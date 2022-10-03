@@ -18,7 +18,10 @@ plugins {
   application
   id("com.github.johnrengelman.shadow") version "7.1.2"
   id("org.sonarqube") version "3.4.0.2513"
+  id("org.checkerframework") version "0.6.16"
 }
+
+apply(plugin = "org.checkerframework")
 
 repositories {
   mavenCentral()
@@ -74,8 +77,8 @@ val TARGET_FILE_PATH_BASE_SHORT = "targetFilePathBaseShort"
 val UPPERCASE_PROJECT_NAME = "uppercaseProjectName"
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_16
-  targetCompatibility = JavaVersion.VERSION_16
+  sourceCompatibility = JavaVersion.VERSION_19
+  targetCompatibility = JavaVersion.VERSION_19
 }
 
 /**
@@ -725,5 +728,22 @@ tasks {
   }
   checkstyleTest {
     source = fileTree("src/test/java")
+  }
+}
+
+// In Kotlin, you need to import CheckerFrameworkExtension explicitly:
+configure<org.checkerframework.gradle.plugin.CheckerFrameworkExtension> {
+  checkers = listOf(
+    "org.checkerframework.checker.tainting.TaintingChecker",
+  )
+}
+
+// To use a locally-built Checker Framework, run gradle with "-PcfLocal".
+if (project.hasProperty("cfLocal")) {
+  val cfHome = System.getenv("CHECKERFRAMEWORK")
+  dependencies {
+    compileOnly(files(cfHome + "/checker/dist/checker-qual.jar"))
+    testCompileOnly(files(cfHome + "/checker/dist/checker-qual.jar"))
+    checkerFramework(files(cfHome + "/checker/dist/checker.jar"))
   }
 }
