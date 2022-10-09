@@ -7,9 +7,11 @@
  * This is free software released under GNU GPLv3 license
  */
 
+import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.internal.os.OperatingSystem
 import java.text.SimpleDateFormat
 import java.util.Date
+import net.ltgt.gradle.errorprone.errorprone
 
 plugins {
   checkstyle
@@ -19,11 +21,13 @@ plugins {
   id("com.github.johnrengelman.shadow") version "7.1.2"
   id("org.sonarqube") version "3.4.0.2513"
   id("org.checkerframework") version "0.6.16"
+  id("net.ltgt.errorprone") version "2.0.2"
 }
 
 apply(plugin = "org.checkerframework")
 
 repositories {
+  mavenLocal()
   mavenCentral()
 }
 
@@ -56,6 +60,11 @@ dependencies {
   testImplementation("org.junit.jupiter:junit-jupiter:5.9.0")
   testImplementation("org.mockito:mockito-inline:4.7.0")
   testImplementation("org.mockito:mockito-junit-jupiter:4.7.0")
+
+  // check called methods
+  annotationProcessor("edu.ucr.cs.riple.checkers:SinkDetector:1.0-SNAPSHOT")
+  compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+  errorprone("com.google.errorprone:error_prone_core:2.15.0")
 }
 
 /**
@@ -746,4 +755,23 @@ if (project.hasProperty("cfLocal")) {
     testCompileOnly(files(cfHome + "/checker/dist/checker-qual.jar"))
     checkerFramework(files(cfHome + "/checker/dist/checker.jar"))
   }
+}
+
+
+// Disabling all checks to let checker framework work.
+tasks.withType<JavaCompile>().configureEach {
+  options.errorprone.disableAllChecks.set(true)
+}
+
+// Not passing any argument to checkers now.
+// ...
+//tasks.withType(JavaCompile).configureEach {
+//  options.errorprone {
+//    option("CheckerName:Flag", "Value")
+//  }
+//}
+
+tasks.named("compileJava", JavaCompile::class) {
+  // The check defaults to a warning, bump it up to an error for the main sources
+  options.errorprone.error("SinkDetector")
 }
