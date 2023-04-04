@@ -748,6 +748,8 @@ tasks {
 
 checkerFramework {
   checkers.add("edu.ucr.cs.riple.taint.ucrtainting.UCRTaintingChecker")
+  // to use original tainting checker, uncomment the following line and comment the above line.
+  //   checkers.add("org.checkerframework.checker.tainting.TaintingChecker")
 }
 
 // To use a locally-built Checker Framework, run gradle with "-PcfLocal".
