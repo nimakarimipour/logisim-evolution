@@ -20,7 +20,7 @@ plugins {
   application
   id("com.github.johnrengelman.shadow") version "7.1.2"
   id("org.sonarqube") version "3.4.0.2513"
-  id("org.checkerframework") version "0.6.16"
+  id("org.checkerframework") version "0.6.24"
   id("net.ltgt.errorprone") version "2.0.2"
 }
 
@@ -62,9 +62,15 @@ dependencies {
   testImplementation("org.mockito:mockito-junit-jupiter:4.7.0")
 
   // check called methods
-  annotationProcessor("edu.ucr.cs.riple.checkers:SinkDetector:1.0-SNAPSHOT")
   compileOnly("com.google.code.findbugs:jsr305:3.0.2")
   errorprone("com.google.errorprone:error_prone_core:2.15.0")
+
+  // UCR Tainting checker
+  annotationProcessor("edu.ucr.cs.riple.taint:ucrtainting-checker:0.1")
+  compileOnly("edu.ucr.cs.riple.taint:ucrtainting-checker-qual:0.1")
+
+  // Annotator Scanner Checker
+  annotationProcessor("edu.ucr.cs.riple.annotator:annotator-scanner:1.3.7-SNAPSHOT")
 }
 
 /**
@@ -740,11 +746,8 @@ tasks {
   }
 }
 
-// In Kotlin, you need to import CheckerFrameworkExtension explicitly:
-configure<org.checkerframework.gradle.plugin.CheckerFrameworkExtension> {
-  checkers = listOf(
-    "org.checkerframework.checker.tainting.TaintingChecker",
-  )
+checkerFramework {
+  checkers.add("edu.ucr.cs.riple.taint.ucrtainting.UCRTaintingChecker")
 }
 
 // To use a locally-built Checker Framework, run gradle with "-PcfLocal".
@@ -763,15 +766,8 @@ tasks.withType<JavaCompile>().configureEach {
   options.errorprone.disableAllChecks.set(true)
 }
 
-// Not passing any argument to checkers now.
-// ...
-//tasks.withType(JavaCompile).configureEach {
-//  options.errorprone {
-//    option("CheckerName:Flag", "Value")
-//  }
-//}
-
 tasks.named("compileJava", JavaCompile::class) {
   // The check defaults to a warning, bump it up to an error for the main sources
-  options.errorprone.error("SinkDetector")
+  options.errorprone.error("AnnotatorScanner")
+  options.errorprone.option("AnnotatorScanner:ConfigPath", "/tmp/ucr-tainting/scanner.xml")
 }
