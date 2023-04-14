@@ -18,6 +18,7 @@ import java.awt.Image;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -132,7 +133,7 @@ public class LFrame extends JFrame implements WindowClosable {
     boolean success = false;
     try {
       if (CollectionUtil.isNotEmpty(allIcons)) {
-        final var set = frame.getClass().getMethod("setIconImages", List.class);
+        final Method set = frame.getClass().getMethod("setIconImages", List.class);
         set.invoke(frame, allIcons);
         success = true;
       }
