@@ -7,6 +7,7 @@
  * This is free software released under GNU GPLv3 license
  */
 
+import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.internal.os.OperatingSystem
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -18,9 +19,14 @@ plugins {
   application
   id("com.github.johnrengelman.shadow") version "7.1.2"
   id("org.sonarqube") version "3.4.0.2513"
+  id("org.checkerframework") version "0.6.34"
+  id("net.ltgt.errorprone") version "2.0.2"
 }
 
+apply(plugin = "org.checkerframework")
+
 repositories {
+  mavenLocal()
   mavenCentral()
 }
 
@@ -53,6 +59,17 @@ dependencies {
   testImplementation("org.junit.jupiter:junit-jupiter:5.9.0")
   testImplementation("org.mockito:mockito-inline:4.7.0")
   testImplementation("org.mockito:mockito-junit-jupiter:4.7.0")
+
+  // Annotator stuff
+  compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+  errorprone("com.google.errorprone:error_prone_core:2.15.0")
+
+  // UCR Tainting checker
+  annotationProcessor("edu.ucr.cs.riple.taint:ucrtainting-checker:0.1")
+  compileOnly("edu.ucr.cs.riple.taint:ucrtainting-checker-qual:0.1")
+
+  // Annotator Scanner Checker
+  annotationProcessor("edu.ucr.cs.riple.annotator:annotator-scanner:1.3.8-SNAPSHOT")
 }
 
 /**
@@ -74,8 +91,8 @@ val TARGET_FILE_PATH_BASE_SHORT = "targetFilePathBaseShort"
 val UPPERCASE_PROJECT_NAME = "uppercaseProjectName"
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_16
-  targetCompatibility = JavaVersion.VERSION_16
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
 }
 
 /**
@@ -658,7 +675,23 @@ tasks.register("jpackage") {
   }
 }
 
-val compilerOptions = listOf("-Xlint:deprecation", "-Xlint:unchecked")
+val scanner_config = "${project.rootDir}/annotator-out/scanner.xml"
+val checker_config = "${project.rootDir}/annotator-out/checker.xml"
+
+checkerFramework {
+  checkers.add("edu.ucr.cs.riple.taint.ucrtainting.UCRTaintingChecker")
+  // to use the original tainting checker, uncomment the following line and comment the above line.
+  // checkers.add("org.checkerframework.checker.tainting.TaintingChecker")
+  extraJavacArgs = listOf(
+    "-Awarns",
+    "-AannotatedPackages=com.cburch",
+    "-AenableLibraryCheck=true",
+    "-AenableSerialization",
+    "-AserializationConfigPath=$checker_config"
+  )
+}
+
+val compilerOptions = mutableListOf("-Xlint:deprecation", "-Xlint:unchecked")
 
 tasks {
   compileJava {
@@ -726,4 +759,15 @@ tasks {
   checkstyleTest {
     source = fileTree("src/test/java")
   }
+}
+
+// Disabling all checks to let checker framework work.
+tasks.withType<JavaCompile>().configureEach {
+  options.errorprone.disableAllChecks.set(true)
+}
+
+tasks.named("compileJava", JavaCompile::class) {
+  // The check defaults to a warning, bump it up to an error for the main sources
+  options.errorprone.error("AnnotatorScanner")
+  options.errorprone.option("AnnotatorScanner:ConfigPath", scanner_config)
 }
