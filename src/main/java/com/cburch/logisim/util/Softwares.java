@@ -23,11 +23,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public final class Softwares {
 
   public static final String QUESTA = "questaSim";
-  public static final String[] QUESTA_BIN = loadQuesta();
+  public static final @RUntainted String[] QUESTA_BIN = loadQuesta();
   public static final int SUCCESS = 0;
   public static final int ERROR = 1;
   public static final int ABORT = 2;
@@ -40,7 +41,7 @@ public final class Softwares {
     throw new IllegalStateException("Utility class. No instantiation allowed.");
   }
 
-  private static boolean createWorkLibrary(File tmpDir, String questaPath, StringBuilder result)
+  private static boolean createWorkLibrary(File tmpDir, @RUntainted String questaPath, StringBuilder result)
       throws IOException, InterruptedException {
     BufferedReader reader = null;
 
@@ -49,7 +50,7 @@ public final class Softwares {
     }
 
     try {
-      final var command = new ArrayList<String>();
+      final var command = new ArrayList<@RUntainted String>();
       command.add(FileUtil.correctPath(questaPath) + QUESTA_BIN[VLIB]);
       command.add("work");
 
@@ -77,19 +78,19 @@ public final class Softwares {
     }
   }
 
-  public static String getQuestaPath() {
+  public static @RUntainted String getQuestaPath() {
     return getQuestaPath(null);
   }
 
-  public static String getQuestaPath(Component parent) {
+  public static @RUntainted String getQuestaPath(Component parent) {
     var prefPath = AppPreferences.QUESTA_PATH.get();
     if (!validatePath(prefPath, QUESTA)) if ((prefPath = setQuestaPath()) == null) return null;
 
     return prefPath;
   }
 
-  private static String[] loadQuesta() {
-    String[] questaProgs = {"vcom", "vsim", "vmap", "vlib"};
+  private static @RUntainted String[] loadQuesta() {
+    @RUntainted String[] questaProgs = {"vcom", "vsim", "vmap", "vlib"};
 
     final var osname = System.getProperty("os.name");
     if (osname == null) throw new IllegalArgumentException("no os.name");
@@ -166,7 +167,7 @@ public final class Softwares {
     }
 
     BufferedReader reader = null;
-    File tmp = null;
+    @RUntainted File tmp = null;
 
     try {
       tmp = FileUtil.createTmpFile(vhdl, "tmp", ".vhd");
@@ -179,7 +180,7 @@ public final class Softwares {
         return ERROR;
       }
 
-      List<String> command = new ArrayList<>();
+      List<@RUntainted String> command = new ArrayList<>();
       command.add(FileUtil.correctPath(questaPath) + QUESTA_BIN[VCOM]);
       command.add("-reportprogress");
       command.add("300");

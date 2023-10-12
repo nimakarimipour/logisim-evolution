@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.cburch.logisim.util.LineBuffer;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class HdlTypes {
 

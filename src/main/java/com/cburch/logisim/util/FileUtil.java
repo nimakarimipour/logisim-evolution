@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RPolyTainted;
 
 public final class FileUtil {
 
@@ -23,11 +24,11 @@ public final class FileUtil {
     throw new IllegalStateException("Utility class. No instantiation allowed.");
   }
 
-  public static String correctPath(String path) {
+  public static @RPolyTainted String correctPath(@RPolyTainted String path) {
     return path.endsWith(File.separator) ? path : path + File.separator;
   }
 
-  public static File createTmpFile(String content, String prefix, String suffix)
+  public static @RPolyTainted File createTmpFile(String content, @RPolyTainted String prefix, @RPolyTainted String suffix)
       throws IOException {
     final var tmp = File.createTempFile(prefix, suffix);
 

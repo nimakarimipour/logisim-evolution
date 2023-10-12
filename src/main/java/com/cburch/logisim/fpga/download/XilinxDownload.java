@@ -32,6 +32,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class XilinxDownload implements VendorDownload {
 
@@ -119,7 +120,7 @@ public class XilinxDownload implements VendorDownload {
   @Override
   public ProcessBuilder downloadToBoard() {
     if (!boardInfo.fpga.isUsbTmcDownloadRequired()) {
-      var command = new ArrayList<String>();
+      var command = new ArrayList<@RUntainted String>();
       command.add(xilinxVendor.getBinaryPath(5));
       command.add("-batch");
       command.add(scriptPath.replace(projectPath, "../") + File.separator + DOWNLOAD_FILE);

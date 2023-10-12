@@ -13,6 +13,7 @@ import com.cburch.logisim.fpga.settings.VendorSoftware;
 import com.cburch.logisim.util.StringUtil;
 import java.util.Iterator;
 import java.util.List;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class FpgaClass {
   public static char getId(String identifier) {

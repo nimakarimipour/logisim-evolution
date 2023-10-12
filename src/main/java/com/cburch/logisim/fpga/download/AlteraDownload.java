@@ -36,12 +36,13 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class AlteraDownload implements VendorDownload {
 
   private final VendorSoftware alteraVendor = VendorSoftware.getSoftware(VendorSoftware.VENDOR_ALTERA);
-  private final String scriptPath;
-  private final String projectPath;
+  private final @RUntainted String scriptPath;
+  private final @RUntainted String projectPath;
   private final String sandboxPath;
   private final Netlist rootNetList;
   private MappableResourcesContainer mapInfo;
@@ -136,7 +137,7 @@ public class AlteraDownload implements VendorDownload {
   }
 
   private ProcessBuilder stage0Project() {
-    final var command = new ArrayList<String>();
+    final var command = new ArrayList<@RUntainted String>();
     command.add(alteraVendor.getBinaryPath(0));
     command.add("-t");
     command.add(scriptPath.replace(projectPath, ".." + File.separator) + alteraTclFile);
@@ -146,7 +147,7 @@ public class AlteraDownload implements VendorDownload {
   }
 
   private ProcessBuilder stage1Optimize() {
-    final var command = new ArrayList<String>();
+    final var command = new ArrayList<@RUntainted String>();
     command.add(alteraVendor.getBinaryPath(2));
     command.add(ToplevelHdlGeneratorFactory.FPGA_TOP_LEVEL_NAME);
     command.add("--optimize=area");
@@ -156,7 +157,7 @@ public class AlteraDownload implements VendorDownload {
   }
 
   private ProcessBuilder stage2SprBit() {
-    var command = new ArrayList<String>();
+    var command = new ArrayList<@RUntainted String>();
     command.add(alteraVendor.getBinaryPath(0));
     command.add("--flow");
     command.add("compile");
@@ -287,7 +288,7 @@ public class AlteraDownload implements VendorDownload {
 
   @Override
   public boolean isBoardConnected() {
-    var command = new ArrayList<String>();
+    var command = new ArrayList<@RUntainted String>();
     command.add(alteraVendor.getBinaryPath(1));
     command.add("--list");
     final var detect = new ProcessBuilder(command);
@@ -439,7 +440,7 @@ public class AlteraDownload implements VendorDownload {
     Reporter.report.print("==>");
     Reporter.report.print("==> " + S.get("AlteraJicFile"));
     Reporter.report.print("==>");
-    var command = new ArrayList<String>();
+    var command = new ArrayList<@RUntainted String>();
     command.add(alteraVendor.getBinaryPath(3));
     command.add("-c");
     command.add((scriptPath + AlteraCofFile).replace(projectPath, "../"));
