@@ -15,6 +15,7 @@ import com.cburch.logisim.fpga.file.FileWriter;
 import com.cburch.logisim.fpga.hdlgenerator.AbstractHdlGeneratorFactory;
 import com.cburch.logisim.fpga.hdlgenerator.Hdl;
 import java.util.ArrayList;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class VhdlHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 

@@ -16,6 +16,7 @@ import com.cburch.logisim.util.LineBuffer;
 
 import java.util.List;
 import java.util.Set;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public interface HdlGeneratorFactory {
 

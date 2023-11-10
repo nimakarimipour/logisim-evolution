@@ -22,6 +22,7 @@ import com.cburch.logisim.util.LineBuffer;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class ShiftRegisterHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 

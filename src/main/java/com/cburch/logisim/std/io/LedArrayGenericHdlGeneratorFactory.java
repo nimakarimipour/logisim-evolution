@@ -21,6 +21,7 @@ import com.cburch.logisim.fpga.data.FpgaIoInformationContainer;
 import com.cburch.logisim.fpga.data.LedArrayDriving;
 import com.cburch.logisim.fpga.hdlgenerator.AbstractHdlGeneratorFactory;
 import com.cburch.logisim.fpga.hdlgenerator.Hdl;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class LedArrayGenericHdlGeneratorFactory {
   public static String LedArrayOutputs = "externalLeds";

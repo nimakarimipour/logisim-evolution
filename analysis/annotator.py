@@ -30,9 +30,9 @@ def run_annotator():
     # Uncomment to see build output
     # commands += ['-rboserr']
     # Uncomment to disable outer loop
-    # commands += ['-dol']
+    commands += ['-dol']
     # Uncomment to disable parallel processing
-    # commands += ['--disable-parallel-processing']
+    commands += ['--disable-parallel-processing']
 
     subprocess.call(commands)
 

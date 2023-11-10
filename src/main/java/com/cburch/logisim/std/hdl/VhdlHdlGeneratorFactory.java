@@ -17,6 +17,7 @@ import com.cburch.logisim.fpga.hdlgenerator.Hdl;
 import com.cburch.logisim.instance.Port;
 
 import java.util.ArrayList;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class VhdlHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
