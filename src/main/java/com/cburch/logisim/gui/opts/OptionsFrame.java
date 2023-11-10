@@ -44,7 +44,7 @@ public class OptionsFrame extends LFrame.Dialog {
     project.addLibraryListener(myListener);
     project.addProjectListener(
         event -> {
-          final var action = event.getAction();
+          final int action = event.getAction();
           if (action == ProjectEvent.ACTION_SET_STATE) {
             computeTitle();
           }
@@ -57,11 +57,11 @@ public class OptionsFrame extends LFrame.Dialog {
           new RevertPanel(this)
         };
     tabbedPane = new JTabbedPane();
-    for (final var panel : panels) {
+    for (final com.cburch.logisim.gui.opts.OptionsPanel panel : panels) {
       tabbedPane.addTab(panel.getTitle(), null, panel, panel.getToolTipText());
     }
 
-    final var contents = getContentPane();
+    final java.awt.Container contents = getContentPane();
     tabbedPane.setPreferredSize(
         new Dimension(AppPreferences.getScaled(450), AppPreferences.getScaled(300)));
     contents.add(tabbedPane, BorderLayout.CENTER);
@@ -73,9 +73,9 @@ public class OptionsFrame extends LFrame.Dialog {
   }
 
   private void computeTitle() {
-    final var file = project.getLogisimFile();
-    final var name = (file == null) ? "???" : file.getName();
-    final var title = S.get("optionsFrameTitle", name);
+    final com.cburch.logisim.file.LogisimFile file = project.getLogisimFile();
+    final java.lang.String name = (file == null) ? "???" : file.getName();
+    final java.lang.String title = S.get("optionsFrameTitle", name);
     setTitle(title);
   }
 
@@ -103,7 +103,7 @@ public class OptionsFrame extends LFrame.Dialog {
     public RevertPanel(OptionsFrame window) {
       super(window);
       setLayout(new TableLayout(1));
-      final var buttonPanel = new JPanel();
+      final javax.swing.JPanel buttonPanel = new JPanel();
       buttonPanel.add(revert);
       revert.addActionListener(myListener);
       add(buttonPanel);
@@ -127,7 +127,7 @@ public class OptionsFrame extends LFrame.Dialog {
     private class MyListener implements ActionListener {
       @Override
       public void actionPerformed(ActionEvent event) {
-        final var src = event.getSource();
+        final java.lang.Object src = event.getSource();
         if (src == revert) {
           getProject().doAction(LogisimFileActions.revertDefaults());
         }
@@ -168,7 +168,7 @@ public class OptionsFrame extends LFrame.Dialog {
 
     @Override
     public void localeChanged() {
-      final var title = project.getLogisimFile().getDisplayName();
+      final java.lang.String title = project.getLogisimFile().getDisplayName();
       setText(S.get("optionsFrameMenuItem", title));
     }
   }

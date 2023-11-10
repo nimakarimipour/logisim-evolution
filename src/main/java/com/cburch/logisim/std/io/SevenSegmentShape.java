@@ -39,13 +39,13 @@ public class SevenSegmentShape extends DynamicElement {
 
   @Override
   public void paintDynamic(Graphics g, CircuitState state) {
-    final var offColor = path.leaf().getAttributeSet().getValue(IoLibrary.ATTR_OFF_COLOR);
-    final var onColor = path.leaf().getAttributeSet().getValue(IoLibrary.ATTR_ON_COLOR);
-    final var bgColor = path.leaf().getAttributeSet().getValue(IoLibrary.ATTR_BACKGROUND);
-    final var x = bounds.getX();
-    final var y = bounds.getY();
-    final var w = bounds.getWidth();
-    final var h = bounds.getHeight();
+    final java.awt.Color offColor = path.leaf().getAttributeSet().getValue(IoLibrary.ATTR_OFF_COLOR);
+    final java.awt.Color onColor = path.leaf().getAttributeSet().getValue(IoLibrary.ATTR_ON_COLOR);
+    final java.awt.Color bgColor = path.leaf().getAttributeSet().getValue(IoLibrary.ATTR_BACKGROUND);
+    final int x = bounds.getX();
+    final int y = bounds.getY();
+    final int w = bounds.getWidth();
+    final int h = bounds.getHeight();
     GraphicsUtil.switchToWidth(g, 1);
     if (bgColor.getAlpha() != 0) {
       g.setColor(bgColor);
@@ -59,7 +59,7 @@ public class SevenSegmentShape extends DynamicElement {
     if (state != null) {
       InstanceDataSingleton data = (InstanceDataSingleton) getData(state);
       summ = (data == null ? 0 : (Integer) data.getValue());
-      final var activ = path.leaf().getAttributeSet().getValue(IoLibrary.ATTR_ACTIVE);
+      final java.lang.Boolean activ = path.leaf().getAttributeSet().getValue(IoLibrary.ATTR_ACTIVE);
       desired = activ == null || activ ? 1 : 0;
     }
     g.setColor(Color.DARK_GRAY);

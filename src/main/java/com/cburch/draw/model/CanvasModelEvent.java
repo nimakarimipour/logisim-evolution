@@ -46,8 +46,8 @@ public final class CanvasModelEvent extends EventObject {
       boolean dummy, CanvasModel source, int action, Collection<ReorderRequest> requests) {
     this(source, action, Collections.emptySet());
 
-    final var affected = new ArrayList<CanvasObject>(requests.size());
-    for (final var r : requests) {
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> affected = new ArrayList<CanvasObject>(requests.size());
+    for (final com.cburch.draw.model.ReorderRequest r : requests) {
       affected.add(r.getObject());
     }
     this.affected = affected;
@@ -110,14 +110,14 @@ public final class CanvasModelEvent extends EventObject {
       Map<AttributeMapKey, Object> newValues) {
     this(source, action, Collections.emptySet());
 
-    final var affected = new HashSet<CanvasObject>(newValues.size());
-    for (final var key : newValues.keySet()) {
+    final java.util.HashSet<com.cburch.draw.model.CanvasObject> affected = new HashSet<CanvasObject>(newValues.size());
+    for (final com.cburch.draw.model.AttributeMapKey key : newValues.keySet()) {
       affected.add(key.getObject());
     }
     this.affected = affected;
 
-    final var oldValuesCopy = new HashMap<>(oldValues);
-    final var newValuesCopy = new HashMap<>(newValues);
+    final java.util.HashMap<com.cburch.draw.model.AttributeMapKey,java.lang.Object> oldValuesCopy = new HashMap<>(oldValues);
+    final java.util.HashMap<com.cburch.draw.model.AttributeMapKey,java.lang.Object> newValuesCopy = new HashMap<>(newValues);
 
     this.oldValues = Collections.unmodifiableMap(oldValuesCopy);
     this.newValues = Collections.unmodifiableMap(newValuesCopy);
@@ -175,10 +175,10 @@ public final class CanvasModelEvent extends EventObject {
   public Collection<? extends CanvasObject> getAffected() {
     java.util.Collection<? extends com.cburch.draw.model.CanvasObject> ret = affected;
     if (ret == null) {
-      final var newVals = newValues;
+      final java.util.Map<com.cburch.draw.model.AttributeMapKey,java.lang.Object> newVals = newValues;
       if (newVals != null) {
-        final var keys = new HashSet<CanvasObject>();
-        for (final var key : newVals.keySet()) {
+        final java.util.HashSet<com.cburch.draw.model.CanvasObject> keys = new HashSet<CanvasObject>();
+        for (final com.cburch.draw.model.AttributeMapKey key : newVals.keySet()) {
           keys.add(key.getObject());
         }
         ret = Collections.unmodifiableCollection(keys);

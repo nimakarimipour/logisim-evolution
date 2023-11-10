@@ -87,17 +87,17 @@ public class Splitter extends ManagedComponent
   }
 
   private synchronized void configureComponent() {
-    final var attrs = (SplitterAttributes) getAttributeSet();
-    final var parms = attrs.getParameters();
-    final var fanout = attrs.fanout;
-    final var bitEnd = attrs.bitEnd;
+    final com.cburch.logisim.circuit.SplitterAttributes attrs = (SplitterAttributes) getAttributeSet();
+    final com.cburch.logisim.circuit.SplitterParameters parms = attrs.getParameters();
+    final byte fanout = attrs.fanout;
+    final byte[] bitEnd = attrs.bitEnd;
 
     // compute width of each end
     bitThread = new byte[bitEnd.length];
-    final var endWidth = new byte[fanout + 1];
+    final byte[] endWidth = new byte[fanout + 1];
     endWidth[0] = (byte) bitEnd.length;
     for (int i = 0; i < bitEnd.length; i++) {
-      final var thr = bitEnd[i];
+      final byte thr = bitEnd[i];
       if (thr > 0) {
         bitThread[i] = endWidth[thr];
         endWidth[thr]++;
@@ -107,13 +107,13 @@ public class Splitter extends ManagedComponent
     }
 
     // compute end positions
-    final var origin = getLocation();
+    final com.cburch.logisim.data.Location origin = getLocation();
     int x = origin.getX() + parms.getEnd0X();
     int y = origin.getY() + parms.getEnd0Y();
-    final var dx = parms.getEndToEndDeltaX();
-    final var dy = parms.getEndToEndDeltaY();
+    final int dx = parms.getEndToEndDeltaX();
+    final int dy = parms.getEndToEndDeltaY();
 
-    final var ends = new EndData[fanout + 1];
+    final com.cburch.logisim.comp.EndData[] ends = new EndData[fanout + 1];
     ends[0] = new EndData(origin, BitWidth.create(bitEnd.length), EndData.INPUT_OUTPUT);
     for (int i = 0; i < fanout; i++) {
       ends[i + 1] = new EndData(Location.create(x, y, true), BitWidth.create(endWidth[i + 1]), EndData.INPUT_OUTPUT);
@@ -136,8 +136,8 @@ public class Splitter extends ManagedComponent
   @Override
   public boolean contains(Location loc) {
     if (super.contains(loc)) {
-      final var myLoc = getLocation();
-      final var facing = getAttributeSet().getValue(StdAttr.FACING);
+      final com.cburch.logisim.data.Location myLoc = getLocation();
+      final com.cburch.logisim.data.Direction facing = getAttributeSet().getValue(StdAttr.FACING);
       if (facing == Direction.EAST || facing == Direction.WEST) {
         return Math.abs(loc.getX() - myLoc.getX()) > 5 || loc.manhattanDistanceTo(myLoc) <= 5;
       } else {
@@ -153,18 +153,18 @@ public class Splitter extends ManagedComponent
   //
   @Override
   public void draw(ComponentDrawContext context) {
-    final var attrs = (SplitterAttributes) getAttributeSet();
+    final com.cburch.logisim.circuit.SplitterAttributes attrs = (SplitterAttributes) getAttributeSet();
     if (attrs.appear == SplitterAttributes.APPEAR_LEGACY) {
       SplitterPainter.drawLegacy(context, attrs, getLocation());
     } else {
-      final var loc = getLocation();
+      final com.cburch.logisim.data.Location loc = getLocation();
       SplitterPainter.drawLines(context, attrs, loc);
       SplitterPainter.drawLabels(context, attrs, loc);
       context.drawPins(this);
     }
     if (isMarked) {
-      final var g = context.getGraphics();
-      final var bds = this.getBounds();
+      final java.awt.Graphics g = context.getGraphics();
+      final com.cburch.logisim.data.Bounds bds = this.getBounds();
       g.setColor(Netlist.DRC_INSTANCE_MARK_COLOR);
       GraphicsUtil.switchToWidth(g, 2);
       g.drawRoundRect(bds.getX() - 10, bds.getY() - 10, bds.getWidth() + 20, bds.getHeight() + 20, 20, 20);
@@ -207,9 +207,9 @@ public class Splitter extends ManagedComponent
     if (end == 0) return S.get("splitterCombinedTip");
     if (end < 0) return null;
     int bits = 0;
-    final var buffer = new StringBuilder();
-    final var attrs = (SplitterAttributes) getAttributeSet();
-    final var bitEnd = attrs.bitEnd;
+    final java.lang.StringBuilder buffer = new StringBuilder();
+    final com.cburch.logisim.circuit.SplitterAttributes attrs = (SplitterAttributes) getAttributeSet();
+    final byte[] bitEnd = attrs.bitEnd;
     boolean inString = false;
     int beginString = 0;
     for (int i = 0; i < bitEnd.length; i++) {
@@ -226,7 +226,7 @@ public class Splitter extends ManagedComponent
     }
 
     if (inString) appendBuf(buffer, bitEnd.length - 1, beginString);
-    final var base = switch (bits) {
+    final java.lang.String base = switch (bits) {
       case 0 -> S.get("splitterSplit0Tip");
       case 1 -> S.get("splitterSplit1Tip");
       default -> S.get("splitterSplitManyTip");

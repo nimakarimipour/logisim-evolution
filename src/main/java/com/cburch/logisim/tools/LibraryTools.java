@@ -39,7 +39,7 @@ public final class LibraryTools {
   private static String message(String libName, Map<String, String> messages) {
     java.lang.String message = "";
     int item = 0;
-    for (final var myerror : messages.keySet()) {
+    for (final java.lang.String myerror : messages.keySet()) {
       item++;
       message = message.concat(item + ") " + messages.get(myerror) + " \"" + myerror + "\".\n");
     }
@@ -47,10 +47,10 @@ public final class LibraryTools {
   }
 
   public static void buildToolList(Library lib, Set<String> tools) {
-    for (final var tool : lib.getTools()) {
+    for (final com.cburch.logisim.tools.Tool tool : lib.getTools()) {
       tools.add(tool.getName().toUpperCase());
     }
-    for (final var sublib : lib.getLibraries()) {
+    for (final com.cburch.logisim.tools.Library sublib : lib.getLibraries()) {
       buildToolList(sublib, tools);
     }
   }
@@ -58,7 +58,7 @@ public final class LibraryTools {
   public static boolean buildToolList(Library lib, Map<String, AddTool> tools) {
     boolean ret = true;
     if (!"Base".equals(lib.getName())) {
-      for (final var tool1 : lib.getTools()) {
+      for (final com.cburch.logisim.tools.Tool tool1 : lib.getTools()) {
         if (tools.containsKey(tool1.getName().toUpperCase())) {
           ret = false;
         } else {
@@ -66,7 +66,7 @@ public final class LibraryTools {
         }
       }
     }
-    for (final var sublib : lib.getLibraries()) {
+    for (final com.cburch.logisim.tools.Library sublib : lib.getLibraries()) {
       ret &= buildToolList(sublib, tools);
     }
     return ret;
@@ -75,13 +75,13 @@ public final class LibraryTools {
   // FIXME: why `upperCaseName` even matters here if we do case insensitive comparision?
   public static Circuit getCircuitFromLibs(Library lib, String upperCaseName) {
     if (lib instanceof LogisimFile llib) {
-      for (final var circ : llib.getCircuits()) {
+      for (final com.cburch.logisim.circuit.Circuit circ : llib.getCircuits()) {
         if (circ.getName().equalsIgnoreCase(upperCaseName)) return circ;
       }
     }
 
     Circuit ret = null;
-    for (final var libs : lib.getLibraries()) {
+    for (final com.cburch.logisim.tools.Library libs : lib.getLibraries()) {
       if (libs instanceof LoadedLibrary lib1) {
         ret = getCircuitFromLibs(lib1.getBase(), upperCaseName);
       } else ret = getCircuitFromLibs(libs, upperCaseName);
@@ -92,8 +92,8 @@ public final class LibraryTools {
 
   // FIXME: method name is odd.
   public static List<String> libraryCanBeMerged(Set<String> sourceTools, Set<String> newTools) {
-    final var ret = new ArrayList<String>();
-    for (final var This : newTools) {
+    final java.util.ArrayList<java.lang.String> ret = new ArrayList<String>();
+    for (final java.lang.String This : newTools) {
       if (sourceTools.contains(This)) {
         ret.add(This);
       }
@@ -103,26 +103,26 @@ public final class LibraryTools {
 
   // Why name case matters that it is reflected in argument `uppercasedNames` name?
   public static Map<String, String> getToolLocation(Library lib, String location, List<String> upercasedNames) {
-    final var toolIter = lib.getTools().iterator();
-    final var ret = new HashMap<String, String>();
-    final var MyLocation = (location.isEmpty()) ? lib.getName() : location + "->" + lib.getName();
+    final java.util.Iterator<? extends com.cburch.logisim.tools.Tool> toolIter = lib.getTools().iterator();
+    final java.util.HashMap<java.lang.String,java.lang.String> ret = new HashMap<String, String>();
+    final java.lang.String MyLocation = (location.isEmpty()) ? lib.getName() : location + "->" + lib.getName();
     while (toolIter.hasNext()) {
-      final var tool = toolIter.next();
+      final com.cburch.logisim.tools.Tool tool = toolIter.next();
       if (upercasedNames.contains(tool.getName().toUpperCase())) {
         ret.put(tool.getName(), MyLocation);
       }
     }
-    for (final var sublib : lib.getLibraries()) {
+    for (final com.cburch.logisim.tools.Library sublib : lib.getLibraries()) {
       ret.putAll(getToolLocation(sublib, MyLocation, upercasedNames));
     }
     return ret;
   }
 
   public static boolean isLibraryConform(Library lib, Set<String> names, Set<String> tools, Map<String, String> error) {
-    final var toolIter = lib.getTools().iterator();
+    final java.util.Iterator<? extends com.cburch.logisim.tools.Tool> toolIter = lib.getTools().iterator();
     boolean hasErrors = false;
     while (toolIter.hasNext()) {
-      final var tool = toolIter.next();
+      final com.cburch.logisim.tools.Tool tool = toolIter.next();
       if (tools.contains(tool.getName().toUpperCase())) {
         hasErrors = true;
         if (!error.containsKey(tool.getName())) {
@@ -131,7 +131,7 @@ public final class LibraryTools {
       }
       tools.add(tool.getName().toUpperCase());
     }
-    for (final var sublib : lib.getLibraries()) {
+    for (final com.cburch.logisim.tools.Library sublib : lib.getLibraries()) {
       if (names.contains(sublib.getName().toUpperCase())) {
         hasErrors = true;
         if (!error.containsKey(sublib.getName())) {
@@ -146,25 +146,25 @@ public final class LibraryTools {
 
   public static void buildLibraryList(Library lib, Map<String, Library> names) {
     names.put(lib.getName().toUpperCase(), lib);
-    for (final var sublib : lib.getLibraries()) {
+    for (final com.cburch.logisim.tools.Library sublib : lib.getLibraries()) {
       buildLibraryList(sublib, names);
     }
   }
 
   public static void removePresentLibraries(Library lib, Map<String, Library> knownLibs, boolean addToSet) {
     /* we work top -> down */
-    final var toBeRemoved = new HashSet<String>();
-    for (final var sublib : lib.getLibraries()) {
+    final java.util.HashSet<java.lang.String> toBeRemoved = new HashSet<String>();
+    for (final com.cburch.logisim.tools.Library sublib : lib.getLibraries()) {
       if (knownLibs.containsKey(sublib.getName().toUpperCase())) {
         toBeRemoved.add(sublib.getName());
       } else if (addToSet) {
         knownLibs.put(sublib.getName().toUpperCase(), sublib);
       }
     }
-    for (final var remove : toBeRemoved) {
+    for (final java.lang.String remove : toBeRemoved) {
       lib.removeLibrary(remove);
     }
-    for (final var sublib : lib.getLibraries())
+    for (final com.cburch.logisim.tools.Library sublib : lib.getLibraries())
       removePresentLibraries(sublib, knownLibs, addToSet);
   }
 }

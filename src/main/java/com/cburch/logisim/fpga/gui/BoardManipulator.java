@@ -272,10 +272,10 @@ public class BoardManipulator extends JPanel implements BaseMouseListenerContrac
     clear();
     image = board.getImage();
     boardName = board.getBoardName();
-    for (final var comp : board.getAllComponents()) {
+    for (final com.cburch.logisim.fpga.data.FpgaIoInformationContainer comp : board.getAllComponents()) {
       ioComps.addComponent(comp, scale);
     }
-    for (final var listener : listeners) {
+    for (final com.cburch.logisim.fpga.data.BoardManipulatorListener listener : listeners) {
       listener.boardNameChanged(boardName);
     }
   }
@@ -297,7 +297,7 @@ public class BoardManipulator extends JPanel implements BaseMouseListenerContrac
   }
 
   private void defineIOComponent() {
-    final var rect = defineRectangle.getBoardRectangle(scale);
+    final com.cburch.logisim.fpga.data.BoardRectangle rect = defineRectangle.getBoardRectangle(scale);
     com.cburch.logisim.fpga.data.FpgaIoInformationContainer comp = defineRectangle.getIoInfo();
     /*
      * Before doing anything we have to check that this region does not
@@ -310,14 +310,14 @@ public class BoardManipulator extends JPanel implements BaseMouseListenerContrac
       return;
     }
     if (comp == null) {
-      final var result = (new IoComponentSelector(ioComps.getParentFrame())).run();
+      final java.lang.String result = (new IoComponentSelector(ioComps.getParentFrame())).run();
       if (result == null) return;
       comp = new FpgaIoInformationContainer(IoComponentTypes.valueOf(result), rect, ioComps);
     } else
       comp.getRectangle().updateRectangle(rect);
     if (comp.isKnownComponent()) {
       ioComps.addComponent(comp, scale);
-      for (final var listener : listeners) {
+      for (final com.cburch.logisim.fpga.data.BoardManipulatorListener listener : listeners) {
         listener.componentsChanged(ioComps);
       }
     }
@@ -327,7 +327,7 @@ public class BoardManipulator extends JPanel implements BaseMouseListenerContrac
   @Override
   public void paint(Graphics g) {
     super.paint(g);
-    final var g2 = (Graphics2D) g;
+    final java.awt.Graphics2D g2 = (Graphics2D) g;
     if (!mapMode && image == null) BoardPainter.newBoardpainter(this, g2);
     else if (image == null) BoardPainter.errorBoardPainter(this, g2);
     else {
@@ -340,7 +340,7 @@ public class BoardManipulator extends JPanel implements BaseMouseListenerContrac
 
   @Override
   public void stateChanged(ChangeEvent event) {
-    final var source = (JSlider) event.getSource();
+    final javax.swing.JSlider source = (JSlider) event.getSource();
     if (!source.getValueIsAdjusting()) {
       int value = source.getValue();
       if (value > maxZoom) {
@@ -348,7 +348,7 @@ public class BoardManipulator extends JPanel implements BaseMouseListenerContrac
         value = maxZoom;
       }
       scale = (float) value / (float) 100.0;
-      final var mySize = new Dimension(getWidth(), getHeight());
+      final java.awt.Dimension mySize = new Dimension(getWidth(), getHeight());
       setPreferredSize(mySize);
       setSize(mySize);
     }
@@ -361,7 +361,7 @@ public class BoardManipulator extends JPanel implements BaseMouseListenerContrac
       repaint(defineRectangle.resizeAndGetUpdate(e));
     } else if (ioComps.hasHighlighted()) {
       /* resize or move the current highlighted component */
-      final var edit = ioComps.getHighligted();
+      final com.cburch.logisim.fpga.data.FpgaIoInformationContainer edit = ioComps.getHighligted();
       ioComps.removeComponent(edit, scale);
       defineRectangle = new SimpleRectangle(e, edit, scale);
       repaint(defineRectangle.resizeAndGetUpdate(e));
@@ -376,14 +376,14 @@ public class BoardManipulator extends JPanel implements BaseMouseListenerContrac
   @Override
   public void mouseClicked(MouseEvent e) {
     if (!mapMode && image == null) {
-      final var fc = new JFileChooser();
+      final javax.swing.JFileChooser fc = new JFileChooser();
       fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
       fc.setDialogTitle(S.get("BoardManipLoadPng"));
       fc.setFileFilter(PngFileFilter.PNG_FILTER);
       fc.setAcceptAllFileFilterUsed(false);
-      final var retVal = fc.showOpenDialog(this);
+      final int retVal = fc.showOpenDialog(this);
       if (retVal == JFileChooser.APPROVE_OPTION) {
-        final var file = fc.getSelectedFile();
+        final java.io.File file = fc.getSelectedFile();
         try {
           image = ImageIO.read(file);
           repaint();
@@ -418,7 +418,7 @@ public class BoardManipulator extends JPanel implements BaseMouseListenerContrac
         /* Edit the current highligted component */
         if (e.getClickCount() > 1) {
           try {
-            final var clone = (FpgaIoInformationContainer) ioComps.getHighligted().clone();
+            final com.cburch.logisim.fpga.data.FpgaIoInformationContainer clone = (FpgaIoInformationContainer) ioComps.getHighligted().clone();
             clone.edit(true, ioComps);
             if (clone.isToBeDeleted()) ioComps.removeComponent(ioComps.getHighligted(), scale);
             else if (clone.isKnownComponent())
@@ -442,7 +442,7 @@ public class BoardManipulator extends JPanel implements BaseMouseListenerContrac
   @Override
   public void mouseReleased(MouseEvent e) {
     if (defineRectangle != null && !mapMode) {
-      final var toBeRepainted = defineRectangle.resizeRemoveAndgetUpdate(e);
+      final java.awt.Rectangle toBeRepainted = defineRectangle.resizeRemoveAndgetUpdate(e);
       defineIOComponent();
       defineRectangle = null;
       repaint(toBeRepainted);
@@ -510,7 +510,7 @@ public class BoardManipulator extends JPanel implements BaseMouseListenerContrac
   public void actionPerformed(ActionEvent event) {
     if (event.getActionCommand().equals("unmapone")) {
       if (mappedList.getSelectedIndex() >= 0) {
-        final var map = mappedList.getSelectedValue();
+        final com.cburch.logisim.fpga.data.MapListModel.MapInfo map = mappedList.getSelectedValue();
         if (map.getPin() < 0) map.getMap().unmap();
         else map.getMap().unmap(map.getPin());
         ioComps.removeSelectable(scale);

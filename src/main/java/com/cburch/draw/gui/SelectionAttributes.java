@@ -49,9 +49,9 @@ public class SelectionAttributes extends AbstractAttributeSet {
 
   private static Object getSelectionValue(Attribute<?> attr, Set<AttributeSet> sel) {
     Object ret = null;
-    for (final var attrs : sel) {
+    for (final com.cburch.logisim.data.AttributeSet attrs : sel) {
       if (attrs.containsAttribute(attr)) {
-        final var val = attrs.getValue(attr);
+        final java.lang.Object val = attrs.getValue(attr);
         if (ret == null) {
           ret = val;
         } else if (val != null && val.equals(ret)) {
@@ -74,7 +74,7 @@ public class SelectionAttributes extends AbstractAttributeSet {
   }
 
   public Iterable<Map.Entry<AttributeSet, CanvasObject>> entries() {
-    final var raw = selected.entrySet();
+    final java.util.Set<java.util.Map.Entry<com.cburch.logisim.data.AttributeSet,com.cburch.draw.model.CanvasObject>> raw = selected.entrySet();
     return new ArrayList<>(raw);
   }
 
@@ -85,8 +85,8 @@ public class SelectionAttributes extends AbstractAttributeSet {
 
   @Override
   public <V> V getValue(Attribute<V> attr) {
-    final var attrs = selAttrs;
-    final var values = selValues;
+    final com.cburch.logisim.data.Attribute<?>[] attrs = selAttrs;
+    final java.lang.Object[] values = selValues;
     for (int i = 0; i < attrs.length; i++) {
       if (attrs[i] == attr) {
         @SuppressWarnings("unchecked")
@@ -99,14 +99,14 @@ public class SelectionAttributes extends AbstractAttributeSet {
 
   @Override
   public <V> void setValue(Attribute<V> attr, V value) {
-    final var attrs = this.selAttrs;
-    final var values = this.selValues;
+    final com.cburch.logisim.data.Attribute<?>[] attrs = this.selAttrs;
+    final java.lang.Object[] values = this.selValues;
     for (int i = 0; i < attrs.length; i++) {
       if (attrs[i] == attr) {
-        final var same = Objects.equals(value, values[i]);
+        final boolean same = Objects.equals(value, values[i]);
         if (!same) {
           values[i] = value;
-          for (final var objAttrs : selected.keySet()) {
+          for (final com.cburch.logisim.data.AttributeSet objAttrs : selected.keySet()) {
             objAttrs.setValue(attr, value);
           }
         }
@@ -130,8 +130,8 @@ public class SelectionAttributes extends AbstractAttributeSet {
       if (selected.containsKey(e.getSource())) {
         @SuppressWarnings("unchecked")
         Attribute<Object> attr = (Attribute<Object>) e.getAttribute();
-        final var attrs = SelectionAttributes.this.selAttrs;
-        final var values = SelectionAttributes.this.selValues;
+        final com.cburch.logisim.data.Attribute<?>[] attrs = SelectionAttributes.this.selAttrs;
+        final java.lang.Object[] values = SelectionAttributes.this.selValues;
         for (int i = 0; i < attrs.length; i++) {
           if (attrs[i] == attr) {
             values[i] = getSelectionValue(attr, selected.keySet());
@@ -141,21 +141,21 @@ public class SelectionAttributes extends AbstractAttributeSet {
     }
 
     private void computeAttributeList(Set<AttributeSet> attrsSet) {
-      final var attrSet = new LinkedHashSet<Attribute<?>>();
-      final var sit = attrsSet.iterator();
+      final java.util.LinkedHashSet<com.cburch.logisim.data.Attribute<?>> attrSet = new LinkedHashSet<Attribute<?>>();
+      final java.util.Iterator<com.cburch.logisim.data.AttributeSet> sit = attrsSet.iterator();
       if (sit.hasNext()) {
-        final var first = sit.next();
+        final com.cburch.logisim.data.AttributeSet first = sit.next();
         attrSet.addAll(first.getAttributes());
         while (sit.hasNext()) {
-          final var next = sit.next();
+          final com.cburch.logisim.data.AttributeSet next = sit.next();
           attrSet.removeIf(attr -> !next.containsAttribute(attr));
         }
       }
 
-      final var attrs = new Attribute<?>[attrSet.size()];
-      final var values = new Object[attrs.length];
+      final com.cburch.logisim.data.Attribute<?>[] attrs = new Attribute<?>[attrSet.size()];
+      final java.lang.Object[] values = new Object[attrs.length];
       int i = 0;
-      for (final var attr : attrSet) {
+      for (final com.cburch.logisim.data.Attribute<?> attr : attrSet) {
         attrs[i] = attr;
         values[i] = getSelectionValue(attr, attrsSet);
         i++;
@@ -171,20 +171,20 @@ public class SelectionAttributes extends AbstractAttributeSet {
     //
     @Override
     public void selectionChanged(SelectionEvent ex) {
-      final var oldSel = selected;
-      final var newSel = new HashMap<AttributeSet, CanvasObject>();
-      for (final var o : selection.getSelected()) {
+      final java.util.Map<com.cburch.logisim.data.AttributeSet,com.cburch.draw.model.CanvasObject> oldSel = selected;
+      final java.util.HashMap<com.cburch.logisim.data.AttributeSet,com.cburch.draw.model.CanvasObject> newSel = new HashMap<AttributeSet, CanvasObject>();
+      for (final com.cburch.draw.model.CanvasObject o : selection.getSelected()) {
         if (o != null) newSel.put(o.getAttributeSet(), o);
       }
       selected = newSel;
       boolean change = false;
-      for (final var attrs : oldSel.keySet()) {
+      for (final com.cburch.logisim.data.AttributeSet attrs : oldSel.keySet()) {
         if (!newSel.containsKey(attrs)) {
           change = true;
           attrs.removeAttributeListener(this);
         }
       }
-      for (final var attrs : newSel.keySet()) {
+      for (final com.cburch.logisim.data.AttributeSet attrs : newSel.keySet()) {
         if (!oldSel.containsKey(attrs)) {
           change = true;
           attrs.addAttributeListener(this);

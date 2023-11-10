@@ -33,7 +33,7 @@ public record CircuitEvent(int getAction, Circuit getCircuit, Object getData) {
 
   @Override
   public String toString() {
-    final var s = switch (getAction) {
+    final java.lang.String s = switch (getAction) {
       case ACTION_SET_NAME -> "ACTION_SET_NAME";
       case ACTION_ADD -> "ACTION_ADD";
       case ACTION_REMOVE -> "ACTION_REMOVE";

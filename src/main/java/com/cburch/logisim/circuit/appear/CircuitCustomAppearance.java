@@ -50,7 +50,7 @@ public class CircuitCustomAppearance extends Drawing {
 
   @Override
   public List<CanvasObject> getObjectsFromTop() {
-    final var ret = new ArrayList<>(getObjectsFromBottom());
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> ret = new ArrayList<>(getObjectsFromBottom());
     Collections.reverse(ret);
     return ret;
   }

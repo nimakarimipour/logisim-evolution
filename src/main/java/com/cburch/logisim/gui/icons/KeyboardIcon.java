@@ -19,7 +19,7 @@ public class KeyboardIcon extends BaseIcon {
   protected void paintIcon(Graphics2D g2) {
     final int state = 0;
 
-    final var wh = scale(12);
+    final int wh = scale(12);
     int x = scale(state);
     int y = scale(11) + scale(state);
     final int[] xpos = {x, x + wh, scale(14), scale(3)};
@@ -41,11 +41,11 @@ public class KeyboardIcon extends BaseIcon {
     g2.setColor(Color.BLACK);
     g2.drawRect(scale(state), scale(state), wh, wh);
 
-    final var s = "K";
-    final var f = g2.getFont().deriveFont((float) wh);
-    final var t = new TextLayout(s, f, g2.getFontRenderContext());
+    final java.lang.String s = "K";
+    final java.awt.Font f = g2.getFont().deriveFont((float) wh);
+    final java.awt.font.TextLayout t = new TextLayout(s, f, g2.getFontRenderContext());
     g2.setColor(Color.BLUE);
-    final var center = scale(state) + wh / 2;
+    final int center = scale(state) + wh / 2;
     t.draw(
         g2,
         center - (float) t.getBounds().getCenterX(),

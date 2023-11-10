@@ -76,7 +76,7 @@ public abstract class DotMatrixBase extends InstanceFactory {
     @Override
     public Object clone() {
       try {
-        final var ret = (State) super.clone();
+        final com.cburch.logisim.std.io.DotMatrixBase.State ret = (State) super.clone();
         ret.grid = this.grid.clone();
         ret.persistTo = this.persistTo.clone();
         return ret;
@@ -86,7 +86,7 @@ public abstract class DotMatrixBase extends InstanceFactory {
     }
 
     protected Value get(int row, int col, long curTick) {
-      final var index = row * cols + col;
+      final int index = row * cols + col;
       com.cburch.logisim.data.Value ret = grid[index];
       if (ret == Value.FALSE && persistTo[index] - curTick >= 0) {
         ret = Value.TRUE;
@@ -96,10 +96,10 @@ public abstract class DotMatrixBase extends InstanceFactory {
 
     protected void setColumn(int index, Value colVector, long persist) {
       int gridloc = (rows - 1) * cols + index;
-      final var stride = -cols;
-      final var vals = colVector.getAll();
+      final int stride = -cols;
+      final com.cburch.logisim.data.Value[] vals = colVector.getAll();
       for (int i = 0; i < vals.length; i++, gridloc += stride) {
-        final var val = vals[i];
+        final com.cburch.logisim.data.Value val = vals[i];
         if (grid[gridloc] == Value.TRUE) {
           persistTo[gridloc] = persist - 1;
         }
@@ -112,10 +112,10 @@ public abstract class DotMatrixBase extends InstanceFactory {
 
     protected void setRow(int index, Value rowVector, long persist) {
       int gridloc = (index + 1) * cols - 1;
-      final var stride = -1;
-      final var vals = rowVector.getAll();
+      final int stride = -1;
+      final com.cburch.logisim.data.Value[] vals = rowVector.getAll();
       for (int i = 0; i < vals.length; i++, gridloc += stride) {
-        final var val = vals[i];
+        final com.cburch.logisim.data.Value val = vals[i];
         if (grid[gridloc] == Value.TRUE) {
           persistTo[gridloc] = persist - 1;
         }
@@ -127,14 +127,14 @@ public abstract class DotMatrixBase extends InstanceFactory {
     }
 
     protected void setSelect(Value rowVector, Value colVector, long persist) {
-      final var rowVals = rowVector.getAll();
-      final var colVals = colVector.getAll();
+      final com.cburch.logisim.data.Value[] rowVals = rowVector.getAll();
+      final com.cburch.logisim.data.Value[] colVals = colVector.getAll();
       int gridloc = 0;
       for (int i = rowVals.length - 1; i >= 0; i--) {
         com.cburch.logisim.data.Value wholeRow = rowVals[i];
         if (wholeRow == Value.TRUE) {
           for (int j = colVals.length - 1; j >= 0; j--, gridloc++) {
-            final var val = colVals[colVals.length - 1 - j];
+            final com.cburch.logisim.data.Value val = colVals[colVals.length - 1 - j];
             if (grid[gridloc] == Value.TRUE) {
               persistTo[gridloc] = persist - 1;
             }
@@ -201,7 +201,7 @@ public abstract class DotMatrixBase extends InstanceFactory {
           "persist", S.getter("ioMatrixPersistenceAttr"), 0, Integer.MAX_VALUE, true);
 
   protected static List<String> getLabels(int rows, int cols) {
-    final var result = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> result = new ArrayList<String>();
     for (int r = 0; r < rows; r++) for (int c = 0; c < cols; c++) result.add("Row" + r + "Col" + c);
     return result;
   }
@@ -296,8 +296,8 @@ public abstract class DotMatrixBase extends InstanceFactory {
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
     Object input = attrs.getValue(getAttributeInputType());
-    final var cols = attrs.getValue(getAttributeColumns()).getWidth();
-    final var rows = attrs.getValue(getAttributeRows()).getWidth();
+    final int cols = attrs.getValue(getAttributeColumns()).getWidth();
+    final int rows = attrs.getValue(getAttributeRows()).getWidth();
     if (input.equals(getAttributeItemColumn())) {
       return Bounds.create(
           -5 * scaleX, -10 * scaleY * rows, 10 * scaleX * cols, 10 * scaleY * rows);
@@ -313,9 +313,9 @@ public abstract class DotMatrixBase extends InstanceFactory {
   }
 
   protected State getState(InstanceState state) {
-    final var rows = state.getAttributeValue(getAttributeRows()).getWidth();
-    final var cols = state.getAttributeValue(getAttributeColumns()).getWidth();
-    final var clock = state.getTickCount();
+    final int rows = state.getAttributeValue(getAttributeRows()).getWidth();
+    final int cols = state.getAttributeValue(getAttributeColumns()).getWidth();
+    final int clock = state.getTickCount();
 
     com.cburch.logisim.std.io.DotMatrixBase.State data = (State) state.getData();
     if (data == null) {
@@ -340,8 +340,8 @@ public abstract class DotMatrixBase extends InstanceFactory {
       instance.computeLabelTextField(Instance.AVOID_LEFT);
       updatePorts(instance);
       if (attr == getAttributeRows() || attr == getAttributeColumns()) {
-        final var rows = instance.getAttributeValue(getAttributeRows()).getWidth();
-        final var cols = instance.getAttributeValue(getAttributeColumns()).getWidth();
+        final int rows = instance.getAttributeValue(getAttributeRows()).getWidth();
+        final int cols = instance.getAttributeValue(getAttributeColumns()).getWidth();
         ComponentMapInformationContainer cm = instance.getAttributeValue(StdAttr.MAPINFO);
         cm.setNrOfOutports(rows * cols, getLabels(rows, cols));
       }
@@ -357,8 +357,8 @@ public abstract class DotMatrixBase extends InstanceFactory {
   }
 
   protected void drawPaddedSquare(Graphics g, int x, int y) {
-    final var paddingY = 2;
-    final var paddingX = 2;
+    final int paddingY = 2;
+    final int paddingX = 2;
     g.fillRect(
         x + (paddingX * scaleX),
         y + (paddingY * scaleY),
@@ -368,18 +368,18 @@ public abstract class DotMatrixBase extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var onColor = painter.getAttributeValue(IoLibrary.ATTR_ON_COLOR);
-    final var offColor = painter.getAttributeValue(IoLibrary.ATTR_OFF_COLOR);
-    final var shape = painter.getAttributeValue(getAttributeShape());
+    final java.awt.Color onColor = painter.getAttributeValue(IoLibrary.ATTR_ON_COLOR);
+    final java.awt.Color offColor = painter.getAttributeValue(IoLibrary.ATTR_OFF_COLOR);
+    final com.cburch.logisim.data.AttributeOption shape = painter.getAttributeValue(getAttributeShape());
 
-    final var data = getState(painter);
-    final var ticks = painter.getTickCount();
-    final var bounds = painter.getBounds();
-    final var showState = painter.getShowState();
-    final var g = painter.getGraphics();
+    final com.cburch.logisim.std.io.DotMatrixBase.State data = getState(painter);
+    final int ticks = painter.getTickCount();
+    final com.cburch.logisim.data.Bounds bounds = painter.getBounds();
+    final boolean showState = painter.getShowState();
+    final java.awt.Graphics g = painter.getGraphics();
 
-    final var rows = data.rows;
-    final var cols = data.cols;
+    final int rows = data.rows;
+    final int cols = data.cols;
 
     // If user wants port dots to be hug it would normally cover the component
     // so we draw ports first, then happily paint over it.
@@ -399,7 +399,7 @@ public abstract class DotMatrixBase extends InstanceFactory {
           continue;
         }
 
-        final var val = data.get(j, i, ticks);
+        final com.cburch.logisim.data.Value val = data.get(j, i, ticks);
         Color c;
         if (val == Value.TRUE) {
           c = onColor;
@@ -432,12 +432,12 @@ public abstract class DotMatrixBase extends InstanceFactory {
   @Override
   public void propagate(InstanceState state) {
     Object type = state.getAttributeValue(getAttributeInputType());
-    final var rows = state.getAttributeValue(getAttributeRows()).getWidth();
-    final var cols = state.getAttributeValue(getAttributeColumns()).getWidth();
+    final int rows = state.getAttributeValue(getAttributeRows()).getWidth();
+    final int cols = state.getAttributeValue(getAttributeColumns()).getWidth();
     final long clock = state.getTickCount();
     long persist = clock + state.getAttributeValue(ATTR_PERSIST);
 
-    final var data = getState(state);
+    final com.cburch.logisim.std.io.DotMatrixBase.State data = getState(state);
     if (getAttributeItemRow().equals(type)) {
       for (int i = 0; i < rows; i++) {
         data.setRow(i, state.getPortValue(i), persist);
@@ -455,9 +455,9 @@ public abstract class DotMatrixBase extends InstanceFactory {
 
   protected void updatePorts(Instance instance) {
     Object input = instance.getAttributeValue(getAttributeInputType());
-    final var rows = instance.getAttributeValue(getAttributeRows()).getWidth();
-    final var cols = instance.getAttributeValue(getAttributeColumns()).getWidth();
-    final var selectLoc = instance.getAttributeValue(StdAttr.SELECT_LOC);
+    final int rows = instance.getAttributeValue(getAttributeRows()).getWidth();
+    final int cols = instance.getAttributeValue(getAttributeColumns()).getWidth();
+    final com.cburch.logisim.data.AttributeOption selectLoc = instance.getAttributeValue(StdAttr.SELECT_LOC);
     Port[] ps;
     if (input == getAttributeItemColumn()) {
       ps = new Port[cols];
@@ -481,7 +481,7 @@ public abstract class DotMatrixBase extends InstanceFactory {
         ps =
             new Port[] {new Port(0, 0, Port.INPUT, cols), new Port(10 * cols, 0, Port.INPUT, rows)};
       } else {
-        final var dx = selectLoc == StdAttr.SELECT_BOTTOM_LEFT ? 0 : cols * 10;
+        final int dx = selectLoc == StdAttr.SELECT_BOTTOM_LEFT ? 0 : cols * 10;
         ps = new Port[] {new Port(dx, 0, Port.INPUT, cols), new Port(dx, 10, Port.INPUT, rows)};
       }
     }

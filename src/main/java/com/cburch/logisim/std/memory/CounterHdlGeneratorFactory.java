@@ -72,12 +72,12 @@ public class CounterHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public SortedMap<String, String> getPortMap(Netlist nets, Object mapInfo) {
-    final var result = new TreeMap<String, String>(super.getPortMap(nets, mapInfo));
+    final java.util.TreeMap<java.lang.String,java.lang.String> result = new TreeMap<String, String>(super.getPortMap(nets, mapInfo));
     if (mapInfo instanceof final netlistComponent compInfo && Hdl.isVhdl()) {
-      final var nrOfBits = compInfo.getComponent().getAttributeSet().getValue(StdAttr.WIDTH).getWidth();
+      final int nrOfBits = compInfo.getComponent().getAttributeSet().getValue(StdAttr.WIDTH).getWidth();
       if (nrOfBits == 1) {
-        final var mappedInputData = result.get(LOAD_DATA_INPUT);
-        final var mappedOutputData = result.get(COUNT_DATA_OUTPUT);
+        final java.lang.String mappedInputData = result.get(LOAD_DATA_INPUT);
+        final java.lang.String mappedOutputData = result.get(COUNT_DATA_OUTPUT);
         result.remove(LOAD_DATA_INPUT);
         result.remove(COUNT_DATA_OUTPUT);
         result.put(LineBuffer.formatHdl("{{1}}{{<}}0{{>}}", LOAD_DATA_INPUT), mappedInputData);
@@ -89,7 +89,7 @@ public class CounterHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist TheNetlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer()
         .pair("invertClock", INVERT_CLOCK_STRING)
         .pair("clock", HdlPorts.CLOCK)
         .pair("Tick", HdlPorts.TICK)

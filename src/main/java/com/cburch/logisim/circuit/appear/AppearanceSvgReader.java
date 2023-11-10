@@ -62,26 +62,26 @@ public class AppearanceSvgReader {
   }
 
   public static AbstractCanvasObject createShape(Element elt, List<PinInfo> pins, Circuit circuit) {
-    final var name = elt.getTagName();
+    final java.lang.String name = elt.getTagName();
     if (name.equals("circ-anchor") || name.equals("circ-origin")) {
-      final var loc = getLocation(elt, true);
-      final var ret = new AppearanceAnchor(loc);
+      final com.cburch.logisim.data.Location loc = getLocation(elt, true);
+      final com.cburch.logisim.circuit.appear.AppearanceAnchor ret = new AppearanceAnchor(loc);
       if (elt.hasAttribute("facing")) {
-        final var facing = Direction.parse(elt.getAttribute("facing"));
+        final com.cburch.logisim.data.Direction facing = Direction.parse(elt.getAttribute("facing"));
         ret.setValue(AppearanceAnchor.FACING, facing);
       }
       return ret;
     }
 
     if (name.equals("circ-port")) {
-      final var loc = getLocation(elt, true);
-      final var pinStr = elt.getAttribute("pin").split(",");
-      final var pinLoc = Location.create(Integer.parseInt(pinStr[0].trim()), Integer.parseInt(pinStr[1].trim()), true);
-      for (final var pin : pins) {
+      final com.cburch.logisim.data.Location loc = getLocation(elt, true);
+      final java.lang.String[] pinStr = elt.getAttribute("pin").split(",");
+      final com.cburch.logisim.data.Location pinLoc = Location.create(Integer.parseInt(pinStr[0].trim()), Integer.parseInt(pinStr[1].trim()), true);
+      for (final com.cburch.logisim.circuit.appear.AppearanceSvgReader.PinInfo pin : pins) {
         if (pin.pinIsAlreadyUsed()) continue;
         if (pin.getPinLocation().equals(pinLoc)) {
-          final var isInputPin = ((Pin) pin.getPinInstance().getFactory()).isInputPin(pin.getPinInstance());
-          final var isInputRef = isInputPinReference(elt);
+          final boolean isInputPin = ((Pin) pin.getPinInstance().getFactory()).isInputPin(pin.getPinInstance());
+          final java.lang.Boolean isInputRef = isInputPinReference(elt);
           if (isInputPin == isInputRef) {
             pin.setPinIsUsed();
             return new AppearancePort(loc, pin.getPinInstance());
@@ -92,13 +92,13 @@ public class AppearanceSvgReader {
     }
 
     if (name.startsWith("visible-")) {
-      final var pathStr = elt.getAttribute("path");
+      final java.lang.String pathStr = elt.getAttribute("path");
       if (pathStr == null || pathStr.length() == 0) return null;
       try {
-        final var path = DynamicElement.Path.fromSvgString(pathStr, circuit);
-        final var x = (int) Double.parseDouble(elt.getAttribute("x").trim());
-        final var y = (int) Double.parseDouble(elt.getAttribute("y").trim());
-        final var shape = getDynamicElement(name, path, x, y);
+        final com.cburch.logisim.circuit.appear.DynamicElement.Path path = DynamicElement.Path.fromSvgString(pathStr, circuit);
+        final int x = (int) Double.parseDouble(elt.getAttribute("x").trim());
+        final int y = (int) Double.parseDouble(elt.getAttribute("y").trim());
+        final com.cburch.logisim.circuit.appear.DynamicElement shape = getDynamicElement(name, path, x, y);
         if (shape == null) return null;
         try {
           shape.parseSvgElement(elt);
@@ -134,12 +134,12 @@ public class AppearanceSvgReader {
   private static Boolean isInputPinReference(Element elt) {
     
     if (elt.hasAttribute("dir")) {
-      final var direction = elt.getAttribute("dir");
+      final java.lang.String direction = elt.getAttribute("dir");
       return direction.equals("in");
     }
     // for backward compatability
-    final var width = Double.parseDouble(elt.getAttribute("width"));
-    final var radius = (int) Math.round(width / 2.0);
+    final double width = Double.parseDouble(elt.getAttribute("width"));
+    final int radius = (int) Math.round(width / 2.0);
     return AppearancePort.isInputAppearance(radius);
   }
 
@@ -148,10 +148,10 @@ public class AppearanceSvgReader {
     int px = 0;
     int py = 0;
     if (elt.hasAttribute("width") && elt.hasAttribute("height")) {
-      final var x = Double.parseDouble(elt.getAttribute("x"));
-      final var y = Double.parseDouble(elt.getAttribute("y"));
-      final var w = Double.parseDouble(elt.getAttribute("width"));
-      final var h = Double.parseDouble(elt.getAttribute("height"));
+      final double x = Double.parseDouble(elt.getAttribute("x"));
+      final double y = Double.parseDouble(elt.getAttribute("y"));
+      final double w = Double.parseDouble(elt.getAttribute("width"));
+      final double h = Double.parseDouble(elt.getAttribute("height"));
       px = (int) Math.round(x + w / 2);
       py = (int) Math.round(y + h / 2);
     } else {

@@ -53,7 +53,7 @@ class RecentProjects implements PreferenceChangeListener {
     recentTimes = new long[NUM_RECENT];
     Arrays.fill(recentTimes, System.currentTimeMillis());
 
-    final var prefs = AppPreferences.getPrefs();
+    final java.util.prefs.Preferences prefs = AppPreferences.getPrefs();
     prefs.addPreferenceChangeListener(this);
 
     for (int index = 0; index < NUM_RECENT; index++) {
@@ -62,22 +62,22 @@ class RecentProjects implements PreferenceChangeListener {
   }
 
   private void getAndDecode(Preferences prefs, int index) {
-    final var encoding = prefs.get(BASE_PROPERTY + index, null);
+    final java.lang.String encoding = prefs.get(BASE_PROPERTY + index, null);
     if (encoding == null) return;
     int semi = encoding.indexOf(';');
     if (semi < 0) return;
     try {
-      final var time = Long.parseLong(encoding.substring(0, semi));
-      final var file = new File(encoding.substring(semi + 1));
+      final long time = Long.parseLong(encoding.substring(0, semi));
+      final java.io.File file = new File(encoding.substring(semi + 1));
       updateInto(index, time, file);
     } catch (NumberFormatException ignored) {
     }
   }
 
   public List<File> getRecentFiles() {
-    final var now = System.currentTimeMillis();
-    final var ages = new long[NUM_RECENT];
-    final var toSort = new long[NUM_RECENT];
+    final long now = System.currentTimeMillis();
+    final long[] ages = new long[NUM_RECENT];
+    final long[] toSort = new long[NUM_RECENT];
     for (int i = 0; i < NUM_RECENT; i++) {
       if (recentFiles[i] == null) {
         ages[i] = -1;
@@ -88,8 +88,8 @@ class RecentProjects implements PreferenceChangeListener {
     }
     Arrays.sort(toSort);
 
-    final var ret = new ArrayList<File>();
-    for (final var age : toSort) {
+    final java.util.ArrayList<java.io.File> ret = new ArrayList<File>();
+    for (final long age : toSort) {
       if (age >= 0) {
         int index = -1;
         for (int i = 0; i < NUM_RECENT; i++) {
@@ -133,10 +133,10 @@ class RecentProjects implements PreferenceChangeListener {
 
   @Override
   public void preferenceChange(PreferenceChangeEvent event) {
-    final var prefs = event.getNode();
-    final var prop = event.getKey();
+    final java.util.prefs.Preferences prefs = event.getNode();
+    final java.lang.String prop = event.getKey();
     if (prop.startsWith(BASE_PROPERTY)) {
-      final var rest = prop.substring(BASE_PROPERTY.length());
+      final java.lang.String rest = prop.substring(BASE_PROPERTY.length());
       int index = -1;
       try {
         index = Integer.parseInt(rest);
@@ -144,11 +144,11 @@ class RecentProjects implements PreferenceChangeListener {
       } catch (NumberFormatException ignored) {
       }
       if (index >= 0) {
-        final var oldValue = recentFiles[index];
-        final var oldTime = recentTimes[index];
+        final java.io.File oldValue = recentFiles[index];
+        final long oldTime = recentTimes[index];
         getAndDecode(prefs, index);
-        final var newValue = recentFiles[index];
-        final var newTime = recentTimes[index];
+        final java.io.File newValue = recentFiles[index];
+        final long newTime = recentTimes[index];
         if (!isSame(oldValue, newValue) || oldTime != newTime) {
           AppPreferences.firePropertyChange(
               AppPreferences.RECENT_PROJECTS,
@@ -160,8 +160,8 @@ class RecentProjects implements PreferenceChangeListener {
   }
 
   private void updateInto(int index, long time, File file) {
-    final var oldFile = recentFiles[index];
-    final var oldTime = recentTimes[index];
+    final java.io.File oldFile = recentFiles[index];
+    final long oldTime = recentTimes[index];
     if (!isSame(oldFile, file) || oldTime != time) {
       recentFiles[index] = file;
       recentTimes[index] = time;
@@ -185,8 +185,8 @@ class RecentProjects implements PreferenceChangeListener {
       fileToSave = file.getCanonicalFile();
     } catch (IOException ignored) {
     }
-    final var now = System.currentTimeMillis();
-    final var index = getReplacementIndex(now, fileToSave);
+    final long now = System.currentTimeMillis();
+    final int index = getReplacementIndex(now, fileToSave);
     updateInto(index, now, fileToSave);
   }
 }

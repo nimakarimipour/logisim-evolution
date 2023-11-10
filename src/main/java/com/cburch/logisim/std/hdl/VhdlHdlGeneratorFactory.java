@@ -29,13 +29,13 @@ public class VhdlHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public void getGenerationTimeWiresPorts(Netlist theNetlist, AttributeSet attrs) {
-    final var contents = attrs.getValue(VhdlEntityComponent.CONTENT_ATTR);
-    final var inputs = contents.getInputs();
-    final var outputs = contents.getOutputs();
+    final com.cburch.logisim.std.hdl.VhdlContentComponent contents = attrs.getValue(VhdlEntityComponent.CONTENT_ATTR);
+    final com.cburch.logisim.instance.Port[] inputs = contents.getInputs();
+    final com.cburch.logisim.instance.Port[] outputs = contents.getOutputs();
     int portId = 0;
-    for (final var input : inputs)
+    for (final com.cburch.logisim.instance.Port input : inputs)
       myPorts.add(Port.INPUT, input.getToolTip(), input.getFixedBitWidth().getWidth(), portId++);
-    for (final var output : outputs)
+    for (final com.cburch.logisim.instance.Port output : outputs)
       myPorts.add(Port.OUTPUT, output.getToolTip(), output.getFixedBitWidth().getWidth(), portId++);
   }
 

@@ -70,7 +70,7 @@ public class HdlPorts {
       if (mySinglePinException) {
         if (!attrs.containsAttribute(myBitWidthAttribute))
           throw new IllegalArgumentException("Bitwidth attribute not found");
-        final var value = attrs.getValue(myBitWidthAttribute);
+        final java.lang.Object value = attrs.getValue(myBitWidthAttribute);
         int nrOfBits = 0;
         if (value instanceof BitWidth) {
           nrOfBits = ((BitWidth) value).getWidth();
@@ -86,24 +86,24 @@ public class HdlPorts {
   private final List<PortInfo> myPorts = new ArrayList<>();
 
   public HdlPorts add(String type, String name, int nrOfBits, String fixedMap) {
-    final var realType = Port.CLOCK.equals(type) ? Port.INPUT : type;
-    final var newPort = new PortInfo(realType, name, nrOfBits, fixedMap);
+    final java.lang.String realType = Port.CLOCK.equals(type) ? Port.INPUT : type;
+    final com.cburch.logisim.fpga.hdlgenerator.HdlPorts.PortInfo newPort = new PortInfo(realType, name, nrOfBits, fixedMap);
     newPort.isClock = Port.CLOCK.equals(type);
     myPorts.add(newPort);
     return this;
   }
 
   public HdlPorts add(String type, String name, int nrOfBits, int compPinId) {
-    final var realType = Port.CLOCK.equals(type) ? Port.INPUT : type;
-    final var newPort = new PortInfo(realType, name, nrOfBits, compPinId);
+    final java.lang.String realType = Port.CLOCK.equals(type) ? Port.INPUT : type;
+    final com.cburch.logisim.fpga.hdlgenerator.HdlPorts.PortInfo newPort = new PortInfo(realType, name, nrOfBits, compPinId);
     newPort.isClock = Port.CLOCK.equals(type);
     myPorts.add(newPort);
     return this;
   }
 
   public HdlPorts add(String type, String name, int nrOfBits, int compPinId, boolean pullToZero) {
-    final var realType = Port.CLOCK.equals(type) ? Port.INPUT : type;
-    final var newPort = new PortInfo(realType, name, nrOfBits, compPinId, pullToZero);
+    final java.lang.String realType = Port.CLOCK.equals(type) ? Port.INPUT : type;
+    final com.cburch.logisim.fpga.hdlgenerator.HdlPorts.PortInfo newPort = new PortInfo(realType, name, nrOfBits, compPinId, pullToZero);
     newPort.isClock = Port.CLOCK.equals(type);
     myPorts.add(newPort);
     return this;
@@ -111,8 +111,8 @@ public class HdlPorts {
 
   public HdlPorts add(
       String type, String name, int nrOfBits, int compPinId, Attribute<?> nrOfBitsAttr) {
-    final var realType = Port.CLOCK.equals(type) ? Port.INPUT : type;
-    final var newPort = new PortInfo(realType, name, nrOfBits, compPinId, nrOfBitsAttr);
+    final java.lang.String realType = Port.CLOCK.equals(type) ? Port.INPUT : type;
+    final com.cburch.logisim.fpga.hdlgenerator.HdlPorts.PortInfo newPort = new PortInfo(realType, name, nrOfBits, compPinId, nrOfBitsAttr);
     newPort.isClock = Port.CLOCK.equals(type);
     myPorts.add(newPort);
     return this;
@@ -127,19 +127,19 @@ public class HdlPorts {
   }
 
   public ArrayList<String> keySet(String type) {
-    final var keySet = new ArrayList<String>();
-    for (final var port : myPorts)
+    final java.util.ArrayList<java.lang.String> keySet = new ArrayList<String>();
+    for (final com.cburch.logisim.fpga.hdlgenerator.HdlPorts.PortInfo port : myPorts)
       if (type == null || port.myPortType.equals(type)) keySet.add(port.myName);
     return keySet;
   }
 
   public int get(String name, AttributeSet attrs) {
-    for (final var port : myPorts) if (port.myName.equals(name)) return port.getNrOfBits(attrs);
+    for (final com.cburch.logisim.fpga.hdlgenerator.HdlPorts.PortInfo port : myPorts) if (port.myName.equals(name)) return port.getNrOfBits(attrs);
     throw new ArrayStoreException("port not contained in structure");
   }
 
   public boolean isFixedMapped(String name) {
-    for (final var port : myPorts)
+    for (final com.cburch.logisim.fpga.hdlgenerator.HdlPorts.PortInfo port : myPorts)
       if (port.myName.equals(name)) {
         return port.myComponentPinId < 0;
       }
@@ -148,13 +148,13 @@ public class HdlPorts {
 
   public String getFixedMap(String name) {
     if (isFixedMapped(name)) {
-      for (final var port : myPorts) if (port.myName.equals(name)) return port.myFixedMap;
+      for (final com.cburch.logisim.fpga.hdlgenerator.HdlPorts.PortInfo port : myPorts) if (port.myName.equals(name)) return port.myFixedMap;
     }
     throw new ArrayStoreException("port not contained in structure or not fixed mapped");
   }
 
   public int getComponentPortId(String name) {
-    for (final var port : myPorts) if (port.myName.equals(name)) return port.myComponentPinId;
+    for (final com.cburch.logisim.fpga.hdlgenerator.HdlPorts.PortInfo port : myPorts) if (port.myName.equals(name)) return port.myComponentPinId;
     throw new ArrayStoreException("port not contained in structure");
   }
 
@@ -163,22 +163,22 @@ public class HdlPorts {
   }
 
   public boolean doPullDownOnFloat(String name) {
-    for (final var port : myPorts) if (port.myName.equals(name)) return port.myPullToZero;
+    for (final com.cburch.logisim.fpga.hdlgenerator.HdlPorts.PortInfo port : myPorts) if (port.myName.equals(name)) return port.myPullToZero;
     throw new ArrayStoreException("port not contained in structure");
   }
 
   public boolean contains(String name) {
-    for (final var port : myPorts) if (port.myName.equals(name)) return true;
+    for (final com.cburch.logisim.fpga.hdlgenerator.HdlPorts.PortInfo port : myPorts) if (port.myName.equals(name)) return true;
     return false;
   }
 
   public boolean isClock(String name) {
-    for (final var port : myPorts) if (port.myName.equals(name)) return port.isClock;
+    for (final com.cburch.logisim.fpga.hdlgenerator.HdlPorts.PortInfo port : myPorts) if (port.myName.equals(name)) return port.isClock;
     throw new ArrayStoreException("port not contained in structure");
   }
 
   public String getTickName(String name) {
-    for (final var port : myPorts)
+    for (final com.cburch.logisim.fpga.hdlgenerator.HdlPorts.PortInfo port : myPorts)
       if (port.myName.equals(name)) return getTickName(port.myNrOfBits);
     throw new ArrayStoreException("port not contained in structure");
   }

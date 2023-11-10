@@ -20,8 +20,8 @@ public class DipSwitchIcon extends BaseIcon {
   protected void paintIcon(Graphics2D g2) {
     g2.setColor(Color.BLUE);
     g2.fillRect(0, 0, getIconWidth(), getIconHeight());
-    final var w = scale(8);
-    final var h = scale(5);
+    final int w = scale(8);
+    final int h = scale(5);
     g2.setColor(Color.WHITE);
     Font f = g2.getFont().deriveFont((float) (getIconWidth() / 2.5));
     TextLayout t = new TextLayout("1", f, g2.getFontRenderContext());
@@ -37,8 +37,8 @@ public class DipSwitchIcon extends BaseIcon {
     g2.fillRect(scale(2), scale(2), w, h);
     g2.fillRect(scale(2), scale(9), w, h);
     g2.setColor(Color.gray);
-    final var x1 = scale(2) + w >> 1;
-    final var x2 = scale(2);
+    final int x1 = scale(2) + w >> 1;
+    final int x2 = scale(2);
     g2.fillRect(x1, scale(2), w >> 1, h);
     g2.fillRect(x2, scale(9), w >> 1, h);
   }

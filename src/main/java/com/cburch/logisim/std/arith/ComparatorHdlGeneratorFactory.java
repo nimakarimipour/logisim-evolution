@@ -62,8 +62,8 @@ public class ComparatorHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist theNetlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getBuffer().pair("twosComplement", TWOS_COMPLEMENT_STRING);
-    final var nrOfBits = attrs.getValue(StdAttr.WIDTH).getWidth();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getBuffer().pair("twosComplement", TWOS_COMPLEMENT_STRING);
+    final int nrOfBits = attrs.getValue(StdAttr.WIDTH).getWidth();
     if (Hdl.isVhdl()) {
       if (nrOfBits == 1) {
         contents.empty().addVhdlKeywords().add("""

@@ -44,7 +44,7 @@ public class ConstantButton extends FpgaIoInformationContainer {
   @Override
   public boolean tryMap(JPanel parent) {
     if (selComp == null) return false;
-    final var map = selComp.getMap();
+    final com.cburch.logisim.fpga.data.MapComponent map = selComp.getMap();
     return switch (myType) {
       case CONSTANT_ZERO -> map.tryConstantMap(selComp.getPin(), 0L);
       case CONSTANT_ONE  -> map.tryConstantMap(selComp.getPin(), -1L);
@@ -59,7 +59,7 @@ public class ConstantButton extends FpgaIoInformationContainer {
     boolean correct;
     do {
       correct = true;
-      final var value = OptionPane.showInputDialog(S.get("FpgaMapSpecConst"));
+      final java.lang.String value = OptionPane.showInputDialog(S.get("FpgaMapSpecConst"));
       if (value == null) return false;
       if (value.startsWith("0x")) {
         try {
@@ -87,7 +87,7 @@ public class ConstantButton extends FpgaIoInformationContainer {
   @Override
   public boolean setSelectable(MapListModel.MapInfo comp) {
     selComp = comp;
-    final var map = comp.getMap();
+    final com.cburch.logisim.fpga.data.MapComponent map = comp.getMap();
     int connect = comp.getPin();
     if (connect < 0) {
       if (map.hasInputs()) {

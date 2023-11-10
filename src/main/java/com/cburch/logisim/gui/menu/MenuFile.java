@@ -43,7 +43,7 @@ class MenuFile extends Menu implements ActionListener {
     this.menubar = menubar;
     openRecent = new OpenRecent(menubar);
 
-    final var menuMask = getToolkit().getMenuShortcutKeyMaskEx();
+    final int menuMask = getToolkit().getMenuShortcutKeyMaskEx();
 
     newi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, menuMask));
     merge.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, menuMask));
@@ -79,7 +79,7 @@ class MenuFile extends Menu implements ActionListener {
       add(quit);
     }
 
-    final var proj = menubar.getSaveProject();
+    final com.cburch.logisim.proj.Project proj = menubar.getSaveProject();
     newi.addActionListener(this);
     open.addActionListener(this);
     if (proj == null) {
@@ -103,15 +103,15 @@ class MenuFile extends Menu implements ActionListener {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    final var src = e.getSource();
-    final var proj = menubar.getSaveProject();
-    final var baseProj = menubar.getBaseProject();
+    final java.lang.Object src = e.getSource();
+    final com.cburch.logisim.proj.Project proj = menubar.getSaveProject();
+    final com.cburch.logisim.proj.Project baseProj = menubar.getBaseProject();
     if (src == newi) {
       ProjectActions.doNew(baseProj);
     } else if (src == merge) {
       ProjectActions.doMerge(baseProj == null ? null : baseProj.getFrame().getCanvas(), baseProj);
     } else if (src == open) {
-      final var newProj =
+      final com.cburch.logisim.proj.Project newProj =
           ProjectActions.doOpen(
               baseProj == null ? null : baseProj.getFrame().getCanvas(), baseProj);
       if (newProj != null
@@ -122,10 +122,10 @@ class MenuFile extends Menu implements ActionListener {
       }
     } else if (src == close && proj != null) {
       int result = 0;
-      final var frame = proj.getFrame();
+      final com.cburch.logisim.gui.main.Frame frame = proj.getFrame();
       if (proj.isFileDirty()) {
         /* Must use hardcoded strings here, because the string management is rotten */
-        final var message =
+        final java.lang.String message =
             "What should happen to your unsaved changes to " + proj.getLogisimFile().getName();
         String[] options = {"Save", "Discard", "Cancel"};
         result =
@@ -148,7 +148,7 @@ class MenuFile extends Menu implements ActionListener {
       // opening one if this was the last opened window.
       if (result != 2) {
         // Get the list of open projects
-        final var projectList = Projects.getOpenProjects();
+        final java.util.List<com.cburch.logisim.proj.Project> projectList = Projects.getOpenProjects();
         if (projectList.size() == 1) {
           // Since we have a single window open, before closing the
           // current project open a new empty one

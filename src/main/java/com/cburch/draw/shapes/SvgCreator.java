@@ -25,10 +25,10 @@ public final class SvgCreator {
   }
 
   public static Element createCurve(Document doc, Curve curve) {
-    final var elt = doc.createElement("path");
-    final var e0 = curve.getEnd0();
-    final var e1 = curve.getEnd1();
-    final var ct = curve.getControl();
+    final org.w3c.dom.Element elt = doc.createElement("path");
+    final com.cburch.logisim.data.Location e0 = curve.getEnd0();
+    final com.cburch.logisim.data.Location e1 = curve.getEnd1();
+    final com.cburch.logisim.data.Location ct = curve.getControl();
     elt.setAttribute(
         "d",
         "M" + e0.getX() + "," + e0.getY() + " Q" + ct.getX() + "," + ct.getY() + " " + e1.getX()
@@ -38,9 +38,9 @@ public final class SvgCreator {
   }
 
   public static Element createLine(Document doc, Line line) {
-    final var elt = doc.createElement("line");
-    final var v1 = line.getEnd0();
-    final var v2 = line.getEnd1();
+    final org.w3c.dom.Element elt = doc.createElement("line");
+    final com.cburch.logisim.data.Location v1 = line.getEnd0();
+    final com.cburch.logisim.data.Location v2 = line.getEnd1();
     elt.setAttribute("x1", "" + v1.getX());
     elt.setAttribute("y1", "" + v1.getY());
     elt.setAttribute("x2", "" + v2.getX());
@@ -50,11 +50,11 @@ public final class SvgCreator {
   }
 
   public static Element createOval(Document doc, Oval oval) {
-    final var x = oval.getX();
-    final var y = oval.getY();
-    final var width = oval.getWidth();
-    final var height = oval.getHeight();
-    final var elt = doc.createElement("ellipse");
+    final int x = oval.getX();
+    final int y = oval.getY();
+    final int width = oval.getWidth();
+    final int height = oval.getHeight();
+    final org.w3c.dom.Element elt = doc.createElement("ellipse");
     elt.setAttribute("cx", "" + (x + width / 2));
     elt.setAttribute("cy", "" + (y + height / 2));
     elt.setAttribute("rx", "" + (width / 2));
@@ -67,9 +67,9 @@ public final class SvgCreator {
     Element elt;
     elt = (poly.isClosed()) ? doc.createElement("polygon") : doc.createElement("polyline");
 
-    final var points = new StringBuilder();
+    final java.lang.StringBuilder points = new StringBuilder();
     boolean first = true;
-    for (final var h : poly.getHandles(null)) {
+    for (final com.cburch.draw.model.Handle h : poly.getHandles(null)) {
       if (!first) points.append(" ");
       points.append(h.getX()).append(",").append(h.getY());
       first = false;
@@ -85,7 +85,7 @@ public final class SvgCreator {
   }
 
   private static Element createRectangular(Document doc, Rectangular rect) {
-    final var elt = doc.createElement("rect");
+    final org.w3c.dom.Element elt = doc.createElement("rect");
     elt.setAttribute("x", "" + rect.getX());
     elt.setAttribute("y", "" + rect.getY());
     elt.setAttribute("width", "" + rect.getWidth());
@@ -95,18 +95,18 @@ public final class SvgCreator {
   }
 
   public static Element createRoundRectangle(Document doc, RoundRectangle rrect) {
-    final var elt = createRectangular(doc, rrect);
-    final var r = rrect.getValue(DrawAttr.CORNER_RADIUS);
+    final org.w3c.dom.Element elt = createRectangular(doc, rrect);
+    final java.lang.Integer r = rrect.getValue(DrawAttr.CORNER_RADIUS);
     elt.setAttribute("rx", "" + r);
     elt.setAttribute("ry", "" + r);
     return elt;
   }
 
   public static Element createText(Document doc, Text text) {
-    final var elt = doc.createElement("text");
-    final var loc = text.getLocation();
-    final var font = text.getValue(DrawAttr.FONT);
-    final var fill = text.getValue(DrawAttr.FILL_COLOR);
+    final org.w3c.dom.Element elt = doc.createElement("text");
+    final com.cburch.logisim.data.Location loc = text.getLocation();
+    final java.awt.Font font = text.getValue(DrawAttr.FONT);
+    final java.awt.Color fill = text.getValue(DrawAttr.FILL_COLOR);
     final Object halign = text.getValue(DrawAttr.HALIGNMENT);
     final Object valign = text.getValue(DrawAttr.VALIGNMENT);
     elt.setAttribute("x", "" + loc.getX());
@@ -141,7 +141,7 @@ public final class SvgCreator {
   public static void setFontAttribute(Element elt, Font font, String prefix) {
     elt.setAttribute(prefix + "font-family", font.getFamily());
     elt.setAttribute(prefix + "font-size", "" + font.getSize());
-    final var style = font.getStyle();
+    final int style = font.getStyle();
     if ((style & Font.ITALIC) != 0) {
       elt.setAttribute(prefix + "font-style", "italic");
     }
@@ -159,7 +159,7 @@ public final class SvgCreator {
   }
 
   private static void populateFill(Element elt, AbstractCanvasObject shape) {
-    final var type = shape.getValue(DrawAttr.PAINT_TYPE);
+    final com.cburch.logisim.data.AttributeOption type = shape.getValue(DrawAttr.PAINT_TYPE);
     if (type == DrawAttr.PAINT_FILL) {
       elt.setAttribute("stroke", "none");
     } else {
@@ -168,7 +168,7 @@ public final class SvgCreator {
     if (type == DrawAttr.PAINT_STROKE) {
       elt.setAttribute("fill", "none");
     } else {
-      final var fill = shape.getValue(DrawAttr.FILL_COLOR);
+      final java.awt.Color fill = shape.getValue(DrawAttr.FILL_COLOR);
       if (colorMatches(fill, Color.BLACK)) {
         elt.removeAttribute("fill");
       } else {
@@ -181,11 +181,11 @@ public final class SvgCreator {
   }
 
   private static void populateStroke(Element elt, AbstractCanvasObject shape) {
-    final var width = shape.getValue(DrawAttr.STROKE_WIDTH);
+    final java.lang.Integer width = shape.getValue(DrawAttr.STROKE_WIDTH);
     if (width != null && width != 1) {
       elt.setAttribute("stroke-width", width.toString());
     }
-    final var stroke = shape.getValue(DrawAttr.STROKE_COLOR);
+    final java.awt.Color stroke = shape.getValue(DrawAttr.STROKE_COLOR);
     elt.setAttribute("stroke", getColorString(stroke));
     if (showOpacity(stroke)) {
       elt.setAttribute("stroke-opacity", getOpacityString(stroke));

@@ -284,16 +284,16 @@ public abstract class Expression {
   }
 
   public boolean isCnf() {
-    final var cnf = new Object();
+    final java.lang.Object cnf = new Object();
     return cnf == visit(new Visitor<>() {
       int level = 0;
 
       @Override
       public Object visitAnd(Expression a, Expression b) {
         if (level > 1) return null;
-        final var oldLevel = level;
+        final int oldLevel = level;
         level = 1;
-        final var ret = a.visit(this) == cnf && b.visit(this) == cnf ? cnf : null;
+        final java.lang.Object ret = a.visit(this) == cnf && b.visit(this) == cnf ? cnf : null;
         level = oldLevel;
         return ret;
       }
@@ -306,9 +306,9 @@ public abstract class Expression {
       @Override
       public Object visitNot(Expression a) {
         if (level == 2) return null;
-        final var oldLevel = level;
+        final int oldLevel = level;
         level = 2;
-        final var ret = a.visit(this);
+        final java.lang.Object ret = a.visit(this);
         level = oldLevel;
         return ret;
       }
@@ -345,8 +345,8 @@ public abstract class Expression {
     return visit(new Visitor<>() {
       @Override
       public Expression visitAnd(Expression a, Expression b) {
-        final var l = a.visit(this);
-        final var r = b.visit(this);
+        final com.cburch.logisim.analyze.model.Expression l = a.visit(this);
+        final com.cburch.logisim.analyze.model.Expression r = b.visit(this);
         if (l == null) return r;
         if (r == null) return l;
         return Expressions.and(l, r);
@@ -359,15 +359,15 @@ public abstract class Expression {
 
       @Override
       public Expression visitNot(Expression a) {
-        final var l = a.visit(this);
+        final com.cburch.logisim.analyze.model.Expression l = a.visit(this);
         if (l == null) return null;
         return Expressions.not(l);
       }
 
       @Override
       public Expression visitOr(Expression a, Expression b) {
-        final var l = a.visit(this);
-        final var r = b.visit(this);
+        final com.cburch.logisim.analyze.model.Expression l = a.visit(this);
+        final com.cburch.logisim.analyze.model.Expression r = b.visit(this);
         if (l == null) return r;
         if (r == null) return l;
         return Expressions.or(l, r);
@@ -380,8 +380,8 @@ public abstract class Expression {
 
       @Override
       public Expression visitXor(Expression a, Expression b) {
-        final var l = a.visit(this);
-        final var r = b.visit(this);
+        final com.cburch.logisim.analyze.model.Expression l = a.visit(this);
+        final com.cburch.logisim.analyze.model.Expression r = b.visit(this);
         if (l == null) return r;
         if (r == null) return l;
         return Expressions.xor(l, r);
@@ -389,8 +389,8 @@ public abstract class Expression {
 
       @Override
       public Expression visitXnor(Expression a, Expression b) {
-        final var l = a.visit(this);
-        final var r = b.visit(this);
+        final com.cburch.logisim.analyze.model.Expression l = a.visit(this);
+        final com.cburch.logisim.analyze.model.Expression r = b.visit(this);
         if (l == null) return r;
         if (r == null) return l;
         return Expressions.xnor(l, r);
@@ -398,8 +398,8 @@ public abstract class Expression {
 
       @Override
       public Expression visitEq(Expression a, Expression b) {
-        final var l = a.visit(this);
-        final var r = b.visit(this);
+        final com.cburch.logisim.analyze.model.Expression l = a.visit(this);
+        final com.cburch.logisim.analyze.model.Expression r = b.visit(this);
         if (l == null) return r;
         if (r == null) return l;
         return Expressions.eq(l, r);
@@ -411,8 +411,8 @@ public abstract class Expression {
     return visit(new Visitor<>() {
       @Override
       public Expression visitAnd(Expression a, Expression b) {
-        final var l = a.visit(this);
-        final var r = b.visit(this);
+        final com.cburch.logisim.analyze.model.Expression l = a.visit(this);
+        final com.cburch.logisim.analyze.model.Expression r = b.visit(this);
         return Expressions.and(l, r);
       }
 
@@ -423,14 +423,14 @@ public abstract class Expression {
 
       @Override
       public Expression visitNot(Expression a) {
-        final var l = a.visit(this);
+        final com.cburch.logisim.analyze.model.Expression l = a.visit(this);
         return Expressions.not(l);
       }
 
       @Override
       public Expression visitOr(Expression a, Expression b) {
-        final var l = a.visit(this);
-        final var r = b.visit(this);
+        final com.cburch.logisim.analyze.model.Expression l = a.visit(this);
+        final com.cburch.logisim.analyze.model.Expression r = b.visit(this);
         return Expressions.or(l, r);
       }
 
@@ -441,22 +441,22 @@ public abstract class Expression {
 
       @Override
       public Expression visitXor(Expression a, Expression b) {
-        final var l = a.visit(this);
-        final var r = b.visit(this);
+        final com.cburch.logisim.analyze.model.Expression l = a.visit(this);
+        final com.cburch.logisim.analyze.model.Expression r = b.visit(this);
         return Expressions.xor(l, r);
       }
 
       @Override
       public Expression visitXnor(Expression a, Expression b) {
-        final var l = a.visit(this);
-        final var r = b.visit(this);
+        final com.cburch.logisim.analyze.model.Expression l = a.visit(this);
+        final com.cburch.logisim.analyze.model.Expression r = b.visit(this);
         return Expressions.xnor(l, r);
       }
 
       @Override
       public Expression visitEq(Expression a, Expression b) {
-        final var l = a.visit(this);
-        final var r = b.visit(this);
+        final com.cburch.logisim.analyze.model.Expression l = a.visit(this);
+        final com.cburch.logisim.analyze.model.Expression r = b.visit(this);
         return Expressions.eq(l, r);
       }
     });
@@ -482,8 +482,8 @@ public abstract class Expression {
   private static final int BADNESS_AND_BREAK = 5;
 
   public String toString(Notation notation, boolean reduce, Expression other) {
-    final var text = new StringBuilder();
-    final var badnessList = new ArrayList<Integer>();
+    final java.lang.StringBuilder text = new StringBuilder();
+    final java.util.ArrayList<java.lang.Integer> badnessList = new ArrayList<Integer>();
     if (reduce) {
       nots.clear();
       subscripts.clear();
@@ -508,9 +508,9 @@ public abstract class Expression {
               mark.startIndex = text.length();
               marks.add(mark);
             }
-            final var opLvl = notation.opLvl[op.id];
-            final var aLvl = a.getPrecedence(notation);
-            final var bLvl = b.getPrecedence(notation);
+            final int opLvl = notation.opLvl[op.id];
+            final int aLvl = a.getPrecedence(notation);
+            final int bLvl = b.getPrecedence(notation);
             if (aLvl < opLvl || (aLvl == opLvl && a.getOp() != op)) {
               curBadness += BADNESS_PARENTESIS_BREAK;
               add("(");
@@ -556,10 +556,10 @@ public abstract class Expression {
           @Override
           public Void visitNot(Expression a) {
             curBadness += BADNESS_NOT_BREAK;
-            final var opLvl = notation.opLvl[Op.NOT.id];
-            final var levelOfA = a.getPrecedence(notation);
+            final int opLvl = notation.opLvl[Op.NOT.id];
+            final int levelOfA = a.getPrecedence(notation);
             if (reduce && notation.equals(Notation.MATHEMATICAL)) {
-              final var notData = new Range();
+              final com.cburch.logisim.analyze.data.Range notData = new Range();
               notData.startIndex = text.length();
               nots.add(notData);
               a.visit(this);
@@ -602,7 +602,7 @@ public abstract class Expression {
             java.lang.String baseName = name;
             String index = null;
             try {
-              final var b = Bit.parse(name);
+              final com.cburch.logisim.analyze.model.Var.Bit b = Bit.parse(name);
               baseName = b.name;
               if (b.bitIndex >= 0) index = Integer.toString(b.bitIndex);
             } catch (ParserException except) {
@@ -611,7 +611,7 @@ public abstract class Expression {
             curBadness += BADNESS_VAR_BREAK;
             if (reduce && index != null) {
               add(baseName);
-              final var subscript = new Range();
+              final com.cburch.logisim.analyze.data.Range subscript = new Range();
               subscript.startIndex = text.length();
               add(index);
               subscript.stopIndex = text.length();

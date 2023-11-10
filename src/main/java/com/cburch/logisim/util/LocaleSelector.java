@@ -57,7 +57,7 @@ class LocaleSelector extends JList implements LocaleListener, ListSelectionListe
   @SuppressWarnings("unchecked")
   LocaleSelector(Locale[] locales) {
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    final var model = new DefaultListModel<LocaleOption>();
+    final javax.swing.DefaultListModel<com.cburch.logisim.util.LocaleSelector.LocaleOption> model = new DefaultListModel<LocaleOption>();
     items = new LocaleOption[locales.length];
     for (int i = 0; i < locales.length; i++) {
       items[i] = new LocaleOption(locales[i]);
@@ -72,9 +72,9 @@ class LocaleSelector extends JList implements LocaleListener, ListSelectionListe
 
   @Override
   public void localeChanged() {
-    final var current = LocaleManager.getLocale();
+    final java.util.Locale current = LocaleManager.getLocale();
     LocaleOption sel = null;
-    for (final var item : items) {
+    for (final com.cburch.logisim.util.LocaleSelector.LocaleOption item : items) {
       item.update(current);
       if (current.equals(item.locale)) sel = item;
     }
@@ -85,7 +85,7 @@ class LocaleSelector extends JList implements LocaleListener, ListSelectionListe
 
   @Override
   public void valueChanged(ListSelectionEvent e) {
-    final var opt = (LocaleOption) getSelectedValue();
+    final com.cburch.logisim.util.LocaleSelector.LocaleOption opt = (LocaleOption) getSelectedValue();
     if (opt != null) {
       SwingUtilities.invokeLater(opt);
     }

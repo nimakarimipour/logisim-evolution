@@ -61,7 +61,7 @@ public final class ProjectActions {
     @Override
     public void run() {
       try {
-        final var frame = createFrame(null, proj);
+        final com.cburch.logisim.gui.main.Frame frame = createFrame(null, proj);
         frame.setVisible(true);
         frame.toFront();
         frame.getCanvas().requestFocus();
@@ -70,8 +70,8 @@ public final class ProjectActions {
           proj.setStartupScreen(true);
         }
       } catch (Exception e) {
-        final var result = new StringWriter();
-        final var printWriter = new PrintWriter(result);
+        final java.io.StringWriter result = new StringWriter();
+        final java.io.PrintWriter printWriter = new PrintWriter(result);
         e.printStackTrace(printWriter);
         OptionPane.showMessageDialog(null, result.toString());
         System.exit(-1);
@@ -107,7 +107,7 @@ public final class ProjectActions {
   private static Project completeProject(
       SplashScreen monitor, Loader loader, LogisimFile file, boolean isStartup) {
     if (monitor != null) monitor.setProgress(SplashScreen.PROJECT_CREATE);
-    final var ret = new Project(file);
+    final com.cburch.logisim.proj.Project ret = new Project(file);
     if (monitor != null) monitor.setProgress(SplashScreen.FRAME_CREATE);
     SwingUtilities.invokeLater(new CreateFrame(loader, ret, isStartup));
     updatecircs(file, ret);
@@ -133,20 +133,20 @@ public final class ProjectActions {
 
   private static Frame createFrame(Project sourceProject, Project newProject) {
     if (sourceProject != null) {
-      final var frame = sourceProject.getFrame();
+      final com.cburch.logisim.gui.main.Frame frame = sourceProject.getFrame();
       if (frame != null) {
         frame.savePreferences();
       }
     }
-    final var newFrame = new Frame(newProject);
+    final com.cburch.logisim.gui.main.Frame newFrame = new Frame(newProject);
     newProject.setFrame(newFrame);
     return newFrame;
   }
 
   public static LogisimFile createNewFile(Project baseProject) {
-    final var parent = (baseProject == null) ? null : baseProject.getFrame();
-    final var loader = new Loader(parent);
-    final var templReader = AppPreferences.getTemplate().createStream();
+    final com.cburch.logisim.gui.main.Frame parent = (baseProject == null) ? null : baseProject.getFrame();
+    final com.cburch.logisim.file.Loader loader = new Loader(parent);
+    final java.io.InputStream templReader = AppPreferences.getTemplate().createStream();
     LogisimFile file;
     try {
       file = loader.openLogisimFile(templReader);
@@ -170,9 +170,9 @@ public final class ProjectActions {
   }
 
   public static Project doNew(Project baseProject) {
-    final var file = createNewFile(baseProject);
-    final var newProj = new Project(file);
-    final var frame = createFrame(baseProject, newProj);
+    final com.cburch.logisim.file.LogisimFile file = createNewFile(baseProject);
+    final com.cburch.logisim.proj.Project newProj = new Project(file);
+    final com.cburch.logisim.gui.main.Frame frame = createFrame(baseProject, newProj);
     frame.setVisible(true);
     frame.getCanvas().requestFocus();
     newProj.getLogisimFile().getLoader().setParent(frame);
@@ -186,8 +186,8 @@ public final class ProjectActions {
 
   public static Project doNew(SplashScreen monitor, boolean isStartupScreen) {
     if (monitor != null) monitor.setProgress(SplashScreen.FILE_CREATE);
-    final var loader = new Loader(monitor);
-    final var templReader = AppPreferences.getTemplate().createStream();
+    final com.cburch.logisim.file.Loader loader = new Loader(monitor);
+    final java.io.InputStream templReader = AppPreferences.getTemplate().createStream();
     LogisimFile file = null;
     try {
       file = loader.openLogisimFile(templReader);
@@ -206,7 +206,7 @@ public final class ProjectActions {
   public static void doMerge(Component parent, Project baseProject) {
     JFileChooser chooser;
     if (baseProject != null) {
-      final var oldLoader = baseProject.getLogisimFile().getLoader();
+      final com.cburch.logisim.file.Loader oldLoader = baseProject.getLogisimFile().getLoader();
       chooser = oldLoader.createChooser();
       if (oldLoader.getMainFile() != null) {
         chooser.setSelectedFile(oldLoader.getMainFile());
@@ -220,8 +220,8 @@ public final class ProjectActions {
     LogisimFile mergelib;
     int returnVal = chooser.showOpenDialog(parent);
     if (returnVal != JFileChooser.APPROVE_OPTION) return;
-    final var selected = chooser.getSelectedFile();
-    final var loader = new Loader(baseProject == null ? parent : baseProject.getFrame());
+    final java.io.File selected = chooser.getSelectedFile();
+    final com.cburch.logisim.file.Loader loader = new Loader(baseProject == null ? parent : baseProject.getFrame());
     try {
       mergelib = loader.openLogisimFile(selected);
       if (mergelib == null) return;
@@ -239,10 +239,10 @@ public final class ProjectActions {
   }
 
   private static void updatecircs(LogisimFile lib, Project proj) {
-    for (final var circ : lib.getCircuits()) {
+    for (final com.cburch.logisim.circuit.Circuit circ : lib.getCircuits()) {
       circ.setProject(proj);
     }
-    for (final var libs : lib.getLibraries()) {
+    for (final com.cburch.logisim.tools.Library libs : lib.getLibraries()) {
       if (libs instanceof LoadedLibrary test) {
         if (test.getBase() instanceof LogisimFile lsFile) {
           updatecircs(lsFile, proj);
@@ -254,7 +254,7 @@ public final class ProjectActions {
   public static Project doOpen(Component parent, Project baseProject) {
     JFileChooser chooser;
     if (baseProject != null) {
-      final var oldLoader = baseProject.getLogisimFile().getLoader();
+      final com.cburch.logisim.file.Loader oldLoader = baseProject.getLogisimFile().getLoader();
       chooser = oldLoader.createChooser();
       if (oldLoader.getMainFile() != null) {
         chooser.setSelectedFile(oldLoader.getMainFile());
@@ -265,9 +265,9 @@ public final class ProjectActions {
     chooser.setFileFilter(Loader.LOGISIM_FILTER);
     chooser.setDialogTitle(S.get("FileOpenItem"));
 
-    final var returnVal = chooser.showOpenDialog(parent);
+    final int returnVal = chooser.showOpenDialog(parent);
     if (returnVal != JFileChooser.APPROVE_OPTION) return null;
-    final var selected = chooser.getSelectedFile();
+    final java.io.File selected = chooser.getSelectedFile();
     if (selected == null) return null;
     return doOpen(parent, baseProject, selected);
   }
@@ -313,7 +313,7 @@ public final class ProjectActions {
     }
 
     try {
-      final var lib = loader.openLogisimFile(f);
+      final com.cburch.logisim.file.LogisimFile lib = loader.openLogisimFile(f);
       AppPreferences.updateRecentFile(f);
       if (lib == null) return null;
       LibraryTools.removePresentLibraries(lib, new HashMap<>(), true);
@@ -349,8 +349,8 @@ public final class ProjectActions {
   public static Project doOpen(SplashScreen monitor, File source, Map<File, File> substitutions)
       throws LoadFailedException {
     if (monitor != null) monitor.setProgress(SplashScreen.FILE_LOAD);
-    final var loader = new Loader(monitor);
-    final var file = loader.openLogisimFile(source, substitutions);
+    final com.cburch.logisim.file.Loader loader = new Loader(monitor);
+    final com.cburch.logisim.file.LogisimFile file = loader.openLogisimFile(source, substitutions);
     AppPreferences.updateRecentFile(source);
 
     return completeProject(monitor, loader, file, false);
@@ -358,15 +358,15 @@ public final class ProjectActions {
 
   public static Project doOpenNoWindow(SplashScreen monitor, File source)
       throws LoadFailedException {
-    final var loader = new Loader(monitor);
-    final var file = loader.openLogisimFile(source);
-    final var ret = new Project(file);
+    final com.cburch.logisim.file.Loader loader = new Loader(monitor);
+    final com.cburch.logisim.file.LogisimFile file = loader.openLogisimFile(source);
+    final com.cburch.logisim.proj.Project ret = new Project(file);
     updatecircs(file, ret);
     return ret;
   }
 
   public static void doQuit() {
-    final var top = Projects.getTopFrame();
+    final com.cburch.logisim.gui.main.Frame top = Projects.getTopFrame();
     top.savePreferences();
 
     for (Project proj : new ArrayList<>(Projects.getOpenProjects())) {
@@ -376,17 +376,17 @@ public final class ProjectActions {
   }
 
   public static boolean doSave(Project proj) {
-    final var loader = proj.getLogisimFile().getLoader();
-    final var f = loader.getMainFile();
+    final com.cburch.logisim.file.Loader loader = proj.getLogisimFile().getLoader();
+    final java.io.File f = loader.getMainFile();
     if (f == null) return doSaveAs(proj);
     else return doSave(proj, f);
   }
 
   public static boolean doSave(Project proj, File f) {
-    final var loader = proj.getLogisimFile().getLoader();
-    final var oldTool = proj.getTool();
+    final com.cburch.logisim.file.Loader loader = proj.getLogisimFile().getLoader();
+    final com.cburch.logisim.tools.Tool oldTool = proj.getTool();
     proj.setTool(null);
-    final var ret = loader.save(proj.getLogisimFile(), f);
+    final boolean ret = loader.save(proj.getLogisimFile(), f);
     if (ret) {
       AppPreferences.updateRecentFile(f);
       proj.setFileAsClean();
@@ -406,10 +406,10 @@ public final class ProjectActions {
   public static boolean doExportProject(Project proj) {
     boolean ret = proj.isFileDirty() ? doSave(proj) : true;
     if (ret) {
-      final var loader = proj.getLogisimFile().getLoader();
-      final var oldTool = proj.getTool();
+      final com.cburch.logisim.file.Loader loader = proj.getLogisimFile().getLoader();
+      final com.cburch.logisim.tools.Tool oldTool = proj.getTool();
       proj.setTool(null);
-      final var chooser = loader.createChooser();
+      final javax.swing.JFileChooser chooser = loader.createChooser();
       chooser.setFileFilter(Loader.LOGISIM_DIRECTORY);
       chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
       chooser.setAcceptAllFileFilterUsed(false);
@@ -421,13 +421,13 @@ public final class ProjectActions {
           proj.setTool(oldTool);
           return false;
         }
-        final var exportHome = chooser.getSelectedFile();
-        final var exportRoot = loader.getMainFile().getName().replace(".circ", "");
+        final java.io.File exportHome = chooser.getSelectedFile();
+        final java.lang.String exportRoot = loader.getMainFile().getName().replace(".circ", "");
         exportRootDir = String.format("%s%s%s", exportHome, File.separator, exportRoot);
-        final var exportLibDir = String.format("%s%s%s", exportRootDir, File.separator, Loader.LOGISIM_LIBRARY_DIR);
-        final var exportCircDir = String.format("%s%s%s", exportRootDir, File.separator, Loader.LOGISIM_CIRCUIT_DIR);
+        final java.lang.String exportLibDir = String.format("%s%s%s", exportRootDir, File.separator, Loader.LOGISIM_LIBRARY_DIR);
+        final java.lang.String exportCircDir = String.format("%s%s%s", exportRootDir, File.separator, Loader.LOGISIM_CIRCUIT_DIR);
         try {
-          final var path = Paths.get(exportRootDir);
+          final java.nio.file.Path path = Paths.get(exportRootDir);
           if (Files.exists(path)) {
             OptionPane.showMessageDialog(proj.getFrame(), S.get("ProjExistsUnableToCreate", exportRoot));
           } else {

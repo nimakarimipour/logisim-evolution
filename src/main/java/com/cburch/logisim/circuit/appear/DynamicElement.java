@@ -69,7 +69,7 @@ public abstract class DynamicElement extends AbstractCanvasObject {
     }
 
     public boolean contains(Component c) {
-      for (final var ic : elt) {
+      for (final com.cburch.logisim.instance.InstanceComponent ic : elt) {
         if (ic == c) return true;
       }
       return false;
@@ -85,9 +85,9 @@ public abstract class DynamicElement extends AbstractCanvasObject {
     }
 
     public String toSvgString() {
-      final var s = new StringBuilder();
-      for (final var instanceComponent : elt) {
-        final var loc = instanceComponent.getLocation();
+      final java.lang.StringBuilder s = new StringBuilder();
+      for (final com.cburch.logisim.instance.InstanceComponent instanceComponent : elt) {
+        final com.cburch.logisim.data.Location loc = instanceComponent.getLocation();
         s.append("/").append(escape(instanceComponent.getFactory().getName())).append(loc);
       }
       return s.toString();
@@ -95,22 +95,22 @@ public abstract class DynamicElement extends AbstractCanvasObject {
 
     public static Path fromSvgString(String s, Circuit circuit) throws IllegalArgumentException {
       if (!s.startsWith("/")) throw new IllegalArgumentException("Bad path: " + s);
-      final var parts = s.substring(1).split("(?<!\\\\)/");
-      final var elt = new InstanceComponent[parts.length];
+      final java.lang.String[] parts = s.substring(1).split("(?<!\\\\)/");
+      final com.cburch.logisim.instance.InstanceComponent[] elt = new InstanceComponent[parts.length];
       for (int i = 0; i < parts.length; i++) {
-        final var ss = parts[i];
-        final var p = ss.lastIndexOf("(");
-        final var c = ss.lastIndexOf(",");
-        final var e = ss.lastIndexOf(")");
+        final java.lang.String ss = parts[i];
+        final int p = ss.lastIndexOf("(");
+        final int c = ss.lastIndexOf(",");
+        final int e = ss.lastIndexOf(")");
         if (e != ss.length() - 1 || p <= 0 || c <= p)
           throw new IllegalArgumentException("Bad path element: " + ss);
-        final var x = Integer.parseInt(ss.substring(p + 1, c).trim());
-        final var y = Integer.parseInt(ss.substring(c + 1, e).trim());
-        final var loc = Location.create(x, y, false);
-        final var name = unescape(ss.substring(0, p));
+        final int x = Integer.parseInt(ss.substring(p + 1, c).trim());
+        final int y = Integer.parseInt(ss.substring(c + 1, e).trim());
+        final com.cburch.logisim.data.Location loc = Location.create(x, y, false);
+        final java.lang.String name = unescape(ss.substring(0, p));
         com.cburch.logisim.circuit.Circuit circ = circuit;
         if (i > 0) circ = ((SubcircuitFactory) elt[i - 1].getFactory()).getSubcircuit();
-        final var ic = find(circ, loc, name);
+        final com.cburch.logisim.instance.InstanceComponent ic = find(circ, loc, name);
         if (ic == null) throw new IllegalArgumentException("Missing component: " + ss);
         elt[i] = ic;
       }
@@ -118,7 +118,7 @@ public abstract class DynamicElement extends AbstractCanvasObject {
     }
 
     private static InstanceComponent find(Circuit circuit, Location loc, String name) {
-      for (final var c : circuit.getNonWires()) {
+      for (final com.cburch.logisim.comp.Component c : circuit.getNonWires()) {
         if (name.equals(c.getFactory().getName()) && loc.equals(c.getLocation()))
           return (InstanceComponent) c;
       }
@@ -194,10 +194,10 @@ public abstract class DynamicElement extends AbstractCanvasObject {
 
   @Override
   public List<Handle> getHandles(HandleGesture gesture) {
-    final var x0 = bounds.getX();
-    final var y0 = bounds.getY();
-    final var x1 = x0 + bounds.getWidth();
-    final var y1 = y0 + bounds.getHeight();
+    final int x0 = bounds.getX();
+    final int y0 = bounds.getY();
+    final int x1 = x0 + bounds.getWidth();
+    final int y1 = y0 + bounds.getHeight();
     return UnmodifiableList.create(
         new Handle[] {
           new Handle(this, x0, y0),
@@ -247,7 +247,7 @@ public abstract class DynamicElement extends AbstractCanvasObject {
 
   @Override
   public String getDisplayNameAndLabel() {
-    final var label = path.leaf().getInstance().getAttributeValue(StdAttr.LABEL);
+    final java.lang.String label = path.leaf().getInstance().getAttributeValue(StdAttr.LABEL);
     return (label != null && label.length() > 0)
         ? getDisplayName() + " \"" + label + "\""
         : getDisplayName();
@@ -262,7 +262,7 @@ public abstract class DynamicElement extends AbstractCanvasObject {
     if (elt.hasAttribute("stroke-width"))
       strokeWidth = Integer.parseInt(elt.getAttribute("stroke-width").trim());
     if (elt.hasAttribute("label")) {
-      final var loc = elt.getAttribute("label").trim().toLowerCase();
+      final java.lang.String loc = elt.getAttribute("label").trim().toLowerCase();
       labelLoc = switch (loc) {
         case "left" -> LABEL_LEFT;
         case "right" -> LABEL_RIGHT;
@@ -302,12 +302,12 @@ public abstract class DynamicElement extends AbstractCanvasObject {
 
   public void drawLabel(Graphics g) {
     if (labelLoc == LABEL_NONE) return;
-    final var label = path.leaf().getAttributeSet().getValue(StdAttr.LABEL);
+    final java.lang.String label = path.leaf().getAttributeSet().getValue(StdAttr.LABEL);
     if (label == null || label.length() == 0) return;
-    final var x = bounds.getX();
-    final var y = bounds.getY();
-    final var w = bounds.getWidth();
-    final var h = bounds.getHeight();
+    final int x = bounds.getX();
+    final int y = bounds.getY();
+    final int w = bounds.getWidth();
+    final int h = bounds.getHeight();
     int vAlign = GraphicsUtil.V_CENTER;
     int hAlign = GraphicsUtil.H_CENTER;
     int pX = x + w / 2;

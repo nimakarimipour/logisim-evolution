@@ -124,12 +124,12 @@ public final class InstanceComponent implements Component, AttributeListener, To
   //
   @Override
   public void attributeValueChanged(AttributeEvent e) {
-    final var attr = e.getAttribute();
+    final com.cburch.logisim.data.Attribute<?> attr = e.getAttribute();
     if (e.getAttribute().equals(StdAttr.LABEL)) {
       @SuppressWarnings("unchecked")
-      final var lAttr = (Attribute<String>) e.getAttribute();
-      final var value = (String) e.getSource().getValue(e.getAttribute());
-      final var oldValue = e.getOldValue() != null ? (String) e.getOldValue() : "";
+      final Attribute<String> lAttr = (Attribute<String>) e.getAttribute();
+      final java.lang.String value = (String) e.getSource().getValue(e.getAttribute());
+      final java.lang.String oldValue = e.getOldValue() != null ? (String) e.getOldValue() : "";
       if (!oldValue.equals(value)) {
         if (!SyntaxChecker.isVariableNameAcceptable(value, true)) {
           e.getSource().setValue(lAttr, oldValue);
@@ -151,14 +151,14 @@ public final class InstanceComponent implements Component, AttributeListener, To
   }
 
   private void computeEnds() {
-    final var ports = portList;
-    final var esOld = endArray;
-    final var esOldLength = esOld == null ? 0 : esOld.length;
+    final java.util.List<com.cburch.logisim.instance.Port> ports = portList;
+    final com.cburch.logisim.comp.EndData[] esOld = endArray;
+    final int esOldLength = esOld == null ? 0 : esOld.length;
     com.cburch.logisim.comp.EndData[] es = esOld;
     if (es == null || es.length != ports.size()) {
       es = new EndData[ports.size()];
       if (esOldLength > 0) {
-        final var toCopy = Math.min(esOldLength, es.length);
+        final int toCopy = Math.min(esOldLength, es.length);
         System.arraycopy(esOld, 0, es, 0, toCopy);
       }
     }
@@ -166,11 +166,11 @@ public final class InstanceComponent implements Component, AttributeListener, To
     boolean toolTipFound = false;
     ArrayList<EndData> endsChangedOld = null;
     ArrayList<EndData> endsChangedNew = null;
-    final var portIt = ports.iterator();
+    final java.util.Iterator<com.cburch.logisim.instance.Port> portIt = ports.iterator();
     for (int i = 0; portIt.hasNext() || i < esOldLength; i++) {
-      final var p = portIt.hasNext() ? portIt.next() : null;
-      final var oldEnd = i < esOldLength ? esOld[i] : null;
-      final var newEnd = p == null ? null : p.toEnd(loc, attrs);
+      final com.cburch.logisim.instance.Port p = portIt.hasNext() ? portIt.next() : null;
+      final com.cburch.logisim.comp.EndData oldEnd = i < esOldLength ? esOld[i] : null;
+      final com.cburch.logisim.comp.EndData newEnd = p == null ? null : p.toEnd(loc, attrs);
       if (oldEnd == null || !oldEnd.equals(newEnd)) {
         if (newEnd != null) es[i] = newEnd;
         if (endsChangedOld == null) {
@@ -182,7 +182,7 @@ public final class InstanceComponent implements Component, AttributeListener, To
       }
 
       if (p != null) {
-        final var attr = p.getWidthAttribute();
+        final com.cburch.logisim.data.Attribute<com.cburch.logisim.data.BitWidth> attr = p.getWidthAttribute();
         if (attr != null) {
           if (wAttrs == null) {
             wAttrs = new HashSet<>();
@@ -194,7 +194,7 @@ public final class InstanceComponent implements Component, AttributeListener, To
       }
     }
     if (!attrListenRequested) {
-      final var oldWidthAttrs = widthAttrs;
+      final java.util.HashSet<com.cburch.logisim.data.Attribute<com.cburch.logisim.data.BitWidth>> oldWidthAttrs = widthAttrs;
       if (wAttrs == null && oldWidthAttrs != null) {
         getAttributeSet().removeAttributeListener(this);
       } else if (wAttrs != null && oldWidthAttrs == null) {
@@ -214,14 +214,14 @@ public final class InstanceComponent implements Component, AttributeListener, To
 
   @Override
   public boolean contains(Location pt) {
-    final var translated = pt.translate(-loc.getX(), -loc.getY());
-    final var factory = instance.getFactory();
+    final com.cburch.logisim.data.Location translated = pt.translate(-loc.getX(), -loc.getY());
+    final com.cburch.logisim.instance.InstanceFactory factory = instance.getFactory();
     return factory.contains(translated, instance.getAttributeSet());
   }
 
   @Override
   public boolean contains(Location pt, Graphics g) {
-    final var field = textField;
+    final com.cburch.logisim.instance.InstanceTextField field = textField;
     return (field != null && field.getBounds(g).contains(pt)) ? true : contains(pt);
   }
 
@@ -230,13 +230,13 @@ public final class InstanceComponent implements Component, AttributeListener, To
   //
   @Override
   public void draw(ComponentDrawContext context) {
-    final var painter = context.getInstancePainter();
+    final com.cburch.logisim.instance.InstancePainter painter = context.getInstancePainter();
     painter.setInstance(this);
     factory.paintInstance(painter);
     if (doMarkInstance) {
-      final var g = painter.getGraphics();
-      final var bds = painter.getBounds();
-      final var current = g.getColor();
+      final java.awt.Graphics g = painter.getGraphics();
+      final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+      final java.awt.Color current = g.getColor();
       g.setColor(Netlist.DRC_INSTANCE_MARK_COLOR);
       GraphicsUtil.switchToWidth(g, 2);
       g.drawRoundRect(
@@ -250,13 +250,13 @@ public final class InstanceComponent implements Component, AttributeListener, To
   // methods for InstancePainter
   //
   void drawLabel(ComponentDrawContext context) {
-    final var field = textField;
+    final com.cburch.logisim.instance.InstanceTextField field = textField;
     if (field != null) {
       field.draw(this, context);
       if (doMarkLabel) {
-        final var g = context.getGraphics();
-        final var bds = field.getBounds(g);
-        final var current = g.getColor();
+        final java.awt.Graphics g = context.getGraphics();
+        final com.cburch.logisim.data.Bounds bds = field.getBounds(g);
+        final java.awt.Color current = g.getColor();
         g.setColor(Netlist.DRC_LABEL_MARK_COLOR);
         GraphicsUtil.switchToWidth(g, 2);
         g.drawRoundRect(
@@ -269,8 +269,8 @@ public final class InstanceComponent implements Component, AttributeListener, To
 
   @Override
   public boolean endsAt(Location pt) {
-    final var ends = endArray;
-    for (final var end : ends) {
+    final com.cburch.logisim.comp.EndData[] ends = endArray;
+    for (final com.cburch.logisim.comp.EndData end : ends) {
       if (end.getLocation().equals(pt)) return true;
     }
     return false;
@@ -284,10 +284,10 @@ public final class InstanceComponent implements Component, AttributeListener, To
   }
 
   private void fireLabelChanged(AttributeEvent attre) {
-    final var listeners = this.listeners;
+    final com.cburch.logisim.util.EventSourceWeakSupport<com.cburch.logisim.comp.ComponentListener> listeners = this.listeners;
     if (listeners != null) {
       ComponentEvent e = null;
-      for (final var listener : listeners) {
+      for (final com.cburch.logisim.comp.ComponentListener listener : listeners) {
         if (e == null) e = new ComponentEvent(this, null, attre);
         listener.labelChanged(e);
       }
@@ -295,10 +295,10 @@ public final class InstanceComponent implements Component, AttributeListener, To
   }
 
   private void fireEndsChanged(ArrayList<EndData> oldEnds, ArrayList<EndData> newEnds) {
-    final var listeners = this.listeners;
+    final com.cburch.logisim.util.EventSourceWeakSupport<com.cburch.logisim.comp.ComponentListener> listeners = this.listeners;
     if (listeners != null) {
       ComponentEvent e = null;
-      for (final var listener : listeners) {
+      for (final com.cburch.logisim.comp.ComponentListener listener : listeners) {
         if (e == null) e = new ComponentEvent(this, oldEnds, newEnds);
         listener.endChanged(e);
       }
@@ -306,10 +306,10 @@ public final class InstanceComponent implements Component, AttributeListener, To
   }
 
   void fireInvalidated() {
-    final var listeners = this.listeners;
+    final com.cburch.logisim.util.EventSourceWeakSupport<com.cburch.logisim.comp.ComponentListener> listeners = this.listeners;
     if (listeners != null) {
       ComponentEvent e = null;
-      for (final var listener : listeners) {
+      for (final com.cburch.logisim.comp.ComponentListener listener : listeners) {
         if (e == null) e = new ComponentEvent(this);
         listener.componentInvalidated(e);
       }
@@ -399,13 +399,13 @@ public final class InstanceComponent implements Component, AttributeListener, To
   @Override
   public String getToolTip(ComponentUserEvent e) {
     int i = 0;
-    for (final var end : endArray) {
+    for (final com.cburch.logisim.comp.EndData end : endArray) {
       if (end.getLocation().manhattanDistanceTo(e.getX(), e.getY()) < 10) {
         return portList.get(i).getToolTip();
       }
       i++;
     }
-    final var defaultTip = factory.getDefaultToolTip();
+    final com.cburch.logisim.util.StringGetter defaultTip = factory.getDefaultToolTip();
     return defaultTip == null ? null : defaultTip.toString();
   }
 
@@ -432,7 +432,7 @@ public final class InstanceComponent implements Component, AttributeListener, To
   }
 
   void setPorts(Port[] ports) {
-    final var portsCopy = ports.clone();
+    final com.cburch.logisim.instance.Port[] portsCopy = ports.clone();
     portList = new UnmodifiableList<>(portsCopy);
     computeEnds();
   }
@@ -451,7 +451,7 @@ public final class InstanceComponent implements Component, AttributeListener, To
 
   @Override
   public String toString() {
-    final var label = attrs.getValue(StdAttr.LABEL);
+    final java.lang.String label = attrs.getValue(StdAttr.LABEL);
     return "InstanceComponent{factory="
         + factory.getName()
         + ",loc=("

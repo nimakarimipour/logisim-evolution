@@ -37,7 +37,7 @@ public class OpenSaveIcon extends BaseIcon {
 
   @Override
   protected void paintIcon(Graphics2D g2) {
-    final var discCol = myType == FILE_SAVE_AS ? Color.GRAY : Color.BLUE;
+    final java.awt.Color discCol = myType == FILE_SAVE_AS ? Color.GRAY : Color.BLUE;
     com.cburch.logisim.data.Bounds bds = getScaled(2, 2, 12, 12);
     g2.setColor(discCol);
     g2.fillRect(bds.getX(), bds.getY(), bds.getWidth(), bds.getHeight());

@@ -74,7 +74,7 @@ public class MenuListener {
     }
 
     public void register() {
-      for (final var item : LogisimMenuBar.EDIT_ITEMS) {
+      for (final com.cburch.logisim.gui.menu.LogisimMenuItem item : LogisimMenuBar.EDIT_ITEMS) {
         menubar.addActionListener(item, this);
       }
       computeEnabled();
@@ -84,7 +84,7 @@ public class MenuListener {
       if (handler != null) {
         handler.computeEnabled();
       } else {
-        for (final var item : LogisimMenuBar.EDIT_ITEMS) {
+        for (final com.cburch.logisim.gui.menu.LogisimMenuItem item : LogisimMenuBar.EDIT_ITEMS) {
           menubar.setEnabled(item, false);
         }
       }

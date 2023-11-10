@@ -35,7 +35,7 @@ public class RgbArrayLedDefaultHdlGeneratorFactory extends LedArrayLedDefaultHdl
   }
 
   public static LineBuffer getPortMap(int id) {
-    final var ports = new HashMap<String, String>();
+    final java.util.HashMap<java.lang.String,java.lang.String> ports = new HashMap<String, String>();
     ports.put(LedArrayGenericHdlGeneratorFactory.LedArrayRedOutputs, String.format("%s%d", LedArrayGenericHdlGeneratorFactory.LedArrayRedOutputs, id));
     ports.put(LedArrayGenericHdlGeneratorFactory.LedArrayGreenOutputs, String.format("%s%d", LedArrayGenericHdlGeneratorFactory.LedArrayGreenOutputs, id));
     ports.put(LedArrayGenericHdlGeneratorFactory.LedArrayBlueOutputs, String.format("%s%d", LedArrayGenericHdlGeneratorFactory.LedArrayBlueOutputs, id));
@@ -47,7 +47,7 @@ public class RgbArrayLedDefaultHdlGeneratorFactory extends LedArrayLedDefaultHdl
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist TheNetlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer()
         .pair("outsR", LedArrayGenericHdlGeneratorFactory.LedArrayRedOutputs)
         .pair("outsG", LedArrayGenericHdlGeneratorFactory.LedArrayGreenOutputs)
         .pair("outsB", LedArrayGenericHdlGeneratorFactory.LedArrayBlueOutputs)

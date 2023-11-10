@@ -45,7 +45,7 @@ public class ProjectAddIcon extends BaseIcon {
     }
     if (vhdl) {
       g2.setColor(Color.GREEN.darker().darker());
-      final var f =
+      final java.awt.Font f =
           g2.getFont()
               .deriveFont((float) AppPreferences.getIconSize() / (float) 1.6)
               .deriveFont(Font.BOLD);
@@ -66,7 +66,7 @@ public class ProjectAddIcon extends BaseIcon {
       g2.rotate(Math.PI / 4);
       g2.translate(-AppPreferences.getIconSize() / 2, -AppPreferences.getIconSize() / 2);
     } else g2.setColor(Color.GREEN.darker());
-    final var path = new GeneralPath();
+    final java.awt.geom.GeneralPath path = new GeneralPath();
     path.moveTo(AppPreferences.getScaled(points[0]), AppPreferences.getScaled(points[1]));
     for (int i = 2; i < points.length; i += 2)
       path.lineTo(AppPreferences.getScaled(points[i]), AppPreferences.getScaled(points[i + 1]));

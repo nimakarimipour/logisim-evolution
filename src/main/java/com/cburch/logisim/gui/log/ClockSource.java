@@ -70,31 +70,31 @@ public class ClockSource extends JDialogOk {
 
   @Override
   public void okClicked() {
-    final var list = selector.getSelectedItems();
+    final com.cburch.logisim.gui.log.SignalInfo.List list = selector.getSelectedItems();
     if (list == null || list.size() != 1) return;
     item = list.get(0);
   }
 
   public static Component doClockDriverDialog(Circuit circ) {
-    final var dialog = new ClockSource(S.getter("selectClockDriverMessage"), circ, true);
+    final com.cburch.logisim.gui.log.ClockSource dialog = new ClockSource(S.getter("selectClockDriverMessage"), circ, true);
     dialog.setVisible(true);
     return dialog.item == null ? null : dialog.item.getComponent(); // always top-level
   }
 
   public static SignalInfo doClockMissingObserverDialog(Circuit circ) {
-    final var dialog = new ClockSource(S.getter("selectClockMissingMessage"), circ, false);
+    final com.cburch.logisim.gui.log.ClockSource dialog = new ClockSource(S.getter("selectClockMissingMessage"), circ, false);
     dialog.setVisible(true);
     return dialog.item;
   }
 
   public static SignalInfo doClockMultipleObserverDialog(Circuit circ) {
-    final var dialog = new ClockSource(S.getter("selectClockMultipleMessage"), circ, false);
+    final com.cburch.logisim.gui.log.ClockSource dialog = new ClockSource(S.getter("selectClockMultipleMessage"), circ, false);
     dialog.setVisible(true);
     return dialog.item;
   }
 
   public static SignalInfo doClockObserverDialog(Circuit circ) {
-    final var dialog = new ClockSource(S.getter("selectClockObserverMessage"), circ, false);
+    final com.cburch.logisim.gui.log.ClockSource dialog = new ClockSource(S.getter("selectClockObserverMessage"), circ, false);
     dialog.setVisible(true);
     return dialog.item;
   }
@@ -116,11 +116,11 @@ public class ClockSource extends JDialogOk {
   public static final CycleInfo DEFAULT_CYCLE_INFO = new CycleInfo(1, 1, 0);
 
   public static CycleInfo getCycleInfo(SignalInfo clockSource) {
-    final var clk = clockSource.getComponent();
+    final com.cburch.logisim.comp.Component clk = clockSource.getComponent();
     if (clk.getFactory() instanceof Clock) {
-      final var hi = clk.getAttributeSet().getValue(Clock.ATTR_HIGH);
-      final var lo = clk.getAttributeSet().getValue(Clock.ATTR_LOW);
-      final var phase = clk.getAttributeSet().getValue(Clock.ATTR_PHASE);
+      final java.lang.Integer hi = clk.getAttributeSet().getValue(Clock.ATTR_HIGH);
+      final java.lang.Integer lo = clk.getAttributeSet().getValue(Clock.ATTR_LOW);
+      final java.lang.Integer phase = clk.getAttributeSet().getValue(Clock.ATTR_PHASE);
       return new CycleInfo(hi, lo, phase);
     }
     return DEFAULT_CYCLE_INFO;

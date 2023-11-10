@@ -53,7 +53,7 @@ public class Expressions {
     public boolean equals(Object other) {
       if (other == null) return false;
       if (this.getClass() != other.getClass()) return false;
-      final var o = (Binary) other;
+      final com.cburch.logisim.analyze.model.Expressions.Binary o = (Binary) other;
       return this.exprA.equals(o.exprA) && this.exprB.equals(o.exprB);
     }
 

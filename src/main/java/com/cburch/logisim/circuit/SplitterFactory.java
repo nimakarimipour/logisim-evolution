@@ -54,9 +54,9 @@ public class SplitterFactory extends AbstractComponentFactory {
   //
   @Override
   public void drawGhost(ComponentDrawContext context, Color color, int x, int y, AttributeSet attrsBase) {
-    final var attrs = (SplitterAttributes) attrsBase;
+    final com.cburch.logisim.circuit.SplitterAttributes attrs = (SplitterAttributes) attrsBase;
     context.getGraphics().setColor(color);
-    final var loc = Location.create(x, y, true);
+    final com.cburch.logisim.data.Location loc = Location.create(x, y, true);
     if (attrs.appear == SplitterAttributes.APPEAR_LEGACY) {
       SplitterPainter.drawLegacy(context, attrs, loc);
     } else {
@@ -107,11 +107,11 @@ public class SplitterFactory extends AbstractComponentFactory {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrsBase) {
-    final var attrs = (SplitterAttributes) attrsBase;
-    final var fanout = attrs.fanout;
-    final var parms = attrs.getParameters();
-    final var xEnd0 = parms.getEnd0X();
-    final var yEnd0 = parms.getEnd0Y();
+    final com.cburch.logisim.circuit.SplitterAttributes attrs = (SplitterAttributes) attrsBase;
+    final byte fanout = attrs.fanout;
+    final com.cburch.logisim.circuit.SplitterParameters parms = attrs.getParameters();
+    final int xEnd0 = parms.getEnd0X();
+    final int yEnd0 = parms.getEnd0Y();
     com.cburch.logisim.data.Bounds bds = Bounds.create(0, 0, 1, 1);
     bds = bds.add(xEnd0, yEnd0);
     bds = bds.add(xEnd0 + (fanout - 1) * parms.getEndToEndDeltaX(), yEnd0 + (fanout - 1) * parms.getEndToEndDeltaY());
@@ -125,7 +125,7 @@ public class SplitterFactory extends AbstractComponentFactory {
 
   @Override
   public void paintIcon(ComponentDrawContext c, int x, int y, AttributeSet attrs) {
-    final var g = c.getGraphics();
+    final java.awt.Graphics g = c.getGraphics();
     if (toolIcon != null) {
       toolIcon.paintIcon(c.getDestination(), g, x + 2, y + 2);
     }

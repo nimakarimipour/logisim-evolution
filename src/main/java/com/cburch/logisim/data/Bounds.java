@@ -18,13 +18,13 @@ import java.awt.Rectangle;
  */
 public class Bounds {
   public static Bounds create(int x, int y, int wid, int ht) {
-    final var hashCode = 13 * (31 * (31 * x + y) + wid) + ht;
+    final int hashCode = 13 * (31 * (31 * x + y) + wid) + ht;
     Object cached = cache.get(hashCode);
     if (cached != null) {
-      final var bds = (Bounds) cached;
+      final com.cburch.logisim.data.Bounds bds = (Bounds) cached;
       if (bds.x == x && bds.y == y && bds.wid == wid && bds.ht == ht) return bds;
     }
-    final var ret = new Bounds(x, y, wid, ht);
+    final com.cburch.logisim.data.Bounds ret = new Bounds(x, y, wid, ht);
     cache.put(hashCode, ret);
     return ret;
   }
@@ -64,10 +64,10 @@ public class Bounds {
   public Bounds add(Bounds bd) {
     if (this == EMPTY_BOUNDS) return bd;
     if (bd == EMPTY_BOUNDS) return this;
-    final var retX = Math.min(bd.x, this.x);
-    final var retY = Math.min(bd.y, this.y);
-    final var retWidth = Math.max(bd.x + bd.wid, this.x + this.wid) - retX;
-    final var retHeight = Math.max(bd.y + bd.ht, this.y + this.ht) - retY;
+    final int retX = Math.min(bd.x, this.x);
+    final int retY = Math.min(bd.y, this.y);
+    final int retWidth = Math.max(bd.x + bd.wid, this.x + this.wid) - retX;
+    final int retHeight = Math.max(bd.y + bd.ht, this.y + this.ht) - retY;
     if (retX == this.x && retY == this.y && retWidth == this.wid && retHeight == this.ht) {
       return this;
     } else if (retX == bd.x && retY == bd.y && retWidth == bd.wid && retHeight == bd.ht) {
@@ -104,10 +104,10 @@ public class Bounds {
 
   public Bounds add(int x, int y, int wid, int ht) {
     if (this == EMPTY_BOUNDS) return Bounds.create(x, y, wid, ht);
-    final var retX = Math.min(x, this.x);
-    final var retY = Math.min(y, this.y);
-    final var retWidth = Math.max(x + wid, this.x + this.wid) - retX;
-    final var retHeight = Math.max(y + ht, this.y + this.ht) - retY;
+    final int retX = Math.min(x, this.x);
+    final int retY = Math.min(y, this.y);
+    final int retWidth = Math.max(x + wid, this.x + this.wid) - retX;
+    final int retHeight = Math.max(y + ht, this.y + this.ht) - retY;
     if (retX == this.x && retY == this.y && retWidth == this.wid && retHeight == this.ht) {
       return this;
     } else {
@@ -120,8 +120,8 @@ public class Bounds {
   }
 
   public boolean borderContains(int px, int py, int fudge) {
-    final var x1 = x + wid - 1;
-    final var y1 = y + ht - 1;
+    final int x1 = x + wid - 1;
+    final int y1 = y + ht - 1;
     if (Math.abs(px - x) <= fudge || Math.abs(px - x1) <= fudge) {
       // maybe on east or west border?
       return y - fudge >= py && py <= y1 + fudge;
@@ -153,8 +153,8 @@ public class Bounds {
   }
 
   public boolean contains(int x, int y, int wid, int ht) {
-    final var othX = (wid <= 0 ? x : x + wid - 1);
-    final var othY = (ht <= 0 ? y : y + ht - 1);
+    final int othX = (wid <= 0 ? x : x + wid - 1);
+    final int othY = (ht <= 0 ? y : y + ht - 1);
     return contains(x, y) && contains(othX, othY);
   }
 
@@ -216,10 +216,10 @@ public class Bounds {
     int y0 = this.y;
     int x1 = x0 + this.wid;
     int y1 = y0 + this.ht;
-    final var x2 = other.x;
-    final var y2 = other.y;
-    final var x3 = x2 + other.wid;
-    final var y3 = y2 + other.ht;
+    final int x2 = other.x;
+    final int y2 = other.y;
+    final int x3 = x2 + other.wid;
+    final int y3 = y2 + other.ht;
     if (x2 > x0) x0 = x2;
     if (y2 > y0) y0 = y2;
     if (x3 < x1) x1 = x3;
@@ -235,8 +235,8 @@ public class Bounds {
     while (degrees >= 360) degrees -= 360;
     while (degrees < 0) degrees += 360;
 
-    final var dx = x - xc;
-    final var dy = y - yc;
+    final int dx = x - xc;
+    final int dy = y - yc;
     if (degrees == 90) {
       return create(xc + dy, yc - dx - wid, ht, wid);
     } else if (degrees == 180) {

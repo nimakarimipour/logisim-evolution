@@ -39,7 +39,7 @@ public class AbstractOctalBuffers extends AbstractTtlGate {
 
   @Override
   public void paintInternal(InstancePainter painter, int x, int y, int height, boolean up) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     super.paintBase(painter, false, false);
     drawBuffers(g, x, y, height);
   }

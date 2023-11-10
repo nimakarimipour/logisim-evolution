@@ -36,11 +36,11 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
   @Override
   public void getGenerationTimeWiresPorts(Netlist theNetlist, AttributeSet attrs) {
     if (!attrs.containsAttribute(GateAttributes.ATTR_INPUTS)) return;
-    final var nrOfInputs = attrs.getValue(GateAttributes.ATTR_INPUTS);
-    final var bitWidth = attrs.getValue(StdAttr.WIDTH).getWidth();
+    final java.lang.Integer nrOfInputs = attrs.getValue(GateAttributes.ATTR_INPUTS);
+    final int bitWidth = attrs.getValue(StdAttr.WIDTH).getWidth();
     for (int input = 1; input <= nrOfInputs; input++) {
       myWires.addWire(String.format("s_realInput%d", input), bitWidth == 1 ? 1 : BIT_WIDTH_GENERIC);
-      final var floatingToZero =
+      final boolean floatingToZero =
           getFloatingValue(attrs.getValue(new NegateAttribute(input - 1, null)));
       myPorts.add(
           Port.INPUT,
@@ -62,9 +62,9 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist nets, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer();
-    final var bitWidth = attrs.getValue(StdAttr.WIDTH).getWidth();
-    final var nrOfInputs =
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
+    final int bitWidth = attrs.getValue(StdAttr.WIDTH).getWidth();
+    final int nrOfInputs =
         attrs.containsAttribute(GateAttributes.ATTR_INPUTS)
             ? attrs.getValue(GateAttributes.ATTR_INPUTS)
             : 1;
@@ -96,7 +96,7 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
   }
 
   public LineBuffer getOneHot(boolean inverted, int nrOfInputs, boolean isBus) {
-    final var lines = LineBuffer.getHdlBuffer();
+    final com.cburch.logisim.util.LineBuffer lines = LineBuffer.getHdlBuffer();
     java.lang.String spaces = "";
     java.lang.String indexString = "";
     if (isBus) {
@@ -127,7 +127,7 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
         .append(indexString)
         .append(Hdl.assignOperator());
     if (inverted) oneLine.append(Hdl.notOperator()).append("(");
-    final var spacesLen = oneLine.length();
+    final int spacesLen = oneLine.length();
     for (int termloop = 0; termloop < nrOfInputs; termloop++) {
       while (oneLine.length() < spacesLen) {
         oneLine.append(" ");
@@ -170,7 +170,7 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
   }
 
   public static LineBuffer getParity(boolean inverted, int nrOfInputs, boolean isBus) {
-    final var lines = LineBuffer.getHdlBuffer();
+    final com.cburch.logisim.util.LineBuffer lines = LineBuffer.getHdlBuffer();
     java.lang.String spaces = "   ";
     java.lang.String indexString = "";
     if (isBus) {
@@ -193,7 +193,7 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
         indexString = "[n]";
       }
     }
-    final var oneLine = new StringBuilder();
+    final java.lang.StringBuilder oneLine = new StringBuilder();
     oneLine
         .append(spaces)
         .append(Hdl.assignPreamble())
@@ -201,7 +201,7 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
         .append(indexString)
         .append(Hdl.assignOperator());
     if (inverted) oneLine.append(Hdl.notOperator()).append("(");
-    final var spacesLen = oneLine.length();
+    final int spacesLen = oneLine.length();
     for (int i = 0; i < nrOfInputs; i++) {
       while (oneLine.length() < spacesLen) {
         oneLine.append(" ");

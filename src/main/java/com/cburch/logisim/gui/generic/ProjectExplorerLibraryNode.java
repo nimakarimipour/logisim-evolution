@@ -44,9 +44,9 @@ public class ProjectExplorerLibraryNode extends ProjectExplorerModel.Node<Librar
   }
 
   private void buildChildren() {
-    final var lib = getValue();
+    final com.cburch.logisim.tools.Library lib = getValue();
     if (lib != null) {
-      final var showLib = (showMouseTools & lib instanceof BaseLibrary) || !lib.isHidden();
+      final boolean showLib = (showMouseTools & lib instanceof BaseLibrary) || !lib.isHidden();
       if (showLib) {
         buildChildren(new ProjectExplorerToolNode(getModel(), null), lib.getTools(), 0);
         buildChildren(
@@ -64,10 +64,10 @@ public class ProjectExplorerLibraryNode extends ProjectExplorerModel.Node<Librar
     int oldPos = startIndex;
 
     for (Enumeration<?> en = children(); en.hasMoreElements(); ) {
-      final var baseNode = en.nextElement();
+      final java.lang.Object baseNode = en.nextElement();
       if (baseNode.getClass() == factory.getClass()) {
         @SuppressWarnings("unchecked")
-        final var node = (ProjectExplorerModel.Node<T>) baseNode;
+        final ProjectExplorerModel.Node<T> node = (ProjectExplorerModel.Node<T>) baseNode;
         nodeMap.put(node.getValue(), node);
         nodeList.add(node);
         node.oldIndex = oldPos;
@@ -104,18 +104,18 @@ public class ProjectExplorerLibraryNode extends ProjectExplorerModel.Node<Librar
 
     // identify removals first
     if (oldPos != oldCount) {
-      final var delIndex = new int[oldCount - oldPos];
-      final var delNodes = new ProjectExplorerModel.Node<?>[delIndex.length];
+      final int[] delIndex = new int[oldCount - oldPos];
+      final com.cburch.logisim.gui.generic.ProjectExplorerModel.Node<?>[] delNodes = new ProjectExplorerModel.Node<?>[delIndex.length];
       int delPos = 0;
 
       for (int i = nodeList.size() - 1; i >= 0; i--) {
-        final var node = nodeList.get(i);
+        final com.cburch.logisim.gui.generic.ProjectExplorerModel.Node<T> node = nodeList.get(i);
         if (node.newIndex < 0) {
           node.decommission();
           remove(node.oldIndex);
           nodeList.remove(node.oldIndex - startIndex);
 
-          for (final var other : nodeList) {
+          for (final com.cburch.logisim.gui.generic.ProjectExplorerModel.Node<T> other : nodeList) {
             if (other.oldIndex > node.oldIndex) {
               other.oldIndex--;
             }
@@ -139,11 +139,11 @@ public class ProjectExplorerLibraryNode extends ProjectExplorerModel.Node<Librar
       }
     }
     if (minChange <= maxChange) {
-      final var moveIndex = new int[maxChange - minChange + 1];
-      final var moveNodes = new ProjectExplorerModel.Node<?>[moveIndex.length];
+      final int[] moveIndex = new int[maxChange - minChange + 1];
+      final com.cburch.logisim.gui.generic.ProjectExplorerModel.Node<?>[] moveNodes = new ProjectExplorerModel.Node<?>[moveIndex.length];
 
       for (int i = maxChange; i >= minChange; i--) {
-        final var node = nodeList.get(i);
+        final com.cburch.logisim.gui.generic.ProjectExplorerModel.Node<T> node = nodeList.get(i);
         moveIndex[node.newIndex - minChange] = node.newIndex;
         moveNodes[node.newIndex - minChange] = node;
         remove(i);
@@ -158,11 +158,11 @@ public class ProjectExplorerLibraryNode extends ProjectExplorerModel.Node<Librar
 
     // identify inserted nodes
     if (insertionCount > 0) {
-      final var insIndex = new int[insertionCount];
-      final var insNodes = new ProjectExplorerModel.Node<?>[insertionCount];
+      final int[] insIndex = new int[insertionCount];
+      final com.cburch.logisim.gui.generic.ProjectExplorerModel.Node<?>[] insNodes = new ProjectExplorerModel.Node<?>[insertionCount];
       int insertionsPos = 0;
 
-      for (final var node : nodeList) {
+      for (final com.cburch.logisim.gui.generic.ProjectExplorerModel.Node<T> node : nodeList) {
         if (node.oldIndex < 0) {
           insert(node, node.newIndex);
           insIndex[insertionsPos] = node.newIndex;
@@ -184,8 +184,8 @@ public class ProjectExplorerLibraryNode extends ProjectExplorerModel.Node<Librar
     if (file != null) {
       file.removeLibraryListener(this);
     }
-    for (final var en = children(); en.hasMoreElements(); ) {
-      final var n = en.nextElement();
+    for (final java.util.Enumeration<javax.swing.tree.TreeNode> en = children(); en.hasMoreElements(); ) {
+      final javax.swing.tree.TreeNode n = en.nextElement();
       if (n instanceof ProjectExplorerModel.Node<?> node) {
         node.decommission();
       }

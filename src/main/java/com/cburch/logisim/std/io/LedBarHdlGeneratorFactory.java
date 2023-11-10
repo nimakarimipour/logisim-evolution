@@ -23,22 +23,22 @@ public class LedBarHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
   @Override
   public LineBuffer getInlinedCode(
       Netlist netlist, Long componentId, netlistComponent componentInfo, String circuitName) {
-    final var contents = LineBuffer.getHdlBuffer();
-    final var isSingleBus =
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
+    final boolean isSingleBus =
         componentInfo
             .getComponent()
             .getAttributeSet()
             .getValue(LedBar.ATTR_INPUT_TYPE)
             .equals(LedBar.INPUT_ONE_WIRE);
-    final var nrOfSegments =
+    final int nrOfSegments =
         componentInfo.getComponent().getAttributeSet().getValue(LedBar.ATTR_MATRIX_COLS).getWidth();
-    final var wires = new HashMap<String, String>();
+    final java.util.HashMap<java.lang.String,java.lang.String> wires = new HashMap<String, String>();
     for (int pin = 0; pin < nrOfSegments; pin++) {
-      final var destPin =
+      final java.lang.String destPin =
           LineBuffer.format(
               "{{1}}{{<}}{{2}}{{>}}",
               LOCAL_OUTPUT_BUBBLE_BUS_NAME, componentInfo.getLocalBubbleOutputStartId() + pin);
-      final var sourcePin =
+      final java.lang.String sourcePin =
           isSingleBus
               ? Hdl.getBusEntryName(componentInfo, 0, true, pin, netlist)
               : Hdl.getNetName(componentInfo, pin, true, netlist);

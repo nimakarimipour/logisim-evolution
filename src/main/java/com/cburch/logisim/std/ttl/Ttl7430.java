@@ -35,7 +35,7 @@ public class Ttl7430 extends AbstractTtlGate {
   @Override
   public void paintInternal(InstancePainter painter, int x, int y, int height, boolean up) {
     super.paintBase(painter, false, false);
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     Drawgates.paintAnd(g, x + 123, y + 30, 10, 18, true);
     g.drawLine(x + 70, y + AbstractTtlGate.PIN_HEIGHT, x + 70, y + 23);
     g.drawLine(x + 50, y + AbstractTtlGate.PIN_HEIGHT, x + 50, y + 25);

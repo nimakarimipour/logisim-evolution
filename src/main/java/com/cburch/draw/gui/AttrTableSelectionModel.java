@@ -32,12 +32,12 @@ class AttrTableSelectionModel extends AttributeSetTableModel implements Selectio
 
   @Override
   public String getTitle() {
-    final var sel = canvas.getSelection();
+    final com.cburch.draw.canvas.Selection sel = canvas.getSelection();
     Class<? extends CanvasObject> commonClass = null;
     int commonCount = 0;
     CanvasObject firstObject = null;
     int totalCount = 0;
-    for (final var obj : sel.getSelected()) {
+    for (final com.cburch.draw.model.CanvasObject obj : sel.getSelected()) {
       if (firstObject == null) {
         firstObject = obj;
         commonClass = obj.getClass();
@@ -71,15 +71,15 @@ class AttrTableSelectionModel extends AttributeSetTableModel implements Selectio
 
   @Override
   public void setValueRequested(Attribute<Object> attr, Object value) {
-    final var attrs = (SelectionAttributes) getAttributeSet();
-    final var oldVals = new HashMap<AttributeMapKey, Object>();
-    final var newVals = new HashMap<AttributeMapKey, Object>();
-    for (final var ent : attrs.entries()) {
-      final var key = new AttributeMapKey(attr, ent.getValue());
+    final com.cburch.draw.gui.SelectionAttributes attrs = (SelectionAttributes) getAttributeSet();
+    final java.util.HashMap<com.cburch.draw.model.AttributeMapKey,java.lang.Object> oldVals = new HashMap<AttributeMapKey, Object>();
+    final java.util.HashMap<com.cburch.draw.model.AttributeMapKey,java.lang.Object> newVals = new HashMap<AttributeMapKey, Object>();
+    for (final java.util.Map.Entry<com.cburch.logisim.data.AttributeSet,com.cburch.draw.model.CanvasObject> ent : attrs.entries()) {
+      final com.cburch.draw.model.AttributeMapKey key = new AttributeMapKey(attr, ent.getValue());
       oldVals.put(key, ent.getKey().getValue(attr));
       newVals.put(key, value);
     }
-    final var model = canvas.getModel();
+    final com.cburch.draw.model.CanvasModel model = canvas.getModel();
     canvas.doAction(new ModelChangeAttributeAction(model, oldVals, newVals));
     fireTitleChanged();
   }

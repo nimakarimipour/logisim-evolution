@@ -37,10 +37,10 @@ public class Ttl7432 extends AbstractTtlGate {
 
   @Override
   public void paintInternal(InstancePainter painter, int x, int y, int height, boolean up) {
-    final var g = painter.getGraphics();
-    final var portwidth = 14;
-    final var portheight = 15;
-    final var youtput = y + (up ? 20 : 40);
+    final java.awt.Graphics g = painter.getGraphics();
+    final int portwidth = 14;
+    final int portheight = 15;
+    final int youtput = y + (up ? 20 : 40);
     Drawgates.paintOr(g, x + 40, youtput, portwidth, portheight, false, false);
     // output line
     Drawgates.paintOutputgate(g, x + 50, y, x + 40, youtput, up, height);

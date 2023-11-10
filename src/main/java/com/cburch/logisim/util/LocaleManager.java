@@ -109,7 +109,7 @@ public class LocaleManager {
   }
 
   private static void fireLocaleChanged() {
-    for (final var l : listeners) {
+    for (final com.cburch.logisim.util.LocaleListener l : listeners) {
       l.localeChanged();
     }
   }
@@ -131,14 +131,14 @@ public class LocaleManager {
     int i = 0;
     int n = src.length();
     for (; i < n; i++) {
-      final var ci = src.charAt(i);
+      final char ci = src.charAt(i);
       if (ci < 32 || ci >= 127) break;
     }
     if (i == n) return src;
 
     // ok, we'll have to consider replacing accents
     char[] cs = src.toCharArray();
-    final var ret = new StringBuilder(src.substring(0, i));
+    final java.lang.StringBuilder ret = new StringBuilder(src.substring(0, i));
     for (int j = i; j < cs.length; j++) {
       char cj = cs[j];
       if (cj < 32 || cj >= 127) {
@@ -192,13 +192,13 @@ public class LocaleManager {
   }
 
   public static void setLocale(Locale loc) {
-    final var cur = getLocale();
+    final java.util.Locale cur = getLocale();
     if (!loc.equals(cur)) {
-      final var opts = S.getLocaleOptions();
+      final java.util.Locale[] opts = S.getLocaleOptions();
       Locale select = null;
       Locale backup = null;
       String locLang = loc.getLanguage();
-      for (final var opt : opts) {
+      for (final java.util.Locale opt : opts) {
         if (select == null && opt.equals(loc)) {
           select = opt;
         }
@@ -212,7 +212,7 @@ public class LocaleManager {
 
       curLocale = select;
       Locale.setDefault(select);
-      for (final var man : managers) {
+      for (final com.cburch.logisim.util.LocaleManager man : managers) {
         man.loadDefault();
       }
       updateButtonText();
@@ -237,7 +237,7 @@ public class LocaleManager {
     } catch (MissingResourceException e) {
       ret = key;
     }
-    final var repl = LocaleManager.repl;
+    final java.util.HashMap<java.lang.Character,java.lang.String> repl = LocaleManager.repl;
     if (repl != null) ret = replaceAccents(ret, repl);
     return ret;
   }
@@ -263,10 +263,10 @@ public class LocaleManager {
     }
     if (locs == null) return new Locale[] {};
 
-    final var retl = new ArrayList<Locale>();
-    final var toks = new StringTokenizer(locs);
+    final java.util.ArrayList<java.util.Locale> retl = new ArrayList<Locale>();
+    final java.util.StringTokenizer toks = new StringTokenizer(locs);
     while (toks.hasMoreTokens()) {
-      final var f = toks.nextToken();
+      final java.lang.String f = toks.nextToken();
       String language;
       String country;
       if (f.length() >= 2) {
@@ -277,7 +277,7 @@ public class LocaleManager {
         country = null;
       }
       if (language != null) {
-        final var loc = new Locale.Builder().setLanguage(language).setRegion(country).build();
+        final java.util.Locale loc = new Locale.Builder().setLanguage(language).setRegion(country).build();
         retl.add(loc);
       }
     }
@@ -329,7 +329,7 @@ public class LocaleManager {
   }
 
   private void loadLocale(Locale loc) {
-    final var bundleName = dirName + "/strings/" + fileStart + "/" + fileStart;
+    final java.lang.String bundleName = dirName + "/strings/" + fileStart + "/" + fileStart;
     locale = ResourceBundle.getBundle(bundleName, loc);
   }
 }

@@ -42,7 +42,7 @@ class CanvasListener
   }
 
   public void setTool(CanvasTool value) {
-    final var oldValue = tool;
+    final com.cburch.draw.canvas.CanvasTool oldValue = tool;
     if (value != oldValue) {
       tool = value;
       if (oldValue != null) oldValue.toolDeselected(canvas);
@@ -56,17 +56,17 @@ class CanvasListener
   }
 
   private void handlePopupTrigger(MouseEvent e) {
-    final var loc = Location.create(e.getX(), e.getY(), false);
-    final var objects = canvas.getModel().getObjectsFromTop();
+    final com.cburch.logisim.data.Location loc = Location.create(e.getX(), e.getY(), false);
+    final java.util.List<com.cburch.draw.model.CanvasObject> objects = canvas.getModel().getObjectsFromTop();
     CanvasObject clicked = null;
-    for (final var o : objects) {
+    for (final com.cburch.draw.model.CanvasObject o : objects) {
       if (o.contains(loc, false)) {
         clicked = o;
         break;
       }
     }
     if (clicked == null) {
-      for (final var o : objects) {
+      for (final com.cburch.draw.model.CanvasObject o : objects) {
         if (o.contains(loc, true)) {
           clicked = o;
           break;
@@ -77,14 +77,14 @@ class CanvasListener
   }
 
   private void handlePorts(MouseEvent e) {
-    final var loc = Location.create(e.getX(), e.getY(), true);
-    final var objects = canvas.getModel().getObjectsFromTop();
-    final var ports = new ArrayList<CanvasObject>();
+    final com.cburch.logisim.data.Location loc = Location.create(e.getX(), e.getY(), true);
+    final java.util.List<com.cburch.draw.model.CanvasObject> objects = canvas.getModel().getObjectsFromTop();
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> ports = new ArrayList<CanvasObject>();
     CanvasObject newSelectedPort = null;
-    for (final var object : objects) {
+    for (final com.cburch.draw.model.CanvasObject object : objects) {
       if (object instanceof AppearancePort) ports.add(object);
     }
-    for (final var port : ports) {
+    for (final com.cburch.draw.model.CanvasObject port : ports) {
       if (port.contains(loc, false) || port.contains(loc, true)) {
         newSelectedPort = port;
       }

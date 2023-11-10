@@ -30,9 +30,9 @@ public class TclVhdlEntityContent extends VhdlContentComponent {
 
   // TODO: remove code duplication with parent class
   private static String loadTemplate() {
-    final var input = VhdlContentComponent.class.getResourceAsStream(RESOURCE);
-    final var in = new BufferedReader(new InputStreamReader(input));
-    final var tmp = new StringBuilder();
+    final java.io.InputStream input = VhdlContentComponent.class.getResourceAsStream(RESOURCE);
+    final java.io.BufferedReader in = new BufferedReader(new InputStreamReader(input));
+    final java.lang.StringBuilder tmp = new StringBuilder();
     String line;
 
     try {

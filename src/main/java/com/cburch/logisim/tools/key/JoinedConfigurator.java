@@ -33,7 +33,7 @@ public final class JoinedConfigurator implements KeyConfigurator, Cloneable {
       e.printStackTrace();
       return null;
     }
-    final var len = this.handlers.length;
+    final int len = this.handlers.length;
     ret.handlers = new KeyConfigurator[len];
     for (int i = 0; i < len; i++) {
       ret.handlers[i] = this.handlers[i].clone();
@@ -44,8 +44,8 @@ public final class JoinedConfigurator implements KeyConfigurator, Cloneable {
   @Override
   public KeyConfigurationResult keyEventReceived(KeyConfigurationEvent event) {
     if (event.isConsumed()) return null;
-    for (final var handler : handlers) {
-      final var result = handler.keyEventReceived(event);
+    for (final com.cburch.logisim.tools.key.KeyConfigurator handler : handlers) {
+      final com.cburch.logisim.tools.key.KeyConfigurationResult result = handler.keyEventReceived(event);
       if (result != null || event.isConsumed()) {
         return result;
       }

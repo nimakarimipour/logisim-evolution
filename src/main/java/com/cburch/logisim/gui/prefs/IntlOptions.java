@@ -40,7 +40,7 @@ class IntlOptions extends OptionsPanel {
             });
     // new PrefOption(AppPreferences.SHAPE_DIN40700, S.getter("shapeDIN40700"))
 
-    final var localePanel = new Box(BoxLayout.X_AXIS);
+    final javax.swing.Box localePanel = new Box(BoxLayout.X_AXIS);
     localePanel.add(Box.createGlue());
     localePanel.add(localeLabel);
     localeLabel.setMaximumSize(localeLabel.getPreferredSize());
@@ -49,7 +49,7 @@ class IntlOptions extends OptionsPanel {
     locale.setAlignmentY(Component.TOP_ALIGNMENT);
     localePanel.add(Box.createGlue());
 
-    final var shapePanel = new JPanel();
+    final javax.swing.JPanel shapePanel = new JPanel();
     shapePanel.add(gateShape.getJLabel());
     shapePanel.add(gateShape.getJComboBox());
 

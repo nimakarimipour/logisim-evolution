@@ -37,12 +37,12 @@ public class WidthIncompatibilityData {
 
     if (this.size() != o.size()) return false;
     for (int i = 0; i < this.size(); i++) {
-      final var p = o.getPoint(i);
-      final var w = o.getBitWidth(i);
+      final com.cburch.logisim.data.Location p = o.getPoint(i);
+      final com.cburch.logisim.data.BitWidth w = o.getBitWidth(i);
       boolean matched = false;
       for (int j = 0; j < o.size(); j++) {
-        final var q = this.getPoint(j);
-        final var x = this.getBitWidth(j);
+        final com.cburch.logisim.data.Location q = this.getPoint(j);
+        final com.cburch.logisim.data.BitWidth x = this.getBitWidth(j);
         if (p.equals(q) && w.equals(x)) {
           matched = true;
           break;
@@ -62,10 +62,10 @@ public class WidthIncompatibilityData {
   }
 
   public BitWidth getCommonBitWidth() {
-    final var hist = new int[65];
+    final int[] hist = new int[65];
     BitWidth maxwidth = null;
     int maxcount = 0;
-    for (final var bw : widths) {
+    for (final com.cburch.logisim.data.BitWidth bw : widths) {
       int w = bw.getWidth();
       int n = ++hist[w];
       if (n > maxcount) {

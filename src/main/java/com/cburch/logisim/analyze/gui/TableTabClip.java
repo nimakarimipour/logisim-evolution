@@ -38,12 +38,12 @@ class TableTabClip implements ClipboardOwner {
       if (flavor == binaryFlavor) {
         return this;
       } else if (flavor == DataFlavor.stringFlavor) {
-        final var buf = new StringBuilder();
+        final java.lang.StringBuilder buf = new StringBuilder();
         for (int i = 0; i < headers.length; i++) {
           buf.append(headers[i]);
           buf.append(i == headers.length - 1 ? '\n' : '\t');
         }
-        for (final var content : contents) {
+        for (final java.lang.String[] content : contents) {
           for (int j = 0; j < content.length; j++) {
             buf.append(content[j]);
             buf.append(j == content.length - 1 ? '\n' : '\t');
@@ -75,17 +75,17 @@ class TableTabClip implements ClipboardOwner {
   }
 
   public boolean canPaste() {
-    final var clip = table.getToolkit().getSystemClipboard();
-    final var xfer = clip.getContents(this);
+    final java.awt.datatransfer.Clipboard clip = table.getToolkit().getSystemClipboard();
+    final java.awt.datatransfer.Transferable xfer = clip.getContents(this);
     return xfer.isDataFlavorSupported(binaryFlavor);
   }
 
   public void copy() {
-    final var s = table.getCaret().getSelection();
+    final java.awt.Rectangle s = table.getCaret().getSelection();
     if (s.width <= 0 || s.height <= 0) return;
-    final var t = table.getTruthTable();
-    final var inputs = t.getInputColumnCount();
-    final var header = new String[s.width];
+    final com.cburch.logisim.analyze.model.TruthTable t = table.getTruthTable();
+    final int inputs = t.getInputColumnCount();
+    final java.lang.String[] header = new String[s.width];
     for (int c = s.x; c < s.x + s.width; c++) {
       if (c < inputs) {
         header[c - s.x] = t.getInputHeader(c);
@@ -93,7 +93,7 @@ class TableTabClip implements ClipboardOwner {
         header[c - s.x] = t.getOutputHeader(c - inputs);
       }
     }
-    final var contents = new String[s.height][s.width];
+    final java.lang.String[][] contents = new String[s.height][s.width];
     for (int r = s.y; r < s.y + s.height; r++) {
       for (int c = s.x; c < s.x + s.width; c++) {
         if (c < inputs) {
@@ -114,7 +114,7 @@ class TableTabClip implements ClipboardOwner {
   }
 
   public void paste() {
-    final var clip = table.getToolkit().getSystemClipboard();
+    final java.awt.datatransfer.Clipboard clip = table.getToolkit().getSystemClipboard();
     Transferable xfer;
     try {
       xfer = clip.getContents(this);
@@ -132,10 +132,10 @@ class TableTabClip implements ClipboardOwner {
     Entry[][] entries;
     if (xfer.isDataFlavorSupported(binaryFlavor)) {
       try {
-        final var data = (Data) xfer.getTransferData(binaryFlavor);
+        final com.cburch.logisim.analyze.gui.TableTabClip.Data data = (Data) xfer.getTransferData(binaryFlavor);
         entries = new Entry[data.contents.length][];
         for (int i = 0; i < entries.length; i++) {
-          final var row = new Entry[data.contents[i].length];
+          final com.cburch.logisim.analyze.model.Entry[] row = new Entry[data.contents[i].length];
           for (int j = 0; j < row.length; j++) {
             row[j] = Entry.parse(data.contents[i][j]);
           }
@@ -146,14 +146,14 @@ class TableTabClip implements ClipboardOwner {
       }
     } else if (xfer.isDataFlavorSupported(DataFlavor.stringFlavor)) {
       try {
-        final var buf = (String) xfer.getTransferData(DataFlavor.stringFlavor);
-        final var lines = new StringTokenizer(buf, "\r\n");
+        final java.lang.String buf = (String) xfer.getTransferData(DataFlavor.stringFlavor);
+        final java.util.StringTokenizer lines = new StringTokenizer(buf, "\r\n");
         String first;
         if (!lines.hasMoreTokens()) return;
         first = lines.nextToken();
         java.util.StringTokenizer toks = new StringTokenizer(first, "\t,");
-        final var headers = new String[toks.countTokens()];
-        final var firstEntries = new Entry[headers.length];
+        final java.lang.String[] headers = new String[toks.countTokens()];
+        final com.cburch.logisim.analyze.model.Entry[] firstEntries = new Entry[headers.length];
         boolean allParsed = true;
         for (int i = 0; toks.hasMoreTokens(); i++) {
           headers[i] = toks.nextToken();
@@ -170,7 +170,7 @@ class TableTabClip implements ClipboardOwner {
         }
         while (lines.hasMoreTokens()) {
           toks = new StringTokenizer(lines.nextToken(), "\t");
-          final var ents = new Entry[toks.countTokens()];
+          final com.cburch.logisim.analyze.model.Entry[] ents = new Entry[toks.countTokens()];
           for (int i = 0; toks.hasMoreTokens(); i++) {
             ents[i] = Entry.parse(toks.nextToken());
           }
@@ -188,12 +188,12 @@ class TableTabClip implements ClipboardOwner {
           OptionPane.ERROR_MESSAGE);
       return;
     }
-    final var s = table.getCaret().getSelection();
+    final java.awt.Rectangle s = table.getCaret().getSelection();
     if (s.width <= 0 || s.height <= 0) return;
-    final var model = table.getTruthTable();
-    final var rows = model.getVisibleRowCount();
-    final var inputs = model.getInputColumnCount();
-    final var outputs = model.getOutputColumnCount();
+    final com.cburch.logisim.analyze.model.TruthTable model = table.getTruthTable();
+    final int rows = model.getVisibleRowCount();
+    final int inputs = model.getInputColumnCount();
+    final int outputs = model.getOutputColumnCount();
     if (s.width == 1 && s.height == 1) {
       if (s.y + entries.length > rows || s.x + entries[0].length > inputs + outputs) {
         OptionPane.showMessageDialog(

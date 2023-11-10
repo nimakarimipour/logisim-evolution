@@ -168,8 +168,8 @@ public enum IoComponentTypes {
         return ReptarLocalBus.getOutputLabel(id);
       case LedArray:
         if (nrOfRows != 0 && nrOfColumns != 0 && id >= 0 && id < nrPins) {
-          final var row = id / nrOfColumns;
-          final var col = id % nrOfColumns;
+          final int row = id / nrOfColumns;
+          final int col = id % nrOfColumns;
           return "Row_" + row + "_Col_" + col;
         }
       default:
@@ -190,13 +190,13 @@ public enum IoComponentTypes {
   }
 
   private static int[][] getSevenSegmentDisplayArray(boolean hasDp) {
-    final var sa = com.cburch.logisim.std.io.SevenSegment.Segment_A;
-    final var sb = com.cburch.logisim.std.io.SevenSegment.Segment_B;
-    final var sc = com.cburch.logisim.std.io.SevenSegment.Segment_C;
-    final var sd = com.cburch.logisim.std.io.SevenSegment.Segment_D;
-    final var se = com.cburch.logisim.std.io.SevenSegment.Segment_E;
-    final var sf = com.cburch.logisim.std.io.SevenSegment.Segment_F;
-    final var sg = com.cburch.logisim.std.io.SevenSegment.Segment_G;
+    final int sa = com.cburch.logisim.std.io.SevenSegment.Segment_A;
+    final int sb = com.cburch.logisim.std.io.SevenSegment.Segment_B;
+    final int sc = com.cburch.logisim.std.io.SevenSegment.Segment_C;
+    final int sd = com.cburch.logisim.std.io.SevenSegment.Segment_D;
+    final int se = com.cburch.logisim.std.io.SevenSegment.Segment_E;
+    final int sf = com.cburch.logisim.std.io.SevenSegment.Segment_F;
+    final int sg = com.cburch.logisim.std.io.SevenSegment.Segment_G;
     final int[][] indexes = {
         {-1, sa, sa, -1, -1},
         {sf, -1, -1, sb, -1},
@@ -247,7 +247,7 @@ public enum IoComponentTypes {
         break;
       case SevenSegment: hasDp = true;
       case SevenSegmentNoDp:
-        final var indexes = getSevenSegmentDisplayArray(hasDp);
+        final int[][] indexes = getSevenSegmentDisplayArray(hasDp);
         switch (mapRotation) {
           case ROTATION_CCW_90, ROTATION_CW_90 -> {
             partX = (float) width / (float) 7;
@@ -367,13 +367,13 @@ public enum IoComponentTypes {
         break;
       case RgbLed:
         part = (float) height / (float) 3;
-        final var by = y + (int) ((float) pinNr * part);
-        final var bh = (int) ((float) (pinNr + 1) * part) - (int) ((float) pinNr * part);
+        final int by = y + (int) ((float) pinNr * part);
+        final int bh = (int) ((float) (pinNr + 1) * part) - (int) ((float) pinNr * part);
         g.fillRect(x, by, width, bh);
         break;
       case SevenSegment: hasDp = true;
       case SevenSegmentNoDp:
-        final var indexes = getSevenSegmentDisplayArray(hasDp);
+        final int[][] indexes = getSevenSegmentDisplayArray(hasDp);
         switch (mapRotation) {
           case ROTATION_CCW_90, ROTATION_CW_90 -> {
             partX = (float) width / (float) 7;
@@ -424,8 +424,8 @@ public enum IoComponentTypes {
         }
         break;
       case LedArray:
-        final var selectedColumn = pinNr % nrOfColumns;
-        final var selectedRow = pinNr / nrOfColumns;
+        final int selectedColumn = pinNr % nrOfColumns;
+        final int selectedRow = pinNr / nrOfColumns;
         switch (mapRotation) {
           case ROTATION_CCW_90, ROTATION_CW_90 -> {
             partX = (float) width / (float) nrOfRows;

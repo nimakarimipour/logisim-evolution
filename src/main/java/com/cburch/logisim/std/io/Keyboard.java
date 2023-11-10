@@ -41,10 +41,10 @@ public class Keyboard extends InstanceFactory {
 
   public static class Poker extends InstancePoker {
     public void draw(InstancePainter painter) {
-      final var data = getKeyboardState(painter);
-      final var bds = painter.getInstance().getBounds();
-      final var g = painter.getGraphics();
-      final var fm = g.getFontMetrics(DEFAULT_FONT);
+      final com.cburch.logisim.std.io.KeyboardData data = getKeyboardState(painter);
+      final com.cburch.logisim.data.Bounds bds = painter.getInstance().getBounds();
+      final java.awt.Graphics g = painter.getGraphics();
+      final java.awt.FontMetrics fm = g.getFontMetrics(DEFAULT_FONT);
 
       String str;
       int cursor;
@@ -56,7 +56,7 @@ public class Keyboard extends InstanceFactory {
         dispStart = data.getDisplayStart();
       }
 
-      final var asc = fm.getAscent();
+      final int asc = fm.getAscent();
       int x = bds.getX() + 8;
       if (dispStart > 0) {
         x += fm.stringWidth(str.charAt(0) + "m");
@@ -66,13 +66,13 @@ public class Keyboard extends InstanceFactory {
       } else {
         x += fm.stringWidth(str.substring(0, cursor));
       }
-      final var y = bds.getY() + (bds.getHeight() + asc) / 2;
+      final int y = bds.getY() + (bds.getHeight() + asc) / 2;
       g.drawLine(x, y - asc, x, y);
     }
 
     @Override
     public void keyPressed(InstanceState state, KeyEvent e) {
-      final var data = getKeyboardState(state);
+      final com.cburch.logisim.std.io.KeyboardData data = getKeyboardState(state);
       boolean changed = false;
       boolean used = true;
 
@@ -92,8 +92,8 @@ public class Keyboard extends InstanceFactory {
 
     @Override
     public void keyTyped(InstanceState state, KeyEvent e) {
-      final var data = getKeyboardState(state);
-      final var ch = e.getKeyChar();
+      final com.cburch.logisim.std.io.KeyboardData data = getKeyboardState(state);
+      final char ch = e.getKeyChar();
       boolean changed = false;
       if (ch != KeyEvent.CHAR_UNDEFINED) {
         if (!Character.isISOControl(ch) || ch == '\b' || ch == '\n' || ch == FORM_FEED) {
@@ -108,7 +108,7 @@ public class Keyboard extends InstanceFactory {
   }
 
   public static void addToBuffer(InstanceState state, char[] newChars) {
-    final var keyboardData = getKeyboardState(state);
+    final com.cburch.logisim.std.io.KeyboardData keyboardData = getKeyboardState(state);
     for (char newChar : newChars) {
       keyboardData.insert(newChar);
     }
@@ -121,7 +121,7 @@ public class Keyboard extends InstanceFactory {
   }
 
   private static KeyboardData getKeyboardState(InstanceState state) {
-    final var bufLen = getBufferLength(state.getAttributeValue(ATTR_BUFFER));
+    final int bufLen = getBufferLength(state.getAttributeValue(ATTR_BUFFER));
     com.cburch.logisim.std.io.KeyboardData ret = (KeyboardData) state.getData();
     if (ret == null) {
       ret = new KeyboardData(bufLen);
@@ -164,7 +164,7 @@ public class Keyboard extends InstanceFactory {
     setIcon(new KeyboardIcon());
     setInstancePoker(Poker.class);
 
-    final var ps = new Port[5];
+    final com.cburch.logisim.instance.Port[] ps = new Port[5];
     ps[CLR] = new Port(20, 10, Port.INPUT, 1);
     ps[CK] = new Port(0, 0, Port.INPUT, 1);
     ps[RE] = new Port(10, 10, Port.INPUT, 1);
@@ -191,22 +191,22 @@ public class Keyboard extends InstanceFactory {
 
     g.setFont(DEFAULT_FONT);
     if (fm == null) fm = g.getFontMetrics();
-    final var asc = fm.getAscent();
-    final var x0 = x + 8;
-    final var ys = y + (HEIGHT + asc) / 2;
-    final var dotsWidth = fm.stringWidth("m");
+    final int asc = fm.getAscent();
+    final int x0 = x + 8;
+    final int ys = y + (HEIGHT + asc) / 2;
+    final int dotsWidth = fm.stringWidth("m");
     int xs;
     if (dispStart > 0) {
       g.drawString(str.substring(0, 1), x0, ys);
       xs = x0 + fm.stringWidth(str.charAt(0) + "m");
       drawDots(g, xs - dotsWidth, ys, dotsWidth, asc);
-      final var sub = str.substring(dispStart, dispEnd);
+      final java.lang.String sub = str.substring(dispStart, dispEnd);
       g.drawString(sub, xs, ys);
       if (dispEnd < str.length()) {
         drawDots(g, xs + fm.stringWidth(sub), ys, dotsWidth, asc);
       }
     } else if (dispEnd < str.length()) {
-      final var sub = str.substring(dispStart, dispEnd);
+      final java.lang.String sub = str.substring(dispStart, dispEnd);
       xs = x0;
       g.drawString(sub, xs, ys);
       drawDots(g, xs + fm.stringWidth(sub), ys, dotsWidth, asc);
@@ -223,18 +223,18 @@ public class Keyboard extends InstanceFactory {
   private void drawDots(Graphics g, int x, int y, int width, int ascent) {
     int r = width / 10;
     if (r < 1) r = 1;
-    final var d = 2 * r;
+    final int d = 2 * r;
     if (2 * r + 1 * d <= width) g.fillOval(x + r, y - d, d, d);
     if (3 * r + 2 * d <= width) g.fillOval(x + 2 * r + d, y - d, d, d);
     if (5 * r + 3 * d <= width) g.fillOval(x + 3 * r + 2 * d, y - d, d, d);
   }
 
   private void drawSpecials(ArrayList<Integer> specials, int x0, int xs, int ys, int asc, Graphics g, FontMetrics fm, String str, int dispStart, int dispEnd) {
-    final var px = new int[3];
-    final var py = new int[3];
-    for (final var special : specials) {
-      final var code = special;
-      final var pos = code & 0xFF;
+    final int[] px = new int[3];
+    final int[] py = new int[3];
+    for (final java.lang.Integer special : specials) {
+      final java.lang.Integer code = special;
+      final int pos = code & 0xFF;
       int w0;
       int w1;
       if (pos == 0) {
@@ -249,9 +249,9 @@ public class Keyboard extends InstanceFactory {
       w0++;
       w1--;
 
-      final var key = code >> 16;
+      final int key = code >> 16;
       if (key == '\b') {
-        final var y1 = ys - asc / 2;
+        final int y1 = ys - asc / 2;
         g.drawLine(w0, y1, w1, y1);
         px[0] = w0 + 3;
         py[0] = y1 - 3;
@@ -261,7 +261,7 @@ public class Keyboard extends InstanceFactory {
         py[2] = y1 + 3;
         g.drawPolyline(px, py, 3);
       } else if (key == '\n') {
-        final var y1 = ys - 3;
+        final int y1 = ys - 3;
         px[0] = w1;
         py[0] = ys - asc;
         px[1] = w1;
@@ -284,8 +284,8 @@ public class Keyboard extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var showState = painter.getShowState();
-    final var g = painter.getGraphics();
+    final boolean showState = painter.getShowState();
+    final java.awt.Graphics g = painter.getGraphics();
     painter.drawClock(CK, Direction.EAST);
     painter.drawBounds();
     painter.drawPort(CLR);
@@ -297,13 +297,13 @@ public class Keyboard extends InstanceFactory {
       String str;
       int dispStart;
       int dispEnd;
-      final var specials = new ArrayList<Integer>();
+      final java.util.ArrayList<java.lang.Integer> specials = new ArrayList<Integer>();
       FontMetrics fm = null;
-      final var state = getKeyboardState(painter);
+      final com.cburch.logisim.std.io.KeyboardData state = getKeyboardState(painter);
       synchronized (state) {
         str = state.toString();
         for (int i = state.getNextSpecial(0); i >= 0; i = state.getNextSpecial(i + 1)) {
-          final var c = state.getChar(i);
+          final char c = state.getChar(i);
           specials.add(c << 16 | i);
         }
         if (!state.isDisplayValid()) {
@@ -315,16 +315,16 @@ public class Keyboard extends InstanceFactory {
       }
 
       if (str.length() > 0) {
-        final var bds = painter.getBounds();
+        final com.cburch.logisim.data.Bounds bds = painter.getBounds();
         drawBuffer(g, fm, str, dispStart, dispEnd, specials, bds);
       }
     } else {
-      final var bds = painter.getBounds();
-      final var len = getBufferLength(painter.getAttributeValue(ATTR_BUFFER));
-      final var str = S.get("keybDesc", "" + len);
-      final var fm = g.getFontMetrics();
-      final var x = bds.getX() + (WIDTH - fm.stringWidth(str)) / 2;
-      final var y = bds.getY() + (HEIGHT + fm.getAscent()) / 2;
+      final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+      final int len = getBufferLength(painter.getAttributeValue(ATTR_BUFFER));
+      final java.lang.String str = S.get("keybDesc", "" + len);
+      final java.awt.FontMetrics fm = g.getFontMetrics();
+      final int x = bds.getX() + (WIDTH - fm.stringWidth(str)) / 2;
+      final int y = bds.getY() + (HEIGHT + fm.getAscent()) / 2;
       g.drawString(str, x, y);
     }
   }
@@ -332,18 +332,18 @@ public class Keyboard extends InstanceFactory {
   @Override
   public void propagate(InstanceState circState) {
     Object trigger = circState.getAttributeValue(StdAttr.EDGE_TRIGGER);
-    final var state = getKeyboardState(circState);
-    final var clear = circState.getPortValue(CLR);
-    final var clock = circState.getPortValue(CK);
-    final var enable = circState.getPortValue(RE);
+    final com.cburch.logisim.std.io.KeyboardData state = getKeyboardState(circState);
+    final com.cburch.logisim.data.Value clear = circState.getPortValue(CLR);
+    final com.cburch.logisim.data.Value clock = circState.getPortValue(CK);
+    final com.cburch.logisim.data.Value enable = circState.getPortValue(RE);
     char c;
 
     synchronized (state) {
-      final var lastClock = state.setLastClock(clock);
+      final com.cburch.logisim.data.Value lastClock = state.setLastClock(clock);
       if (clear == Value.TRUE) {
         state.clear();
       } else if (enable != Value.FALSE) {
-        final var go = (trigger == StdAttr.TRIG_FALLING)
+        final boolean go = (trigger == StdAttr.TRIG_FALLING)
                 ? lastClock == Value.TRUE && clock == Value.FALSE
                 : lastClock == Value.FALSE && clock == Value.TRUE;
         if (go) state.dequeue();
@@ -351,7 +351,7 @@ public class Keyboard extends InstanceFactory {
 
       c = state.getChar(0);
     }
-    final var out = Value.createKnown(BitWidth.create(7), c & 0x7F);
+    final com.cburch.logisim.data.Value out = Value.createKnown(BitWidth.create(7), c & 0x7F);
     circState.setPort(OUT, out, DELAY0);
     circState.setPort(AVL, c != '\0' ? Value.TRUE : Value.FALSE, DELAY1);
   }

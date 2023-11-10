@@ -67,7 +67,7 @@ public class ZoomControl extends JPanel {
     minus = new ZoomButton(new ZoomIcon(ZoomIcon.ZOOMOUT), true);
     slider = new JSlider(sliderModel);
 
-    final var zoom = new JPanel(new BorderLayout());
+    final javax.swing.JPanel zoom = new JPanel(new BorderLayout());
     zoom.add(minus, BorderLayout.WEST);
     zoom.add(label, BorderLayout.CENTER);
     zoom.add(plus, BorderLayout.EAST);
@@ -97,8 +97,8 @@ public class ZoomControl extends JPanel {
   }
 
   private int nearestZoomOption() {
-    final var choices = model.getZoomOptions();
-    final var factor = model.getZoomFactor() * 100.0;
+    final java.util.List<java.lang.Double> choices = model.getZoomOptions();
+    final double factor = model.getZoomFactor() * 100.0;
     int closest = 0;
     for (int i = 1; i < choices.size(); i++) {
       if (Math.abs(choices.get(i) - factor) < Math.abs(choices.get(closest) - factor)) {
@@ -119,10 +119,10 @@ public class ZoomControl extends JPanel {
   }
 
   public void zoomIn() {
-    final var zoom = model.getZoomFactor();
-    final var choices = model.getZoomOptions();
-    final var factor = zoom * 100.0 * 1.001;
-    for (final var choice : choices) {
+    final double zoom = model.getZoomFactor();
+    final java.util.List<java.lang.Double> choices = model.getZoomOptions();
+    final double factor = zoom * 100.0 * 1.001;
+    for (final java.lang.Double choice : choices) {
       if (choice > factor) {
         model.setZoomFactor(choice / 100.0);
         break;
@@ -131,9 +131,9 @@ public class ZoomControl extends JPanel {
   }
 
   public void zoomOut() {
-    final var zoom = model.getZoomFactor();
-    final var choices = model.getZoomOptions();
-    final var factor = zoom * 100.0 * 0.999;
+    final double zoom = model.getZoomFactor();
+    final java.util.List<java.lang.Double> choices = model.getZoomOptions();
+    final double factor = zoom * 100.0 * 0.999;
     for (int i = choices.size() - 1; i >= 0; i--) {
       if (choices.get(i) < factor) {
         model.setZoomFactor(choices.get(i) / 100.0);
@@ -143,7 +143,7 @@ public class ZoomControl extends JPanel {
   }
 
   public void zoomTo(int i) {
-    final var choices = model.getZoomOptions();
+    final java.util.List<java.lang.Double> choices = model.getZoomOptions();
     i = Math.max(Math.min(i, choices.size() - 1), 0);
     model.setZoomFactor(choices.get(i) / 100.0);
   }
@@ -154,7 +154,7 @@ public class ZoomControl extends JPanel {
   }
 
   public void setZoomModel(ZoomModel value) {
-    final var oldModel = model;
+    final com.cburch.logisim.gui.generic.ZoomModel oldModel = model;
     if (oldModel != value) {
       if (oldModel != null) {
         oldModel.removePropertyChangeListener(ZoomModel.SHOW_GRID, grid);
@@ -228,19 +228,19 @@ public class ZoomControl extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
       if (AppPreferences.AntiAliassing.getBoolean()) {
-        final var g2 = (Graphics2D) g;
+        final java.awt.Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(
             RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
       }
-      final var width = getWidth();
-      final var height = getHeight();
+      final int width = getWidth();
+      final int height = getHeight();
       g.setColor(state ? getBackground() : Color.BLACK);
-      final var three = AppPreferences.getScaled(3);
-      final var xdim = (width - AppPreferences.getScaled(4)) / three * three + 1;
-      final var ydim = (height - AppPreferences.getScaled(4)) / three * three + 1;
-      final var xoff = (width - xdim) / 2;
-      final var yoff = (height - ydim) / 2;
+      final int three = AppPreferences.getScaled(3);
+      final int xdim = (width - AppPreferences.getScaled(4)) / three * three + 1;
+      final int ydim = (height - AppPreferences.getScaled(4)) / three * three + 1;
+      final int xoff = (width - xdim) / 2;
+      final int yoff = (height - ydim) / 2;
       for (int x = 0; x < xdim; x += three) {
         for (int y = 0; y < ydim; y += three) {
           g.drawLine(x + xoff, y + yoff, x + xoff, y + yoff);
@@ -263,7 +263,7 @@ public class ZoomControl extends JPanel {
     }
 
     private void update() {
-      final var grid = model.getShowGrid();
+      final boolean grid = model.getShowGrid();
       if (grid != state) {
         state = grid;
         repaint();
@@ -372,31 +372,31 @@ public class ZoomControl extends JPanel {
     @Override
     public void actionPerformed(ActionEvent e) {
       if (zoomModel != null) {
-        final var g = getGraphics();
+        final java.awt.Graphics g = getGraphics();
         if (canvas.getProject().getCurrentCircuit() == null) return;
 
-        final var bounds =
+        final com.cburch.logisim.data.Bounds bounds =
             (g != null)
                 ? canvas.getProject().getCurrentCircuit().getBounds(getGraphics())
                 : canvas.getProject().getCurrentCircuit().getBounds();
         if (bounds.getHeight() == 0 || bounds.getWidth() == 0) return;
 
-        final var canvasPane = canvas.getCanvasPane();
+        final com.cburch.logisim.gui.generic.CanvasPane canvasPane = canvas.getCanvasPane();
         if (canvasPane == null) return;
         // the white space around
-        final var padding = 50;
+        final int padding = 50;
         // set autozoom
-        final var zoomFactor = zoomModel.getZoomFactor();
-        final var height = (bounds.getHeight() + 2 * padding) * zoomFactor;
-        final var width = (bounds.getWidth() + 2 * padding) * zoomFactor;
+        final double zoomFactor = zoomModel.getZoomFactor();
+        final double height = (bounds.getHeight() + 2 * padding) * zoomFactor;
+        final double width = (bounds.getWidth() + 2 * padding) * zoomFactor;
         double autozoom = zoomFactor;
         autozoom *=
             Math.min(
                 canvasPane.getViewport().getSize().getWidth() / width,
                 canvasPane.getViewport().getSize().getHeight() / height);
-        final var max =
+        final double max =
             zoomModel.getZoomOptions().get(zoomModel.getZoomOptions().size() - 1) / 100.0;
-        final var min = zoomModel.getZoomOptions().get(0) / 100.0;
+        final double min = zoomModel.getZoomOptions().get(0) / 100.0;
         if (autozoom > max) autozoom = max;
         if (autozoom < min) autozoom = min;
         if (Math.abs(autozoom - zoomFactor) >= 0.01) {

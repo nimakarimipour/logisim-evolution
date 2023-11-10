@@ -23,7 +23,7 @@ public class CircuitTransactionResult {
   }
 
   public ReplacementMap getReplacementMap(Circuit circuit) {
-    final var ret = mutator.getReplacementMap(circuit);
+    final com.cburch.logisim.circuit.ReplacementMap ret = mutator.getReplacementMap(circuit);
     return ret == null ? new ReplacementMap() : ret;
   }
 
@@ -33,8 +33,8 @@ public class CircuitTransactionResult {
 
   @Override
   public String toString() {
-    final var s = new StringBuilder("CircuitTransactionResult affecting...");
-    for (final var c : getModifiedCircuits()) {
+    final java.lang.StringBuilder s = new StringBuilder("CircuitTransactionResult affecting...");
+    for (final com.cburch.logisim.circuit.Circuit c : getModifiedCircuits()) {
       s.append("\n    - circuit ").append(c).append(" with replacements...");
       s.append("\n").append(getReplacementMap(c));
     }

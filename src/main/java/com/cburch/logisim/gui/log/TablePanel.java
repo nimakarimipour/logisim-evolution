@@ -45,7 +45,7 @@ class TablePanel extends LogPanel {
     super(frame);
     vsb = new VerticalScrollBar();
     tableView = new TableView();
-    final var pane =
+    final javax.swing.JScrollPane pane =
         new JScrollPane(
             tableView,
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
@@ -57,10 +57,10 @@ class TablePanel extends LogPanel {
   }
 
   public int getColumn(MouseEvent event) {
-    final var model = getModel();
-    final var x = event.getX() - (getWidth() - tableWidth) / 2;
+    final com.cburch.logisim.gui.log.Model model = getModel();
+    final int x = event.getX() - (getWidth() - tableWidth) / 2;
     if (x < 0) return -1;
-    final var ret = (x + COLUMN_SEP / 2) / (cellWidth + COLUMN_SEP);
+    final int ret = (x + COLUMN_SEP / 2) / (cellWidth + COLUMN_SEP);
     return ret >= 0 && ret < model.getSignalCount() ? ret : -1;
   }
 
@@ -70,9 +70,9 @@ class TablePanel extends LogPanel {
   }
 
   public int getRow(MouseEvent event) {
-    final var y = event.getY() - (getHeight() - tableHeight) / 2;
+    final int y = event.getY() - (getHeight() - tableHeight) / 2;
     if (y < cellHeight + HEADER_SEP) return -1;
-    final var ret = (y - cellHeight - HEADER_SEP) / cellHeight;
+    final int ret = (y - cellHeight - HEADER_SEP) / cellHeight;
     return ret >= 0 && ret < rowCount ? ret : -1;
   }
 
@@ -98,19 +98,19 @@ class TablePanel extends LogPanel {
 
     private void computePreferredSize() {
       // TODO: sizing is terrible
-      final var model = getModel();
-      final var columns = model.getSignalCount();
+      final com.cburch.logisim.gui.log.Model model = getModel();
+      final int columns = model.getSignalCount();
       if (columns == 0) {
         setPreferredSize(new Dimension(0, 0));
         return;
       }
 
-      final var g = getGraphics();
+      final java.awt.Graphics g = getGraphics();
       if (g == null) {
         cellHeight = 16;
         cellWidth = 24;
       } else {
-        final var fm = g.getFontMetrics(HEAD_FONT);
+        final java.awt.FontMetrics fm = g.getFontMetrics(HEAD_FONT);
         cellHeight = fm.getHeight();
         cellWidth = 24;
         for (int i = 0; i < columns; i++) {
@@ -130,12 +130,12 @@ class TablePanel extends LogPanel {
     public void paintComponent(Graphics g) {
       super.paintComponent(g);
 
-      final var sz = getSize();
+      final java.awt.Dimension sz = getSize();
       final int top = Math.max(0, (sz.height - tableHeight) / 2);
       final int left = Math.max(0, (sz.width - tableWidth) / 2);
-      final var model = getModel();
+      final com.cburch.logisim.gui.log.Model model = getModel();
       if (model == null) return;
-      final var columns = model.getSignalCount();
+      final int columns = model.getSignalCount();
       if (columns == 0) {
         g.setFont(BODY_FONT);
         GraphicsUtil.drawCenteredText(g, S.get("tableEmptyMessage"), sz.width / 2, sz.height / 2);
@@ -143,14 +143,14 @@ class TablePanel extends LogPanel {
       }
 
       g.setColor(Color.GRAY);
-      final var lineY = top + cellHeight + HEADER_SEP / 2;
+      final int lineY = top + cellHeight + HEADER_SEP / 2;
       g.drawLine(left, lineY, left + tableWidth, lineY);
 
       g.setColor(Color.BLACK);
       g.setFont(HEAD_FONT);
-      final var headerMetric = g.getFontMetrics();
+      final java.awt.FontMetrics headerMetric = g.getFontMetrics();
       int x = left;
-      final var y = top + headerMetric.getAscent() + 1;
+      final int y = top + headerMetric.getAscent() + 1;
       for (int i = 0; i < columns; i++) {
         x = paintHeader(model.getItem(i).getShortName(), x, y, g, headerMetric);
       }
@@ -180,7 +180,7 @@ class TablePanel extends LogPanel {
     }
 
     private int paintHeader(String header, int x, int y, Graphics g, FontMetrics fm) {
-      final var width = fm.stringWidth(header);
+      final int width = fm.stringWidth(header);
       g.drawString(header, x + (cellWidth - width) / 2, y);
       return x + cellWidth + COLUMN_SEP;
     }
@@ -233,8 +233,8 @@ class TablePanel extends LogPanel {
 
     @Override
     public int getBlockIncrement(int direction) {
-      final var curY = getValue();
-      final var curHeight = getVisibleAmount();
+      final int curY = getValue();
+      final int curHeight = getVisibleAmount();
       int numCells = curHeight / cellHeight - 1;
       if (numCells <= 0) numCells = 1;
       return (direction > 0)
@@ -246,7 +246,7 @@ class TablePanel extends LogPanel {
 
     @Override
     public int getUnitIncrement(int direction) {
-      final var curY = getValue();
+      final int curY = getValue();
       return (direction > 0)
           ? curY > 0 ? cellHeight : cellHeight + HEADER_SEP
           : curY > cellHeight + HEADER_SEP ? cellHeight : cellHeight + HEADER_SEP;
@@ -254,8 +254,8 @@ class TablePanel extends LogPanel {
 
     @Override
     public void stateChanged(ChangeEvent event) {
-      final var newMaximum = getMaximum();
-      final var newExtent = getVisibleAmount();
+      final int newMaximum = getMaximum();
+      final int newExtent = getVisibleAmount();
       if (oldMaximum != newMaximum || oldExtent != newExtent) {
         if (getValue() + oldExtent >= oldMaximum) {
           setValue(newMaximum - newExtent);

@@ -96,9 +96,9 @@ public class ProjectExplorer extends JTree implements LocaleListener {
   }
 
   public Tool getSelectedTool() {
-    final var path = getSelectionPath();
+    final javax.swing.tree.TreePath path = getSelectionPath();
     if (path == null) return null;
-    final var last = path.getLastPathComponent();
+    final java.lang.Object last = path.getLastPathComponent();
 
     return (last instanceof ProjectExplorerToolNode)
         ? ((ProjectExplorerToolNode) last).getValue()
@@ -132,7 +132,7 @@ public class ProjectExplorer extends JTree implements LocaleListener {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-      final var path = getSelectionPath();
+      final javax.swing.tree.TreePath path = getSelectionPath();
       if (listener != null && path != null && path.getPathCount() == 2) {
         listener.deleteRequested(new Event(path));
       }
@@ -154,20 +154,20 @@ public class ProjectExplorer extends JTree implements LocaleListener {
         int row,
         boolean hasFocus) {
       java.awt.Component ret = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
-      final var plainFont = AppPreferences.getScaledFont(ret.getFont());
-      final var boldFont = new Font(plainFont.getFontName(), Font.BOLD, plainFont.getSize());
+      final java.awt.Font plainFont = AppPreferences.getScaledFont(ret.getFont());
+      final java.awt.Font boldFont = new Font(plainFont.getFontName(), Font.BOLD, plainFont.getSize());
       ret.setFont(plainFont);
       if (ret instanceof JComponent comp) {
         comp.setToolTipText(null);
       }
       if (value instanceof ProjectExplorerToolNode toolNode) {
-        final var tool = toolNode.getValue();
+        final com.cburch.logisim.tools.Tool tool = toolNode.getValue();
         if (ret instanceof JLabel label) {
           boolean viewed = false;
           if (tool instanceof AddTool && proj != null && proj.getFrame() != null) {
             Circuit circ = null;
             VhdlContent vhdl = null;
-            final var fact = ((AddTool) tool).getFactory(false);
+            final com.cburch.logisim.comp.ComponentFactory fact = ((AddTool) tool).getFactory(false);
             if (fact instanceof SubcircuitFactory sub) {
               circ = sub.getSubcircuit();
             } else if (fact instanceof VhdlEntity vhdlEntity) {
@@ -184,16 +184,16 @@ public class ProjectExplorer extends JTree implements LocaleListener {
           label.setToolTipText(tool.getDescription());
         }
       } else if (value instanceof ProjectExplorerLibraryNode libNode) {
-        final var lib = libNode.getValue();
+        final com.cburch.logisim.tools.Library lib = libNode.getValue();
 
         if (ret instanceof JLabel) {
-          final var baseName = lib.getDisplayName();
+          final java.lang.String baseName = lib.getDisplayName();
           java.lang.String text = baseName;
           if (lib.isDirty()) {
             // TODO: Would be nice to use DIRTY_MARKER here instead of "*" but it does not render
             // corectly in project tree, font seem to have the character as frame title is fine.
             // Needs to figure out what is different (java fonts?). Keep "*" unless bug is resolved.
-            final var DIRTY_MARKER_LOCAL = "*"; // useless var for easy DIRTY_MARKER hunt in future.
+            final java.lang.String DIRTY_MARKER_LOCAL = "*"; // useless var for easy DIRTY_MARKER hunt in future.
             text = DIRTY_MARKER_LOCAL + baseName;
           }
 
@@ -207,9 +207,9 @@ public class ProjectExplorer extends JTree implements LocaleListener {
   private class MyListener implements BaseMouseListenerContract, TreeSelectionListener, ProjectListener, PropertyChangeListener {
     private void checkForPopup(MouseEvent e) {
       if (e.isPopupTrigger()) {
-        final var path = getPathForLocation(e.getX(), e.getY());
+        final javax.swing.tree.TreePath path = getPathForLocation(e.getX(), e.getY());
         if (path != null && listener != null) {
-          final var menu = listener.menuRequested(new Event(path));
+          final javax.swing.JPopupMenu menu = listener.menuRequested(new Event(path));
           if (menu != null) {
             menu.show(ProjectExplorer.this, e.getX(), e.getY());
           }
@@ -220,7 +220,7 @@ public class ProjectExplorer extends JTree implements LocaleListener {
     @Override
     public void mouseClicked(MouseEvent e) {
       if (e.getClickCount() == 2) {
-        final var path = getPathForLocation(e.getX(), e.getY());
+        final javax.swing.tree.TreePath path = getPathForLocation(e.getX(), e.getY());
         if (path != null && listener != null) {
           listener.doubleClicked(new Event(path));
         }
@@ -242,9 +242,9 @@ public class ProjectExplorer extends JTree implements LocaleListener {
     }
 
     void changedNode(Object o) {
-      final var model = (ProjectExplorerModel) getModel();
+      final com.cburch.logisim.gui.generic.ProjectExplorerModel model = (ProjectExplorerModel) getModel();
       if (model != null && o instanceof Tool) {
-        final var node = model.findTool((Tool) o);
+        final com.cburch.logisim.gui.generic.ProjectExplorerModel.Node<com.cburch.logisim.tools.Tool> node = model.findTool((Tool) o);
         if (node != null) node.fireNodeChanged();
       }
     }
@@ -254,7 +254,7 @@ public class ProjectExplorer extends JTree implements LocaleListener {
     //
     @Override
     public void projectChanged(ProjectEvent event) {
-      final var act = event.getAction();
+      final int act = event.getAction();
       if (act == ProjectEvent.ACTION_SET_CURRENT || act == ProjectEvent.ACTION_SET_TOOL) {
         changedNode(event.getOldData());
         changedNode(event.getData());
@@ -276,7 +276,7 @@ public class ProjectExplorer extends JTree implements LocaleListener {
     //
     @Override
     public void valueChanged(TreeSelectionEvent e) {
-      final var path = e.getNewLeadSelectionPath();
+      final javax.swing.tree.TreePath path = e.getNewLeadSelectionPath();
       if (listener != null) {
         listener.selectionChanged(new Event(path));
       }
@@ -301,7 +301,7 @@ public class ProjectExplorer extends JTree implements LocaleListener {
 
     private TreePath[] getValidPaths(TreePath[] paths) {
       int count = 0;
-      for (final var treePath : paths) {
+      for (final javax.swing.tree.TreePath treePath : paths) {
         if (isPathValid(treePath)) ++count;
       }
 
@@ -310,10 +310,10 @@ public class ProjectExplorer extends JTree implements LocaleListener {
       } else if (count == paths.length) {
         return paths;
       } else {
-        final var ret = new TreePath[count];
+        final javax.swing.tree.TreePath[] ret = new TreePath[count];
         int j = 0;
 
-        for (final var path : paths) {
+        for (final javax.swing.tree.TreePath path : paths) {
           if (isPathValid(path)) ret[j++] = path;
         }
 
@@ -353,7 +353,7 @@ public class ProjectExplorer extends JTree implements LocaleListener {
     ToolIcon(Tool tool) {
       this.tool = tool;
       if (tool instanceof AddTool addTool) {
-        final var fact = addTool.getFactory(false);
+        final com.cburch.logisim.comp.ComponentFactory fact = addTool.getFactory(false);
         if (fact instanceof SubcircuitFactory sub) {
           circ = sub.getSubcircuit();
         } else if (fact instanceof VhdlEntity vhdlEntity) {
@@ -378,10 +378,10 @@ public class ProjectExplorer extends JTree implements LocaleListener {
           (proj.getFrame().getHdlEditorView() == null)
               ? (circ != null && circ == proj.getCurrentCircuit())
               : (vhdl != null && vhdl == proj.getFrame().getHdlEditorView());
-      final var haloed = !viewed && (tool == haloedTool && AppPreferences.ATTRIBUTE_HALO.getBoolean());
+      final boolean haloed = !viewed && (tool == haloedTool && AppPreferences.ATTRIBUTE_HALO.getBoolean());
       // draw halo if appropriate
       if (haloed) {
-        final var s = g.getClip();
+        final java.awt.Shape s = g.getClip();
         g.clipRect(
             x,
             y,
@@ -393,8 +393,8 @@ public class ProjectExplorer extends JTree implements LocaleListener {
       }
 
       // draw tool icon
-      final var gfxIcon = g.create();
-      final var context = new ComponentDrawContext(ProjectExplorer.this, null, null, g, gfxIcon);
+      final java.awt.Graphics gfxIcon = g.create();
+      final com.cburch.logisim.comp.ComponentDrawContext context = new ComponentDrawContext(ProjectExplorer.this, null, null, g, gfxIcon);
       tool.paintIcon(
           context,
           x + AppPreferences.getScaled(AppPreferences.ICON_BORDER),
@@ -403,8 +403,8 @@ public class ProjectExplorer extends JTree implements LocaleListener {
 
       // draw magnifying glass if appropriate
       if (viewed) {
-        final var tx = x + AppPreferences.getScaled(AppPreferences.BOX_SIZE - 7);
-        final var ty = y + AppPreferences.getScaled(AppPreferences.BOX_SIZE - 7);
+        final int tx = x + AppPreferences.getScaled(AppPreferences.BOX_SIZE - 7);
+        final int ty = y + AppPreferences.getScaled(AppPreferences.BOX_SIZE - 7);
         int[] xp = {
           tx - 1,
           x + AppPreferences.getScaled(AppPreferences.BOX_SIZE - 2),

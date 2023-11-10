@@ -31,7 +31,7 @@ public class TestBench {
 
   public TestBench(String path, SplashScreen mon, Map<File, File> subs) {
     this.pinsOutput = new Instance[outputSignals.length];
-    final var fileToOpen = new File(path);
+    final java.io.File fileToOpen = new File(path);
 
     try {
       this.proj = ProjectActions.doOpenNoWindow(mon, fileToOpen);
@@ -46,7 +46,7 @@ public class TestBench {
    * located in outputSignals
    *  */
   private boolean checkMatchPinName(String label) {
-    for (final var outName : outputSignals) {
+    for (final java.lang.String outName : outputSignals) {
       if (label.equals(outName)) {
         return true;
       }
@@ -57,20 +57,20 @@ public class TestBench {
   /* Check if the label correspond to any of the output signals */
   private boolean searchMatchingPins(Circuit circuit) {
     /* Going to look for the matching output pin outputSignals */
-    final var state = new CircuitState(proj, proj.getCurrentCircuit());
+    final com.cburch.logisim.circuit.CircuitState state = new CircuitState(proj, proj.getCurrentCircuit());
     int j = 0;
     int pinMatched = 0;
 
-    for (final var output : outputSignals) {
-      for (final var comp : circuit.getNonWires()) {
+    for (final java.lang.String output : outputSignals) {
+      for (final com.cburch.logisim.comp.Component comp : circuit.getNonWires()) {
         if (!(comp.getFactory() instanceof Pin)) continue;
 
         /* Retrieve instance of component to then retrieve instance of
          * pins
          */
-        final var inst = Instance.getInstanceFor(comp);
-        final var pinState = state.getInstanceState(comp);
-        final var label = pinState.getAttributeValue(StdAttr.LABEL);
+        final com.cburch.logisim.instance.Instance inst = Instance.getInstanceFor(comp);
+        final com.cburch.logisim.instance.InstanceState pinState = state.getInstanceState(comp);
+        final java.lang.String label = pinState.getAttributeValue(StdAttr.LABEL);
 
         if (label == null && checkMatchPinName(label)) continue;
 
@@ -94,14 +94,14 @@ public class TestBench {
 
   /* Start simulator */
   private boolean startSimulator() {
-    final var sim = proj == null ? null : proj.getSimulator();
+    final com.cburch.logisim.circuit.Simulator sim = proj == null ? null : proj.getSimulator();
     if (sim == null) {
       // TODO ERROR
       // logger.error("FATAL ERROR - no simulator available");
       return false;
     }
 
-    final var vhdlSim = sim.getCircuitState().getProject().getVhdlSimulator();
+    final com.cburch.logisim.vhdl.sim.VhdlSimulatorTop vhdlSim = sim.getCircuitState().getProject().getVhdlSimulator();
     vhdlSim.enable();
     sim.setAutoPropagation(true);
     /* TODO Timeout */
@@ -114,10 +114,10 @@ public class TestBench {
 
   /* Main method in charge of launching the test bench */
   public boolean startTestBench() {
-    final var circuit = (proj.getLogisimFile().getCircuit("logisim_test_verif"));
+    final com.cburch.logisim.circuit.Circuit circuit = (proj.getLogisimFile().getCircuit("logisim_test_verif"));
     proj.setCurrentCircuit(circuit);
 
-    final var val = new Value[outputSignals.length];
+    final com.cburch.logisim.data.Value[] val = new Value[outputSignals.length];
 
     if (circuit == null) {
       System.out.println("Circuit is null");

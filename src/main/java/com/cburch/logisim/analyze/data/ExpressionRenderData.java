@@ -61,7 +61,7 @@ public class ExpressionRenderData {
     notSep = AppPreferences.getScaled(3);
     extraLeading = AppPreferences.getScaled(4);
     expressionBaseFont = AppPreferences.getScaledFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
-    final var img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+    final java.awt.image.BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
     final Graphics2D g = (Graphics2D) img.getGraphics().create();
     if (AppPreferences.AntiAliassing.getBoolean()) {
       g.setRenderingHint(
@@ -69,7 +69,7 @@ public class ExpressionRenderData {
       g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
     g.setFont(expressionBaseFont);
-    final var fm = expressionBaseFontMetrics = g.getFontMetrics();
+    final java.awt.FontMetrics fm = expressionBaseFontMetrics = g.getFontMetrics();
     minimumHeight = fm.getHeight() + fm.getHeight() >> 1;
     g.dispose();
     if (expr == null || expr.toString(notation, true).length() == 0) {
@@ -100,14 +100,14 @@ public class ExpressionRenderData {
   }
 
   private ArrayList<ArrayList<Range>> computeLineAttribs(List<Range> attribs) {
-    final var attrs = new ArrayList<ArrayList<Range>>();
+    final java.util.ArrayList<java.util.ArrayList<com.cburch.logisim.analyze.data.Range>> attrs = new ArrayList<ArrayList<Range>>();
     for (int i = 0; i < lineText.length; i++) {
       attrs.add(new ArrayList<>());
     }
     for (Range nd : attribs) {
       int pos = 0;
       for (int j = 0; j < attrs.size() && pos < nd.stopIndex; j++) {
-        final var line = lineText[j];
+        final java.lang.String line = lineText[j];
         int nextPos = pos + line.length();
         if (nextPos > nd.startIndex) {
           Range toAdd = new Range();
@@ -127,9 +127,9 @@ public class ExpressionRenderData {
 
   private void computeLineText() {
     java.lang.String text = expr.toString(notation, true);
-    final var badness = expr.getBadness();
-    final var bestBreakPositions = new ArrayList<Integer>();
-    final var secondBestBreakPositions = new ArrayList<Integer>();
+    final java.lang.Integer[] badness = expr.getBadness();
+    final java.util.ArrayList<java.lang.Integer> bestBreakPositions = new ArrayList<Integer>();
+    final java.util.ArrayList<java.lang.Integer> secondBestBreakPositions = new ArrayList<Integer>();
     int minimal1 = Integer.MAX_VALUE;
     int minimal2 = Integer.MAX_VALUE;
     lineStyled = null;
@@ -148,16 +148,16 @@ public class ExpressionRenderData {
     }
     bestBreakPositions.add(text.length());
     secondBestBreakPositions.add(text.length());
-    final var lines = new ArrayList<String>();
-    final var img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-    final var g = (Graphics2D) img.getGraphics().create();
+    final java.util.ArrayList<java.lang.String> lines = new ArrayList<String>();
+    final java.awt.image.BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+    final java.awt.Graphics2D g = (Graphics2D) img.getGraphics().create();
     if (AppPreferences.AntiAliassing.getBoolean()) {
       g.setRenderingHint(
           RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
       g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
     g.setFont(expressionBaseFont);
-    final var ctx = g.getFontRenderContext();
+    final java.awt.font.FontRenderContext ctx = g.getFontRenderContext();
     /* first pass, we are going to break on the best positions if required */
     int i = bestBreakPositions.size() - 1;
     int breakPosition = 0;
@@ -202,7 +202,7 @@ public class ExpressionRenderData {
     int curY = 0;
     for (int i = 0; i < lineY.length; i++) {
       int maxDepth = -1;
-      final var nots = lineNots.get(i);
+      final java.util.ArrayList<com.cburch.logisim.analyze.data.Range> nots = lineNots.get(i);
       for (Range nd : nots) {
         if (nd.depth > maxDepth) maxDepth = nd.depth;
       }
@@ -214,15 +214,15 @@ public class ExpressionRenderData {
 
   private void computeNotDepths() {
     for (ArrayList<Range> nots : lineNots) {
-      final var n = nots.size();
-      final var stack = new int[n];
+      final int n = nots.size();
+      final int[] stack = new int[n];
       for (int i = 0; i < nots.size(); i++) {
-        final var nd = nots.get(i);
+        final com.cburch.logisim.analyze.data.Range nd = nots.get(i);
         int depth = 0;
         int top = 0;
         stack[0] = nd.stopIndex;
         for (int j = i + 1; j < nots.size(); j++) {
-          final var nd2 = nots.get(j);
+          final com.cburch.logisim.analyze.data.Range nd2 = nots.get(j);
           if (nd2.startIndex >= nd.stopIndex) break;
           while (nd2.startIndex >= stack[top]) top--;
           ++top;
@@ -264,28 +264,28 @@ public class ExpressionRenderData {
   }
 
   public int getWidth() {
-    final var img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-    final var g = (Graphics2D) img.getGraphics().create();
+    final java.awt.image.BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+    final java.awt.Graphics2D g = (Graphics2D) img.getGraphics().create();
     g.setFont(expressionBaseFont);
     if (AppPreferences.AntiAliassing.getBoolean()) {
       g.setRenderingHint(
           RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
       g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
-    final var ctx = g.getFontRenderContext();
+    final java.awt.font.FontRenderContext ctx = g.getFontRenderContext();
     if (lineStyled == null) {
       lineStyled = new AttributedString[lineText.length];
       notStarts = new int[lineText.length][];
       notStops = new int[lineText.length][];
       for (int i = 0; i < lineText.length; i++) {
-        final var line = lineText[i];
-        final var nots = lineNots.get(i);
-        final var subs = lineSubscripts.get(i);
-        final var marks = lineMarks.get(i);
+        final java.lang.String line = lineText[i];
+        final java.util.ArrayList<com.cburch.logisim.analyze.data.Range> nots = lineNots.get(i);
+        final java.util.ArrayList<com.cburch.logisim.analyze.data.Range> subs = lineSubscripts.get(i);
+        final java.util.ArrayList<com.cburch.logisim.analyze.data.Range> marks = lineMarks.get(i);
         notStarts[i] = new int[nots.size()];
         notStops[i] = new int[nots.size()];
         for (int j = 0; j < nots.size(); j++) {
-          final var not = nots.get(j);
+          final com.cburch.logisim.analyze.data.Range not = nots.get(j);
           notStarts[i][j] = getWidth(ctx, line, not.startIndex, subs, marks);
           notStops[i][j] = getWidth(ctx, line, not.stopIndex, subs, marks);
         }
@@ -294,7 +294,7 @@ public class ExpressionRenderData {
     }
     int width = 0;
     for (AttributedString attributedString : lineStyled) {
-      final var test = new TextLayout(attributedString.getIterator(), ctx);
+      final java.awt.font.TextLayout test = new TextLayout(attributedString.getIterator(), ctx);
       if (test.getBounds().getWidth() > width) width = (int) test.getBounds().getWidth();
     }
     g.dispose();
@@ -304,35 +304,35 @@ public class ExpressionRenderData {
   private int getWidth(
       FontRenderContext ctx, String s, int end, List<Range> subs, List<Range> marks) {
     if (end == 0) return 0;
-    final var as = style(s, end, subs, marks, true);
+    final java.text.AttributedString as = style(s, end, subs, marks, true);
     /* The TextLayout class will omit trailing spaces,
      * hence the width is incorrectly calculated. Therefore in the previous method we can
      * replace the spaces by underscores to prevent this problem; maybe
      * there is a more intelligent way.
      */
-    final var layout = new TextLayout(as.getIterator(), ctx);
+    final java.awt.font.TextLayout layout = new TextLayout(as.getIterator(), ctx);
     return (int) layout.getBounds().getWidth();
   }
 
   public void paint(Graphics g, int x, int y) {
     g.setFont(expressionBaseFont);
     if (AppPreferences.AntiAliassing.getBoolean()) {
-      final var g2 = (Graphics2D) g;
+      final java.awt.Graphics2D g2 = (Graphics2D) g;
       g2.setRenderingHint(
           RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
-    final var fm = g.getFontMetrics();
+    final java.awt.FontMetrics fm = g.getFontMetrics();
     if (lineStyled == null) {
-      final var ctx = ((Graphics2D) g).getFontRenderContext();
+      final java.awt.font.FontRenderContext ctx = ((Graphics2D) g).getFontRenderContext();
       lineStyled = new AttributedString[lineText.length];
       notStarts = new int[lineText.length][];
       notStops = new int[lineText.length][];
       for (int i = 0; i < lineText.length; i++) {
-        final var line = lineText[i];
-        final var nots = lineNots.get(i);
-        final var subs = lineSubscripts.get(i);
-        final var marks = lineMarks.get(i);
+        final java.lang.String line = lineText[i];
+        final java.util.ArrayList<com.cburch.logisim.analyze.data.Range> nots = lineNots.get(i);
+        final java.util.ArrayList<com.cburch.logisim.analyze.data.Range> subs = lineSubscripts.get(i);
+        final java.util.ArrayList<com.cburch.logisim.analyze.data.Range> marks = lineMarks.get(i);
         notStarts[i] = new int[nots.size()];
         notStops[i] = new int[nots.size()];
         for (int j = 0; j < nots.size(); j++) {
@@ -343,12 +343,12 @@ public class ExpressionRenderData {
         lineStyled[i] = style(line, line.length(), subs, marks, false);
       }
     }
-    final var col = g.getColor();
+    final java.awt.Color col = g.getColor();
     java.awt.Color curCol = col;
     for (int i = 0; i < lineStyled.length; i++) {
-      final var as = lineStyled[i];
-      final var nots = lineNots.get(i);
-      final var marks = lineMarks.get(i);
+      final java.text.AttributedString as = lineStyled[i];
+      final java.util.ArrayList<com.cburch.logisim.analyze.data.Range> nots = lineNots.get(i);
+      final java.util.ArrayList<com.cburch.logisim.analyze.data.Range> marks = lineMarks.get(i);
       Range md;
       if (marks.isEmpty()) {
         md = new Range();
@@ -363,10 +363,10 @@ public class ExpressionRenderData {
       g.drawString(as.getIterator(), x, y + lineY[i] + fm.getAscent());
 
       for (int j = 0; j < nots.size(); j++) {
-        final var nd = nots.get(j);
-        final var notY = y + lineY[i] - nd.depth * AppPreferences.getScaled(notSep);
-        final var startX = x + notStarts[i][j];
-        final var stopX = x + notStops[i][j];
+        final com.cburch.logisim.analyze.data.Range nd = nots.get(j);
+        final int notY = y + lineY[i] - nd.depth * AppPreferences.getScaled(notSep);
+        final int startX = x + notStarts[i][j];
+        final int stopX = x + notStops[i][j];
         if (nd.startIndex >= md.startIndex && nd.stopIndex <= md.stopIndex) g.setColor(MARKCOLOR);
         GraphicsUtil.switchToWidth(g, 2);
         g.drawLine(startX, notY, stopX, notY);

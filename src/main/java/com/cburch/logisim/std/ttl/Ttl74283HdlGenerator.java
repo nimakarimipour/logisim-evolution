@@ -44,7 +44,7 @@ public class Ttl74283HdlGenerator extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist TheNetlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
     if (Hdl.isVhdl()) {
       contents.empty().add("""
             oppA   <= "0"&A4&A3&A2&A1;

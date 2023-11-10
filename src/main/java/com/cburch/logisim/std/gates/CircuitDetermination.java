@@ -41,7 +41,7 @@ abstract class CircuitDetermination {
         }
       }
 
-      final var ret = new Gate(factory);
+      final com.cburch.logisim.std.gates.CircuitDetermination.Gate ret = new Gate(factory);
       ret.inputs.add(aret);
       ret.inputs.add(bret);
       return ret;
@@ -59,7 +59,7 @@ abstract class CircuitDetermination {
 
     @Override
     public CircuitDetermination visitNot(Expression aBase) {
-      final var aret = aBase.visit(this);
+      final com.cburch.logisim.std.gates.CircuitDetermination aret = aBase.visit(this);
       if (aret instanceof Gate a) {
         if (a.factory == AndGate.FACTORY) {
           a.factory = NandGate.FACTORY;
@@ -78,7 +78,7 @@ abstract class CircuitDetermination {
         return a;
       }
 
-      final var ret = new Gate(NotGate.FACTORY);
+      final com.cburch.logisim.std.gates.CircuitDetermination.Gate ret = new Gate(NotGate.FACTORY);
       ret.inputs.add(aret);
       return ret;
     }
@@ -147,7 +147,7 @@ abstract class CircuitDetermination {
     @Override
     void convertToTwoInputs() {
       if (inputs.size() <= 2) {
-        for (final var a : inputs) {
+        for (final com.cburch.logisim.std.gates.CircuitDetermination a : inputs) {
           a.convertToTwoInputs();
         }
       } else {
@@ -157,8 +157,8 @@ abstract class CircuitDetermination {
         else subFactory = factory;
 
         int split = (inputs.size() + 1) / 2;
-        final var a = convertToTwoInputsSub(0, split, subFactory);
-        final var b = convertToTwoInputsSub(split, inputs.size(), subFactory);
+        final com.cburch.logisim.std.gates.CircuitDetermination a = convertToTwoInputsSub(0, split, subFactory);
+        final com.cburch.logisim.std.gates.CircuitDetermination b = convertToTwoInputsSub(split, inputs.size(), subFactory);
         inputs.clear();
         inputs.add(a);
         inputs.add(b);
@@ -168,13 +168,13 @@ abstract class CircuitDetermination {
     private CircuitDetermination convertToTwoInputsSub(
         int start, int stop, ComponentFactory subFactory) {
       if (stop - start == 1) {
-        final var a = inputs.get(start);
+        final com.cburch.logisim.std.gates.CircuitDetermination a = inputs.get(start);
         a.convertToTwoInputs();
         return a;
       } else {
         int split = (start + stop + 1) / 2;
-        final var a = convertToTwoInputsSub(start, split, subFactory);
-        final var b = convertToTwoInputsSub(split, stop, subFactory);
+        final com.cburch.logisim.std.gates.CircuitDetermination a = convertToTwoInputsSub(start, split, subFactory);
+        final com.cburch.logisim.std.gates.CircuitDetermination b = convertToTwoInputsSub(split, stop, subFactory);
         Gate ret = new Gate(subFactory);
         ret.inputs.add(a);
         ret.inputs.add(b);
@@ -197,7 +197,7 @@ abstract class CircuitDetermination {
 
     private void notAllInputs() {
       for (int i = 0; i < inputs.size(); i++) {
-        final var old = inputs.get(i);
+        final com.cburch.logisim.std.gates.CircuitDetermination old = inputs.get(i);
         if (inputs.get(i) instanceof CircuitDetermination.Value inp) {
           inp.value ^= 1;
         } else if (inputs.get(i) instanceof CircuitDetermination.Input inp) {
@@ -205,7 +205,7 @@ abstract class CircuitDetermination {
         } else if (old.isNandNot()) {
           inputs.set(i, ((Gate) old).inputs.get(0));
         } else {
-          final var now = new Gate(NandGate.FACTORY);
+          final com.cburch.logisim.std.gates.CircuitDetermination.Gate now = new Gate(NandGate.FACTORY);
           now.inputs.add(old);
           now.inputs.add(old);
           inputs.set(i, now);
@@ -214,7 +214,7 @@ abstract class CircuitDetermination {
     }
 
     private void notOutput() {
-      final var sub = new Gate(NandGate.FACTORY);
+      final com.cburch.logisim.std.gates.CircuitDetermination.Gate sub = new Gate(NandGate.FACTORY);
       sub.inputs = this.inputs;
       this.inputs = new ArrayList<>();
       inputs.add(sub);
@@ -227,7 +227,7 @@ abstract class CircuitDetermination {
       int num = inputs.size();
       if (num > GateAttributes.MAX_INPUTS) {
         int newNum = (num + GateAttributes.MAX_INPUTS - 1) / GateAttributes.MAX_INPUTS;
-        final var oldInputs = inputs;
+        final java.util.ArrayList<com.cburch.logisim.std.gates.CircuitDetermination> oldInputs = inputs;
         inputs = new ArrayList<>();
 
         ComponentFactory subFactory = factory;
@@ -238,7 +238,7 @@ abstract class CircuitDetermination {
         int numExtra = num - per * newNum;
         int k = 0;
         for (int i = 0; i < newNum; i++) {
-          final var sub = new Gate(subFactory);
+          final com.cburch.logisim.std.gates.CircuitDetermination.Gate sub = new Gate(subFactory);
           int subCount = per + (i < numExtra ? 1 : 0);
           for (int j = 0; j < subCount; j++) {
             sub.inputs.add(oldInputs.get(k));
@@ -258,7 +258,7 @@ abstract class CircuitDetermination {
       }
 
       // finally, recurse to clean up any children
-      for (final var sub : inputs) {
+      for (final com.cburch.logisim.std.gates.CircuitDetermination sub : inputs) {
         sub.repair();
       }
     }

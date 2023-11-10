@@ -78,19 +78,19 @@ public class Ttl74192 extends AbstractTtlGate {
     boolean isPressed = true;
 
     private boolean isInside(InstanceState state, MouseEvent e) {
-      final var p = getTranslatedTtlXY(state, e);
+      final java.awt.Point p = getTranslatedTtlXY(state, e);
       boolean inside = false;
       for (int i = 0; i < 4; i++) {
-        final var dx = p.x - (56 + i * 10);
-        final var dy = p.y - 30;
-        final var d2 = dx * dx + dy * dy;
+        final int dx = p.x - (56 + i * 10);
+        final int dy = p.y - 30;
+        final int d2 = dx * dx + dy * dy;
         inside |= (d2 < 4 * 4);
       }
       return inside;
     }
 
     private int getIndex(InstanceState state, MouseEvent e) {
-      final var p = getTranslatedTtlXY(state, e);
+      final java.awt.Point p = getTranslatedTtlXY(state, e);
       for (int i = 0; i < 4; i++) {
         int dx = p.x - (56 + i * 10);
         int dy = p.y - 30;
@@ -110,10 +110,10 @@ public class Ttl74192 extends AbstractTtlGate {
       if (!state.getAttributeValue(TtlLibrary.DRAW_INTERNAL_STRUCTURE).booleanValue()) return;
       if (isPressed && isInside(state, e)) {
         int index = getIndex(state, e);
-        final var data = (UpDownCounterData) state.getData();
+        final com.cburch.logisim.std.ttl.UpDownCounterData data = (UpDownCounterData) state.getData();
         if (data == null) return;
         long current = data.getValue().toLongValue();
-        final var bitValue = 1L << index;
+        final long bitValue = 1L << index;
         current ^= bitValue;
         updateState(state, Value.createKnown(WIDTH, current), Value.FALSE, Value.FALSE, Value.FALSE, Value.FALSE);
       }
@@ -123,7 +123,7 @@ public class Ttl74192 extends AbstractTtlGate {
 
   @Override
   public void paintInternal(InstancePainter painter, int x, int y, int height, boolean up) {
-    final var gfx = (Graphics2D) painter.getGraphics();
+    final java.awt.Graphics2D gfx = (Graphics2D) painter.getGraphics();
     super.paintBase(painter, false, false);
     Drawgates.paintPortNames(
         painter,
@@ -141,7 +141,7 @@ public class Ttl74192 extends AbstractTtlGate {
     if (state == null) return;
     com.cburch.logisim.data.Value value = state.getValue();
     for (int i = 0; i < 4; i++) {
-      final var bitValue = value.get(3 - i);
+      final com.cburch.logisim.data.Value bitValue = value.get(3 - i);
       gfx.setColor(bitValue.getColor());
       gfx.fillOval(x + 52 + i * 10, y + height / 2 - 4, 8, 8);
       gfx.setColor(Color.WHITE);
@@ -151,15 +151,15 @@ public class Ttl74192 extends AbstractTtlGate {
   }
 
   public static void updateState(InstanceState state, Value value, Value carry, Value borrow, Value down, Value up) {
-    final var data = getStateData(state);
+    final com.cburch.logisim.std.ttl.UpDownCounterData data = getStateData(state);
 
     data.setAll(value, carry, borrow, down, up);
-    final var vA = data.getValue().get(0);
-    final var vB = data.getValue().get(1);
-    final var vC = data.getValue().get(2);
-    final var vD = data.getValue().get(3);
-    final var vCar = data.getCarry();
-    final var vBor = data.getBorrow();
+    final com.cburch.logisim.data.Value vA = data.getValue().get(0);
+    final com.cburch.logisim.data.Value vB = data.getValue().get(1);
+    final com.cburch.logisim.data.Value vC = data.getValue().get(2);
+    final com.cburch.logisim.data.Value vD = data.getValue().get(3);
+    final com.cburch.logisim.data.Value vCar = data.getCarry();
+    final com.cburch.logisim.data.Value vBor = data.getBorrow();
 
     state.setPort(PORT_INDEX_QA, vA, 4);
     state.setPort(PORT_INDEX_QB, vB, 4);
@@ -180,22 +180,22 @@ public class Ttl74192 extends AbstractTtlGate {
 
   @Override
   public void propagateTtl(InstanceState state) {
-    final var data = getStateData(state);
+    final com.cburch.logisim.std.ttl.UpDownCounterData data = getStateData(state);
 
     com.cburch.logisim.data.Value carry = Value.TRUE;
     com.cburch.logisim.data.Value borrow = Value.TRUE;
     long counter = data.getValue().toLongValue();
 
-    final var downPrev = data.getDownPrev();
-    final var upPrev = data.getUpPrev();
-    final var downCur = state.getPortValue(PORT_INDEX_DOWN);
-    final var upCur = state.getPortValue(PORT_INDEX_UP);
-    final var downFalling = downPrev == Value.TRUE && downCur == Value.FALSE;
-    final var downRising = downPrev == Value.FALSE && downCur == Value.TRUE;
-    final var upFalling = upPrev == Value.TRUE && upCur == Value.FALSE;
-    final var upRising = upPrev == Value.FALSE && upCur == Value.TRUE;
-    final var downUnchangedHigh = downPrev == Value.TRUE && downCur == Value.TRUE;
-    final var upUnchangedHigh = upPrev == Value.TRUE && upCur == Value.TRUE;
+    final com.cburch.logisim.data.Value downPrev = data.getDownPrev();
+    final com.cburch.logisim.data.Value upPrev = data.getUpPrev();
+    final com.cburch.logisim.data.Value downCur = state.getPortValue(PORT_INDEX_DOWN);
+    final com.cburch.logisim.data.Value upCur = state.getPortValue(PORT_INDEX_UP);
+    final boolean downFalling = downPrev == Value.TRUE && downCur == Value.FALSE;
+    final boolean downRising = downPrev == Value.FALSE && downCur == Value.TRUE;
+    final boolean upFalling = upPrev == Value.TRUE && upCur == Value.FALSE;
+    final boolean upRising = upPrev == Value.FALSE && upCur == Value.TRUE;
+    final boolean downUnchangedHigh = downPrev == Value.TRUE && downCur == Value.TRUE;
+    final boolean upUnchangedHigh = upPrev == Value.TRUE && upCur == Value.TRUE;
 
     if (state.getPortValue(PORT_INDEX_CLEAR) == Value.TRUE) { // reset
       counter = 0;

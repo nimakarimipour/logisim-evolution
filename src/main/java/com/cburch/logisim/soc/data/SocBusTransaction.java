@@ -185,7 +185,7 @@ public class SocBusTransaction {
   }
 
   private void paintTraceInfo(Graphics2D g2, BoxInfo boxInfo, boolean isRequest, boolean scale) {
-    final var gfx = (Graphics2D) g2.create();
+    final java.awt.Graphics2D gfx = (Graphics2D) g2.create();
     Bounds bds;
     if (!scale) {
       gfx.setColor(Color.BLACK);
@@ -199,7 +199,7 @@ public class SocBusTransaction {
       gfx.dispose();
       return;
     }
-    final var title = isRequest
+    final java.lang.String title = isRequest
             ? S.get("SocBusStateMaster") + getTransactionInitiatorName()
             : S.get("SocBusStateSlave") + getTransactionResponderName();
     bds = getScaled(boxInfo.blockWidth / 2, (SocBusStateInfo.TRACE_HEIGHT - 2) >> 2, 0, 0, scale);
@@ -226,7 +226,7 @@ public class SocBusTransaction {
     bds = getScaled(boxInfo.skip + boxInfo.mark / 2, (3 * (SocBusStateInfo.TRACE_HEIGHT - 2)) / 4, 0, 0, scale);
     GraphicsUtil.drawCenteredText(gfx, "D", bds.getX(), bds.getY());
     if ((isRequest && isWriteTransaction()) || (!isRequest && isReadTransaction())) {
-      final var format = switch (getAccessType()) {
+      final java.lang.String format = switch (getAccessType()) {
         case SocBusTransaction.HALF_WORD_ACCESS -> "0x%04X";
         case SocBusTransaction.BYTE_ACCESS -> "0x%02X";
         default -> "0x%08X";
@@ -275,8 +275,8 @@ public class SocBusTransaction {
   }
 
   public void paint(int x, int y, Graphics2D g2, Long index) {
-    final var realWidth = getRealBlockWidth(g2, false);
-    final var gfx = (Graphics2D) g2.create();
+    final com.cburch.logisim.soc.data.SocBusTransaction.BoxInfo realWidth = getRealBlockWidth(g2, false);
+    final java.awt.Graphics2D gfx = (Graphics2D) g2.create();
     gfx.translate(x, y);
     gfx.setColor(Color.WHITE);
     gfx.fillRect(0, 0, SocBusStateInfo.TRACE_WIDTH - 2, SocBusStateInfo.TRACE_HEIGHT - 1);
@@ -292,12 +292,12 @@ public class SocBusTransaction {
   }
 
   private BoxInfo getRealBlockWidth(Graphics2D gfx, boolean scale) {
-    final var boxInfo = new BoxInfo();
+    final com.cburch.logisim.soc.data.SocBusTransaction.BoxInfo boxInfo = new BoxInfo();
     if (scale) {
       boxInfo.skip = AppPreferences.getScaled(BLOCK_SKIP);
       double prefferedMark = AppPreferences.getScaled(BLOCK_MARKER);
       double prefferedHex = AppPreferences.getScaled(BLOCK_HEX);
-      final var fntMetrics = gfx.getFontMetrics();
+      final java.awt.FontMetrics fntMetrics = gfx.getFontMetrics();
       double realHex = fntMetrics.getStringBounds("0x00000000", gfx).getWidth();
       double corFactor = realHex <= prefferedHex ? 1.0 : realHex / prefferedHex;
       boxInfo.mark = AppPreferences.getDownScaled((int) Math.round(corFactor * prefferedMark));
@@ -327,8 +327,8 @@ public class SocBusTransaction {
   }
 
   public int paint(Graphics2D g2, Long index, int width) {
-    final var realWidth = getRealBlockWidth(g2, true);
-    final var usedWidth = Math.max(realWidth.blockWidth, width);
+    final com.cburch.logisim.soc.data.SocBusTransaction.BoxInfo realWidth = getRealBlockWidth(g2, true);
+    final int usedWidth = Math.max(realWidth.blockWidth, width);
     com.cburch.logisim.data.Bounds bds = getScaled(usedWidth / 2, (SocBusStateInfo.TRACE_HEIGHT - 2) / 4, usedWidth, SocBusStateInfo.TRACE_HEIGHT >> 1, true);
     g2.setColor(Color.LIGHT_GRAY);
     g2.fillRect(0, 0, bds.getWidth(), bds.getHeight() - 1);

@@ -128,7 +128,7 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
     // set up elements for the Layout view
     layoutToolbarModel = new LayoutToolbarModel(this, project);
     layoutCanvas = new Canvas(project);
-    final var canvasPane = new CanvasPane(layoutCanvas);
+    final com.cburch.logisim.gui.generic.CanvasPane canvasPane = new CanvasPane(layoutCanvas);
 
     layoutZoomModel =
         new BasicZoomModel(
@@ -167,10 +167,10 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
     // set up the contents, split down the middle, with the canvas
     // on the right and a split pane on the left containing the
     // explorer and attribute values.
-    final var explPanel = new JPanel(new BorderLayout());
+    final javax.swing.JPanel explPanel = new JPanel(new BorderLayout());
     explPanel.add(toolbox, BorderLayout.CENTER);
 
-    final var simPanel = new JPanel(new BorderLayout());
+    final javax.swing.JPanel simPanel = new JPanel(new BorderLayout());
     simPanel.add(simExplorer, BorderLayout.CENTER);
 
     topTab = new JTabbedPane();
@@ -178,10 +178,10 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
     topTab.add(explPanel);
     topTab.add(simPanel);
 
-    final var attrFooter = new JPanel(new BorderLayout());
+    final javax.swing.JPanel attrFooter = new JPanel(new BorderLayout());
     attrFooter.add(zoom);
 
-    final var bottomTabAndZoom = new JPanel(new BorderLayout());
+    final javax.swing.JPanel bottomTabAndZoom = new JPanel(new BorderLayout());
     bottomTabAndZoom.add(bottomTab, BorderLayout.CENTER);
     bottomTabAndZoom.add(attrFooter, BorderLayout.SOUTH);
     leftRegion = new HorizontalSplitPane(topTab, bottomTabAndZoom, AppPreferences.WINDOW_LEFT_SPLIT.get());
@@ -194,7 +194,7 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
     rightPanel = new JPanel(new BorderLayout());
     rightPanel.add(rightRegion, BorderLayout.CENTER);
 
-    final var state = new VhdlSimState(project);
+    final com.cburch.logisim.vhdl.gui.VhdlSimState state = new VhdlSimState(project);
     state.stateChanged();
     project.getVhdlSimulator().addVhdlSimStateListener(state);
 
@@ -204,7 +204,7 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
     localeChanged();
 
     this.setSize(AppPreferences.WINDOW_WIDTH.get(), AppPreferences.WINDOW_HEIGHT.get());
-    final var prefPoint = getInitialLocation();
+    final java.awt.Point prefPoint = getInitialLocation();
     if (prefPoint != null) {
       this.setLocation(prefPoint);
     }
@@ -287,11 +287,11 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
     }
 
     protected void swapComponents() {
-      final var tmpOrient = Direction.parse(AppPreferences.CANVAS_PLACEMENT.get());
+      final com.cburch.logisim.data.Direction tmpOrient = Direction.parse(AppPreferences.CANVAS_PLACEMENT.get());
       if (orientation != tmpOrient) {
         orientation = tmpOrient;
 
-        final var isSwapped = (orientation == Direction.WEST);
+        final boolean isSwapped = (orientation == Direction.WEST);
         compLeft = isSwapped ? mainCanvas : componentTree;
         compRight = isSwapped ? componentTree : mainCanvas;
 
@@ -313,12 +313,12 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
    */
   private ArrayList<Double> buildZoomSteps() {
     // Pairs must be in acending order (sorted by maxZoom value).
-    final var config = new ZoomStepPair[] {new ZoomStepPair(50, 5), new ZoomStepPair(200, 10), new ZoomStepPair(1000, 20)};
+    final com.cburch.logisim.gui.main.Frame.ZoomStepPair[] config = new ZoomStepPair[] {new ZoomStepPair(50, 5), new ZoomStepPair(200, 10), new ZoomStepPair(1000, 20)};
 
     // Result zoomsteps.
-    final var steps = new ArrayList<Double>();
+    final java.util.ArrayList<java.lang.Double> steps = new ArrayList<Double>();
     double zoom = 0D;
-    for (final var pair : config) {
+    for (final com.cburch.logisim.gui.main.Frame.ZoomStepPair pair : config) {
       while (zoom < pair.maxZoom()) {
         zoom += pair.step();
         steps.add(zoom);
@@ -331,9 +331,9 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
 
 
   private static Point getInitialLocation() {
-    final var s = AppPreferences.WINDOW_LOCATION.get();
+    final java.lang.String s = AppPreferences.WINDOW_LOCATION.get();
     if (s == null) return null;
-    final var comma = s.indexOf(',');
+    final int comma = s.indexOf(',');
     if (comma < 0) return null;
     try {
       int x = Integer.parseInt(s.substring(0, comma));
@@ -342,17 +342,17 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
         x += 20;
         y += 20;
       }
-      final var desired = new Rectangle(x, y, 50, 50);
+      final java.awt.Rectangle desired = new Rectangle(x, y, 50, 50);
 
       int gcBestSize = 0;
       Point gcBestPoint = null;
-      final var ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-      for (final var gd : ge.getScreenDevices()) {
-        for (final var gc : gd.getConfigurations()) {
-          final var gcBounds = gc.getBounds();
+      final java.awt.GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+      for (final java.awt.GraphicsDevice gd : ge.getScreenDevices()) {
+        for (final java.awt.GraphicsConfiguration gc : gd.getConfigurations()) {
+          final java.awt.Rectangle gcBounds = gc.getBounds();
           if (gcBounds.intersects(desired)) {
-            final var inter = gcBounds.intersection(desired);
-            final var size = inter.width * inter.height;
+            final java.awt.Rectangle inter = gcBounds.intersection(desired);
+            final int size = inter.width * inter.height;
             if (size > gcBestSize) {
               gcBestSize = size;
               int x2 = Math.max(gcBounds.x, Math.min(inter.x, inter.x + inter.width - 50));
@@ -374,11 +374,11 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
   }
 
   private static boolean isProjectFrameAt(int x, int y) {
-    for (final var current : Projects.getOpenProjects()) {
-      final var frame = current.getFrame();
+    for (final com.cburch.logisim.proj.Project current : Projects.getOpenProjects()) {
+      final com.cburch.logisim.gui.main.Frame frame = current.getFrame();
       if (frame != null) {
-        final var loc = frame.getLocationOnScreen();
-        final var d = Math.abs(loc.x - x) + Math.abs(loc.y - y);
+        final java.awt.Point loc = frame.getLocationOnScreen();
+        final int d = Math.abs(loc.x - x) + Math.abs(loc.y - y);
         if (d <= 3) {
           return true;
         }
@@ -403,9 +403,9 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
    * names of circuits or app version or type.
    */
   private void buildTitleString() {
-    final var circuit = project.getCurrentCircuit();
-    final var name = project.getLogisimFile().getName();
-    final var title = new StringBuilder();
+    final com.cburch.logisim.circuit.Circuit circuit = project.getCurrentCircuit();
+    final java.lang.String name = project.getLogisimFile().getName();
+    final java.lang.StringBuilder title = new StringBuilder();
 
     title
         .append(project.isFileDirty() ? (Main.DIRTY_MARKER + "\u0020") : "")
@@ -437,11 +437,11 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
   public boolean confirmClose(String title) {
     if (!project.isFileDirty()) return true;
 
-    final var message = S.get("confirmDiscardMessage", project.getLogisimFile().getName());
+    final java.lang.String message = S.get("confirmDiscardMessage", project.getLogisimFile().getName());
 
     toFront();
     final String[] options = {S.get("saveOption"), S.get("discardOption"), S.get("cancelOption")};
-    final var result = OptionPane.showOptionDialog(this, message, title, 0, OptionPane.QUESTION_MESSAGE, null, options, options[0]);
+    final int result = OptionPane.showOptionDialog(this, message, title, 0, OptionPane.QUESTION_MESSAGE, null, options, options[0]);
     boolean ret = false;
     if (result == 0) {
       ret = ProjectActions.doSave(project);
@@ -463,7 +463,7 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
   }
 
   public void setEditorView(String view) {
-    final var curView = mainPanel.getView();
+    final java.lang.String curView = mainPanel.getView();
     if (hdlEditor.getHdlModel() == null && curView.equals(view)) return;
     editRegion.setFraction(1.0);
     hdlEditor.setHdlModel(null);
@@ -518,11 +518,11 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
   }
 
   private void placeToolbar() {
-    final var loc = AppPreferences.TOOLBAR_PLACEMENT.get();
+    final java.lang.String loc = AppPreferences.TOOLBAR_PLACEMENT.get();
     rightPanel.remove(toolbar);
     if (!AppPreferences.TOOLBAR_HIDDEN.equals(loc)) {
       java.lang.String value = BorderLayout.NORTH;
-      for (final var dir : Direction.cardinals) {
+      for (final com.cburch.logisim.data.Direction dir : Direction.cardinals) {
         if (dir.toString().equals(loc)) {
           if (dir == Direction.EAST) {
             value = BorderLayout.EAST;
@@ -536,7 +536,7 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
         }
       }
       rightPanel.add(toolbar, value);
-      final var vertical = BorderLayout.WEST.equals(value) || BorderLayout.EAST.equals(value);
+      final boolean vertical = BorderLayout.WEST.equals(value) || BorderLayout.EAST.equals(value);
       toolbar.setOrientation(vertical ? Toolbar.VERTICAL : Toolbar.HORIZONTAL);
     }
     getContentPane().validate();
@@ -547,13 +547,13 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
     AppPreferences.LAYOUT_SHOW_GRID.setBoolean(layoutZoomModel.getShowGrid());
     AppPreferences.LAYOUT_ZOOM.set(layoutZoomModel.getZoomFactor());
     if (appearance != null) {
-      final var appearanceZoom = appearance.getZoomModel();
+      final com.cburch.logisim.gui.generic.ZoomModel appearanceZoom = appearance.getZoomModel();
       AppPreferences.APPEARANCE_SHOW_GRID.setBoolean(appearanceZoom.getShowGrid());
       AppPreferences.APPEARANCE_ZOOM.set(appearanceZoom.getZoomFactor());
     }
-    final var state = getExtendedState() & ~JFrame.ICONIFIED;
+    final int state = getExtendedState() & ~JFrame.ICONIFIED;
     AppPreferences.WINDOW_STATE.set(state);
-    final var dim = getSize();
+    final java.awt.Dimension dim = getSize();
     AppPreferences.WINDOW_WIDTH.set(dim.width);
     AppPreferences.WINDOW_HEIGHT.set(dim.height);
     Point loc;
@@ -572,7 +572,7 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
   void setAttrTableModel(AttrTableModel value) {
     attrTable.setAttrTableModel(value);
     if (value instanceof AttrTableToolModel model) {
-      final var tool = model.getTool();
+      final com.cburch.logisim.tools.Tool tool = model.getTool();
       toolbox.setHaloedTool(tool);
       layoutToolbarModel.setHaloedTool(tool);
     } else {
@@ -580,8 +580,8 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
       layoutToolbarModel.setHaloedTool(null);
     }
     if (value instanceof AttrTableComponentModel model) {
-      final var circ = model.getCircuit();
-      final var comp = model.getComponent();
+      final com.cburch.logisim.circuit.Circuit circ = model.getCircuit();
+      final com.cburch.logisim.comp.Component comp = model.getComponent();
       layoutCanvas.setHaloedComponent(circ, comp);
     } else {
       layoutCanvas.setHaloedComponent(null, null);
@@ -627,12 +627,12 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
       newAttrs = newTool.getAttributeSet(layoutCanvas);
     }
     if (newAttrs == null) {
-      final var oldModel = attrTable.getAttrTableModel();
-      final var same = (oldModel instanceof AttrTableToolModel model) && model.getTool() == oldTool;
+      final com.cburch.logisim.gui.generic.AttrTableModel oldModel = attrTable.getAttrTableModel();
+      final boolean same = (oldModel instanceof AttrTableToolModel model) && model.getTool() == oldTool;
       if (!force && !same && !(oldModel instanceof AttrTableCircuitModel)) return;
     }
     if (newAttrs == null) {
-      final var circ = project.getCurrentCircuit();
+      final com.cburch.logisim.circuit.Circuit circ = project.getCurrentCircuit();
       if (circ != null) {
         setAttrTableModel(new AttrTableCircuitModel(project, circ));
       } else if (force) {
@@ -666,7 +666,7 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
     }
 
     private void enableSave() {
-      final var ok = getProject().isFileDirty();
+      final boolean ok = getProject().isFileDirty();
       getRootPane().putClientProperty("windowModified", ok);
     }
 
@@ -682,7 +682,7 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
 
     @Override
     public void projectChanged(ProjectEvent event) {
-      final var action = event.getAction();
+      final int action = event.getAction();
 
       if (action == ProjectEvent.ACTION_SET_FILE) {
         buildTitleString();
@@ -711,8 +711,8 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
           // for startup
           return;
         }
-        final var oldTool = (Tool) event.getOldData();
-        final var newTool = (Tool) event.getData();
+        final com.cburch.logisim.tools.Tool oldTool = (Tool) event.getOldData();
+        final com.cburch.logisim.tools.Tool newTool = (Tool) event.getData();
         if (!getEditorView().equals(EDIT_APPEARANCE)) {
           viewAttributes(oldTool, newTool, false);
         }
@@ -728,7 +728,7 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
 
     @Override
     public void stateChanged(ChangeEvent event) {
-      final var source = event.getSource();
+      final java.lang.Object source = event.getSource();
       if (source == mainPanel) {
         firePropertyChange(EDITOR_VIEW, "???", getEditorView());
       }

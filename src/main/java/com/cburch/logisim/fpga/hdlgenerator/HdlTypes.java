@@ -44,12 +44,12 @@ public class HdlTypes {
 
     @Override
     public String getTypeDefinition() {
-      final var contents = new StringBuilder();
+      final java.lang.StringBuilder contents = new StringBuilder();
       if (Hdl.isVhdl())
         contents.append(LineBuffer.formatVhdl("{{type}} {{1}} {{is}} (", myTypeName));
       else contents.append("typedef enum { ");
       boolean first = true;
-      for (final var entry : myEntries) {
+      for (final java.lang.String entry : myEntries) {
         if (first) first = false;
         else contents.append(", ");
         contents.append(entry);
@@ -87,7 +87,7 @@ public class HdlTypes {
 
     @Override
     public String getTypeDefinition() {
-      final var contents = new StringBuilder();
+      final java.lang.StringBuilder contents = new StringBuilder();
       if (Hdl.isVhdl()) {
         contents
             .append(
@@ -130,7 +130,7 @@ public class HdlTypes {
   public HdlTypes addEnumEntry(int identifier, String entry) {
     if (!myTypes.containsKey(identifier))
       throw new IllegalArgumentException("Enum type not contained in array");
-    final var myEnum = (HdlEnum) myTypes.get(identifier);
+    final com.cburch.logisim.fpga.hdlgenerator.HdlTypes.HdlEnum myEnum = (HdlEnum) myTypes.get(identifier);
     myEnum.add(entry);
     return this;
   }
@@ -155,15 +155,15 @@ public class HdlTypes {
   }
 
   public List<String> getTypeDefinitions() {
-    final var defs = LineBuffer.getHdlBuffer();
-    for (final var entry : myTypes.keySet()) defs.add(myTypes.get(entry).getTypeDefinition());
+    final com.cburch.logisim.util.LineBuffer defs = LineBuffer.getHdlBuffer();
+    for (final java.lang.Integer entry : myTypes.keySet()) defs.add(myTypes.get(entry).getTypeDefinition());
     return defs.getWithIndent();
   }
 
   public Map<String, String> getTypedWires() {
-    final var contents = new HashMap<String, String>();
-    for (final var wire : myWires.keySet()) {
-      final var typeId = myWires.get(wire);
+    final java.util.HashMap<java.lang.String,java.lang.String> contents = new HashMap<String, String>();
+    for (final java.lang.String wire : myWires.keySet()) {
+      final java.lang.Integer typeId = myWires.get(wire);
       if (!myTypes.containsKey(typeId))
         throw new IllegalArgumentException("Enum or array type not contained in array");
       contents.put(wire, myTypes.get(typeId).getTypeName());

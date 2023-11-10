@@ -46,7 +46,7 @@ public class PokeTool extends Tool {
   private class Listener implements CircuitListener {
     @Override
     public void circuitChanged(CircuitEvent event) {
-      final var circ = pokedCircuit;
+      final com.cburch.logisim.circuit.Circuit circ = pokedCircuit;
       if (event.getCircuit() == circ
           && circ != null
           && (event.getAction() == CircuitEvent.ACTION_REMOVE
@@ -72,7 +72,7 @@ public class PokeTool extends Tool {
 
     @Override
     public void draw(Graphics g) {
-      final var v = canvas.getCircuitState().getValue(wire.getEnd0());
+      final com.cburch.logisim.data.Value v = canvas.getCircuitState().getValue(wire.getEnd0());
       com.cburch.logisim.circuit.RadixOption radix1 = RadixOption.decode(AppPreferences.POKE_WIRE_RADIX1.get());
       com.cburch.logisim.circuit.RadixOption radix2 = RadixOption.decode(AppPreferences.POKE_WIRE_RADIX2.get());
       if (radix1 == null) radix1 = RadixOption.RADIX_2;
@@ -84,7 +84,7 @@ public class PokeTool extends Tool {
       if (v.getWidth() == 32 || v.getWidth() == 64) {
         vStr += " / " + RadixOption.RADIX_FLOAT.toString(v);
       }
-      final var fm = g.getFontMetrics();
+      final java.awt.FontMetrics fm = g.getFontMetrics();
       g.setColor(caretColor);
 
       int margin = 2;
@@ -96,16 +96,16 @@ public class PokeTool extends Tool {
       }
       int h = fm.getAscent() + fm.getDescent() + 2 * margin;
 
-      final var rect = canvas.getViewableRect();
-      final var dx = Math.max(0, width - (rect.x + rect.width - x));
+      final java.awt.Rectangle rect = canvas.getViewableRect();
+      final int dx = Math.max(0, width - (rect.x + rect.width - x));
       // offset of callout stem
-      final var dxx1 = (dx > width / 2) ? -30 : 15;
+      final int dxx1 = (dx > width / 2) ? -30 : 15;
       // offset of callout stem
-      final var dxx2 = (dx > width / 2) ? -15 : 30;
+      final int dxx2 = (dx > width / 2) ? -15 : 30;
       if (y - 15 - h <= rect.y) {
         // callout below cursor - bottom left corner of box
-        final var xx = x - dx;
-        final var yy = y + 15 + h;
+        final int xx = x - dx;
+        final int yy = y + 15 + h;
         final int[] xp = {xx, xx, x + dxx1, x, x + dxx2, xx + width, x + width};
         final int[] yp = {yy, yy - h, yy - h, y, yy - h, yy - h, yy};
         g.fillPolygon(xp, yp, xp.length);
@@ -114,8 +114,8 @@ public class PokeTool extends Tool {
         g.drawString(vStr, xx + margin + pad, yy - margin - fm.getDescent());
       } else {
         // callout above cursor - bottom left corner of box
-        final var xx = x - dx;
-        final var yy = y - 15;
+        final int xx = x - dx;
+        final int yy = y - 15;
         final int[] xp = {xx, xx, xx + width, xx + width, x + dxx2, x, x + dxx1};
         final int[] yp = {yy, yy - h, yy - h, yy, yy, y, yy};
         g.fillPolygon(xp, yp, xp.length);
@@ -208,7 +208,7 @@ public class PokeTool extends Tool {
       canvas.getProject().repaintCanvas();
     } else {
       // move scrollpane dragging hand
-      final var m = canvas.getMousePosition();
+      final java.awt.Point m = canvas.getMousePosition();
       if (oldPosition == null || m == null) {
         oldPosition = m;
         return;
@@ -224,7 +224,7 @@ public class PokeTool extends Tool {
   public void mousePressed(Canvas canvas, Graphics g, MouseEvent e) {
     int x = e.getX();
     int y = e.getY();
-    final var loc = Location.create(x, y, false);
+    final com.cburch.logisim.data.Location loc = Location.create(x, y, false);
     boolean dirty = false;
     canvas.setHighlightedWires(WireSet.EMPTY);
     if (pokeCaret != null && !pokeCaret.getBounds(g).contains(loc)) {
@@ -232,23 +232,23 @@ public class PokeTool extends Tool {
       removeCaret(true);
     }
     if (pokeCaret == null) {
-      final var event = new ComponentUserEvent(canvas, x, y);
-      final var circ = canvas.getCircuit();
-      for (final var c : circ.getAllContaining(loc, g)) {
+      final com.cburch.logisim.comp.ComponentUserEvent event = new ComponentUserEvent(canvas, x, y);
+      final com.cburch.logisim.circuit.Circuit circ = canvas.getCircuit();
+      for (final com.cburch.logisim.comp.Component c : circ.getAllContaining(loc, g)) {
         if (pokeCaret != null) break;
 
         if (c instanceof Wire wire) {
-          final var caret = new WireCaret(canvas, wire, x, y, canvas.getProject().getOptions().getAttributeSet());
+          final com.cburch.logisim.tools.PokeTool.WireCaret caret = new WireCaret(canvas, wire, x, y, canvas.getProject().getOptions().getAttributeSet());
           setPokedComponent(circ, c, caret);
           canvas.setHighlightedWires(circ.getWireSet((Wire) c));
         } else {
-          final var p = (Pokable) c.getFeature(Pokable.class);
+          final com.cburch.logisim.tools.Pokable p = (Pokable) c.getFeature(Pokable.class);
           if (p != null) {
-            final var caret = p.getPokeCaret(event);
+            final com.cburch.logisim.tools.Caret caret = p.getPokeCaret(event);
             setPokedComponent(circ, c, caret);
-            final var attrs = c.getAttributeSet();
+            final com.cburch.logisim.data.AttributeSet attrs = c.getAttributeSet();
             if (attrs != null && !attrs.getAttributes().isEmpty()) {
-              final var proj = canvas.getProject();
+              final com.cburch.logisim.proj.Project proj = canvas.getProject();
               proj.getFrame().viewComponentAttributes(circ, c);
             }
           }
@@ -273,10 +273,10 @@ public class PokeTool extends Tool {
 
   @Override
   public void paintIcon(ComponentDrawContext c, int x, int y) {
-    final var g2 = (Graphics2D) c.getGraphics().create();
+    final java.awt.Graphics2D g2 = (Graphics2D) c.getGraphics().create();
     g2.translate(x, y);
     g2.setStroke(new BasicStroke(AppPreferences.getScaled(1)));
-    final var p = new GeneralPath();
+    final java.awt.geom.GeneralPath p = new GeneralPath();
     p.moveTo(scale(6), scale(15));
     p.quadTo(scale(5), scale(10), scale(1), scale(7));
     p.quadTo(scale(2.5), scale(4), scale(4), scale(7));
@@ -301,9 +301,9 @@ public class PokeTool extends Tool {
   }
 
   private void removeCaret(boolean normal) {
-    final var caret = pokeCaret;
+    final com.cburch.logisim.tools.Caret caret = pokeCaret;
     if (caret != null) {
-      final var circ = pokedCircuit;
+      final com.cburch.logisim.circuit.Circuit circ = pokedCircuit;
       if (normal)
         caret.stopEditing();
       else

@@ -23,7 +23,7 @@ public class CheckBoxTree extends JTree {
 
   public CheckBoxTree(DefaultMutableTreeNode root) {
     super(root);
-    final var renderer = new CheckBoxNodeRenderer();
+    final org.scijava.swing.checkboxtree.CheckBoxNodeRenderer renderer = new CheckBoxNodeRenderer();
     this.setCellRenderer(renderer);
     this.setCellEditor(new CheckBoxNodeEditor(this));
     this.setEditable(true);
@@ -64,24 +64,24 @@ public class CheckBoxTree extends JTree {
   }
 
   private void markDescendents(DefaultMutableTreeNode node, boolean checked) {
-    for (final var e = node.depthFirstEnumeration(); e.hasMoreElements(); ) {
-      final var n = (DefaultMutableTreeNode) (e.nextElement());
+    for (final java.util.Enumeration<javax.swing.tree.TreeNode> e = node.depthFirstEnumeration(); e.hasMoreElements(); ) {
+      final javax.swing.tree.DefaultMutableTreeNode n = (DefaultMutableTreeNode) (e.nextElement());
       ((CheckBoxNodeData) (n.getUserObject())).setChecked(checked);
     }
   }
 
   private void adjustParentForChildrenValues(DefaultMutableTreeNode parent) {
     boolean foundCheck = false;
-    for (final var e = parent.children(); !foundCheck && e.hasMoreElements(); ) {
-      final var child = (DefaultMutableTreeNode) (e.nextElement());
+    for (final java.util.Enumeration<javax.swing.tree.TreeNode> e = parent.children(); !foundCheck && e.hasMoreElements(); ) {
+      final javax.swing.tree.DefaultMutableTreeNode child = (DefaultMutableTreeNode) (e.nextElement());
       foundCheck = (((CheckBoxNodeData) (child.getUserObject())).isChecked());
     }
     ((CheckBoxNodeData) parent.getUserObject()).setChecked(foundCheck);
   }
 
   private void adjustParentsInTree(DefaultMutableTreeNode root) {
-    for (final var e = root.postorderEnumeration(); e.hasMoreElements(); ) {
-      final var node = (DefaultMutableTreeNode) (e.nextElement());
+    for (final java.util.Enumeration<javax.swing.tree.TreeNode> e = root.postorderEnumeration(); e.hasMoreElements(); ) {
+      final javax.swing.tree.DefaultMutableTreeNode node = (DefaultMutableTreeNode) (e.nextElement());
       if (!node.isLeaf()) {
         adjustParentForChildrenValues(node);
       }
@@ -89,18 +89,18 @@ public class CheckBoxTree extends JTree {
   }
 
   public void setCheckingPaths(TreePath[] paths) {
-    for (final var path : paths) {
-      final var treeNode = (DefaultMutableTreeNode) (path.getLastPathComponent());
+    for (final javax.swing.tree.TreePath path : paths) {
+      final javax.swing.tree.DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) (path.getLastPathComponent());
       ((CheckBoxNodeData) (treeNode.getUserObject())).setChecked(true);
     }
     adjustParentsInTree((DefaultMutableTreeNode) getModel().getRoot());
   }
 
   public TreePath[] getCheckingPaths() {
-    final var paths = new ArrayList<TreePath>();
-    final var root = (DefaultMutableTreeNode) getModel().getRoot();
-    for (final var e = root.preorderEnumeration(); e.hasMoreElements(); ) {
-      final var n = (DefaultMutableTreeNode) (e.nextElement());
+    final java.util.ArrayList<javax.swing.tree.TreePath> paths = new ArrayList<TreePath>();
+    final javax.swing.tree.DefaultMutableTreeNode root = (DefaultMutableTreeNode) getModel().getRoot();
+    for (final java.util.Enumeration<javax.swing.tree.TreeNode> e = root.preorderEnumeration(); e.hasMoreElements(); ) {
+      final javax.swing.tree.DefaultMutableTreeNode n = (DefaultMutableTreeNode) (e.nextElement());
       if (((CheckBoxNodeData) (n.getUserObject())).isChecked()) {
         paths.add(new TreePath(n.getPath()));
       }
@@ -109,7 +109,7 @@ public class CheckBoxTree extends JTree {
   }
 
   public boolean isPathChecked(TreePath path) {
-    final var n = (DefaultMutableTreeNode) (path.getLastPathComponent());
+    final javax.swing.tree.DefaultMutableTreeNode n = (DefaultMutableTreeNode) (path.getLastPathComponent());
     return ((CheckBoxNodeData) (n.getUserObject())).isChecked();
   }
 }

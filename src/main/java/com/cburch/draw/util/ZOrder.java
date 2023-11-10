@@ -27,7 +27,7 @@ public final class ZOrder {
 
   private static int getIndex(CanvasObject query, List<CanvasObject> objs) {
     int index = -1;
-    for (final var o : objs) {
+    for (final com.cburch.draw.model.CanvasObject o : objs) {
       index++;
       if (o == query) return index;
     }
@@ -53,10 +53,10 @@ public final class ZOrder {
       Collection<? extends CanvasObject> ignore) {
     int index = getIndex(query, objs);
     if (index > 0) {
-      final var set = toSet(model.getObjectsOverlapping(query));
-      final var it = objs.listIterator(index);
+      final java.util.Set<com.cburch.draw.model.CanvasObject> set = toSet(model.getObjectsOverlapping(query));
+      final java.util.ListIterator<com.cburch.draw.model.CanvasObject> it = objs.listIterator(index);
       while (it.hasPrevious()) {
-        final var o = it.previous();
+        final com.cburch.draw.model.CanvasObject o = it.previous();
         if (set.contains(o) && !ignore.contains(o)) return o;
       }
     }
@@ -74,10 +74,10 @@ public final class ZOrder {
     // from the bottom up.
     if (query == null) return Collections.emptyMap();
 
-    final var querySet = toSet(query);
-    final var ret = new LinkedHashMap<CanvasObject, Integer>(query.size());
+    final java.util.Set<? extends com.cburch.draw.model.CanvasObject> querySet = toSet(query);
+    final java.util.LinkedHashMap<com.cburch.draw.model.CanvasObject,java.lang.Integer> ret = new LinkedHashMap<CanvasObject, Integer>(query.size());
     int z = -1;
-    for (final var o : model.getObjectsFromBottom()) {
+    for (final com.cburch.draw.model.CanvasObject o : model.getObjectsFromBottom()) {
       z++;
       if (querySet.contains(o)) {
         ret.put(o, z);
@@ -100,7 +100,7 @@ public final class ZOrder {
       Collection<E> objects, CanvasModel model, Collection<CanvasObject> objs) {
     Set<E> set = toSet(objects);
     List<E> ret = new ArrayList<>(objects.size());
-    for (final var o : objs) {
+    for (final com.cburch.draw.model.CanvasObject o : objs) {
       if (set.contains(o)) {
         @SuppressWarnings("unchecked")
         E toAdd = (E) o;

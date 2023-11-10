@@ -114,14 +114,14 @@ public class Vhdl {
   public static final List<String> VHDL_KEYWORDS = Arrays.asList(RESERVED_VHDL_WORDS);
 
   public static Set<String> getVhdlKeywords() {
-    final var keywords = new TreeSet<String>();
-    for (final var keyword : VHDL_KEYWORDS)
+    final java.util.TreeSet<java.lang.String> keywords = new TreeSet<String>();
+    for (final java.lang.String keyword : VHDL_KEYWORDS)
       keywords.add(AppPreferences.VhdlKeywordsUpperCase.get() ? keyword.toUpperCase() : keyword);
     return keywords;
   }
 
   public static String getVhdlKeyword(String keyword) {
-    final var spaceStrippedKeyword = keyword.replace(" ", "").toLowerCase();
+    final java.lang.String spaceStrippedKeyword = keyword.replace(" ", "").toLowerCase();
     if (VHDL_KEYWORDS.contains(spaceStrippedKeyword))
       return AppPreferences.VhdlKeywordsUpperCase.get()
           ? keyword.toUpperCase()

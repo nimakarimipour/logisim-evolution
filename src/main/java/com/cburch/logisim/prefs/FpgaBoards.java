@@ -75,11 +75,11 @@ public class FpgaBoards implements ActionListener {
     }
 
     public int nrOfExternalBoards() {
-      final var iter = externalBoards.iterator();
+      final java.util.Iterator<java.lang.String> iter = externalBoards.iterator();
       boolean removed = false;
       while (iter.hasNext()) {
-        final var file = iter.next();
-        final var f = new File(file);
+        final java.lang.String file = iter.next();
+        final java.io.File f = new File(file);
         if (!f.exists() || f.isDirectory()) {
           buildInBoards.removeExternalBoard(file);
           removeFromPrefs(file);
@@ -123,7 +123,7 @@ public class FpgaBoards implements ActionListener {
     }
 
     private void fireChange(ListDataEvent e) {
-      for (final var listener : myListeners) {
+      for (final javax.swing.event.ListDataListener listener : myListeners) {
         switch (e.getType()) {
           case ListDataEvent.CONTENTS_CHANGED -> listener.contentsChanged(e);
           case ListDataEvent.INTERVAL_ADDED -> listener.intervalAdded(e);
@@ -149,7 +149,7 @@ public class FpgaBoards implements ActionListener {
     if (e.getSource().equals(addButton)) {
       addBoard(false);
     } else if (e.getSource().equals(removeButton)) {
-      final var board = boardNamesList.getSelectedValue();
+      final java.lang.String board = boardNamesList.getSelectedValue();
       if (removeBoard(board)) {
         if (AppPreferences.SelectedBoard.get().equals(board)) {
           if (boardSelector != null && boardSelector.getItemCount() >= 2)
@@ -189,12 +189,12 @@ public class FpgaBoards implements ActionListener {
   private final ExternalBoardModel extBoardModel = new ExternalBoardModel();
 
   public FpgaBoards() {
-    final var prefs = AppPreferences.getPrefs();
+    final java.util.prefs.Preferences prefs = AppPreferences.getPrefs();
     for (int i = 0; i < MaxBoards; i++) {
-      final var encoding = prefs.get(ExtBoard + i, null);
+      final java.lang.String encoding = prefs.get(ExtBoard + i, null);
       if (encoding != null) addExternalBoard(encoding, i, prefs);
     }
-    final var selectedBoard = AppPreferences.SelectedBoard.get();
+    final java.lang.String selectedBoard = AppPreferences.SelectedBoard.get();
     if (!buildInBoards.getBoardNames().contains(selectedBoard)) {
       AppPreferences.SelectedBoard.set(buildInBoards.getBoardNames().get(0));
     }
@@ -202,7 +202,7 @@ public class FpgaBoards implements ActionListener {
 
   private boolean addExternalBoard(String filename, int oldindex, Preferences prefs) {
     /* first we check if the file exists */
-    final var f = new File(filename);
+    final java.io.File f = new File(filename);
     if (!f.exists() || f.isDirectory()) {
       if (prefs != null) prefs.remove(ExtBoard + oldindex);
       return false;
@@ -216,7 +216,7 @@ public class FpgaBoards implements ActionListener {
     }
     extBoardModel.insert(filename);
     buildInBoards.addExternalBoard(filename);
-    final var index = extBoardModel.indexOf(filename);
+    final int index = extBoardModel.indexOf(filename);
     if ((index != oldindex) && (oldindex != MaxBoards)) {
       prefs.remove(ExtBoard + oldindex);
       prefs.put(ExtBoard + index, filename);
@@ -227,7 +227,7 @@ public class FpgaBoards implements ActionListener {
   }
 
   public boolean addExternalBoard(String filename) {
-    final var prefs = AppPreferences.getPrefs();
+    final java.util.prefs.Preferences prefs = AppPreferences.getPrefs();
     return addExternalBoard(filename, MaxBoards, prefs);
   }
 
@@ -252,10 +252,10 @@ public class FpgaBoards implements ActionListener {
   }
 
   public JPanel addRemovePanel() {
-    final var panel = new JPanel();
+    final javax.swing.JPanel panel = new JPanel();
     final int nrBoards = extBoardModel.nrOfExternalBoards();
-    final var thisLayout = new GridBagLayout();
-    final var c = new GridBagConstraints();
+    final java.awt.GridBagLayout thisLayout = new GridBagLayout();
+    final java.awt.GridBagConstraints c = new GridBagConstraints();
     panel.setLayout(thisLayout);
     panel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
     c.gridwidth = 2;
@@ -295,7 +295,7 @@ public class FpgaBoards implements ActionListener {
   }
 
   private void updateButtons() {
-    final var size = extBoardModel.nrOfExternalBoards();
+    final int size = extBoardModel.nrOfExternalBoards();
     if (addButton != null) addButton.setEnabled(size < MaxBoards);
     if (removeButton != null) removeButton.setEnabled(size > 0);
   }
@@ -325,16 +325,16 @@ public class FpgaBoards implements ActionListener {
   }
 
   private void removeFromPrefs(String fname) {
-    final var prefs = AppPreferences.getPrefs();
+    final java.util.prefs.Preferences prefs = AppPreferences.getPrefs();
     for (int i = 0; i < MaxBoards; i++) {
-      final var name = prefs.get(ExtBoard + i, null);
+      final java.lang.String name = prefs.get(ExtBoard + i, null);
       if ((name != null) && (name.equals(fname))) prefs.remove(ExtBoard + i);
     }
   }
 
   private boolean removeBoard(String name) {
     if (name == null) return false;
-    final var qualifier = buildInBoards.getBoardFilePath(name);
+    final java.lang.String qualifier = buildInBoards.getBoardFilePath(name);
     if (extBoardModel.contains(qualifier)) {
       extBoardModel.remove(qualifier);
     } else return false;
@@ -344,7 +344,7 @@ public class FpgaBoards implements ActionListener {
   }
 
   private void rebuildPrefsTree() {
-    final var prefs = AppPreferences.getPrefs();
+    final java.util.prefs.Preferences prefs = AppPreferences.getPrefs();
     for (int i = 0; i < extBoardModel.getSize(); i++) {
       prefs.put(ExtBoard + i, extBoardModel.get(i));
     }
@@ -385,18 +385,18 @@ public class FpgaBoards implements ActionListener {
   }
 
   private String getBoardFile() {
-    final var fc = new JFileChooser(AppPreferences.FPGA_Workspace.get());
-    final var filter = new FileNameExtensionFilter("Board files", "xml", "xml");
+    final javax.swing.JFileChooser fc = new JFileChooser(AppPreferences.FPGA_Workspace.get());
+    final javax.swing.filechooser.FileNameExtensionFilter filter = new FileNameExtensionFilter("Board files", "xml", "xml");
     fc.setFileFilter(filter);
     fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    final var test = new File(AppPreferences.FPGA_Workspace.get());
+    final java.io.File test = new File(AppPreferences.FPGA_Workspace.get());
     if (test.exists()) {
       fc.setSelectedFile(test);
     }
     fc.setDialogTitle(S.get("BoardSelection"));
-    final var retval = fc.showOpenDialog(null);
+    final int retval = fc.showOpenDialog(null);
     if (retval == JFileChooser.APPROVE_OPTION) {
-      final var file = fc.getSelectedFile();
+      final java.io.File file = fc.getSelectedFile();
       return file.getPath();
     } else return null;
   }

@@ -42,9 +42,9 @@ public class ComponentSelector extends JTable {
 
   static final Comparator<Component> compareComponents =
       (a, b) -> {
-        final var nameA = a.getFactory().getDisplayName();
-        final var nameB = b.getFactory().getDisplayName();
-        final var ret = nameA.compareToIgnoreCase(nameB);
+        final java.lang.String nameA = a.getFactory().getDisplayName();
+        final java.lang.String nameB = b.getFactory().getDisplayName();
+        final int ret = nameA.compareToIgnoreCase(nameB);
         if (ret != 0) return ret;
         return a.getLocation().toString().compareTo(b.getLocation().toString());
       };
@@ -90,8 +90,8 @@ public class ComponentSelector extends JTable {
 
     void toggleExpand(int row) {
       if (row < 0 || row >= rows.size()) return;
-      final var o = rows.get(row);
-      final var n = o.children.size();
+      final com.cburch.logisim.gui.log.ComponentSelector.TreeNode<?> o = rows.get(row);
+      final int n = o.children.size();
       if (n == 0) return;
       if (o.expanded) {
         for (int i = 0; i < n; i++) removeAll(row + 1);
@@ -104,9 +104,9 @@ public class ComponentSelector extends JTable {
     }
 
     void removeAll(int row) {
-      final var item = rows.remove(row);
+      final com.cburch.logisim.gui.log.ComponentSelector.TreeNode<?> item = rows.remove(row);
       if (item.expanded) {
-        final var n = item.children.size();
+        final int n = item.children.size();
         for (int i = 0; i < n; i++) removeAll(row);
       }
     }
@@ -114,7 +114,7 @@ public class ComponentSelector extends JTable {
     void insertAll(int row, TreeNode<?> item) {
       rows.add(row, item);
       if (item.expanded) {
-        final var n = item.children.size();
+        final int n = item.children.size();
         for (int i = n - 1; i >= 0; i--) insertAll(row + 1, item.children.get(i));
       }
     }
@@ -127,7 +127,7 @@ public class ComponentSelector extends JTable {
     void setRoot(TreeNode<CircuitNode> r) {
       root = r;
       rows.clear();
-      final var n = root == null ? 0 : root.children.size();
+      final int n = root == null ? 0 : root.children.size();
       for (int i = n - 1; i >= 0; i--) insertAll(0, root.children.get(i));
       super.fireTableDataChanged();
     }
@@ -162,18 +162,18 @@ public class ComponentSelector extends JTable {
       super(p);
       comp = c;
 
-      final var log = (LoggableContract) comp.getFeature(LoggableContract.class);
+      final com.cburch.logisim.gui.log.LoggableContract log = (LoggableContract) comp.getFeature(LoggableContract.class);
       if (log == null) return;
-      final var opts = log.getLogOptions();
+      final java.lang.Object[] opts = log.getLogOptions();
       if (opts == null) return;
       for (Object opt : opts) addChild(new OptionNode(this, opt));
     }
 
     @Override
     public String toString() {
-      final var log = (LoggableContract) comp.getFeature(LoggableContract.class);
+      final com.cburch.logisim.gui.log.LoggableContract log = (LoggableContract) comp.getFeature(LoggableContract.class);
       if (log != null) {
-        final var ret = log.getLogName(null);
+        final java.lang.String ret = log.getLogName(null);
         if (ret != null && !ret.equals("")) return ret;
       }
       return comp.getFactory().getDisplayName() + " " + comp.getLocation();
@@ -204,7 +204,7 @@ public class ComponentSelector extends JTable {
     }
 
     private ComponentNode findChildFor(Component c) {
-      for (final var o : children) {
+      for (final com.cburch.logisim.gui.log.ComponentSelector.TreeNode<?> o : children) {
         if (o instanceof ComponentNode child) {
           if (child.comp == c) return child;
         }
@@ -222,21 +222,21 @@ public class ComponentSelector extends JTable {
     }
 
     private boolean computeChildren() { // returns true if changed
-      final var newChildren = new ArrayList<TreeNode<?>>();
-      final var subcircs = new ArrayList<Component>();
+      final java.util.ArrayList<com.cburch.logisim.gui.log.ComponentSelector.TreeNode<?>> newChildren = new ArrayList<TreeNode<?>>();
+      final java.util.ArrayList<com.cburch.logisim.comp.Component> subcircs = new ArrayList<Component>();
       boolean changed = false;
       // TODO: hide from display any unselectable things that also have no children
-      for (final var c : circ.getNonWires()) {
+      for (final com.cburch.logisim.comp.Component c : circ.getNonWires()) {
         // For DRIVEABLE_CLOCKS do not recurse into subcircuits
         if (c.getFactory() instanceof SubcircuitFactory && mode != DRIVEABLE_CLOCKS) {
           subcircs.add(c);
           continue;
         }
-        final var log = (LoggableContract) c.getFeature(LoggableContract.class);
+        final com.cburch.logisim.gui.log.LoggableContract log = (LoggableContract) c.getFeature(LoggableContract.class);
         if (log == null) continue;
         com.cburch.logisim.data.BitWidth bitWidth = log.getBitWidth(null);
         if (bitWidth == null) bitWidth = c.getAttributeSet().getValue(StdAttr.WIDTH);
-        final var w = bitWidth.getWidth();
+        final int w = bitWidth.getWidth();
         if (mode != ANY_SIGNAL && w != 1) continue; // signal is too wide to be a used as a clock
         if (mode == DRIVEABLE_CLOCKS) {
           // For now, we only allow input Pins. In principle, we could allow
@@ -256,9 +256,9 @@ public class ComponentSelector extends JTable {
       }
       newChildren.sort(compareNames);
       subcircs.sort(compareComponents);
-      for (final var c : subcircs) {
-        final var factory = (SubcircuitFactory) c.getFactory();
-        final var subCircuit = factory.getSubcircuit();
+      for (final com.cburch.logisim.comp.Component c : subcircs) {
+        final com.cburch.logisim.circuit.SubcircuitFactory factory = (SubcircuitFactory) c.getFactory();
+        final com.cburch.logisim.circuit.Circuit subCircuit = factory.getSubcircuit();
         com.cburch.logisim.gui.log.ComponentSelector.CircuitNode toAdd = findChildFor(subCircuit);
         if (toAdd == null) {
           changed = true;
@@ -275,7 +275,7 @@ public class ComponentSelector extends JTable {
     @Override
     public String toString() {
       if (comp != null) {
-        final var label = comp.getAttributeSet().getValue(StdAttr.LABEL);
+        final java.lang.String label = comp.getAttributeSet().getValue(StdAttr.LABEL);
         if (label != null && !label.equals("")) return label;
       }
       java.lang.String ret = circ.getName();
@@ -414,11 +414,11 @@ public class ComponentSelector extends JTable {
   }
 
   public SignalInfo.List getSelectedItems() {
-    final var items = new SignalInfo.List();
-    final var sel = getSelectedRows();
-    for (final var i : sel) {
-      final var node = tableModel.rows.get(i);
-      final var item = makeSignalInfo(node);
+    final com.cburch.logisim.gui.log.SignalInfo.List items = new SignalInfo.List();
+    final int[] sel = getSelectedRows();
+    for (final int i : sel) {
+      final com.cburch.logisim.gui.log.ComponentSelector.TreeNode<?> node = tableModel.rows.get(i);
+      final com.cburch.logisim.gui.log.SignalInfo item = makeSignalInfo(node);
       if (item != null) items.add(item);
     }
 
@@ -439,7 +439,7 @@ public class ComponentSelector extends JTable {
     }
     int count = 0;
     for (com.cburch.logisim.gui.log.ComponentSelector.CircuitNode cur = n.parent; cur != null; cur = cur.parent) count++;
-    final var paths = new Component[count];
+    final com.cburch.logisim.comp.Component[] paths = new Component[count];
     paths[paths.length - 1] = n.comp;
     com.cburch.logisim.gui.log.ComponentSelector.CircuitNode cur = n.parent;
     for (int j = paths.length - 2; j >= 0; j--) {
@@ -476,8 +476,8 @@ public class ComponentSelector extends JTable {
     @Override
     protected Transferable createTransferable(JComponent c) {
       sending = true;
-      final var tree = (ComponentSelector) c;
-      final var items = tree.getSelectedItems();
+      final com.cburch.logisim.gui.log.ComponentSelector tree = (ComponentSelector) c;
+      final com.cburch.logisim.gui.log.SignalInfo.List items = tree.getSelectedItems();
       return CollectionUtil.isNullOrEmpty(items) ? null : items;
     }
 
@@ -499,8 +499,8 @@ public class ComponentSelector extends JTable {
   }
 
   private void enumerate(ArrayList<SignalInfo> result, TreeNode<?> node) {
-    for (final var child : node.children) {
-      final var item = makeSignalInfo(child);
+    for (final com.cburch.logisim.gui.log.ComponentSelector.TreeNode<?> child : node.children) {
+      final com.cburch.logisim.gui.log.SignalInfo item = makeSignalInfo(child);
       if (item != null) result.add(item);
       enumerate(result, child);
     }

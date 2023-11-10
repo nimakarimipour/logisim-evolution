@@ -56,7 +56,7 @@ public class FpgaOptions extends OptionsPanel {
       if (property.equals(AppPreferences.FPGA_Workspace.getIdentifier())) {
         WorkSpacePath.setText(AppPreferences.FPGA_Workspace.get());
       } else if (property.equals(AppPreferences.HdlType.getIdentifier())) {
-        final var isVhdl = AppPreferences.HdlType.get().equals(HdlGeneratorFactory.VHDL);
+        final boolean isVhdl = AppPreferences.HdlType.get().equals(HdlGeneratorFactory.VHDL);
         vhdlPan.setEnabled(isVhdl);
         vhdlKeywordUpperCase.setEnabled(isVhdl);
       }
@@ -155,7 +155,7 @@ public class FpgaOptions extends OptionsPanel {
   }
 
   private JPanel getVhdlOptions() {
-    final var isVhdl = AppPreferences.HdlType.get().equals(HdlGeneratorFactory.VHDL);
+    final boolean isVhdl = AppPreferences.HdlType.get().equals(HdlGeneratorFactory.VHDL);
     vhdlPan = new JPanel();
     vhdlPan.setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();

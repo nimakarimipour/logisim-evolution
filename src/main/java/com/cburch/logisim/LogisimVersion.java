@@ -40,7 +40,7 @@ public class LogisimVersion {
 
   public LogisimVersion(int major, int minor, int patch, String suffix) {
     suffix = (suffix == null) ? "" : suffix;
-    final var versionString = String.format("%d.%d.%d%s", major, minor, patch, suffix);
+    final java.lang.String versionString = String.format("%d.%d.%d%s", major, minor, patch, suffix);
     initFromVersionString(versionString);
   }
 
@@ -68,10 +68,10 @@ public class LogisimVersion {
     java.lang.String pattern = "^(\\d+.\\d+.\\d+)(.*)$";
     java.util.regex.Matcher m = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE).matcher(versionString);
     if (m.matches()) {
-      final var verStr = m.group(1);
-      final var sufStr = m.group(2);
+      final java.lang.String verStr = m.group(1);
+      final java.lang.String sufStr = m.group(2);
 
-      final var parts = m.group(1).split("\\.");
+      final java.lang.String[] parts = m.group(1).split("\\.");
       try {
         if (parts.length >= 1) major = Integer.parseInt(parts[0]);
         if (parts.length >= 2) minor = Integer.parseInt(parts[1]);
@@ -98,9 +98,9 @@ public class LogisimVersion {
             throw new IllegalArgumentException(
                 String.format("Invalid version suffix format. '%s' found.", sufStr));
           }
-          final var sep = m.group(1);
+          final java.lang.String sep = m.group(1);
           separator = (sep != null) ? sep : "";
-          final var s = m.group(2);
+          final java.lang.String s = m.group(2);
           suffix = (s != null) ? s : "";
         }
       }

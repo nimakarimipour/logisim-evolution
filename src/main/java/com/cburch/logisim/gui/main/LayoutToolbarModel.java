@@ -51,7 +51,7 @@ class LayoutToolbarModel extends AbstractToolbarModel {
     buildContents();
 
     // set up listeners
-    final var data = proj.getOptions().getToolbarData();
+    final com.cburch.logisim.file.ToolbarData data = proj.getOptions().getToolbarData();
     data.addToolbarListener(myListener);
     data.addToolAttributeListener(myListener);
     AppPreferences.GATE_SHAPE.addPropertyChangeListener(myListener);
@@ -59,7 +59,7 @@ class LayoutToolbarModel extends AbstractToolbarModel {
   }
 
   private static ToolbarItem findItem(List<ToolbarItem> items, Tool tool) {
-    for (final var item : items) {
+    for (final com.cburch.draw.toolbar.ToolbarItem item : items) {
       if (item instanceof ToolItem) {
         if (tool == ((ToolItem) item).tool) {
           return item;
@@ -70,14 +70,14 @@ class LayoutToolbarModel extends AbstractToolbarModel {
   }
 
   private void buildContents() {
-    final var oldItems = items;
-    final var newItems = new ArrayList<ToolbarItem>();
-    final var data = proj.getLogisimFile().getOptions().getToolbarData();
-    for (final var tool : data.getContents()) {
+    final java.util.List<com.cburch.draw.toolbar.ToolbarItem> oldItems = items;
+    final java.util.ArrayList<com.cburch.draw.toolbar.ToolbarItem> newItems = new ArrayList<ToolbarItem>();
+    final com.cburch.logisim.file.ToolbarData data = proj.getLogisimFile().getOptions().getToolbarData();
+    for (final com.cburch.logisim.tools.Tool tool : data.getContents()) {
       if (tool == null) {
         newItems.add(new ToolbarSeparator(4));
       } else {
-        final var i = findItem(oldItems, tool);
+        final com.cburch.draw.toolbar.ToolbarItem i = findItem(oldItems, tool);
         newItems.add(Objects.requireNonNullElseGet(i, () -> new ToolItem(tool)));
       }
     }
@@ -134,19 +134,19 @@ class LayoutToolbarModel extends AbstractToolbarModel {
     //
     @Override
     public void projectChanged(ProjectEvent e) {
-      final var act = e.getAction();
+      final int act = e.getAction();
       if (act == ProjectEvent.ACTION_SET_TOOL) {
         fireToolbarAppearanceChanged();
       } else if (act == ProjectEvent.ACTION_SET_FILE) {
-        final var old = (LogisimFile) e.getOldData();
+        final com.cburch.logisim.file.LogisimFile old = (LogisimFile) e.getOldData();
         if (old != null) {
-          final var data = old.getOptions().getToolbarData();
+          final com.cburch.logisim.file.ToolbarData data = old.getOptions().getToolbarData();
           data.removeToolbarListener(this);
           data.removeToolAttributeListener(this);
         }
-        final var file = (LogisimFile) e.getData();
+        final com.cburch.logisim.file.LogisimFile file = (LogisimFile) e.getData();
         if (file != null) {
-          final var data = file.getOptions().getToolbarData();
+          final com.cburch.logisim.file.ToolbarData data = file.getOptions().getToolbarData();
           data.addToolbarListener(this);
           data.addToolAttributeListener(this);
         }
@@ -182,7 +182,7 @@ class LayoutToolbarModel extends AbstractToolbarModel {
 
     @Override
     public Dimension getDimension(Object orientation) {
-      final var pad = 2 * AppPreferences.ICON_BORDER;
+      final int pad = 2 * AppPreferences.ICON_BORDER;
       return new Dimension(AppPreferences.getIconSize() + pad, AppPreferences.getIconSize() + pad);
     }
 
@@ -190,13 +190,13 @@ class LayoutToolbarModel extends AbstractToolbarModel {
     public String getToolTip() {
       java.lang.String ret = tool.getDescription();
       int index = 1;
-      for (final var item : items) {
+      for (final com.cburch.draw.toolbar.ToolbarItem item : items) {
         if (item == this) break;
         if (item instanceof ToolItem) ++index;
       }
       if (index <= 10) {
         if (index == 10) index = 0;
-        final var mask = frame.getToolkit().getMenuShortcutKeyMaskEx();
+        final int mask = frame.getToolkit().getMenuShortcutKeyMaskEx();
         ret += " (" + InputEventUtil.toKeyDisplayString(mask) + "-" + index + ")";
       }
       return ret;
@@ -221,8 +221,8 @@ class LayoutToolbarModel extends AbstractToolbarModel {
 
       // draw tool icon
       gfx.setColor(Color.BLACK);
-      final var gfxCopy = gfx.create();
-      final var c = new ComponentDrawContext(destination, null, null, gfx, gfxCopy);
+      final java.awt.Graphics gfxCopy = gfx.create();
+      final com.cburch.logisim.comp.ComponentDrawContext c = new ComponentDrawContext(destination, null, null, gfx, gfxCopy);
       tool.paintIcon(c, AppPreferences.ICON_BORDER, AppPreferences.ICON_BORDER);
       gfxCopy.dispose();
     }

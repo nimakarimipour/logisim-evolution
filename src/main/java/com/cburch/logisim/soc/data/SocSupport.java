@@ -76,7 +76,7 @@ public class SocSupport {
   public static String getComponentName(Component comp) {
     java.lang.String name = comp.getAttributeSet().getValue(StdAttr.LABEL);
     if (StringUtil.isNullOrEmpty(name)) {
-      final var loc = comp.getLocation();
+      final com.cburch.logisim.data.Location loc = comp.getLocation();
       name = String.format("%s@%d,%d", comp.getFactory().getDisplayName(), loc.getX(), loc.getY());
     }
     return name;

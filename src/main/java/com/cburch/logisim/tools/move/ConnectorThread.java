@@ -73,15 +73,15 @@ public final class ConnectorThread extends UniquelyNamedThread {
       }
 
       try {
-        final var result = Connector.computeWires(req);
+        final com.cburch.logisim.tools.move.MoveResult result = Connector.computeWires(req);
         if (result != null) {
-          final var gesture = req.getMoveGesture();
+          final com.cburch.logisim.tools.move.MoveGesture gesture = req.getMoveGesture();
           gesture.notifyResult(req, result);
         }
       } catch (Exception t) {
         t.printStackTrace();
         if (wasOverride) {
-          final var result =
+          final com.cburch.logisim.tools.move.MoveResult result =
               new MoveResult(req, new ReplacementMap(), req.getMoveGesture().getConnections(), 0);
           req.getMoveGesture().notifyResult(req, result);
         }

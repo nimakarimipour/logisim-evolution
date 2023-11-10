@@ -421,7 +421,7 @@ public class PioState implements SocBusSlaveInterface {
     if (attachedBus != null && attachedBus.getComponent() != null) {
       name = label;
       if (StringUtil.isNullOrEmpty(name)) {
-        final var loc = attachedBus.getComponent().getLocation();
+        final com.cburch.logisim.data.Location loc = attachedBus.getComponent().getLocation();
         name = String.format("%s@%d,%d", attachedBus.getComponent().getFactory().getDisplayName(), loc.getX(), loc.getY());
       }
     }

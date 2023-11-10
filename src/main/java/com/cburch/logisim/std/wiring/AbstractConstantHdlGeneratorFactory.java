@@ -25,10 +25,10 @@ public class AbstractConstantHdlGeneratorFactory extends InlinedHdlGeneratorFact
   @Override
   public LineBuffer getInlinedCode(
       Netlist nets, Long componentId, netlistComponent componentInfo, String circuitName) {
-    final var contents = LineBuffer.getHdlBuffer();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
     int nrOfBits = componentInfo.getComponent().getEnd(0).getWidth().getWidth();
     if (componentInfo.isEndConnected(0)) {
-      final var constantValue = getConstant(componentInfo.getComponent().getAttributeSet());
+      final long constantValue = getConstant(componentInfo.getComponent().getAttributeSet());
       if (componentInfo.getComponent().getEnd(0).getWidth().getWidth() == 1) {
         /* Single Port net */
         contents

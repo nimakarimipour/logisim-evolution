@@ -78,82 +78,82 @@ public class BoardWriterClass {
       // Create blank DOM Document
       boardInfo = parser.newDocument();
 
-      final var root = boardInfo.createElement(BoardInfo.getBoardName());
+      final org.w3c.dom.Element root = boardInfo.createElement(BoardInfo.getBoardName());
       boardInfo.appendChild(root);
-      final var fpgaInfo = boardInfo.createElement(BOARD_INFORMATION_SECTION_STRING);
+      final org.w3c.dom.Element fpgaInfo = boardInfo.createElement(BOARD_INFORMATION_SECTION_STRING);
       root.appendChild(fpgaInfo);
-      final var comment = boardInfo.createComment("This section decribes the FPGA and its clock");
+      final org.w3c.dom.Comment comment = boardInfo.createComment("This section decribes the FPGA and its clock");
       fpgaInfo.appendChild(comment);
-      final var clkInfo = boardInfo.createElement(CLOCK_INFORMATION_SECTION_STRING);
+      final org.w3c.dom.Element clkInfo = boardInfo.createElement(CLOCK_INFORMATION_SECTION_STRING);
       clkInfo.setAttribute(
           CLOCK_SECTION_STRINGS[0], Long.toString(BoardInfo.fpga.getClockFrequency()));
-      final var pin = boardInfo.createAttribute(CLOCK_SECTION_STRINGS[1]);
+      final org.w3c.dom.Attr pin = boardInfo.createAttribute(CLOCK_SECTION_STRINGS[1]);
       pin.setValue(BoardInfo.fpga.getClockPinLocation().toUpperCase());
       clkInfo.setAttributeNode(pin);
-      final var pull = boardInfo.createAttribute(CLOCK_SECTION_STRINGS[2]);
+      final org.w3c.dom.Attr pull = boardInfo.createAttribute(CLOCK_SECTION_STRINGS[2]);
       pull.setValue(PullBehaviors.BEHAVIOR_STRINGS[BoardInfo.fpga.getClockPull()]);
       clkInfo.setAttributeNode(pull);
-      final var ios = boardInfo.createAttribute(CLOCK_SECTION_STRINGS[3]);
+      final org.w3c.dom.Attr ios = boardInfo.createAttribute(CLOCK_SECTION_STRINGS[3]);
       ios.setValue(IoStandards.BEHAVIOR_STRINGS[BoardInfo.fpga.getClockStandard()]);
       clkInfo.setAttributeNode(ios);
       fpgaInfo.appendChild(clkInfo);
-      final var fpga = boardInfo.createElement(FPGA_INFORMATION_SECTION_STRING);
+      final org.w3c.dom.Element fpga = boardInfo.createElement(FPGA_INFORMATION_SECTION_STRING);
       fpga.setAttribute(
           FPGA_SECTION_STRINGS[0],
           VendorSoftware.VENDORS[BoardInfo.fpga.getVendor()].toUpperCase());
-      final var part = boardInfo.createAttribute(FPGA_SECTION_STRINGS[1]);
+      final org.w3c.dom.Attr part = boardInfo.createAttribute(FPGA_SECTION_STRINGS[1]);
       part.setValue(BoardInfo.fpga.getPart());
       fpga.setAttributeNode(part);
-      final var tech = boardInfo.createAttribute(FPGA_SECTION_STRINGS[2]);
+      final org.w3c.dom.Attr tech = boardInfo.createAttribute(FPGA_SECTION_STRINGS[2]);
       tech.setValue(BoardInfo.fpga.getTechnology());
       fpga.setAttributeNode(tech);
-      final var box = boardInfo.createAttribute(FPGA_SECTION_STRINGS[3]);
+      final org.w3c.dom.Attr box = boardInfo.createAttribute(FPGA_SECTION_STRINGS[3]);
       box.setValue(BoardInfo.fpga.getPackage());
       fpga.setAttributeNode(box);
-      final var speed = boardInfo.createAttribute(FPGA_SECTION_STRINGS[4]);
+      final org.w3c.dom.Attr speed = boardInfo.createAttribute(FPGA_SECTION_STRINGS[4]);
       speed.setValue(BoardInfo.fpga.getSpeedGrade());
       fpga.setAttributeNode(speed);
-      final var usbTmc = boardInfo.createAttribute(FPGA_SECTION_STRINGS[5]);
+      final org.w3c.dom.Attr usbTmc = boardInfo.createAttribute(FPGA_SECTION_STRINGS[5]);
       usbTmc.setValue(BoardInfo.fpga.isUsbTmcDownloadRequired().toString());
       fpga.setAttributeNode(usbTmc);
-      final var jtagPos = boardInfo.createAttribute(FPGA_SECTION_STRINGS[6]);
+      final org.w3c.dom.Attr jtagPos = boardInfo.createAttribute(FPGA_SECTION_STRINGS[6]);
       jtagPos.setValue(String.valueOf(BoardInfo.fpga.getFpgaJTAGChainPosition()));
       fpga.setAttributeNode(jtagPos);
-      final var flashName = boardInfo.createAttribute(FPGA_SECTION_STRINGS[7]);
+      final org.w3c.dom.Attr flashName = boardInfo.createAttribute(FPGA_SECTION_STRINGS[7]);
       flashName.setValue(String.valueOf(BoardInfo.fpga.getFlashName()));
       fpga.setAttributeNode(flashName);
-      final var flashJtagPos = boardInfo.createAttribute(FPGA_SECTION_STRINGS[8]);
+      final org.w3c.dom.Attr flashJtagPos = boardInfo.createAttribute(FPGA_SECTION_STRINGS[8]);
       flashJtagPos.setValue(String.valueOf(BoardInfo.fpga.getFlashJTAGChainPosition()));
       fpga.setAttributeNode(flashJtagPos);
-      final var unusedPins = boardInfo.createElement(UNUSED_PINS_STRING);
+      final org.w3c.dom.Element unusedPins = boardInfo.createElement(UNUSED_PINS_STRING);
       fpgaInfo.appendChild(fpga);
       unusedPins.setAttribute(
           "PullBehavior", PullBehaviors.BEHAVIOR_STRINGS[BoardInfo.fpga.getUnusedPinsBehavior()]);
       fpgaInfo.appendChild(unusedPins);
-      final var components = boardInfo.createElement(COMPONENTS_SECTION_STRING);
+      final org.w3c.dom.Element components = boardInfo.createElement(COMPONENTS_SECTION_STRING);
       root.appendChild(components);
-      final var compCmd =
+      final org.w3c.dom.Comment compCmd =
           boardInfo.createComment("This section describes all Components present on the boards");
       components.appendChild(compCmd);
-      for (final var comp : BoardInfo.getAllComponents()) {
+      for (final com.cburch.logisim.fpga.data.FpgaIoInformationContainer comp : BoardInfo.getAllComponents()) {
         components.appendChild(comp.getDocumentElement(boardInfo));
       }
-      final var writer = new ImageXmlFactory();
+      final com.cburch.logisim.fpga.file.ImageXmlFactory writer = new ImageXmlFactory();
       writer.createStream(BoardImage);
-      final var boardPicture = boardInfo.createElement(IMAGE_INFORMATION_STRING);
+      final org.w3c.dom.Element boardPicture = boardInfo.createElement(IMAGE_INFORMATION_STRING);
       root.appendChild(boardPicture);
-      final var pictCmd = boardInfo.createComment("This section hold the board picture");
+      final org.w3c.dom.Comment pictCmd = boardInfo.createComment("This section hold the board picture");
       boardPicture.appendChild(pictCmd);
-      final var pictsize = boardInfo.createElement("PictureDimension");
+      final org.w3c.dom.Element pictsize = boardInfo.createElement("PictureDimension");
       pictsize.setAttribute("Width", Integer.toString(BoardImage.getWidth(null)));
-      final var height = boardInfo.createAttribute("Height");
+      final org.w3c.dom.Attr height = boardInfo.createAttribute("Height");
       height.setValue(Integer.toString(BoardImage.getHeight(null)));
       pictsize.setAttributeNode(height);
       boardPicture.appendChild(pictsize);
-      final var codeTable = boardInfo.createElement("CompressionCodeTable");
+      final org.w3c.dom.Element codeTable = boardInfo.createElement("CompressionCodeTable");
       boardPicture.appendChild(codeTable);
       codeTable.setAttribute("TableData", writer.getCodeTable());
-      final var pixelData = boardInfo.createElement("PixelData");
+      final org.w3c.dom.Element pixelData = boardInfo.createElement("PixelData");
       boardPicture.appendChild(pixelData);
       pixelData.setAttribute("PixelRGB", writer.getCompressedString());
     } catch (Exception e) {
@@ -166,11 +166,11 @@ public class BoardWriterClass {
 
   public void printXml() {
     try {
-      final var tranFactory = TransformerFactory.newInstance();
-      final var aTransformer = tranFactory.newTransformer();
+      final javax.xml.transform.TransformerFactory tranFactory = TransformerFactory.newInstance();
+      final javax.xml.transform.Transformer aTransformer = tranFactory.newTransformer();
       aTransformer.setOutputProperty(OutputKeys.INDENT, "yes");
-      final var src = new DOMSource(boardInfo);
-      final var dest = new StreamResult(new StringWriter());
+      final javax.xml.transform.dom.DOMSource src = new DOMSource(boardInfo);
+      final javax.xml.transform.stream.StreamResult dest = new StreamResult(new StringWriter());
       aTransformer.transform(src, dest);
       logger.info(dest.getWriter().toString());
     } catch (Exception e) {
@@ -182,13 +182,13 @@ public class BoardWriterClass {
 
   public void printXml(String filename) {
     try {
-      final var tranFactory = TransformerFactory.newInstance();
+      final javax.xml.transform.TransformerFactory tranFactory = TransformerFactory.newInstance();
       tranFactory.setAttribute("indent-number", 3);
-      final var aTransformer = tranFactory.newTransformer();
+      final javax.xml.transform.Transformer aTransformer = tranFactory.newTransformer();
       aTransformer.setOutputProperty(OutputKeys.INDENT, "yes");
-      final var src = new DOMSource(boardInfo);
-      final var file = new File(filename);
-      final var dest = new StreamResult(file);
+      final javax.xml.transform.dom.DOMSource src = new DOMSource(boardInfo);
+      final java.io.File file = new File(filename);
+      final javax.xml.transform.stream.StreamResult dest = new StreamResult(file);
       aTransformer.transform(src, dest);
     } catch (Exception e) {
       logger.error(

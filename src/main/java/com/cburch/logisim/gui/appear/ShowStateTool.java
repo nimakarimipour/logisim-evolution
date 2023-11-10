@@ -48,8 +48,8 @@ public class ShowStateTool implements ToolbarClickableItem {
 
   @Override
   public void clicked() {
-    final var w = new ShowStateDialog(view.getFrame(), canvas);
-    final var p = view.getFrame().getLocation();
+    final com.cburch.logisim.gui.appear.ShowStateDialog w = new ShowStateDialog(view.getFrame(), canvas);
+    final java.awt.Point p = view.getFrame().getLocation();
     p.translate(80, 50);
     w.setLocation(p);
     w.setVisible(true);

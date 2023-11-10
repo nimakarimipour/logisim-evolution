@@ -116,7 +116,7 @@ public class Port {
   }
 
   public EndData toEnd(Location loc, AttributeSet attrs) {
-    final var pt = loc.translate(dx, dy);
+    final com.cburch.logisim.data.Location pt = loc.translate(dx, dy);
     if (widthFixed != null) return new EndData(pt, widthFixed, type, exclude);
     final Object val = attrs.getValue(widthAttr);
     if (val instanceof BitWidth) return new EndData(pt, (BitWidth) val, type, exclude);

@@ -131,11 +131,11 @@ class Video extends ManagedComponent implements ToolTipMaker, AttributeListener 
 
     @Override
     public Bounds getOffsetBounds(AttributeSet attrs) {
-      final var s = attrs.getValue(SCALE_OPTION);
-      final var w = attrs.getValue(WIDTH_OPTION);
-      final var h = attrs.getValue(HEIGHT_OPTION);
-      final var bw = (Math.max(s * w + 14, 100));
-      final var bh = (Math.max(s * h + 14, 20));
+      final java.lang.Integer s = attrs.getValue(SCALE_OPTION);
+      final java.lang.Integer w = attrs.getValue(WIDTH_OPTION);
+      final java.lang.Integer h = attrs.getValue(HEIGHT_OPTION);
+      final int bw = (Math.max(s * w + 14, 100));
+      final int bh = (Math.max(s * h + 14, 20));
       return Bounds.create(-30, -bh, bw, bh);
     }
 
@@ -183,23 +183,23 @@ class Video extends ManagedComponent implements ToolTipMaker, AttributeListener 
 
   @Override
   public void propagate(CircuitState circuitState) {
-    final var state = getState(circuitState);
-    final var attrs = getAttributeSet();
-    final var x = addr(circuitState, P_X);
-    final var y = addr(circuitState, P_Y);
-    final var color = addr(circuitState, P_DATA);
+    final com.cburch.logisim.std.io.Video.State state = getState(circuitState);
+    final com.cburch.logisim.data.AttributeSet attrs = getAttributeSet();
+    final int x = addr(circuitState, P_X);
+    final int y = addr(circuitState, P_Y);
+    final int color = addr(circuitState, P_DATA);
     state.lastX = x;
     state.lastY = y;
     state.color = color;
 
     Object resetOption = attrs.getValue(RESET_OPTION);
     if (resetOption == null) resetOption = RESET_OPTIONS[0];
-    final var cm = getColorModel(attrs.getValue(COLOR_OPTION));
-    final var w = attrs.getValue(WIDTH_OPTION);
-    final var h = attrs.getValue(HEIGHT_OPTION);
+    final java.awt.image.ColorModel cm = getColorModel(attrs.getValue(COLOR_OPTION));
+    final java.lang.Integer w = attrs.getValue(WIDTH_OPTION);
+    final java.lang.Integer h = attrs.getValue(HEIGHT_OPTION);
 
     if (state.tick(val(circuitState, P_CLK)) && val(circuitState, P_WE) == Value.TRUE) {
-      final var g = state.img.getGraphics();
+      final java.awt.Graphics g = state.img.getGraphics();
       g.setColor(new Color(cm.getRGB(color)));
       g.fillRect(x, y, 1, 1);
       if (RESET_SYNC.equals(resetOption) && val(circuitState, P_RST) == Value.TRUE) {
@@ -209,7 +209,7 @@ class Video extends ManagedComponent implements ToolTipMaker, AttributeListener 
     }
 
     if (!RESET_SYNC.equals(resetOption) && val(circuitState, P_RST) == Value.TRUE) {
-      final var g = state.img.getGraphics();
+      final java.awt.Graphics g = state.img.getGraphics();
       g.setColor(Color.BLACK);
       g.fillRect(0, 0, w, h);
     }
@@ -217,13 +217,13 @@ class Video extends ManagedComponent implements ToolTipMaker, AttributeListener 
 
   @Override
   public void draw(ComponentDrawContext context) {
-    final var loc = getLocation();
-    final var s = getState(context.getCircuitState());
+    final com.cburch.logisim.data.Location loc = getLocation();
+    final com.cburch.logisim.std.io.Video.State s = getState(context.getCircuitState());
     drawVideo(context, loc.getX(), loc.getY(), s);
   }
 
   static void drawVideoIcon(ComponentDrawContext context, int x, int y) {
-    final var g = context.getGraphics().create();
+    final java.awt.Graphics g = context.getGraphics().create();
     g.translate(x, y);
     g.setColor(Color.WHITE);
     g.fillRoundRect(scale(2), scale(2), scale(16 - 1), scale(16 - 1), scale(3), scale(3));
@@ -357,17 +357,17 @@ class Video extends ManagedComponent implements ToolTipMaker, AttributeListener 
   }
 
   void drawVideo(ComponentDrawContext context, int x, int y, State state) {
-    final var g = context.getGraphics();
+    final java.awt.Graphics g = context.getGraphics();
 
-    final var attrs = getAttributeSet();
+    final com.cburch.logisim.data.AttributeSet attrs = getAttributeSet();
     Object blinkOption = attrs.getValue(BLINK_OPTION);
-    final var cm = getColorModel(attrs.getValue(COLOR_OPTION));
+    final java.awt.image.ColorModel cm = getColorModel(attrs.getValue(COLOR_OPTION));
 
-    final var s = attrs.getValue(SCALE_OPTION);
-    final var w = attrs.getValue(WIDTH_OPTION);
-    final var h = attrs.getValue(HEIGHT_OPTION);
-    final var bw = (Math.max(s * w + 14, 100));
-    final var bh = (Math.max(s * h + 14, 20));
+    final java.lang.Integer s = attrs.getValue(SCALE_OPTION);
+    final java.lang.Integer w = attrs.getValue(WIDTH_OPTION);
+    final java.lang.Integer h = attrs.getValue(HEIGHT_OPTION);
+    final int bw = (Math.max(s * w + 14, 100));
+    final int bh = (Math.max(s * h + 14, 20));
 
     x += (-30);
     y += (-bh);
@@ -414,7 +414,7 @@ class Video extends ManagedComponent implements ToolTipMaker, AttributeListener 
     }
 
     public void reset() {
-      final var g = img.getGraphics();
+      final java.awt.Graphics g = img.getGraphics();
       g.setColor(Color.YELLOW);
       g.fillRect(0, 0, img.getWidth(), img.getHeight());
     }
@@ -478,10 +478,10 @@ class Video extends ManagedComponent implements ToolTipMaker, AttributeListener 
   }
 
   void configureComponent() {
-    final var attrs = getAttributeSet();
-    final var bpp = getColorModel(attrs.getValue(COLOR_OPTION)).getPixelSize();
-    final var xs = 31 - Integer.numberOfLeadingZeros(attrs.getValue(WIDTH_OPTION));
-    final var ys = 31 - Integer.numberOfLeadingZeros(attrs.getValue(HEIGHT_OPTION));
+    final com.cburch.logisim.data.AttributeSet attrs = getAttributeSet();
+    final int bpp = getColorModel(attrs.getValue(COLOR_OPTION)).getPixelSize();
+    final int xs = 31 - Integer.numberOfLeadingZeros(attrs.getValue(WIDTH_OPTION));
+    final int ys = 31 - Integer.numberOfLeadingZeros(attrs.getValue(HEIGHT_OPTION));
     setEnd(P_X, getLocation().translate(40, 0), BitWidth.create(xs), EndData.INPUT_ONLY);
     setEnd(P_Y, getLocation().translate(50, 0), BitWidth.create(ys), EndData.INPUT_ONLY);
     setEnd(P_DATA, getLocation().translate(60, 0), BitWidth.create(bpp), EndData.INPUT_ONLY);

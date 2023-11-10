@@ -26,14 +26,14 @@ public class PlaHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
   }
 
   private static String bits(char[] b) {
-    final var s = new StringBuilder();
-    for (final var c : b) s.insert(0, ((c == '0' || c == '1') ? c : '-'));
+    final java.lang.StringBuilder s = new StringBuilder();
+    for (final char c : b) s.insert(0, ((c == '0' || c == '1') ? c : '-'));
     if (b.length == 1) return "'" + s + "'";
     else return "\"" + s + "\"";
   }
 
   private static String zeros(int sz) {
-    final var s = new StringBuilder();
+    final java.lang.StringBuilder s = new StringBuilder();
     s.append("0".repeat(sz));
     if (sz == 1) return "'" + s + "'";
     else return "\"" + s + "\"";
@@ -41,9 +41,9 @@ public class PlaHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist nets, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer().addVhdlKeywords().empty();
-    final var tt = attrs.getValue(Pla.ATTR_TABLE);
-    final var outSz = attrs.getValue(Pla.ATTR_OUT_WIDTH).getWidth();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer().addVhdlKeywords().empty();
+    final com.cburch.logisim.std.gates.PlaTable tt = attrs.getValue(Pla.ATTR_TABLE);
+    final int outSz = attrs.getValue(Pla.ATTR_OUT_WIDTH).getWidth();
     if (Hdl.isVhdl()) {
       java.lang.String leader = "result <= ";
       if (tt.rows().isEmpty()) {

@@ -35,8 +35,8 @@ public class JKFlipFlop extends AbstractFlipFlop {
 
     @Override
     public LineBuffer getUpdateLogic() {
-      final var contents = LineBuffer.getHdlBuffer();
-      final var preamble = LineBuffer.formatHdl("{{assign}}s_nextState{{=}}");
+      final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
+      final java.lang.String preamble = LineBuffer.formatHdl("{{assign}}s_nextState{{=}}");
       contents
           .add("{{1}}({{not}}(s_currentState){{and}}j){{or}}", preamble)
           .add("{{1}}(s_currentState{{and}}{{not}}(k));", " ".repeat(preamble.length()));

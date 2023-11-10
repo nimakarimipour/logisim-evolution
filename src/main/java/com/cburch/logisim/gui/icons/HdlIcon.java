@@ -30,7 +30,7 @@ public class HdlIcon extends BaseIcon {
     g2.setColor(Color.BLACK);
     g2.drawRect(0, scale(4), scale(16), scale(12));
     g2.setColor(Color.LIGHT_GRAY);
-    final var font = g2.getFont().deriveFont((float) getIconWidth() / (float) 4.5);
+    final java.awt.Font font = g2.getFont().deriveFont((float) getIconWidth() / (float) 4.5);
     java.awt.font.TextLayout t = new TextLayout("LIBRARY", font, g2.getFontRenderContext());
     t.draw(
         g2,

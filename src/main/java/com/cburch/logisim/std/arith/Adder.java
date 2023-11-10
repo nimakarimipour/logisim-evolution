@@ -40,28 +40,28 @@ public class Adder extends InstanceFactory {
   public static final String _ID = "Adder";
 
   static Value[] computeSum(BitWidth width, Value valueA, Value valueB, Value cIn) {
-    final var w = width.getWidth();
+    final int w = width.getWidth();
     if (cIn == Value.UNKNOWN || cIn == Value.NIL) cIn = Value.FALSE;
     if (valueA.isFullyDefined() && valueB.isFullyDefined() && cIn.isFullyDefined()) {
       if (w == 64) {
-        final var ax = valueA.toLongValue();
-        final var bx = valueB.toLongValue();
-        final var cx = cIn.toLongValue();
-        final var mask = ~(1L << 63);
-        final var aLast = (ax < 0);
-        final var bLast = (bx < 0);
-        final var cInLast = (((ax & mask) + (bx & mask) + cx) < 0);
-        final var cOut = (aLast && bLast) || (aLast && cInLast) || (bLast && cInLast);
-        final var sum = valueA.toLongValue() + valueB.toLongValue() + cIn.toLongValue();
+        final long ax = valueA.toLongValue();
+        final long bx = valueB.toLongValue();
+        final long cx = cIn.toLongValue();
+        final long mask = ~(1L << 63);
+        final boolean aLast = (ax < 0);
+        final boolean bLast = (bx < 0);
+        final boolean cInLast = (((ax & mask) + (bx & mask) + cx) < 0);
+        final boolean cOut = (aLast && bLast) || (aLast && cInLast) || (bLast && cInLast);
+        final long sum = valueA.toLongValue() + valueB.toLongValue() + cIn.toLongValue();
         return new Value[] {Value.createKnown(width, sum), cOut ? Value.TRUE : Value.FALSE};
       } else {
-        final var sum = valueA.toLongValue() + valueB.toLongValue() + cIn.toLongValue();
+        final long sum = valueA.toLongValue() + valueB.toLongValue() + cIn.toLongValue();
         return new Value[] {
           Value.createKnown(width, sum), ((sum >> w) & 1) == 0 ? Value.FALSE : Value.TRUE
         };
       }
     } else {
-      final var bits = new Value[w];
+      final com.cburch.logisim.data.Value[] bits = new Value[w];
       com.cburch.logisim.data.Value carry = cIn;
       for (int i = 0; i < w; i++) {
         if (carry == Value.ERROR) {
@@ -106,7 +106,7 @@ public class Adder extends InstanceFactory {
     setOffsetBounds(Bounds.create(-40, -20, 40, 40));
     setIcon(new ArithmeticIcon("+"));
 
-    final var ps = new Port[5];
+    final com.cburch.logisim.instance.Port[] ps = new Port[5];
     ps[IN0] = new Port(-40, -10, Port.INPUT, StdAttr.WIDTH);
     ps[IN1] = new Port(-40, 10, Port.INPUT, StdAttr.WIDTH);
     ps[OUT] = new Port(0, 0, Port.OUTPUT, StdAttr.WIDTH);
@@ -122,7 +122,7 @@ public class Adder extends InstanceFactory {
 
   @Override
   public String getHDLName(AttributeSet attrs) {
-    final var nrOfBits = attrs.getValue(StdAttr.WIDTH).getWidth();
+    final int nrOfBits = attrs.getValue(StdAttr.WIDTH).getWidth();
     return (nrOfBits == 1) ? "FullAdder" : CorrectLabel.getCorrectLabel(getName());
   }
 

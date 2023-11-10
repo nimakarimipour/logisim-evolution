@@ -48,10 +48,10 @@ public class ModelMoveHandleAction extends ModelAction {
 
   @Override
   void undoSub(CanvasModel model) {
-    final var oldHandle = gesture.getHandle();
-    final var dx = oldHandle.getX() - newHandle.getX();
-    final var dy = oldHandle.getY() - newHandle.getY();
-    final var reverse = new HandleGesture(newHandle, dx, dy, 0);
+    final com.cburch.draw.model.Handle oldHandle = gesture.getHandle();
+    final int dx = oldHandle.getX() - newHandle.getX();
+    final int dy = oldHandle.getY() - newHandle.getY();
+    final com.cburch.draw.model.HandleGesture reverse = new HandleGesture(newHandle, dx, dy, 0);
     model.moveHandle(reverse);
   }
 }

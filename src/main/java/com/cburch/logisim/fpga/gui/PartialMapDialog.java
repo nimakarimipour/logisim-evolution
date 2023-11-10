@@ -65,7 +65,7 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
     setLocationRelativeTo(parent);
     setAlwaysOnTop(true);
     MapTo = new ArrayList<>();
-    final var content = new JPanel();
+    final javax.swing.JPanel content = new JPanel();
     content.setLayout(new BorderLayout());
     javax.swing.JPanel pane = createInputPane();
     if (pane != null) {
@@ -79,10 +79,10 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
     if (pane != null) {
       content.add(pane, BorderLayout.SOUTH);
     }
-    final var scroll = new JScrollPane(content);
+    final javax.swing.JScrollPane scroll = new JScrollPane(content);
     scroll.setPreferredSize(new Dimension(AppPreferences.getScaled(450), AppPreferences.getScaled(250)));
     add(scroll, BorderLayout.CENTER);
-    final var buttonBar = new JPanel();
+    final javax.swing.JPanel buttonBar = new JPanel();
     buttonBar.setLayout(new BorderLayout());
     OkButton = new JButton();
     OkButton.setActionCommand(actionOk);
@@ -103,7 +103,7 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
   }
 
   private JPanel createInputPane() {
-    final var map = mapInfo.getMap();
+    final com.cburch.logisim.fpga.data.MapComponent map = mapInfo.getMap();
     if (!map.hasInputs()) return null;
     if (mapInfo.getPin() >= 0 && !map.isInput(mapInfo.getPin())) return null;
     if (InputMapSet == null)
@@ -111,10 +111,10 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
     if (ioComp.hasInputs()) InputMapSet.addAll(ioComp.getInputs());
     if (ioComp.hasIoPins()) InputMapSet.addAll(ioComp.getIos());
     if (InputMapSet.isEmpty()) return null;
-    final var panel = new JPanel();
+    final javax.swing.JPanel panel = new JPanel();
     panel.setBorder(BorderFactory.createTitledBorder(S.get("FpgaInputsMap")));
     panel.setLayout(new GridBagLayout());
-    final var gbc = new GridBagConstraints();
+    final java.awt.GridBagConstraints gbc = new GridBagConstraints();
     gbc.fill = GridBagConstraints.BOTH;
     gbc.gridx = 0;
     gbc.gridy = -1;
@@ -129,7 +129,7 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
       gbc.gridy++;
       panel.add(new JLabel(map.getDisplayString(mapInfo.getPin())), gbc);
       gbc.gridx++;
-      final var mapToAdd = new JLabel();
+      final javax.swing.JLabel mapToAdd = new JLabel();
       MapTo.add(mapToAdd);
       panel.add(mapToAdd, gbc);
       gbc.gridx++;
@@ -145,7 +145,7 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
       gbc.gridy++;
       panel.add(InputMultipleSingle, gbc);
       gbc.gridx++;
-      final var mapToAdd = new JLabel();
+      final javax.swing.JLabel mapToAdd = new JLabel();
       MapTo.add(mapToAdd);
       panel.add(mapToAdd, gbc);
       gbc.gridx++;
@@ -154,7 +154,7 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
       /* multiple on multiple */
       InputMultipleMultiple = new ArrayList<>();
       for (int i = 0; i < map.nrInputs(); i++) {
-        final var sels = new JComboBox<String>();
+        final javax.swing.JComboBox<java.lang.String> sels = new JComboBox<String>();
         sels.addItem(S.get("FpgaNotMapped"));
         for (java.lang.Integer integer : InputMapSet)
           sels.addItem(ioComp.getDisplayString() + "/" + ioComp.getPinName(integer));
@@ -164,7 +164,7 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
         gbc.gridy++;
         panel.add(new JLabel(map.getDisplayString(i)), gbc);
         gbc.gridx++;
-        final var mapToAdd = new JLabel();
+        final javax.swing.JLabel mapToAdd = new JLabel();
         MapTo.add(mapToAdd);
         panel.add(mapToAdd, gbc);
         gbc.gridx++;
@@ -175,7 +175,7 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
   }
 
   private JPanel createOutputPane() {
-    final var map = mapInfo.getMap();
+    final com.cburch.logisim.fpga.data.MapComponent map = mapInfo.getMap();
     if (!map.hasOutputs()) return null;
     if (mapInfo.getPin() >= 0 && !map.isOutput(mapInfo.getPin())) return null;
     if (OutputMapSet == null)
@@ -183,10 +183,10 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
     if (ioComp.hasOutputs()) OutputMapSet.addAll(ioComp.getOutputs());
     if (ioComp.hasIoPins()) OutputMapSet.addAll(ioComp.getIos());
     if (OutputMapSet.isEmpty()) return null;
-    final var panel = new JPanel();
+    final javax.swing.JPanel panel = new JPanel();
     panel.setBorder(BorderFactory.createTitledBorder(S.get("FpgaOutputsMap")));
     panel.setLayout(new GridBagLayout());
-    final var gbc = new GridBagConstraints();
+    final java.awt.GridBagConstraints gbc = new GridBagConstraints();
     gbc.fill = GridBagConstraints.BOTH;
     gbc.gridx = 0;
     gbc.gridy = -1;
@@ -201,7 +201,7 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
       gbc.gridy++;
       panel.add(new JLabel(map.getDisplayString(mapInfo.getPin())), gbc);
       gbc.gridx++;
-      final var mapToAdd = new JLabel();
+      final javax.swing.JLabel mapToAdd = new JLabel();
       MapTo.add(mapToAdd);
       panel.add(mapToAdd, gbc);
       gbc.gridx++;
@@ -217,7 +217,7 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
       gbc.gridy++;
       panel.add(OutputMultipleSingle, gbc);
       gbc.gridx++;
-      final var mapToAdd = new JLabel();
+      final javax.swing.JLabel mapToAdd = new JLabel();
       MapTo.add(mapToAdd);
       panel.add(mapToAdd, gbc);
       gbc.gridx++;
@@ -226,7 +226,7 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
       /* multiple on multiple */
       OutputMultipleMultiple = new ArrayList<>();
       for (int i = 0; i < map.nrOutputs(); i++) {
-        final var sels = new JComboBox<String>();
+        final javax.swing.JComboBox<java.lang.String> sels = new JComboBox<String>();
         sels.addItem(S.get("FpgaNotMapped"));
         for (java.lang.Integer integer : OutputMapSet)
           sels.addItem(ioComp.getDisplayString() + "/" + ioComp.getPinName(integer));
@@ -236,7 +236,7 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
         gbc.gridy++;
         panel.add(new JLabel(map.getDisplayString(map.nrInputs() + i)), gbc);
         gbc.gridx++;
-        final var mapToAdd = new JLabel();
+        final javax.swing.JLabel mapToAdd = new JLabel();
         MapTo.add(mapToAdd);
         panel.add(mapToAdd, gbc);
         gbc.gridx++;
@@ -247,17 +247,17 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
   }
 
   private JPanel createIOPane() {
-    final var map = mapInfo.getMap();
+    final com.cburch.logisim.fpga.data.MapComponent map = mapInfo.getMap();
     if (!map.hasIos()) return null;
     if (mapInfo.getPin() >= 0 && !map.isIo(mapInfo.getPin())) return null;
     if (IOMapSet == null)
       IOMapSet = new ArrayList<>();
     if (ioComp.hasIoPins()) IOMapSet.addAll(ioComp.getIos());
     if (IOMapSet.isEmpty()) return null;
-    final var panel = new JPanel();
+    final javax.swing.JPanel panel = new JPanel();
     panel.setBorder(BorderFactory.createTitledBorder(S.get("FpgaIOsMap")));
     panel.setLayout(new GridBagLayout());
-    final var gbc = new GridBagConstraints();
+    final java.awt.GridBagConstraints gbc = new GridBagConstraints();
     gbc.fill = GridBagConstraints.BOTH;
     gbc.gridx = 0;
     gbc.gridy = -1;
@@ -272,7 +272,7 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
       gbc.gridy++;
       panel.add(new JLabel(map.getDisplayString(mapInfo.getPin())), gbc);
       gbc.gridx++;
-      final var mapToAdd = new JLabel();
+      final javax.swing.JLabel mapToAdd = new JLabel();
       MapTo.add(mapToAdd);
       panel.add(mapToAdd, gbc);
       gbc.gridx++;
@@ -288,7 +288,7 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
       gbc.gridy++;
       panel.add(IOMultipleSingle, gbc);
       gbc.gridx++;
-      final var mapToAdd = new JLabel();
+      final javax.swing.JLabel mapToAdd = new JLabel();
       MapTo.add(mapToAdd);
       panel.add(mapToAdd, gbc);
       gbc.gridx++;
@@ -297,7 +297,7 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
       /* multiple on multiple */
       IOMultipleMultiple = new ArrayList<>();
       for (int i = 0; i < map.nrIOs(); i++) {
-        final var sels = new JComboBox<String>();
+        final javax.swing.JComboBox<java.lang.String> sels = new JComboBox<String>();
         sels.addItem(S.get("FpgaNotMapped"));
         for (java.lang.Integer integer : IOMapSet)
           sels.addItem(ioComp.getDisplayString() + "/" + ioComp.getPinName(integer));
@@ -307,7 +307,7 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
         gbc.gridy++;
         panel.add(new JLabel(map.getDisplayString(map.nrInputs() + map.nrOutputs() + i)), gbc);
         gbc.gridx++;
-        final var mapToAdd = new JLabel();
+        final javax.swing.JLabel mapToAdd = new JLabel();
         MapTo.add(mapToAdd);
         panel.add(mapToAdd, gbc);
         gbc.gridx++;
@@ -345,37 +345,37 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
     if (InputSingleMultiple != null
         && !source.equals(InputSingleMultiple)
         && InputSingleMultiple.getSelectedIndex() != 0) {
-      final var selId = InputMapSet.get(InputSingleMultiple.getSelectedIndex() - 1);
+      final java.lang.Integer selId = InputMapSet.get(InputSingleMultiple.getSelectedIndex() - 1);
       if (pinid == selId) InputSingleMultiple.setSelectedIndex(0);
     }
     for (int i = 0; InputMultipleMultiple != null && i < InputMultipleMultiple.size(); i++) {
       if (source.equals(InputMultipleMultiple.get(i))
           || InputMultipleMultiple.get(i).getSelectedIndex() == 0) continue;
-      final var selId = InputMapSet.get(InputMultipleMultiple.get(i).getSelectedIndex() - 1);
+      final java.lang.Integer selId = InputMapSet.get(InputMultipleMultiple.get(i).getSelectedIndex() - 1);
       if (pinid == selId) InputMultipleMultiple.get(i).setSelectedIndex(0);
     }
     if (OutputSingleMultiple != null
         && !source.equals(OutputSingleMultiple)
         && OutputSingleMultiple.getSelectedIndex() != 0) {
-      final var selId = OutputMapSet.get(OutputSingleMultiple.getSelectedIndex() - 1);
+      final java.lang.Integer selId = OutputMapSet.get(OutputSingleMultiple.getSelectedIndex() - 1);
       if (pinid == selId) OutputSingleMultiple.setSelectedIndex(0);
     }
     for (int i = 0; OutputMultipleMultiple != null && i < OutputMultipleMultiple.size(); i++) {
       if (source.equals(OutputMultipleMultiple.get(i))
           || OutputMultipleMultiple.get(i).getSelectedIndex() == 0) continue;
-      final var selId = OutputMapSet.get(OutputMultipleMultiple.get(i).getSelectedIndex() - 1);
+      final java.lang.Integer selId = OutputMapSet.get(OutputMultipleMultiple.get(i).getSelectedIndex() - 1);
       if (pinid == selId) OutputMultipleMultiple.get(i).setSelectedIndex(0);
     }
     if (IOSingleMultiple != null
         && !source.equals(IOSingleMultiple)
         && IOSingleMultiple.getSelectedIndex() != 0) {
-      final var selId = IOMapSet.get(IOSingleMultiple.getSelectedIndex() - 1);
+      final java.lang.Integer selId = IOMapSet.get(IOSingleMultiple.getSelectedIndex() - 1);
       if (pinid == selId) IOSingleMultiple.setSelectedIndex(0);
     }
     for (int i = 0; IOMultipleMultiple != null && i < IOMultipleMultiple.size(); i++) {
       if (source.equals(IOMultipleMultiple.get(i))
           || IOMultipleMultiple.get(i).getSelectedIndex() == 0) continue;
-      final var selId = IOMapSet.get(IOMultipleMultiple.get(i).getSelectedIndex() - 1);
+      final java.lang.Integer selId = IOMapSet.get(IOMultipleMultiple.get(i).getSelectedIndex() - 1);
       if (pinid == selId) IOMultipleMultiple.get(i).setSelectedIndex(0);
     }
   }
@@ -420,7 +420,7 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
     if (e.getActionCommand().equals(actionOk)) {
       MapComponent map = mapInfo.getMap();
       if (InputSingleMultiple != null && InputSingleMultiple.getSelectedIndex() != 0) {
-        final var pin = Math.max(mapInfo.getPin(), 0);
+        final int pin = Math.max(mapInfo.getPin(), 0);
         map.unmap(pin);
         map.tryMap(pin, ioComp, InputMapSet.get(InputSingleMultiple.getSelectedIndex() - 1));
       }
@@ -430,40 +430,40 @@ public class PartialMapDialog extends JDialog implements LocaleListener, ActionL
       }
       for (int i = 0; InputMultipleMultiple != null && i < InputMultipleMultiple.size(); i++) {
         if (InputMultipleMultiple.get(i).getSelectedIndex() == 0) continue;
-        final var pinId = InputMapSet.get(InputMultipleMultiple.get(i).getSelectedIndex() - 1);
+        final java.lang.Integer pinId = InputMapSet.get(InputMultipleMultiple.get(i).getSelectedIndex() - 1);
         map.unmap(i);
         map.tryMap(i, ioComp, pinId);
       }
       if (OutputSingleMultiple != null && OutputSingleMultiple.getSelectedIndex() != 0) {
-        final var pin = mapInfo.getPin() < 0 ? map.nrInputs() : mapInfo.getPin();
+        final int pin = mapInfo.getPin() < 0 ? map.nrInputs() : mapInfo.getPin();
         map.unmap(pin);
         map.tryMap(pin, ioComp, OutputMapSet.get(OutputSingleMultiple.getSelectedIndex() - 1));
       }
       if (OutputMultipleSingle != null && OutputMultipleSingle.getSelectedIndex() != 0) {
-        final var pin = map.nrInputs() + OutputMultipleSingle.getSelectedIndex() - 1;
+        final int pin = map.nrInputs() + OutputMultipleSingle.getSelectedIndex() - 1;
         map.unmap(pin);
         map.tryMap(pin, ioComp, OutputMapSet.get(0));
       }
       for (int i = 0; OutputMultipleMultiple != null && i < OutputMultipleMultiple.size(); i++) {
         if (OutputMultipleMultiple.get(i).getSelectedIndex() == 0) continue;
-        final var pinId = OutputMapSet.get(OutputMultipleMultiple.get(i).getSelectedIndex() - 1);
+        final java.lang.Integer pinId = OutputMapSet.get(OutputMultipleMultiple.get(i).getSelectedIndex() - 1);
         map.unmap(map.nrInputs() + i);
         map.tryMap(map.nrInputs() + i, ioComp, pinId);
       }
       if (IOSingleMultiple != null && IOSingleMultiple.getSelectedIndex() != 0) {
-        final var pin = mapInfo.getPin() < 0 ? map.nrInputs() + map.nrOutputs() : mapInfo.getPin();
+        final int pin = mapInfo.getPin() < 0 ? map.nrInputs() + map.nrOutputs() : mapInfo.getPin();
         map.unmap(pin);
         map.tryMap(pin, ioComp, IOMapSet.get(IOSingleMultiple.getSelectedIndex() - 1));
       }
       if (IOMultipleSingle != null && IOMultipleSingle.getSelectedIndex() != 0) {
-        final var pin = map.nrInputs() + map.nrOutputs() + IOMultipleSingle.getSelectedIndex() - 1;
+        final int pin = map.nrInputs() + map.nrOutputs() + IOMultipleSingle.getSelectedIndex() - 1;
         map.unmap(pin);
         map.tryMap(pin, ioComp, IOMapSet.get(0));
       }
       for (int i = 0; IOMultipleMultiple != null && i < IOMultipleMultiple.size(); i++) {
         if (IOMultipleMultiple.get(i).getSelectedIndex() == 0) continue;
-        final var pinId = IOMapSet.get(IOMultipleMultiple.get(i).getSelectedIndex() - 1);
-        final var pin = map.nrInputs() + map.nrOutputs() + i;
+        final java.lang.Integer pinId = IOMapSet.get(IOMultipleMultiple.get(i).getSelectedIndex() - 1);
+        final int pin = map.nrInputs() + map.nrOutputs() + i;
         map.unmap(pin);
         map.tryMap(pin, ioComp, pinId);
       }

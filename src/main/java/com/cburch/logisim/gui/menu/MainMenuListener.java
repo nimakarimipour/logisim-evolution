@@ -76,9 +76,9 @@ public class MainMenuListener extends MenuListener {
           CanvasModelListener {
     @Override
     public void actionPerformed(ActionEvent event) {
-      final var src = event.getSource();
-      final var proj = frame.getProject();
-      final var cur = proj == null ? null : proj.getCurrentCircuit();
+      final java.lang.Object src = event.getSource();
+      final com.cburch.logisim.proj.Project proj = frame.getProject();
+      final com.cburch.logisim.circuit.Circuit cur = proj == null ? null : proj.getCurrentCircuit();
       if (src == LogisimMenuBar.ADD_CIRCUIT) {
         ProjectCircuitActions.doAddCircuit(proj);
       } else if (src == LogisimMenuBar.ADD_VHDL) {
@@ -110,13 +110,13 @@ public class MainMenuListener extends MenuListener {
     }
 
     public void computeEnabled() {
-      final var proj = frame == null ? null : frame.getProject();
-      final var file = proj == null ? null : proj.getLogisimFile();
-      final var cur = proj == null ? null : proj.getCurrentCircuit();
-      final var curIndex = file == null ? -1 : file.indexOfCircuit(cur);
-      final var editorView = frame == null ? "" : frame.getEditorView();
-      final var viewAppearance = editorView.equals(Frame.EDIT_APPEARANCE);
-      final var viewLayout = editorView.equals(Frame.EDIT_LAYOUT);
+      final com.cburch.logisim.proj.Project proj = frame == null ? null : frame.getProject();
+      final com.cburch.logisim.file.LogisimFile file = proj == null ? null : proj.getLogisimFile();
+      final com.cburch.logisim.circuit.Circuit cur = proj == null ? null : proj.getCurrentCircuit();
+      final int curIndex = file == null ? -1 : file.indexOfCircuit(cur);
+      final java.lang.String editorView = frame == null ? "" : frame.getEditorView();
+      final boolean viewAppearance = editorView.equals(Frame.EDIT_APPEARANCE);
+      final boolean viewLayout = editorView.equals(Frame.EDIT_LAYOUT);
 
       boolean canSetMain = false;
       boolean canMoveUp = false;
@@ -153,13 +153,13 @@ public class MainMenuListener extends MenuListener {
 
     protected void computeRevertEnabled() {
       // do this separately since it can happen rather often
-      final var proj = frame.getProject();
-      final var file = proj.getLogisimFile();
-      final var cur = proj.getCurrentCircuit();
-      final var isProjectCircuit = file.contains(cur);
-      final var viewAppearance = frame.getEditorView().equals(Frame.EDIT_APPEARANCE);
-      final var canRevert = isProjectCircuit && viewAppearance && !cur.getAppearance().isDefaultAppearance();
-      final var oldValue = menubar.isEnabled(LogisimMenuBar.REVERT_APPEARANCE);
+      final com.cburch.logisim.proj.Project proj = frame.getProject();
+      final com.cburch.logisim.file.LogisimFile file = proj.getLogisimFile();
+      final com.cburch.logisim.circuit.Circuit cur = proj.getCurrentCircuit();
+      final boolean isProjectCircuit = file.contains(cur);
+      final boolean viewAppearance = frame.getEditorView().equals(Frame.EDIT_APPEARANCE);
+      final boolean canRevert = isProjectCircuit && viewAppearance && !cur.getAppearance().isDefaultAppearance();
+      final boolean oldValue = menubar.isEnabled(LogisimMenuBar.REVERT_APPEARANCE);
       if (canRevert != oldValue) {
         menubar.setEnabled(LogisimMenuBar.REVERT_APPEARANCE, canRevert);
         fireEnableChanged();
@@ -178,7 +178,7 @@ public class MainMenuListener extends MenuListener {
 
     @Override
     public void projectChanged(ProjectEvent event) {
-      final var action = event.getAction();
+      final int action = event.getAction();
       if (action == ProjectEvent.ACTION_SET_CURRENT) {
         if (event.getOldData() instanceof Circuit old) {
           old.getAppearance().removeCanvasModelListener(this);
@@ -198,14 +198,14 @@ public class MainMenuListener extends MenuListener {
     }
 
     void register() {
-      final var proj = frame.getProject();
+      final com.cburch.logisim.proj.Project proj = frame.getProject();
       if (proj == null) return;
 
       proj.addProjectListener(this);
       proj.addLibraryListener(this);
       frame.addPropertyChangeListener(Frame.EDITOR_VIEW, this);
       frame.addPropertyChangeListener(Frame.EXPLORER_VIEW, this);
-      final var circ = proj.getCurrentCircuit();
+      final com.cburch.logisim.circuit.Circuit circ = proj.getCurrentCircuit();
       if (circ != null) {
         circ.getAppearance().addCanvasModelListener(this);
       }
@@ -238,7 +238,7 @@ public class MainMenuListener extends MenuListener {
     }
 
     void register() {
-      final var proj = frame.getProject();
+      final com.cburch.logisim.proj.Project proj = frame.getProject();
       proj.addProjectListener(this);
       menubar.setSimulateListener(this);
       menubar.setCircuitState(proj.getSimulator(), proj.getCircuitState());

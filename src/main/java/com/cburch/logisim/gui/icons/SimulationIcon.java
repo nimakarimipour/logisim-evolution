@@ -36,13 +36,13 @@ public class SimulationIcon extends BaseIcon {
   @Override
   @SuppressWarnings("fallthrough")
   protected void paintIcon(Graphics2D g2) {
-    final var wh = getIconWidth() - scale(1);
+    final int wh = getIconWidth() - scale(1);
     g2.setStroke(new BasicStroke(scale(1)));
     g2.setColor(currentType > SIM_STEP ? Color.LIGHT_GRAY : Color.WHITE);
     g2.fillOval(0, 0, wh, wh);
     if (currentType > SIM_STEP) {
       g2.setColor(Color.WHITE);
-      final var wh1 = wh - scale(4);
+      final int wh1 = wh - scale(4);
       g2.fillOval(scale(2), scale(2), wh1, wh1);
       g2.setStroke(new BasicStroke(scale(2)));
       g2.setColor(Color.BLACK);

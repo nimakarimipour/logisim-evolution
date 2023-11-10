@@ -35,7 +35,7 @@ public class DirectionConfigurator implements KeyConfigurator, Cloneable {
   @Override
   public KeyConfigurationResult keyEventReceived(KeyConfigurationEvent event) {
     if (event.getType() == KeyConfigurationEvent.KEY_PRESSED) {
-      final var e = event.getKeyEvent();
+      final java.awt.event.KeyEvent e = event.getKeyEvent();
       if (e.getModifiersEx() == modsEx) {
         Direction value = switch (e.getKeyCode()) {
           case KeyEvent.VK_UP -> Direction.NORTH;

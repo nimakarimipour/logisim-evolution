@@ -20,7 +20,7 @@ import java.util.zip.ZipFile;
 
 public class BoardList {
   public static String getBoardName(String boardIdentifier) {
-    final var parts =
+    final java.lang.String[] parts =
         boardIdentifier.contains("url:")
             ? boardIdentifier.split("/")
             : boardIdentifier.split(Pattern.quote(File.separator));
@@ -28,8 +28,8 @@ public class BoardList {
   }
 
   private static Collection<String> getBoards(Pattern pattern, String match, String element) {
-    final var ret = new ArrayList<String>();
-    final var file = new File(element);
+    final java.util.ArrayList<java.lang.String> ret = new ArrayList<String>();
+    final java.io.File file = new File(element);
     if (file.isDirectory()) {
       ret.addAll(getBoardsfromDirectory(pattern, match, file));
     } else {
@@ -40,15 +40,15 @@ public class BoardList {
 
   private static Collection<String> getBoardsfromDirectory(
       Pattern pattern, String match, File dir) {
-    final var ret = new ArrayList<String>();
-    final var fileList = dir.listFiles();
-    for (final var file : fileList) {
+    final java.util.ArrayList<java.lang.String> ret = new ArrayList<String>();
+    final java.io.File[] fileList = dir.listFiles();
+    for (final java.io.File file : fileList) {
       if (file.isDirectory()) {
         ret.addAll(getBoardsfromDirectory(pattern, match, file));
       } else {
         try {
-          final var fileName = file.getCanonicalPath();
-          final var accept = pattern.matcher(fileName).matches() && fileName.contains(match);
+          final java.lang.String fileName = file.getCanonicalPath();
+          final boolean accept = pattern.matcher(fileName).matches() && fileName.contains(match);
           if (accept) {
             ret.add("file:" + fileName);
           }
@@ -64,18 +64,18 @@ public class BoardList {
     // All path separators are defined with File.Separator, but when
     // browsing the .jar, java uses slash even in Windows
     match = match.replaceAll("\\\\", "/");
-    final var ret = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> ret = new ArrayList<String>();
     ZipFile zf;
     try {
       zf = new ZipFile(dir);
     } catch (IOException e) {
       throw new Error(e);
     }
-    final var entries = zf.entries();
+    final java.util.Enumeration<? extends java.util.zip.ZipEntry> entries = zf.entries();
     while (entries.hasMoreElements()) {
-      final var ze = entries.nextElement();
-      final var fileName = ze.getName();
-      final var accept = pattern.matcher(fileName).matches() && fileName.contains(match);
+      final java.util.zip.ZipEntry ze = entries.nextElement();
+      final java.lang.String fileName = ze.getName();
+      final boolean accept = pattern.matcher(fileName).matches() && fileName.contains(match);
       if (accept) {
         ret.add("url:" + fileName);
       }
@@ -94,10 +94,10 @@ public class BoardList {
   private final ArrayList<String> definedBoards = new ArrayList<>();
 
   public BoardList() {
-    final var classPath = System.getProperty("java.class.path", File.pathSeparator);
-    final var classPathElements = classPath.split(Pattern.quote(File.pathSeparator));
-    final var pattern = Pattern.compile(".*.xml");
-    for (final var element : classPathElements) {
+    final java.lang.String classPath = System.getProperty("java.class.path", File.pathSeparator);
+    final java.lang.String[] classPathElements = classPath.split(Pattern.quote(File.pathSeparator));
+    final java.util.regex.Pattern pattern = Pattern.compile(".*.xml");
+    for (final java.lang.String element : classPathElements) {
       definedBoards.addAll(getBoards(pattern, boardResourcePath, element));
     }
   }
@@ -120,7 +120,7 @@ public class BoardList {
 
   public String getBoardFilePath(String boardName) {
     if (boardName == null) return null;
-    for (final var board : definedBoards) {
+    for (final java.lang.String board : definedBoards) {
       if (getBoardName(board).equals(boardName)) {
         return board;
       }
@@ -142,8 +142,8 @@ public class BoardList {
   }
 
   public List<String> getBoardNames() {
-    final var ret = new SortedArrayList<String>();
-    for (final var board : definedBoards) {
+    final com.cburch.logisim.fpga.settings.BoardList.SortedArrayList<java.lang.String> ret = new SortedArrayList<String>();
+    for (final java.lang.String board : definedBoards) {
       ret.insertSorted(getBoardName(board));
     }
     return ret;

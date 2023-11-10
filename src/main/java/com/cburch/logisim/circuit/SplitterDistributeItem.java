@@ -29,9 +29,9 @@ class SplitterDistributeItem extends JMenuItem implements ActionListener {
     this.order = order;
     addActionListener(this);
 
-    final var attrs = (SplitterAttributes) splitter.getAttributeSet();
-    final var actual = attrs.bitEnd;
-    final var desired = SplitterAttributes.computeDistribution(attrs.fanout, actual.length, order);
+    final com.cburch.logisim.circuit.SplitterAttributes attrs = (SplitterAttributes) splitter.getAttributeSet();
+    final byte[] actual = attrs.bitEnd;
+    final byte[] desired = SplitterAttributes.computeDistribution(attrs.fanout, actual.length, order);
     boolean same = actual.length == desired.length;
     for (int i = 0; same && i < desired.length; i++) {
       if (actual[i] != desired[i]) {
@@ -44,10 +44,10 @@ class SplitterDistributeItem extends JMenuItem implements ActionListener {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    final var attrs = (SplitterAttributes) splitter.getAttributeSet();
-    final var actual = attrs.bitEnd;
-    final var desired = SplitterAttributes.computeDistribution(attrs.fanout, actual.length, order);
-    final var xn = new CircuitMutation(proj.getCircuitState().getCircuit());
+    final com.cburch.logisim.circuit.SplitterAttributes attrs = (SplitterAttributes) splitter.getAttributeSet();
+    final byte[] actual = attrs.bitEnd;
+    final byte[] desired = SplitterAttributes.computeDistribution(attrs.fanout, actual.length, order);
+    final com.cburch.logisim.circuit.CircuitMutation xn = new CircuitMutation(proj.getCircuitState().getCircuit());
     for (int i = 0, n = Math.min(actual.length, desired.length); i < n; i++) {
       if (actual[i] != desired[i]) {
         xn.set(splitter, attrs.getBitOutAttribute(i), (int) desired[i]);

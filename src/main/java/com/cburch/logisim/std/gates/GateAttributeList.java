@@ -33,7 +33,7 @@ class GateAttributeList extends AbstractList<Attribute<?>> {
 
   @Override
   public Attribute<?> get(int index) {
-    final var len = BASE_ATTRIBUTES.length;
+    final int len = BASE_ATTRIBUTES.length;
     if (index < len) {
       return BASE_ATTRIBUTES[index];
     }
@@ -42,8 +42,8 @@ class GateAttributeList extends AbstractList<Attribute<?>> {
       index--;
       if (index < 0) return GateAttributes.ATTR_XOR;
     }
-    final var facing = attrs.facing;
-    final var inputs = attrs.inputs;
+    final com.cburch.logisim.data.Direction facing = attrs.facing;
+    final int inputs = attrs.inputs;
     if (index == 0) {
       if (facing == Direction.EAST || facing == Direction.WEST) {
         return new NegateAttribute(index, Direction.NORTH);

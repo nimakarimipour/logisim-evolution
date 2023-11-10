@@ -166,10 +166,10 @@ public class Text extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var loc = painter.getLocation();
-    final var x = loc.getX();
-    final var y = loc.getY();
-    final var gfx = painter.getGraphics();
+    final com.cburch.logisim.data.Location loc = painter.getLocation();
+    final int x = loc.getX();
+    final int y = loc.getY();
+    final java.awt.Graphics gfx = painter.getGraphics();
     gfx.translate(x, y);
     gfx.setColor(painter.getAttributeValue(ATTR_COLOR));
     paintGhost(painter);

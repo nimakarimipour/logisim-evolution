@@ -38,12 +38,12 @@ class ExperimentalOptions extends OptionsPanel {
               new PrefOption(AppPreferences.ACCEL_D3D, S.getter("accelD3D")),
             });
 
-    final var accelPanel = new JPanel(new BorderLayout());
+    final javax.swing.JPanel accelPanel = new JPanel(new BorderLayout());
     accelPanel.add(accel.getJLabel(), BorderLayout.LINE_START);
     accelPanel.add(accel.getJComboBox(), BorderLayout.CENTER);
     accelPanel.add(accelRestart, BorderLayout.PAGE_END);
     accelRestart.setFont(accelRestart.getFont().deriveFont(Font.ITALIC));
-    final var accelPanel2 = new JPanel();
+    final javax.swing.JPanel accelPanel2 = new JPanel();
     accelPanel2.add(accelPanel);
 
     setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));

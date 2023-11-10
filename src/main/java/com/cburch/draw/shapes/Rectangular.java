@@ -38,24 +38,24 @@ abstract class Rectangular extends FillableCanvasObject {
     if (assumeFilled && type == DrawAttr.PAINT_STROKE) {
       type = DrawAttr.PAINT_STROKE_FILL;
     }
-    final var b = bounds;
-    final var x = b.getX();
-    final var y = b.getY();
-    final var w = b.getWidth();
-    final var h = b.getHeight();
-    final var qx = loc.getX();
-    final var qy = loc.getY();
+    final com.cburch.logisim.data.Bounds b = bounds;
+    final int x = b.getX();
+    final int y = b.getY();
+    final int w = b.getWidth();
+    final int h = b.getHeight();
+    final int qx = loc.getX();
+    final int qy = loc.getY();
     if (type == DrawAttr.PAINT_FILL) {
       return isInRect(qx, qy, x, y, w, h) && contains(x, y, w, h, loc);
     } else if (type == DrawAttr.PAINT_STROKE) {
-      final var stroke = getStrokeWidth();
-      final var tol2 = Math.max(2 * Line.ON_LINE_THRESH, stroke);
-      final var tol = tol2 / 2;
+      final int stroke = getStrokeWidth();
+      final int tol2 = Math.max(2 * Line.ON_LINE_THRESH, stroke);
+      final int tol = tol2 / 2;
       return isInRect(qx, qy, x - tol, y - tol, w + tol2, h + tol2)
           && contains(x - tol, y - tol, w + tol2, h + tol2, loc)
           && !contains(x + tol, y + tol, w - tol2, h - tol2, loc);
     } else if (type == DrawAttr.PAINT_STROKE_FILL) {
-      final var tol = getStrokeWidth() / 2;
+      final int tol = getStrokeWidth() / 2;
       return isInRect(qx, qy, x - tol, y - tol, w + getStrokeWidth(), h + getStrokeWidth())
           && contains(x - tol, y - tol, w + getStrokeWidth(), h + getStrokeWidth(), loc);
     }
@@ -67,17 +67,17 @@ abstract class Rectangular extends FillableCanvasObject {
 
   @Override
   public Bounds getBounds() {
-    final var wid = getStrokeWidth();
-    final var type = getPaintType();
+    final int wid = getStrokeWidth();
+    final com.cburch.logisim.data.AttributeOption type = getPaintType();
     return (wid < 2 || type == DrawAttr.PAINT_FILL) ? bounds : bounds.expand(wid / 2);
   }
 
   private Handle[] getHandleArray(HandleGesture gesture) {
-    final var bds = bounds;
-    final var x0 = bds.getX();
-    final var y0 = bds.getY();
-    final var x1 = x0 + bds.getWidth();
-    final var y1 = y0 + bds.getHeight();
+    final com.cburch.logisim.data.Bounds bds = bounds;
+    final int x0 = bds.getX();
+    final int y0 = bds.getY();
+    final int x1 = x0 + bds.getWidth();
+    final int y1 = y0 + bds.getHeight();
 
     if (gesture == null) {
       return new Handle[] {
@@ -88,10 +88,10 @@ abstract class Rectangular extends FillableCanvasObject {
       };
     }
 
-    final var hx = gesture.getHandle().getX();
-    final var hy = gesture.getHandle().getY();
-    final var dx = gesture.getDeltaX();
-    final var dy = gesture.getDeltaY();
+    final int hx = gesture.getHandle().getX();
+    final int hy = gesture.getHandle().getY();
+    final int dx = gesture.getDeltaX();
+    final int dy = gesture.getDeltaY();
     int newX0 = x0 == hx ? x0 + dx : x0;
     int newY0 = y0 == hy ? y0 + dy : y0;
     int newX1 = x1 == hx ? x1 + dx : x1;
@@ -104,8 +104,8 @@ abstract class Rectangular extends FillableCanvasObject {
         if (y0 == hy) newY1 -= dy;
         if (y1 == hy) newY0 -= dy;
 
-        final var w = Math.abs(newX1 - newX0);
-        final var h = Math.abs(newY1 - newY0);
+        final int w = Math.abs(newX1 - newX0);
+        final int h = Math.abs(newY1 - newY0);
         if (w > h) { // reduce width to h
           int dw = (w - h) / 2;
           newX0 -= (newX0 > newX1 ? 1 : -1) * dw;
@@ -116,8 +116,8 @@ abstract class Rectangular extends FillableCanvasObject {
           newY1 -= (newY1 > newY0 ? 1 : -1) * dh;
         }
       } else {
-        final var w = Math.abs(newX1 - newX0);
-        final var h = Math.abs(newY1 - newY0);
+        final int w = Math.abs(newX1 - newX0);
+        final int h = Math.abs(newY1 - newY0);
         if (w > h) { // reduce width to h
           if (x0 == hx) newX0 = newX1 + (newX0 > newX1 ? 1 : -1) * h;
           if (x1 == hx) newX1 = newX0 + (newX1 > newX0 ? 1 : -1) * h;
@@ -186,22 +186,22 @@ abstract class Rectangular extends FillableCanvasObject {
 
   @Override
   public Handle moveHandle(HandleGesture gesture) {
-    final var oldHandles = getHandleArray(null);
-    final var newHandles = getHandleArray(gesture);
-    final var moved = gesture == null ? null : gesture.getHandle();
+    final com.cburch.draw.model.Handle[] oldHandles = getHandleArray(null);
+    final com.cburch.draw.model.Handle[] newHandles = getHandleArray(gesture);
+    final com.cburch.draw.model.Handle moved = gesture == null ? null : gesture.getHandle();
     Handle result = null;
     int x0 = Integer.MAX_VALUE;
     int x1 = Integer.MIN_VALUE;
     int y0 = Integer.MAX_VALUE;
     int y1 = Integer.MIN_VALUE;
     int i = -1;
-    for (final var h : newHandles) {
+    for (final com.cburch.draw.model.Handle h : newHandles) {
       i++;
       if (oldHandles[i].equals(moved)) {
         result = h;
       }
-      final var hx = h.getX();
-      final var hy = h.getY();
+      final int hx = h.getX();
+      final int hy = h.getY();
       if (hx < x0) x0 = hx;
       if (hx > x1) x1 = hx;
       if (hy < y0) y0 = hy;
@@ -214,23 +214,23 @@ abstract class Rectangular extends FillableCanvasObject {
   @Override
   public void paint(Graphics g, HandleGesture gesture) {
     if (gesture == null) {
-      final var bds = bounds;
+      final com.cburch.logisim.data.Bounds bds = bounds;
       draw(g, bds.getX(), bds.getY(), bds.getWidth(), bds.getHeight());
     } else {
-      final var handles = getHandleArray(gesture);
-      final var p0 = handles[0];
-      final var p1 = handles[2];
+      final com.cburch.draw.model.Handle[] handles = getHandleArray(gesture);
+      final com.cburch.draw.model.Handle p0 = handles[0];
+      final com.cburch.draw.model.Handle p1 = handles[2];
       int x0 = p0.getX();
       int y0 = p0.getY();
       int x1 = p1.getX();
       int y1 = p1.getY();
       if (x1 < x0) {
-        final var t = x0;
+        final int t = x0;
         x0 = x1;
         x1 = t;
       }
       if (y1 < y0) {
-        final var t = y0;
+        final int t = y0;
         y0 = y1;
         y1 = t;
       }

@@ -81,8 +81,8 @@ public class Popups {
       add(remove);
       remove.addActionListener(this);
 
-      final var canChange = proj.getLogisimFile().contains(circuit);
-      final var file = proj.getLogisimFile();
+      final boolean canChange = proj.getLogisimFile().contains(circuit);
+      final com.cburch.logisim.file.LogisimFile file = proj.getLogisimFile();
       if (circuit == proj.getCurrentCircuit()) {
         if (proj.getFrame().getEditorView().equals(Frame.EDIT_APPEARANCE)) {
           editAppearance.setEnabled(false);
@@ -97,7 +97,7 @@ public class Popups {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      final var source = e.getSource();
+      final java.lang.Object source = e.getSource();
       if (source == editLayout) {
         proj.setCurrentCircuit(circuit);
         proj.getFrame().setEditorView(Frame.EDIT_LAYOUT);
@@ -140,7 +140,7 @@ public class Popups {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      final var source = e.getSource();
+      final java.lang.Object source = e.getSource();
       if (source == edit) {
         proj.setCurrentHdlModel(vhdl);
       } else if (source == remove) {
@@ -171,7 +171,7 @@ public class Popups {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      final var src = e.getSource();
+      final java.lang.Object src = e.getSource();
       if (src == unload) {
         ProjectLibraryActions.doUnloadLibrary(proj, lib);
       } else if (src == reload) {
@@ -210,7 +210,7 @@ public class Popups {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      final var src = e.getSource();
+      final java.lang.Object src = e.getSource();
       if (src == add) {
         ProjectCircuitActions.doAddCircuit(proj);
       } else if (src == vhdl) {

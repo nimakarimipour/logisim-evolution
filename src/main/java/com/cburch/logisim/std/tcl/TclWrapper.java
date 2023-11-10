@@ -98,7 +98,7 @@ public class TclWrapper {
 
     /* Create the TCL process */
     ProcessBuilder builder;
-    final var command = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> command = new ArrayList<String>();
 
     command.add("tclsh");
     command.add(TCL_PATH + "tcl_wrapper.tcl");
@@ -130,11 +130,11 @@ public class TclWrapper {
     new Thread(
             () -> {
               /* Through this we can get the process output */
-              final var reader =
+              final java.io.BufferedReader reader =
                   new BufferedReader(new InputStreamReader(process.getInputStream()));
               String line;
               try {
-                final var errorMessage = new StringBuilder();
+                final java.lang.StringBuilder errorMessage = new StringBuilder();
 
                 /* Here we check that the wrapper has correctly started */
                 while ((line = reader.readLine()) != null) {
@@ -168,7 +168,7 @@ public class TclWrapper {
                   }
                 }
 
-                final var userInfoBox =
+                final com.cburch.logisim.tools.MessageBox userInfoBox =
                     new MessageBox(
                         "Error starting TCL wrapper",
                         errorMessage.toString(),

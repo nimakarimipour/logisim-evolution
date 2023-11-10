@@ -59,7 +59,7 @@ public class Propagator {
 
     @Override
     public void attributeValueChanged(AttributeEvent e) {
-      final var p = prop.get();
+      final com.cburch.logisim.circuit.Propagator p = prop.get();
       if (p == null) {
         e.getSource().removeAttributeListener(this);
       } else if (e.getAttribute().equals(Options.ATTR_SIM_RAND)) {
@@ -88,9 +88,9 @@ public class Propagator {
     }
 
     public SetData cloneFor(CircuitState newState) {
-      final var newProp = newState.getPropagator();
-      final var dtime = newProp.clock - state.getPropagator().clock;
-      final var ret =
+      final com.cburch.logisim.circuit.Propagator newProp = newState.getPropagator();
+      final int dtime = newProp.clock - state.getPropagator().clock;
+      final com.cburch.logisim.circuit.Propagator.SetData ret =
           new SetData(time + dtime, newProp.setDataSerialNumber, newState, loc, cause, val);
       newProp.setDataSerialNumber++;
       if (this.next != null) ret.next = this.next.cloneFor(newState);
@@ -152,7 +152,7 @@ public class Propagator {
 
   public Propagator(CircuitState root) {
     this.root = root;
-    final var l = new Listener(this);
+    final com.cburch.logisim.circuit.Propagator.Listener l = new Listener(this);
     root.getProject().getOptions().getAttributeSet().addAttributeListener(l);
     updateRandomness();
   }
@@ -162,7 +162,7 @@ public class Propagator {
       return removeCause(state, head, data.loc, data.cause);
     }
 
-    final var causes = state.causes;
+    final java.util.HashMap<com.cburch.logisim.data.Location,com.cburch.logisim.circuit.Propagator.SetData> causes = state.causes;
 
     // first check whether this is change of previous info.
     boolean replaced = false;
@@ -192,13 +192,13 @@ public class Propagator {
   // private methods
   //
   void checkComponentEnds(CircuitState state, Component comp) {
-    for (final var end : comp.getEnds()) {
-      final var loc = end.getLocation();
-      final var oldHead = state.causes.get(loc);
-      final var oldVal = computeValue(oldHead);
-      final var newHead = removeCause(state, oldHead, loc, comp);
-      final var newVal = computeValue(newHead);
-      final var wireVal = state.getValueByWire(loc);
+    for (final com.cburch.logisim.comp.EndData end : comp.getEnds()) {
+      final com.cburch.logisim.data.Location loc = end.getLocation();
+      final com.cburch.logisim.circuit.Propagator.SetData oldHead = state.causes.get(loc);
+      final com.cburch.logisim.data.Value oldVal = computeValue(oldHead);
+      final com.cburch.logisim.circuit.Propagator.SetData newHead = removeCause(state, oldHead, loc, comp);
+      final com.cburch.logisim.data.Value newVal = computeValue(newHead);
+      final com.cburch.logisim.data.Value wireVal = state.getValueByWire(loc);
 
       if (!newVal.equals(oldVal) || wireVal != null) {
         state.markPointAsDirty(loc);
@@ -271,8 +271,8 @@ public class Propagator {
     root.processDirtyPoints();
     root.processDirtyComponents();
 
-    final var oscThreshold = simLimit;
-    final var logThreshold = 3 * oscThreshold / 4;
+    final int oscThreshold = simLimit;
+    final int logThreshold = 3 * oscThreshold / 4;
     int iters = 0;
     while (!toProcess.isEmpty()) {
       if (iters > 0 && propListener != null)
@@ -297,7 +297,7 @@ public class Propagator {
   }
 
   private SetData removeCause(CircuitState state, SetData head, Location loc, Component cause) {
-    final var causes = state.causes;
+    final java.util.HashMap<com.cburch.logisim.data.Location,com.cburch.logisim.circuit.Propagator.SetData> causes = state.causes;
     if (head == null) {
     } else if (head.cause == cause) {
       head = head.next;
@@ -333,7 +333,7 @@ public class Propagator {
     if (delay <= 0) {
       delay = 1;
     }
-    final var randomShift = simRandomShift;
+    final int randomShift = simRandomShift;
     if (randomShift > 0) { // random noise is turned on
       // multiply the delay by 32 so that the random noise
       // only changes the delay by 3%.
@@ -363,7 +363,7 @@ public class Propagator {
 
     if (toProcess.isEmpty()) return false;
 
-    final var oldOsc = oscPoints;
+    final com.cburch.logisim.circuit.PropagationPoints oldOsc = oscPoints;
     oscAdding = changedPoints != null;
     oscPoints = changedPoints;
     stepInternal(changedPoints);
@@ -379,12 +379,12 @@ public class Propagator {
     clock = toProcess.peek().time;
 
     // propagate all values for this clock tick
-    final var visited = new HashMap<CircuitState, HashSet<ComponentPoint>>();
+    final java.util.HashMap<com.cburch.logisim.circuit.CircuitState,java.util.HashSet<com.cburch.logisim.circuit.Propagator.ComponentPoint>> visited = new HashMap<CircuitState, HashSet<ComponentPoint>>();
     while (true) {
-      final var data = toProcess.peek();
+      final com.cburch.logisim.circuit.Propagator.SetData data = toProcess.peek();
       if (data == null || data.time != clock) break;
       toProcess.remove();
-      final var state = data.state;
+      final com.cburch.logisim.circuit.CircuitState state = data.state;
 
       // if it's already handled for this clock tick, continue
       java.util.HashSet<com.cburch.logisim.circuit.Propagator.ComponentPoint> handled = visited.get(state);
@@ -405,10 +405,10 @@ public class Propagator {
       if (changedPoints != null) changedPoints.add(state, data.loc);
 
       // change the information about value
-      final var oldHead = state.causes.get(data.loc);
-      final var oldVal = computeValue(oldHead);
-      final var newHead = addCause(state, oldHead, data);
-      final var newVal = computeValue(newHead);
+      final com.cburch.logisim.circuit.Propagator.SetData oldHead = state.causes.get(data.loc);
+      final com.cburch.logisim.data.Value oldVal = computeValue(oldHead);
+      final com.cburch.logisim.circuit.Propagator.SetData newHead = addCause(state, oldHead, data);
+      final com.cburch.logisim.data.Value newVal = computeValue(newHead);
 
       // if the value at point has changed, propagate it
       if (!newVal.equals(oldVal)) {
@@ -431,9 +431,9 @@ public class Propagator {
   }
 
   private void updateRandomness() {
-    final var opts = root.getProject().getOptions();
-    final var rand = opts.getAttributeSet().getValue(Options.ATTR_SIM_RAND);
-    final var val = rand;
+    final com.cburch.logisim.file.Options opts = root.getProject().getOptions();
+    final java.lang.Integer rand = opts.getAttributeSet().getValue(Options.ATTR_SIM_RAND);
+    final java.lang.Integer val = rand;
     int logVal = 0;
     while ((1 << logVal) < val) logVal++;
     simRandomShift = logVal;

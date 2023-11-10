@@ -44,8 +44,8 @@ class InstancePokerAdapter extends AbstractCaret implements Pokable {
 
   private void checkCurrent() {
     if (state != null && canvas != null) {
-      final var s0 = state.getCircuitState();
-      final var s1 = canvas.getCircuitState();
+      final com.cburch.logisim.circuit.CircuitState s0 = state.getCircuitState();
+      final com.cburch.logisim.circuit.CircuitState s1 = canvas.getCircuitState();
       if (s0 != s1) {
         state = new InstanceStateImpl(s1, comp);
       }
@@ -73,9 +73,9 @@ class InstancePokerAdapter extends AbstractCaret implements Pokable {
   public Caret getPokeCaret(ComponentUserEvent event) {
     if (poker == null) return null;
     canvas = event.getCanvas();
-    final var circState = event.getCircuitState();
-    final var state = new InstanceStateImpl(circState, comp);
-    final var e =
+    final com.cburch.logisim.circuit.CircuitState circState = event.getCircuitState();
+    final com.cburch.logisim.instance.InstanceStateImpl state = new InstanceStateImpl(circState, comp);
+    final java.awt.event.MouseEvent e =
         new MouseEvent(
             event.getCanvas(),
             MouseEvent.MOUSE_PRESSED,
@@ -85,7 +85,7 @@ class InstancePokerAdapter extends AbstractCaret implements Pokable {
             event.getY(),
             1,
             false);
-    final var isAccepted = poker.init(state, e);
+    final boolean isAccepted = poker.init(state, e);
     if (isAccepted) {
       this.state = state;
       this.context =
@@ -100,9 +100,9 @@ class InstancePokerAdapter extends AbstractCaret implements Pokable {
   }
 
   private void handleError(Throwable t, Class<? extends InstancePoker> pokerClass) {
-    final var className = pokerClass.getName();
+    final java.lang.String className = pokerClass.getName();
     logger.error("Error while instantiating poker {}: {}", className, t.getClass().getName());
-    final var msg = t.getMessage();
+    final java.lang.String msg = t.getMessage();
     if (msg != null) logger.error("  ({})", msg);
   }
 

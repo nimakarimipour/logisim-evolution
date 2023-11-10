@@ -88,7 +88,7 @@ class MenuProject extends Menu {
     addSeparator();
     add(options);
 
-    final var known = menubar.getSaveProject() != null;
+    final boolean known = menubar.getSaveProject() != null;
     loadLibrary.setEnabled(known);
     loadBuiltin.setEnabled(known);
     loadLogisim.setEnabled(known);
@@ -143,8 +143,8 @@ class MenuProject extends Menu {
   private class MyListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
-      final var src = event.getSource();
-      final var proj = menubar.getSaveProject();
+      final java.lang.Object src = event.getSource();
+      final com.cburch.logisim.proj.Project proj = menubar.getSaveProject();
       if (proj == null) return;
       if (src == loadBuiltin) {
         ProjectLibraryActions.doLoadBuiltinLibrary(proj);

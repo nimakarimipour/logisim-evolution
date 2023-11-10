@@ -19,14 +19,14 @@ public class TtyIcon extends BaseIcon {
 
   @Override
   protected void paintIcon(Graphics2D g2) {
-    final var display = "Hello World!";
+    final java.lang.String display = "Hello World!";
 
     g2.setColor(Color.BLUE);
     g2.fillRoundRect(0, scale(3), scale(16), scale(10), scale(3), scale(3));
     g2.setColor(Color.BLACK);
     g2.drawRoundRect(0, scale(3), scale(16), scale(10), scale(3), scale(3));
-    final var f = Tty.DEFAULT_FONT.deriveFont(scale((float) 5)).deriveFont(Font.BOLD);
-    final var t = new TextLayout(display.substring(0, 3), f, g2.getFontRenderContext());
+    final java.awt.Font f = Tty.DEFAULT_FONT.deriveFont(scale((float) 5)).deriveFont(Font.BOLD);
+    final java.awt.font.TextLayout t = new TextLayout(display.substring(0, 3), f, g2.getFontRenderContext());
     g2.setColor(Color.yellow);
     t.draw(
         g2,

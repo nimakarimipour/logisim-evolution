@@ -40,7 +40,7 @@ public class Dependencies {
           comp = (Component) e.getData();
           if (comp.getFactory() instanceof SubcircuitFactory factory) {
             boolean found = false;
-            for (final var o : e.getCircuit().getNonWires()) {
+            for (final com.cburch.logisim.comp.Component o : e.getCircuit().getNonWires()) {
               if (o.getFactory() == factory) {
                 found = true;
                 break;
@@ -50,7 +50,7 @@ public class Dependencies {
               depends.removeEdge(e.getCircuit(), factory.getSubcircuit());
           } else if (comp.getFactory() instanceof VhdlEntity factory) {
             boolean found = false;
-            for (final var o : e.getCircuit().getNonWires()) {
+            for (final com.cburch.logisim.comp.Component o : e.getCircuit().getNonWires()) {
               if (o.getFactory() == factory) {
                 found = true;
                 break;
@@ -69,7 +69,7 @@ public class Dependencies {
       switch (e.getAction()) {
         case LibraryEvent.ADD_TOOL:
           if (e.getData() instanceof AddTool) {
-            final var factory = ((AddTool) e.getData()).getFactory();
+            final com.cburch.logisim.comp.ComponentFactory factory = ((AddTool) e.getData()).getFactory();
             if (factory instanceof SubcircuitFactory circFact) {
               processCircuit(circFact.getSubcircuit());
             }
@@ -77,9 +77,9 @@ public class Dependencies {
           break;
         case LibraryEvent.REMOVE_TOOL:
           if (e.getData() instanceof AddTool) {
-            final var factory = ((AddTool) e.getData()).getFactory();
+            final com.cburch.logisim.comp.ComponentFactory factory = ((AddTool) e.getData()).getFactory();
             if (factory instanceof SubcircuitFactory circFact) {
-              final var circ = circFact.getSubcircuit();
+              final com.cburch.logisim.circuit.Circuit circ = circFact.getSubcircuit();
               depends.removeNode(circ);
               circ.removeCircuitListener(this);
             } else if (factory instanceof VhdlEntity circFact) {
@@ -119,7 +119,7 @@ public class Dependencies {
 
   private void processCircuit(Circuit circ) {
     circ.addCircuitListener(myListener);
-    for (final var comp : circ.getNonWires()) {
+    for (final com.cburch.logisim.comp.Component comp : circ.getNonWires()) {
       if (comp.getFactory() instanceof SubcircuitFactory factory) {
         depends.addEdge(circ, factory.getSubcircuit());
       } else if (comp.getFactory() instanceof VhdlEntity factory) {

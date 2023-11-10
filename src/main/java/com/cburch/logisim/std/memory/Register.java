@@ -68,11 +68,11 @@ public class Register extends InstanceFactory implements DynamicElementProvider 
       boolean negActive,
       boolean hasWE,
       Value value) {
-    final var dq_widtdqWidth = (nrOfBits == 1) ? 2 : 5;
-    final var len = (nrOfBits + 3) / 4;
-    final var wid = 8 * len + 2;
-    final var xoff = (60 - wid) / 2;
-    final var g = painter.getGraphics();
+    final int dq_widtdqWidth = (nrOfBits == 1) ? 2 : 5;
+    final int len = (nrOfBits + 3) / 4;
+    final int wid = 8 * len + 2;
+    final int xoff = (60 - wid) / 2;
+    final java.awt.Graphics g = painter.getGraphics();
     if (painter.getShowState() && (value != null)) {
       if (value.isFullyDefined()) g.setColor(Color.LIGHT_GRAY);
       else if (value.isErrorValue()) g.setColor(Color.RED);
@@ -148,7 +148,7 @@ public class Register extends InstanceFactory implements DynamicElementProvider 
     String b = null;
     if (painter.getShowState()) {
       long val = state == null ? 0 : state.value.toLongValue();
-      final var str = StringUtil.toHexString(width, val);
+      final java.lang.String str = StringUtil.toHexString(width, val);
       if (str.length() <= 4) {
         a = str;
       } else {
@@ -251,7 +251,7 @@ public class Register extends InstanceFactory implements DynamicElementProvider 
   }
 
   private void updatePorts(Instance instance) {
-    final var ps = new Port[5];
+    final com.cburch.logisim.instance.Port[] ps = new Port[5];
     if (instance.getAttributeValue(StdAttr.APPEARANCE) == StdAttr.APPEAR_CLASSIC) {
       ps[OUT] = new Port(0, 0, Port.OUTPUT, StdAttr.WIDTH);
       ps[IN] = new Port(-30, 0, Port.INPUT, StdAttr.WIDTH);
@@ -275,7 +275,7 @@ public class Register extends InstanceFactory implements DynamicElementProvider 
 
   @Override
   public String getHDLName(AttributeSet attrs) {
-    final var CompleteName = new StringBuilder();
+    final java.lang.StringBuilder CompleteName = new StringBuilder();
     CompleteName.append(CorrectLabel.getCorrectLabel(this.getName()).toUpperCase());
     if ((attrs.getValue(StdAttr.TRIGGER) == StdAttr.TRIG_FALLING)
         || (attrs.getValue(StdAttr.TRIGGER) == StdAttr.TRIG_RISING)) {
@@ -291,17 +291,17 @@ public class Register extends InstanceFactory implements DynamicElementProvider 
     if (painter.getAttributeValue(StdAttr.APPEARANCE) == StdAttr.APPEAR_CLASSIC) {
       drawRegisterClassic(painter);
     } else {
-      final var state = (RegisterData) painter.getData();
-      final var widthVal = painter.getAttributeValue(StdAttr.WIDTH);
-      final var width = widthVal == null ? 8 : widthVal.getWidth();
-      final var loc = painter.getLocation();
+      final com.cburch.logisim.std.memory.RegisterData state = (RegisterData) painter.getData();
+      final com.cburch.logisim.data.BitWidth widthVal = painter.getAttributeValue(StdAttr.WIDTH);
+      final int width = widthVal == null ? 8 : widthVal.getWidth();
+      final com.cburch.logisim.data.Location loc = painter.getLocation();
       int x = loc.getX();
       int y = loc.getY();
 
       // determine text to draw in label
       Object Trigger = painter.getAttributeValue(StdAttr.TRIGGER);
-      final var IsLatch = Trigger.equals(StdAttr.TRIG_HIGH) || Trigger.equals(StdAttr.TRIG_LOW);
-      final var NegActive =
+      final boolean IsLatch = Trigger.equals(StdAttr.TRIG_HIGH) || Trigger.equals(StdAttr.TRIG_LOW);
+      final boolean NegActive =
           Trigger.equals(StdAttr.TRIG_FALLING) || Trigger.equals(StdAttr.TRIG_LOW);
 
       drawRegisterEvolution(
@@ -319,7 +319,7 @@ public class Register extends InstanceFactory implements DynamicElementProvider 
 
   @Override
   public void propagate(InstanceState state) {
-    final var dataWidth = state.getAttributeValue(StdAttr.WIDTH);
+    final com.cburch.logisim.data.BitWidth dataWidth = state.getAttributeValue(StdAttr.WIDTH);
     Object triggerType = state.getAttributeValue(StdAttr.TRIGGER);
     com.cburch.logisim.std.memory.RegisterData data = (RegisterData) state.getData();
 
@@ -328,7 +328,7 @@ public class Register extends InstanceFactory implements DynamicElementProvider 
       state.setData(data);
     }
 
-    final var triggered = data.updateClock(state.getPortValue(CK), triggerType);
+    final boolean triggered = data.updateClock(state.getPortValue(CK), triggerType);
 
     if (state.getPortValue(CLR) == Value.TRUE) {
       data.value = Value.createKnown(dataWidth, 0);

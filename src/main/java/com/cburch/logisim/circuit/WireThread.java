@@ -35,8 +35,8 @@ class WireThread {
   }
 
   void unite(WireThread other) {
-    final var group = this.find();
-    final var group2 = other.find();
+    final com.cburch.logisim.circuit.WireThread group = this.find();
+    final com.cburch.logisim.circuit.WireThread group2 = other.find();
     if (group != group2) group.parent = group2;
   }
 }

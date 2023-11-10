@@ -136,7 +136,7 @@ class PinAttributes extends ProbeAttributes {
       if (pull.equals(value)) return;
       pull = value;
     } else if (attr == PROBEAPPEARANCE) {
-      final var newAppearance = (AttributeOption) value;
+      final com.cburch.logisim.data.AttributeOption newAppearance = (AttributeOption) value;
       if (appearance.equals(newAppearance)) return;
       appearance = newAppearance;
     } else if (attr == RadixOption.ATTRIBUTE) {
@@ -145,7 +145,7 @@ class PinAttributes extends ProbeAttributes {
       } else super.setValue(attr, value);
       return;
     } else if (attr == Pin.ATTR_INITIAL) {
-      final var newInitial = (Long) value;
+      final java.lang.Long newInitial = (Long) value;
       if (newInitial == initialValue) return;
       initialValue = newInitial;
     } else {

@@ -129,7 +129,7 @@ public class KarnaughMapGroups {
         boolean highlighted,
         boolean colored) {
       int d = 2 * IMP_RADIUS;
-      final var col = g.getColor();
+      final java.awt.Color col = g.getColor();
       if (highlighted)
         g.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), 180));
       else if (colored)
@@ -148,15 +148,15 @@ public class KarnaughMapGroups {
     }
 
     public boolean insideCover(int col, int row) {
-      final var table = model.getTruthTable();
+      final com.cburch.logisim.analyze.model.TruthTable table = model.getTruthTable();
       if (table.getInputColumnCount() > KarnaughMapPanel.MAX_VARS) return false;
-      final var kmapRows = 1 << KarnaughMapPanel.ROW_VARS[table.getInputColumnCount()];
-      final var kmapCols = 1 << KarnaughMapPanel.COL_VARS[table.getInputColumnCount()];
+      final int kmapRows = 1 << KarnaughMapPanel.ROW_VARS[table.getInputColumnCount()];
+      final int kmapCols = 1 << KarnaughMapPanel.COL_VARS[table.getInputColumnCount()];
       for (Implicant sq : singleCoveredImplicants) {
-        final var tableRow = sq.getRow();
+        final int tableRow = sq.getRow();
         if (tableRow < 0) return false;
-        final var krow = KarnaughMapPanel.getRow(tableRow, kmapRows, kmapCols);
-        final var kcol = KarnaughMapPanel.getCol(tableRow, kmapRows, kmapCols);
+        final int krow = KarnaughMapPanel.getRow(tableRow, kmapRows, kmapCols);
+        final int kcol = KarnaughMapPanel.getCol(tableRow, kmapRows, kmapCols);
         if (krow == row && kcol == col) return true;
       }
       return false;
@@ -177,21 +177,21 @@ public class KarnaughMapGroups {
     }
 
     private void build(Implicant imp) {
-      final var table = model.getTruthTable();
+      final com.cburch.logisim.analyze.model.TruthTable table = model.getTruthTable();
       if (table.getInputColumnCount() > KarnaughMapPanel.MAX_VARS) return;
       int kmapRows = 1 << KarnaughMapPanel.ROW_VARS[table.getInputColumnCount()];
       int kmapCols = 1 << KarnaughMapPanel.COL_VARS[table.getInputColumnCount()];
 
-      final var imps = new Boolean[kmapRows][kmapCols];
+      final java.lang.Boolean[][] imps = new Boolean[kmapRows][kmapCols];
       for (int row = 0; row < kmapRows; row++) {
         for (int col = 0; col < kmapCols; col++) imps[row][col] = false;
       }
       for (Implicant sq : imp.getTerms()) {
         addSingleCover(sq);
-        final var tableRow = sq.getRow();
+        final int tableRow = sq.getRow();
         if (tableRow < 0) return;
-        final var row = KarnaughMapPanel.getRow(tableRow, kmapRows, kmapCols);
-        final var col = KarnaughMapPanel.getCol(tableRow, kmapRows, kmapCols);
+        final int row = KarnaughMapPanel.getRow(tableRow, kmapRows, kmapCols);
+        final int col = KarnaughMapPanel.getCol(tableRow, kmapRows, kmapCols);
         if ((row < kmapRows) && (col < kmapCols)) imps[row][col] = true;
       }
       CoverInfo current = null;
@@ -250,7 +250,7 @@ public class KarnaughMapGroups {
   }
 
   public boolean highlight(int col, int row) {
-    final var oldHighlighted = highlighted;
+    final int oldHighlighted = highlighted;
     highlighted = -1;
     for (int nr = 0; nr < covers.size() && highlighted < 0; nr++) {
       if (covers.get(nr).insideCover(col, row)) highlighted = nr;
@@ -259,7 +259,7 @@ public class KarnaughMapGroups {
   }
 
   public boolean clearHighlight() {
-    final var ret = highlighted >= 0;
+    final boolean ret = highlighted >= 0;
     highlighted = -1;
     return ret;
   }
@@ -271,12 +271,12 @@ public class KarnaughMapGroups {
 
   public Color getBackgroundColor() {
     if (highlighted < 0 || highlighted >= covers.size()) return null;
-    final var col = covers.get(highlighted).color;
+    final java.awt.Color col = covers.get(highlighted).color;
     return new Color(col.getRed(), col.getGreen(), col.getBlue(), 60);
   }
 
   public void update() {
-    final var implicants = model.getOutputExpressions().getMinimalImplicants(output);
+    final java.util.List<com.cburch.logisim.analyze.model.Implicant> implicants = model.getOutputExpressions().getMinimalImplicants(output);
     covers = new ArrayList<>();
     CoverColor.COVER_COLOR.reset();
     if (implicants != null) {
@@ -290,7 +290,7 @@ public class KarnaughMapGroups {
   public void paint(Graphics2D g, int x, int y, int cellWidth, int cellHeight) {
     for (int cov = 0; cov < covers.size(); cov++) {
       if (cov == highlighted) continue;
-      final var curCov = covers.get(cov);
+      final com.cburch.logisim.analyze.data.KarnaughMapGroups.KMapGroupInfo curCov = covers.get(cov);
       curCov.paint(g, x, y, cellWidth, cellHeight, false, highlighted < 0);
     }
     if (highlighted >= 0 && highlighted < covers.size())

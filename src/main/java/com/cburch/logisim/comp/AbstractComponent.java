@@ -18,21 +18,21 @@ public abstract class AbstractComponent implements Component {
 
   @Override
   public boolean contains(Location pt) {
-    final var bds = getBounds();
+    final com.cburch.logisim.data.Bounds bds = getBounds();
     if (bds == null) return false;
     return bds.contains(pt, 1);
   }
 
   @Override
   public boolean contains(Location pt, Graphics g) {
-    final var bds = getBounds(g);
+    final com.cburch.logisim.data.Bounds bds = getBounds(g);
     if (bds == null) return false;
     return bds.contains(pt, 1);
   }
 
   @Override
   public boolean endsAt(Location pt) {
-    for (final var data : getEnds()) {
+    for (final com.cburch.logisim.comp.EndData data : getEnds()) {
       if (data.getLocation().equals(pt)) return true;
     }
     return false;

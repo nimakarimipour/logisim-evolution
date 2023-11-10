@@ -53,7 +53,7 @@ public class FontSelector extends JPanel implements JInputComponent, ActionListe
   @SuppressWarnings("unchecked")
   public FontSelector() {
     fontNames = new TreeSet<>();
-    for (final var font : GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) {
+    for (final java.awt.Font font : GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) {
       fontNames.add(font.getFamily());
     }
     setLayout(new BorderLayout());
@@ -61,7 +61,7 @@ public class FontSelector extends JPanel implements JInputComponent, ActionListe
     add(new JScrollPane(preview), BorderLayout.SOUTH);
     selectableFontFamilies = new JList(fontNames.toArray());
     selectableFontFamilies.addListSelectionListener(this);
-    final var selections = new TreeSet<Integer>();
+    final java.util.TreeSet<java.lang.Integer> selections = new TreeSet<Integer>();
     for (int size = 2; size < 65; size++) {
       selections.add(size);
     }
@@ -80,7 +80,7 @@ public class FontSelector extends JPanel implements JInputComponent, ActionListe
   }
   
   private JPanel getStyle() {
-    final var panel = new JPanel();
+    final javax.swing.JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
     boldAttribute = new JCheckBox();
     boldAttribute.addActionListener(this);
@@ -118,16 +118,16 @@ public class FontSelector extends JPanel implements JInputComponent, ActionListe
   @Override
   public void actionPerformed(ActionEvent e) {
     if (boldAttribute.equals(e.getSource())) {
-      final var isChecked = boldAttribute.isSelected();
-      final var newStyle = isChecked ? fontStyle | Font.BOLD : fontStyle & (Font.BOLD ^ 0xFFFFFFFF);
+      final boolean isChecked = boldAttribute.isSelected();
+      final int newStyle = isChecked ? fontStyle | Font.BOLD : fontStyle & (Font.BOLD ^ 0xFFFFFFFF);
       if (newStyle != fontStyle) {
         fontStyle = newStyle;
         currentFont = new Font(currentFont.getFamily(), fontStyle, fontSize);
         fontChanged();
       }
     } else if (italicAttribute.equals(e.getSource())) {
-      final var isChecked = italicAttribute.isSelected();
-      final var newStyle = isChecked ? fontStyle | Font.ITALIC : fontStyle & (Font.ITALIC ^ 0xFFFFFFFF);
+      final boolean isChecked = italicAttribute.isSelected();
+      final int newStyle = isChecked ? fontStyle | Font.ITALIC : fontStyle & (Font.ITALIC ^ 0xFFFFFFFF);
       if (newStyle != fontStyle) {
         fontStyle = newStyle;
         currentFont = new Font(currentFont.getFamily(), fontStyle, fontSize);
@@ -138,8 +138,8 @@ public class FontSelector extends JPanel implements JInputComponent, ActionListe
 
   @Override
   public void valueChanged(ListSelectionEvent e) {
-    final var selectedFont = selectableFontFamilies.getSelectedValue();
-    final var selectedFontSize = selectableFontSize.getSelectedValue();
+    final java.lang.String selectedFont = selectableFontFamilies.getSelectedValue();
+    final java.lang.Integer selectedFontSize = selectableFontSize.getSelectedValue();
     boolean change = (selectedFontSize != null) && (selectedFontSize != fontSize);
     if ((selectedFont != null) && fontNames.contains(selectedFont)) {
       change |= !selectedFont.equals(currentFont.getFamily());

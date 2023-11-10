@@ -428,12 +428,12 @@ public class Model implements CircuitListener, SignalInfo.Listener {
     int action = event.getAction();
     // TODO: gracefully handle pin width changes, other circuit changes
     if (action == CircuitEvent.TRANSACTION_DONE) {
-      final var circ = circuitState.getCircuit();
-      final var repl = event.getResult().getReplacementMap(circ);
+      final com.cburch.logisim.circuit.Circuit circ = circuitState.getCircuit();
+      final com.cburch.logisim.circuit.ReplacementMap repl = event.getResult().getReplacementMap(circ);
       if (repl == null || repl.isEmpty()) return;
-      for (final var comp : repl.getAdditions()) {
+      for (final com.cburch.logisim.comp.Component comp : repl.getAdditions()) {
         if (!repl.getReplacedBy(comp).isEmpty()) continue;
-        final var item = makeIfDefaultComponent(comp);
+        final com.cburch.logisim.gui.log.SignalInfo item = makeIfDefaultComponent(comp);
         if (item == null) continue;
         addAndInitialize(item, true);
       }

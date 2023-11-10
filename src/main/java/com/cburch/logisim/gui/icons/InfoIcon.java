@@ -24,16 +24,16 @@ public class InfoIcon implements Icon {
 
   @Override
   public void paintIcon(Component c, Graphics g, int x, int y) {
-    final var g2 = (Graphics2D) g.create();
+    final java.awt.Graphics2D g2 = (Graphics2D) g.create();
     g2.translate(x, y);
     g2.setColor(Color.CYAN.darker());
     g2.fillOval(0, 0, iconWidth - 1, iconWidth - 1);
     g2.drawOval(0, 0, iconWidth - 1, iconWidth - 1);
     g2.setColor(Color.BLUE.darker().darker().darker().darker());
-    final var f = g2.getFont().deriveFont((float) iconWidth / (float) 1.3).deriveFont(Font.BOLD);
-    final var t = new TextLayout("i", f, g2.getFontRenderContext());
-    final var xc = (float) iconWidth / (float) 2 - (float) t.getBounds().getCenterX();
-    final var yc = (float) iconWidth / (float) 2 - (float) t.getBounds().getCenterY();
+    final java.awt.Font f = g2.getFont().deriveFont((float) iconWidth / (float) 1.3).deriveFont(Font.BOLD);
+    final java.awt.font.TextLayout t = new TextLayout("i", f, g2.getFontRenderContext());
+    final float xc = (float) iconWidth / (float) 2 - (float) t.getBounds().getCenterX();
+    final float yc = (float) iconWidth / (float) 2 - (float) t.getBounds().getCenterY();
     t.draw(g2, xc, yc);
     g2.dispose();
   }

@@ -44,7 +44,7 @@ public class TextMetrics {
       throw new IllegalStateException("need g");
     }
     if (font == null) font = g.getFont();
-    final var fr = ((Graphics2D) g).getFontRenderContext();
+    final java.awt.font.FontRenderContext fr = ((Graphics2D) g).getFontRenderContext();
 
     if (text == null) {
       text = "ÄAy";
@@ -53,7 +53,7 @@ public class TextMetrics {
       width = (int) font.getStringBounds(text, fr).getWidth();
     }
 
-    final var lm = font.getLineMetrics(text, fr);
+    final java.awt.font.LineMetrics lm = font.getLineMetrics(text, fr);
     ascent = (int) Math.ceil(lm.getAscent());
     descent = (int) Math.ceil(lm.getDescent());
     leading = (int) Math.ceil(lm.getLeading());
@@ -63,7 +63,7 @@ public class TextMetrics {
   public TextMetrics(Component c, Font font, String text) {
     if (c == null) c = canvas;
     if (font == null) font = c.getFont();
-    final var fm = c.getFontMetrics(font);
+    final java.awt.FontMetrics fm = c.getFontMetrics(font);
     width = (text != null ? fm.stringWidth(text) : 0);
     ascent = fm.getAscent();
     descent = fm.getDescent();

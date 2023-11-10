@@ -44,8 +44,8 @@ public class ModelChangeAttributeAction extends ModelAction {
     Attribute<?> a = attr;
     if (a == null) {
       boolean found = false;
-      for (final var key : newValues.keySet()) {
-        final var at = key.getAttribute();
+      for (final com.cburch.draw.model.AttributeMapKey key : newValues.keySet()) {
+        final com.cburch.logisim.data.Attribute<?> at = key.getAttribute();
         if (found) {
           if (!Objects.equals(a, at)) {
             a = null;
@@ -65,8 +65,8 @@ public class ModelChangeAttributeAction extends ModelAction {
 
   @Override
   public Collection<CanvasObject> getObjects() {
-    final var ret = new HashSet<CanvasObject>();
-    for (final var key : newValues.keySet()) {
+    final java.util.HashSet<com.cburch.draw.model.CanvasObject> ret = new HashSet<CanvasObject>();
+    for (final com.cburch.draw.model.AttributeMapKey key : newValues.keySet()) {
       ret.add(key.getObject());
     }
     return ret;

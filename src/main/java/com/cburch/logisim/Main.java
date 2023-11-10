@@ -52,15 +52,15 @@ public class Main {
       e.printStackTrace();
     }
 
-    final var startup = Startup.parseArgs(args);
+    final com.cburch.logisim.gui.start.Startup startup = Startup.parseArgs(args);
     if (startup == null) System.exit(10);
     if (startup.shallQuit()) System.exit(0);
 
     try {
       startup.run();
     } catch (Throwable e) {
-      final var strWriter = new StringWriter();
-      final var printWriter = new PrintWriter(strWriter);
+      final java.io.StringWriter strWriter = new StringWriter();
+      final java.io.PrintWriter printWriter = new PrintWriter(strWriter);
       e.printStackTrace(printWriter);
       OptionPane.showMessageDialog(null, strWriter.toString());
       System.exit(100);

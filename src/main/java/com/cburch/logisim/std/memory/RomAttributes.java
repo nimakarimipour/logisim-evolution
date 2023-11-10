@@ -48,7 +48,7 @@ class RomAttributes extends AbstractAttributeSet {
     if (proj == null || listenerRegistry.containsKey(value)) {
       return;
     }
-    final var l = new RomContentsListener(proj);
+    final com.cburch.logisim.std.memory.RomContentsListener l = new RomContentsListener(proj);
     value.addHexModelListener(l);
     listenerRegistry.put(value, l);
   }
@@ -141,51 +141,51 @@ class RomAttributes extends AbstractAttributeSet {
   @Override
   public <V> void setValue(Attribute<V> attr, V value) {
     if (attr == Mem.ADDR_ATTR) {
-      final var newAddr = (BitWidth) value;
+      final com.cburch.logisim.data.BitWidth newAddr = (BitWidth) value;
       if (newAddr == addrBits) return;
       addrBits = newAddr;
       contents.setDimensions(addrBits.getWidth(), dataBits.getWidth());
       fireAttributeValueChanged(attr, value, null);
     } else if (attr == Mem.DATA_ATTR) {
-      final var newData = (BitWidth) value;
+      final com.cburch.logisim.data.BitWidth newData = (BitWidth) value;
       if (newData == dataBits) return;
       dataBits = newData;
       contents.setDimensions(addrBits.getWidth(), dataBits.getWidth());
       fireAttributeValueChanged(attr, value, null);
     } else if (attr == Mem.LINE_ATTR) {
-      final var val = (AttributeOption) value;
+      final com.cburch.logisim.data.AttributeOption val = (AttributeOption) value;
       if (lineSize.equals(val)) return;
       lineSize = val;
       fireAttributeValueChanged(attr, value, null);
     } else if (attr == Mem.ALLOW_MISALIGNED) {
-      final var val = (Boolean) value;
+      final java.lang.Boolean val = (Boolean) value;
       if (allowMisaligned.equals(val)) return;
       allowMisaligned = val;
       fireAttributeValueChanged(attr, value, null);
     } else if (attr == Rom.CONTENTS_ATTR) {
-      final var newContents = (MemContents) value;
+      final com.cburch.logisim.std.memory.MemContents newContents = (MemContents) value;
       if (contents.equals(newContents)) return;
       contents = newContents;
       fireAttributeValueChanged(attr, value, null);
     } else if (attr == StdAttr.LABEL) {
-      final var newLabel = (String) value;
+      final java.lang.String newLabel = (String) value;
       if (label.equals(newLabel)) return;
       @SuppressWarnings("unchecked")
       V oldLabel = (V) label;
       label = newLabel;
       fireAttributeValueChanged(attr, value, oldLabel);
     } else if (attr == StdAttr.LABEL_FONT) {
-      final var newFont = (Font) value;
+      final java.awt.Font newFont = (Font) value;
       if (labelFont.equals(newFont)) return;
       labelFont = newFont;
       fireAttributeValueChanged(attr, value, null);
     } else if (attr == StdAttr.LABEL_VISIBILITY) {
-      final var newVis = (Boolean) value;
+      final java.lang.Boolean newVis = (Boolean) value;
       if (labelVisible.equals(newVis)) return;
       labelVisible = newVis;
       fireAttributeValueChanged(attr, value, null);
     } else if (attr == StdAttr.APPEARANCE) {
-      final var newAppearance = (AttributeOption) value;
+      final com.cburch.logisim.data.AttributeOption newAppearance = (AttributeOption) value;
       if (appearance.equals(newAppearance)) return;
       appearance = newAppearance;
       fireAttributeValueChanged(attr, value, null);

@@ -115,16 +115,16 @@ public class CircuitChange {
       case ADD, REMOVE:
         return comp.getFactory() instanceof Pin;
       case ADD_ALL, REMOVE_ALL:
-        for (final var comp : comps) {
+        for (final com.cburch.logisim.comp.Component comp : comps) {
           if (comp.getFactory() instanceof Pin) return true;
         }
         return false;
       case REPLACE:
-        final var repl = (ReplacementMap) newValue;
-        for (final var comp : repl.getRemovals()) {
+        final com.cburch.logisim.circuit.ReplacementMap repl = (ReplacementMap) newValue;
+        for (final com.cburch.logisim.comp.Component comp : repl.getRemovals()) {
           if (comp.getFactory() instanceof Pin) return true;
         }
-        for (final var comp : repl.getAdditions()) {
+        for (final com.cburch.logisim.comp.Component comp : repl.getAdditions()) {
           if (comp.getFactory() instanceof Pin) return true;
         }
         return false;
@@ -159,13 +159,13 @@ public class CircuitChange {
         prevReplacements.add(comp);
         break;
       case ADD_ALL:
-        for (final var comp : comps) prevReplacements.add(comp);
+        for (final com.cburch.logisim.comp.Component comp : comps) prevReplacements.add(comp);
         break;
       case REMOVE:
         prevReplacements.remove(comp);
         break;
       case REMOVE_ALL:
-        for (final var comp : comps) prevReplacements.remove(comp);
+        for (final com.cburch.logisim.comp.Component comp : comps) prevReplacements.remove(comp);
         break;
       case REPLACE:
         prevReplacements.append((ReplacementMap) newValue);

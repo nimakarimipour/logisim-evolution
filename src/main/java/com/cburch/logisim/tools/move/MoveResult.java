@@ -31,8 +31,8 @@ public class MoveResult {
     this.unsatisfiedConnections = unsatisfiedConnections;
     this.totalDistance = totalDistance;
 
-    final var unconnected = new ArrayList<Location>();
-    for (final var conn : unsatisfiedConnections) {
+    final java.util.ArrayList<com.cburch.logisim.data.Location> unconnected = new ArrayList<Location>();
+    for (final com.cburch.logisim.tools.move.ConnectionData conn : unsatisfiedConnections) {
       unconnected.add(conn.getLocation());
     }
     unconnectedLocations = unconnected;
@@ -40,7 +40,7 @@ public class MoveResult {
 
   void addUnsatisfiedConnections(Collection<ConnectionData> toAdd) {
     unsatisfiedConnections.addAll(toAdd);
-    for (final var conn : toAdd) {
+    for (final com.cburch.logisim.tools.move.ConnectionData conn : toAdd) {
       unconnectedLocations.add(conn.getLocation());
     }
   }

@@ -45,10 +45,10 @@ public class WarningIcon implements Icon {
     g2.setStroke(new BasicStroke(scale(1)));
     g2.setColor(Color.BLACK);
     g2.drawPolygon(xpos, ypos, 3);
-    final var f = g2.getFont().deriveFont((float) wixth / (float) 1.3).deriveFont(Font.BOLD);
-    final var t = new TextLayout("!", f, g2.getFontRenderContext());
-    final var xc = (float) wixth / (float) 2 - (float) t.getBounds().getCenterX();
-    final var yc = (float) (5 * wixth) / (float) 8 - (float) t.getBounds().getCenterY();
+    final java.awt.Font f = g2.getFont().deriveFont((float) wixth / (float) 1.3).deriveFont(Font.BOLD);
+    final java.awt.font.TextLayout t = new TextLayout("!", f, g2.getFontRenderContext());
+    final float xc = (float) wixth / (float) 2 - (float) t.getBounds().getCenterX();
+    final float yc = (float) (5 * wixth) / (float) 8 - (float) t.getBounds().getCenterY();
     t.draw(g2, xc, yc);
     g2.dispose();
   }

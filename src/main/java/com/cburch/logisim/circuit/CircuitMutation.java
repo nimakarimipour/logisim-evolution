@@ -55,39 +55,39 @@ public final class CircuitMutation extends CircuitTransaction {
 
   @Override
   protected Map<Circuit, Integer> getAccessedCircuits() {
-    final var accessMap = new HashMap<Circuit, Integer>();
-    final var supercircsDone = new HashSet<Circuit>();
-    final var vhdlDone = new HashSet<VhdlEntity>();
-    final var siblingsDone = new HashSet<ComponentFactory>();
-    for (final var change : changes) {
-      final var circ = change.getCircuit();
+    final java.util.HashMap<com.cburch.logisim.circuit.Circuit,java.lang.Integer> accessMap = new HashMap<Circuit, Integer>();
+    final java.util.HashSet<com.cburch.logisim.circuit.Circuit> supercircsDone = new HashSet<Circuit>();
+    final java.util.HashSet<com.cburch.logisim.vhdl.base.VhdlEntity> vhdlDone = new HashSet<VhdlEntity>();
+    final java.util.HashSet<com.cburch.logisim.comp.ComponentFactory> siblingsDone = new HashSet<ComponentFactory>();
+    for (final com.cburch.logisim.circuit.CircuitChange change : changes) {
+      final com.cburch.logisim.circuit.Circuit circ = change.getCircuit();
       accessMap.put(circ, READ_WRITE);
 
       if (change.concernsSupercircuit()) {
-        final var isFirstForCirc = supercircsDone.add(circ);
+        final boolean isFirstForCirc = supercircsDone.add(circ);
         if (isFirstForCirc) {
-          for (final var supercirc : circ.getCircuitsUsingThis()) {
+          for (final com.cburch.logisim.circuit.Circuit supercirc : circ.getCircuitsUsingThis()) {
             accessMap.put(supercirc, READ_WRITE);
           }
         }
       }
 
       if (change.concernsSiblingComponents()) {
-        final var factory = change.getComponent().getFactory();
-        final var isFirstForSibling = siblingsDone.add(factory);
+        final com.cburch.logisim.comp.ComponentFactory factory = change.getComponent().getFactory();
+        final boolean isFirstForSibling = siblingsDone.add(factory);
         if (isFirstForSibling) {
           if (factory instanceof SubcircuitFactory sub) {
-            final var sibling = sub.getSubcircuit();
-            final var isFirstForCirc = supercircsDone.add(sibling);
+            final com.cburch.logisim.circuit.Circuit sibling = sub.getSubcircuit();
+            final boolean isFirstForCirc = supercircsDone.add(sibling);
             if (isFirstForCirc) {
-              for (final var supercirc : sibling.getCircuitsUsingThis()) {
+              for (final com.cburch.logisim.circuit.Circuit supercirc : sibling.getCircuitsUsingThis()) {
                 accessMap.put(supercirc, READ_WRITE);
               }
             }
           } else if (factory instanceof VhdlEntity sibling) {
-            final var isFirstForVhdl = vhdlDone.add(sibling);
+            final boolean isFirstForVhdl = vhdlDone.add(sibling);
             if (isFirstForVhdl) {
-              for (final var supercirc : sibling.getCircuitsUsingThis()) {
+              for (final com.cburch.logisim.circuit.Circuit supercirc : sibling.getCircuitsUsingThis()) {
                 accessMap.put(supercirc, READ_WRITE);
               }
             }
@@ -111,7 +111,7 @@ public final class CircuitMutation extends CircuitTransaction {
   }
 
   public void replace(Component oldComp, Component newComp) {
-    final var repl = new ReplacementMap(oldComp, newComp);
+    final com.cburch.logisim.circuit.ReplacementMap repl = new ReplacementMap(oldComp, newComp);
     changes.add(CircuitChange.replace(primary, repl));
   }
 
@@ -126,8 +126,8 @@ public final class CircuitMutation extends CircuitTransaction {
   protected void run(CircuitMutator mutator) {
     Circuit curCircuit = null;
     ReplacementMap curReplacements = null;
-    for (final var change : changes) {
-      final var circ = change.getCircuit();
+    for (final com.cburch.logisim.circuit.CircuitChange change : changes) {
+      final com.cburch.logisim.circuit.Circuit circ = change.getCircuit();
       if (circ != curCircuit) {
         if (curCircuit != null) {
           mutator.replace(curCircuit, curReplacements);

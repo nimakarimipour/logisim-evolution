@@ -40,7 +40,7 @@ public class CircuitAttributes extends AbstractAttributeSet {
 
     @Override
     public Object getDefaultAttributeValue(Attribute<?> attr, LogisimVersion ver) {
-      final var ret = AttributeSets.fixedSet(STATIC_ATTRS, STATIC_DEFAULTS);
+      final com.cburch.logisim.data.AttributeSet ret = AttributeSets.fixedSet(STATIC_ATTRS, STATIC_DEFAULTS);
       ret.setValue(APPEARANCE_ATTR, StdAttr.APPEAR_CLASSIC);
       return ret.getValue(attr);
     }
@@ -72,7 +72,7 @@ public class CircuitAttributes extends AbstractAttributeSet {
 
     @Override
     public void circuitAppearanceChanged(CircuitAppearanceEvent e) {
-      final var factory = (SubcircuitFactory) subcircInstance.getFactory();
+      final com.cburch.logisim.circuit.SubcircuitFactory factory = (SubcircuitFactory) subcircInstance.getFactory();
       if (e.isConcerning(CircuitAppearanceEvent.PORTS)) {
         factory.computePorts(subcircInstance);
       }
@@ -100,8 +100,8 @@ public class CircuitAttributes extends AbstractAttributeSet {
     @Override
     public void attributeValueChanged(AttributeEvent e) {
       if (e.getAttribute() == NAME_ATTR) {
-        final var NewName = (String) e.getValue();
-        final var OldName =
+        final java.lang.String NewName = (String) e.getValue();
+        final java.lang.String OldName =
             e.getOldValue() == null ? "ThisShouldNotHappen" : (String) e.getOldValue();
         if (!NewName.equals(OldName)) {
           if (NewName.isEmpty()) {
@@ -115,11 +115,11 @@ public class CircuitAttributes extends AbstractAttributeSet {
             source.fireEvent(CircuitEvent.ACTION_SET_NAME, OldName);
             return;
           } else {
-            for (final var component : source.getNonWires()) {
+            for (final com.cburch.logisim.comp.Component component : source.getNonWires()) {
               if (component.getFactory() instanceof Pin) {
-                final var label = component.getAttributeSet().getValue(StdAttr.LABEL).toUpperCase();
+                final java.lang.String label = component.getAttributeSet().getValue(StdAttr.LABEL).toUpperCase();
                 if (!label.isEmpty() && label.equals(NewName.toUpperCase())) {
-                  final var msg = S.get("CircuitSameInputOutputLabel");
+                  final java.lang.String msg = S.get("CircuitSameInputOutputLabel");
                   OptionPane.showMessageDialog(null, "\"" + NewName + "\" : " + msg);
                   e.getSource().setValue(NAME_ATTR, OldName);
                   source.fireEvent(CircuitEvent.ACTION_SET_NAME, OldName);
@@ -148,7 +148,7 @@ public class CircuitAttributes extends AbstractAttributeSet {
   }
 
   static AttributeSet createBaseAttrs(Circuit source, String name) {
-    final var ret = AttributeSets.fixedSet(STATIC_ATTRS, STATIC_DEFAULTS);
+    final com.cburch.logisim.data.AttributeSet ret = AttributeSets.fixedSet(STATIC_ATTRS, STATIC_DEFAULTS);
     ret.setValue(APPEARANCE_ATTR, AppPreferences.getDefaultCircuitAppearance());
     ret.setValue(CircuitAttributes.NAME_ATTR, name);
     ret.addAttributeListener(new StaticListener(source));
@@ -248,7 +248,7 @@ public class CircuitAttributes extends AbstractAttributeSet {
 
   @Override
   protected void copyInto(AbstractAttributeSet dest) {
-    final var other = (CircuitAttributes) dest;
+    final com.cburch.logisim.circuit.CircuitAttributes other = (CircuitAttributes) dest;
     other.subcircInstance = null;
     other.listener = null;
   }
@@ -324,29 +324,29 @@ public class CircuitAttributes extends AbstractAttributeSet {
   @Override
   public <E> void setValue(Attribute<E> attr, E value) {
     if (attr == StdAttr.FACING) {
-      final var val = (Direction) value;
+      final com.cburch.logisim.data.Direction val = (Direction) value;
       if (facing.equals(val)) return;
       facing = val;
       fireAttributeValueChanged(StdAttr.FACING, val, null);
       if (subcircInstance != null) subcircInstance.recomputeBounds();
     } else if (attr == StdAttr.LABEL) {
-      final var val = (String) value;
-      final var oldval = label;
+      final java.lang.String val = (String) value;
+      final java.lang.String oldval = label;
       if (label.equals(val)) return;
       label = val;
       fireAttributeValueChanged(StdAttr.LABEL, val, oldval);
     } else if (attr == StdAttr.LABEL_FONT) {
-      final var val = (Font) value;
+      final java.awt.Font val = (Font) value;
       if (labelFont.equals(val)) return;
       labelFont = val;
       fireAttributeValueChanged(StdAttr.LABEL_FONT, val, null);
     } else if (attr == StdAttr.LABEL_VISIBILITY) {
-      final var val = (Boolean) value;
+      final java.lang.Boolean val = (Boolean) value;
       if (labelVisible == value) return;
       labelVisible = val;
       fireAttributeValueChanged(StdAttr.LABEL_VISIBILITY, val, null);
     } else if (attr == LABEL_LOCATION_ATTR) {
-      final var val = (Direction) value;
+      final com.cburch.logisim.data.Direction val = (Direction) value;
       if (labelLocation.equals(val)) return;
       labelLocation = val;
       fireAttributeValueChanged(LABEL_LOCATION_ATTR, val, null);

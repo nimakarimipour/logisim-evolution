@@ -47,7 +47,7 @@ public class FpSubtractor extends InstanceFactory {
     setOffsetBounds(Bounds.create(-40, -20, 40, 40));
     setIcon(new ArithmeticIcon("-"));
 
-    final var ps = new Port[4];
+    final com.cburch.logisim.instance.Port[] ps = new Port[4];
     ps[IN0] = new Port(-40, -10, Port.INPUT, StdAttr.FP_WIDTH);
     ps[IN1] = new Port(-40, 10, Port.INPUT, StdAttr.FP_WIDTH);
     ps[OUT] = new Port(0, 0, Port.OUTPUT, StdAttr.FP_WIDTH);
@@ -61,7 +61,7 @@ public class FpSubtractor extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     painter.drawBounds();
 
     g.setColor(Color.GRAY);
@@ -70,9 +70,9 @@ public class FpSubtractor extends InstanceFactory {
     painter.drawPort(OUT);
     painter.drawPort(ERR);
 
-    final var loc = painter.getLocation();
-    final var x = loc.getX();
-    final var y = loc.getY();
+    final com.cburch.logisim.data.Location loc = painter.getLocation();
+    final int x = loc.getX();
+    final int y = loc.getY();
     GraphicsUtil.switchToWidth(g, 2);
     g.setColor(Color.BLACK);
     g.drawLine(x - 15, y, x - 5, y);
@@ -86,23 +86,23 @@ public class FpSubtractor extends InstanceFactory {
   @Override
   public void propagate(InstanceState state) {
     // get attributes
-    final var dataWidth = state.getAttributeValue(StdAttr.FP_WIDTH);
+    final com.cburch.logisim.data.BitWidth dataWidth = state.getAttributeValue(StdAttr.FP_WIDTH);
 
     // compute outputs
-    final var a = state.getPortValue(IN0);
-    final var b = state.getPortValue(IN1);
+    final com.cburch.logisim.data.Value a = state.getPortValue(IN0);
+    final com.cburch.logisim.data.Value b = state.getPortValue(IN1);
 
-    final var a_val = dataWidth.getWidth() == 64 ? a.toDoubleValue() : a.toFloatValue();
-    final var b_val = dataWidth.getWidth() == 64 ? b.toDoubleValue() : b.toFloatValue();
+    final double a_val = dataWidth.getWidth() == 64 ? a.toDoubleValue() : a.toFloatValue();
+    final double b_val = dataWidth.getWidth() == 64 ? b.toDoubleValue() : b.toFloatValue();
 
-    final var out_val = a_val - b_val;
-    final var out =
+    final double out_val = a_val - b_val;
+    final com.cburch.logisim.data.Value out =
         dataWidth.getWidth() == 64
             ? Value.createKnown(out_val)
             : Value.createKnown((float) out_val);
 
     // propagate them
-    final var delay = (dataWidth.getWidth() + 2) * PER_DELAY;
+    final int delay = (dataWidth.getWidth() + 2) * PER_DELAY;
     state.setPort(OUT, out, delay);
     state.setPort(ERR, Value.createKnown(BitWidth.create(1), Double.isNaN(out_val) ? 1 : 0), delay);
   }

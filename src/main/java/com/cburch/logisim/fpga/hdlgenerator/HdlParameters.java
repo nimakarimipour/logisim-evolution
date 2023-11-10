@@ -83,7 +83,7 @@ public class HdlParameters {
           if (!(args[0] instanceof Attribute<?> arg0)) throw new IllegalArgumentException("Attribute map Type: first argument needs to be an Attribute<?>");
           if (!(args[1] instanceof Map<?, ?> map)) throw new IllegalArgumentException("Attribute map Type: second argument needs to be an Map<?,?>");
           if (map.isEmpty()) throw new IllegalArgumentException("Attribute map Type: Map<?,?> cannot be empty");
-          for (final var key : map.keySet()) {
+          for (final java.lang.Object key : map.keySet()) {
             if (!(key instanceof AttributeOption)) throw new IllegalArgumentException("Attribute map Type: Map<?,?> keys need to be an AttributeOption");
             if (!(map.get(key) instanceof Integer)) throw new IllegalArgumentException("Attribute map Type: Map<?,?> value need to be an Integer");
           }
@@ -103,7 +103,7 @@ public class HdlParameters {
 
         case MAP_POW2:
         case MAP_LN2:
-          for (final var arg : args) {
+          for (final java.lang.Object arg : args) {
             if (arg instanceof Integer) {
               offsetValue = (int) arg;
               if (offsetValue < 0) throw new NumberFormatException("Integer value must be positive");
@@ -131,7 +131,7 @@ public class HdlParameters {
     }
 
     public boolean isUsed(AttributeSet attrs) {
-      final var nrOfBits = (attrs != null) && attrs.containsAttribute(attributeToCheckForBus) ? attrs.getValue(attributeToCheckForBus).getWidth() : 0;
+      final int nrOfBits = (attrs != null) && attrs.containsAttribute(attributeToCheckForBus) ? attrs.getValue(attributeToCheckForBus).getWidth() : 0;
       return !isOnlyUsedForBusses || (nrOfBits > 1);
     }
 
@@ -147,8 +147,8 @@ public class HdlParameters {
       long totalValue = 0L;
       long selectedValue = 0L;
 
-      final var noReqAttrExMsg = "Component has not the required attribute";
-      final var notAnIntExMsg = "Requested attribute is not an Integer";
+      final java.lang.String noReqAttrExMsg = "Component has not the required attribute";
+      final java.lang.String notAnIntExMsg = "Requested attribute is not an Integer";
 
       switch (myMapType) {
         case MAP_CONSTANT:
@@ -157,7 +157,7 @@ public class HdlParameters {
 
         case MAP_ATTRIBUTE_OPTION:
           if (!attrs.containsAttribute(attributesList.get(0))) throw new UnsupportedOperationException(noReqAttrExMsg);
-          final var value = attrs.getValue(attributesList.get(0));
+          final java.lang.Object value = attrs.getValue(attributesList.get(0));
           if (!(value instanceof AttributeOption)) throw new UnsupportedOperationException("Requested attribute is not an attributeOption");
           if (!attributeOptionMap.containsKey(value)) throw new UnsupportedOperationException("Map does not contain the requested attributeOption");
           selectedValue = attributeOptionMap.get(value);
@@ -166,7 +166,7 @@ public class HdlParameters {
         case MAP_POW2:
           for (com.cburch.logisim.data.Attribute<?> attr : attributesList) {
             if (!attrs.containsAttribute(attr)) throw new UnsupportedOperationException(noReqAttrExMsg);
-            final var intValue = attrs.getValue(attr);
+            final java.lang.Object intValue = attrs.getValue(attr);
             if (intValue instanceof Integer) {
               totalValue += (int) intValue;
             } else if (intValue instanceof BitWidth bitWidth) {
@@ -179,20 +179,20 @@ public class HdlParameters {
         case MAP_LN2:
           for (com.cburch.logisim.data.Attribute<?> attr : attributesList) {
             if (!attrs.containsAttribute(attr)) throw new UnsupportedOperationException(noReqAttrExMsg);
-            final var intValue = attrs.getValue(attr);
+            final java.lang.Object intValue = attrs.getValue(attr);
             if (intValue instanceof Integer) {
               totalValue += (int) intValue;
             } else if (intValue instanceof BitWidth bitWidth) {
               totalValue += bitWidth.getWidth();
             } else throw new UnsupportedOperationException(notAnIntExMsg);
           }
-          final var logValue = Math.log(totalValue) / Math.log(2D);
+          final double logValue = Math.log(totalValue) / Math.log(2D);
           selectedValue = (long) Math.ceil(logValue) + offsetValue;
           break;
 
         case MAP_INT_ATTRIBUTE:
           if (!attrs.containsAttribute(attributesList.get(0))) throw new UnsupportedOperationException(noReqAttrExMsg);
-          final var intValue = attrs.getValue(attributesList.get(0));
+          final java.lang.Object intValue = attrs.getValue(attributesList.get(0));
           if (intValue instanceof Integer) selectedValue = (int) intValue + offsetValue;
           else if (intValue instanceof Long) selectedValue = (long) intValue + offsetValue;
           else if (intValue instanceof BitWidth bitWidth) selectedValue = bitWidth.getWidth() + offsetValue;
@@ -201,13 +201,13 @@ public class HdlParameters {
 
         case MAP_GATE_INPUT_BUBLE:
           if (!attrs.containsAttribute(GateAttributes.ATTR_INPUTS)) throw new UnsupportedOperationException(noReqAttrExMsg);
-          final var nrOfInputs = attrs.getValue(GateAttributes.ATTR_INPUTS);
+          final java.lang.Integer nrOfInputs = attrs.getValue(GateAttributes.ATTR_INPUTS);
           long bubbleMask = 0L;
           long mask = 1L;
           for (int i = 0; i < nrOfInputs; i++) {
             // VHDL is particular with the general type std_logic_vector, as it does an upto, so we have to exchange the bits
-            final var realIndex = Hdl.isVhdl() ? nrOfInputs - i - 1 : i;   
-            final var inputIsInverted = attrs.getValue(new NegateAttribute(realIndex, null));
+            final int realIndex = Hdl.isVhdl() ? nrOfInputs - i - 1 : i;   
+            final java.lang.Boolean inputIsInverted = attrs.getValue(new NegateAttribute(realIndex, null));
             if (Boolean.TRUE.equals(inputIsInverted)) bubbleMask |= mask;
             mask <<= 1L;
           }
@@ -220,9 +220,9 @@ public class HdlParameters {
           } else {
             selectedValue = 1;
 
-            for (final var attr : attributesList) {
+            for (final com.cburch.logisim.data.Attribute<?> attr : attributesList) {
               if (attrs.containsAttribute(attr)) {
-                final var attrValue = attrs.getValue(attr);
+                final java.lang.Object attrValue = attrs.getValue(attr);
                 if (attrValue instanceof Integer intVal) selectedValue *= intVal;
                 else if (attrValue instanceof Long longVal) selectedValue *= longVal;
                 else if (attrValue instanceof BitWidth width) selectedValue *= width.getWidth();
@@ -341,7 +341,7 @@ public class HdlParameters {
    * @param args Arguments required for the type
    */
   public HdlParameters addVector(String name, int id, int type, Object... args) {
-    final var newParameter = new ParameterInfo(name, id, type, args);
+    final com.cburch.logisim.fpga.hdlgenerator.HdlParameters.ParameterInfo newParameter = new ParameterInfo(name, id, type, args);
     newParameter.setVectorRepresentation();
     myParameters.add(newParameter);
     return this;
@@ -372,38 +372,38 @@ public class HdlParameters {
   }
 
   public boolean containsKey(int id, AttributeSet attrs) {
-    for (final var parameter : myParameters) {
+    for (final com.cburch.logisim.fpga.hdlgenerator.HdlParameters.ParameterInfo parameter : myParameters) {
       if (id == parameter.getParameterId(attrs)) return true;
     }
     return false;
   }
 
   public String get(int id, AttributeSet attrs) {
-    for (final var parameter : myParameters) {
+    for (final com.cburch.logisim.fpga.hdlgenerator.HdlParameters.ParameterInfo parameter : myParameters) {
       if (id == parameter.getParameterId(attrs)) return parameter.getParameterString(attrs);
     }
     return null;
   }
 
   public int getNumberOfVectorBits(int id, AttributeSet attrs) {
-    for (final var parameter : myParameters) {
+    for (final com.cburch.logisim.fpga.hdlgenerator.HdlParameters.ParameterInfo parameter : myParameters) {
       if (id == parameter.getParameterId(attrs)) return parameter.getNumberOfVectorBits(attrs);
     }
     throw new UnsupportedOperationException("Parameter not found");
   }
 
   public boolean isPresentedByInteger(int id, AttributeSet attrs) {
-    for (final var parameter : myParameters) {
+    for (final com.cburch.logisim.fpga.hdlgenerator.HdlParameters.ParameterInfo parameter : myParameters) {
       if (id == parameter.getParameterId(attrs)) return parameter.isRepresentedByInteger();
     }
     return true;
   }
 
   public Map<String, String> getMaps(AttributeSet attrs) {
-    final var contents = new TreeMap<String, String>();
-    for (final var parameter : myParameters) {
+    final java.util.TreeMap<java.lang.String,java.lang.String> contents = new TreeMap<String, String>();
+    for (final com.cburch.logisim.fpga.hdlgenerator.HdlParameters.ParameterInfo parameter : myParameters) {
       if (parameter.isUsed(attrs)) {
-        final var value = parameter.getParameterValue(attrs);
+        final java.lang.String value = parameter.getParameterValue(attrs);
         if (!value.isEmpty()) contents.put(parameter.getParameterString(attrs), value);
       }
     }
@@ -412,15 +412,15 @@ public class HdlParameters {
 
   public boolean isEmpty(AttributeSet attrs) {
     int count = 0;
-    for (final var parameter : myParameters) {
+    for (final com.cburch.logisim.fpga.hdlgenerator.HdlParameters.ParameterInfo parameter : myParameters) {
       if (parameter.isUsed(attrs)) count++;
     }
     return count == 0;
   }
 
   public List<Integer> keySet(AttributeSet attrs) {
-    final var keySet = new ArrayList<Integer>();
-    for (final var parameter : myParameters) {
+    final java.util.ArrayList<java.lang.Integer> keySet = new ArrayList<Integer>();
+    for (final com.cburch.logisim.fpga.hdlgenerator.HdlParameters.ParameterInfo parameter : myParameters) {
       if (parameter.isUsed(attrs)) keySet.add(parameter.getParameterId(attrs));
     }
     return keySet;

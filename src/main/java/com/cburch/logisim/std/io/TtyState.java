@@ -36,7 +36,7 @@ class TtyState implements InstanceData, Cloneable {
       TtyInterface.sendFromTty(c);
     }
 
-    final var lastLength = lastRow.length();
+    final int lastLength = lastRow.length();
     switch (c) {
       case 12: // control-L
         row = 0;
@@ -101,7 +101,7 @@ class TtyState implements InstanceData, Cloneable {
   }
 
   public Value setLastClock(Value newClock) {
-    final var ret = lastClock;
+    final com.cburch.logisim.data.Value ret = lastClock;
     lastClock = newClock;
     return ret;
   }
@@ -119,9 +119,9 @@ class TtyState implements InstanceData, Cloneable {
   }
 
   public void updateSize(int rows, int cols) {
-    final var oldRows = rowData.length + 1;
+    final int oldRows = rowData.length + 1;
     if (rows != oldRows) {
-      final var newData = new String[rows - 1];
+      final java.lang.String[] newData = new String[rows - 1];
       if (rows > oldRows // rows have been added,
           || row < rows - 1) { // or rows removed but filled rows fit
         System.arraycopy(rowData, 0, newData, 0, row);
@@ -133,12 +133,12 @@ class TtyState implements InstanceData, Cloneable {
       rowData = newData;
     }
 
-    final var oldCols = colCount;
+    final int oldCols = colCount;
     if (cols != oldCols) {
       colCount = cols;
       if (cols < oldCols) { // will need to trim any long rows
         for (int i = 0; i < rows - 1; i++) {
-          final var s = rowData[i];
+          final java.lang.String s = rowData[i];
           if (s.length() > cols) rowData[i] = s.substring(0, cols);
         }
         if (lastRow.length() > cols) {

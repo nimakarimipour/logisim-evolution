@@ -53,10 +53,10 @@ public class ShifterHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist TheNetlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getBuffer()
             .pair("shiftMode", SHIFT_MODE_STRING);
-    final var nrOfBits = attrs.getValue(StdAttr.WIDTH).getWidth();
-    final var nrOfShiftBits = attrs.getValue(Shifter.SHIFT_BITS_ATTR);
+    final int nrOfBits = attrs.getValue(StdAttr.WIDTH).getWidth();
+    final java.lang.Integer nrOfShiftBits = attrs.getValue(Shifter.SHIFT_BITS_ATTR);
     contents.addRemarkBlock("""
           ShifterMode represents when:
           0 : Logical Shift Left
@@ -101,12 +101,12 @@ public class ShifterHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
   }
 
   private LineBuffer getStageFunctionalityVerilog(int stageNumber, int nrOfBits) {
-    final var contents = LineBuffer.getBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getBuffer()
             .pair("shiftMode", SHIFT_MODE_STRING)
             .pair("stageNumber", stageNumber)
             .pair("nrOfBits1", nrOfBits - 1)
             .pair("nrOfBits2", nrOfBits - 2);
-    final var nrOfBitsToShift = (1 << stageNumber);
+    final int nrOfBitsToShift = (1 << stageNumber);
     contents.empty().addRemarkBlock(String.format("Stage %d of the binary shift tree is defined here", stageNumber));
     if (stageNumber == 0) {
       contents.add("""
@@ -147,8 +147,8 @@ public class ShifterHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
   }
 
   private LineBuffer getStageFunctionalityVhdl(int stageNumber, int nrOfBits) {
-    final var nrOfBitsToShift = (1 << stageNumber);
-    final var contents =
+    final int nrOfBitsToShift = (1 << stageNumber);
+    final com.cburch.logisim.util.LineBuffer contents =
         LineBuffer.getBuffer()
           .addVhdlKeywords()
           .pair("shiftMode", SHIFT_MODE_STRING)

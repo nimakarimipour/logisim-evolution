@@ -94,13 +94,13 @@ public class ShiftRegister extends InstanceFactory {
   }
 
   private void configurePorts(Instance instance) {
-    final var widthObj = instance.getAttributeValue(StdAttr.WIDTH);
-    final var width = widthObj.getWidth();
-    final var parallelObj = instance.getAttributeValue(ATTR_LOAD);
-    final var bds = instance.getBounds();
+    final com.cburch.logisim.data.BitWidth widthObj = instance.getAttributeValue(StdAttr.WIDTH);
+    final int width = widthObj.getWidth();
+    final java.lang.Boolean parallelObj = instance.getAttributeValue(ATTR_LOAD);
+    final com.cburch.logisim.data.Bounds bds = instance.getBounds();
     Port[] ps;
-    final var lenObj = instance.getAttributeValue(ATTR_LENGTH);
-    final var len = lenObj == null ? 8 : lenObj;
+    final java.lang.Integer lenObj = instance.getAttributeValue(ATTR_LENGTH);
+    final int len = lenObj == null ? 8 : lenObj;
     if (instance.getAttributeValue(StdAttr.APPEARANCE) == StdAttr.APPEAR_CLASSIC) {
       if (parallelObj == null || parallelObj) {
         ps = new Port[6 + 2 * len];
@@ -160,9 +160,9 @@ public class ShiftRegister extends InstanceFactory {
       int nr_of_bits,
       boolean has_load,
       boolean active_low_clock) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     GraphicsUtil.switchToWidth(g, 2);
-    final var blockwidth = symbolWidth;
+    final int blockwidth = symbolWidth;
     g.drawLine(xpos + 10, ypos, xpos + blockwidth + 10, ypos);
     g.drawLine(xpos + 10, ypos, xpos + 10, ypos + 60);
     g.drawLine(xpos + blockwidth + 10, ypos, xpos + blockwidth + 10, ypos + 60);
@@ -181,7 +181,7 @@ public class ShiftRegister extends InstanceFactory {
         g.drawLine(xpos + blockwidth + 10, ypos + 70, xpos + blockwidth + 20, ypos + 70);
       }
     }
-    final var Identifier = "SRG" + nr_of_stages;
+    final java.lang.String Identifier = "SRG" + nr_of_stages;
     GraphicsUtil.drawCenteredText(g, Identifier, xpos + (symbolWidth / 2) + 10, ypos + 5);
     /* Draw the clock input */
     painter.drawClockSymbol(xpos + 10, ypos + 50);
@@ -189,7 +189,7 @@ public class ShiftRegister extends InstanceFactory {
     if (active_low_clock) g.drawOval(xpos, ypos + 45, 10, 10);
     else g.drawLine(xpos, ypos + 50, xpos + 10, ypos + 50);
     painter.drawPort(CK);
-    final var cntrl = "1\u2192/C3";
+    final java.lang.String cntrl = "1\u2192/C3";
     GraphicsUtil.drawText(
         g, cntrl, xpos + 20, ypos + 50, GraphicsUtil.H_LEFT, GraphicsUtil.V_CENTER);
     /* draw shift input */
@@ -222,13 +222,13 @@ public class ShiftRegister extends InstanceFactory {
       boolean hasLoad) {
     int realYpos = ypos + 70 + currentStage * 20;
     if (currentStage > 0) realYpos += 10;
-    final var realXpos = xpos + 10;
-    final var dataWidth = (nrOfBits == 1) ? 2 : 5;
-    final var lineFix = (nrOfBits == 1) ? 1 : 2;
+    final int realXpos = xpos + 10;
+    final int dataWidth = (nrOfBits == 1) ? 2 : 5;
+    final int lineFix = (nrOfBits == 1) ? 1 : 2;
     int height = (currentStage == 0) ? 30 : 20;
-    final var lastBlock = (currentStage == (nrOfStages - 1));
-    final var blockWidth = symbolWidth;
-    final var g = painter.getGraphics();
+    final boolean lastBlock = (currentStage == (nrOfStages - 1));
+    final int blockWidth = symbolWidth;
+    final java.awt.Graphics g = painter.getGraphics();
     GraphicsUtil.switchToWidth(g, 2);
     g.drawRect(realXpos, realYpos, blockWidth, height);
     if (nrOfBits > 1) {
@@ -311,9 +311,9 @@ public class ShiftRegister extends InstanceFactory {
       if (data_value.isFullyDefined()) g.setColor(Color.LIGHT_GRAY);
       else if (data_value.isErrorValue()) g.setColor(Color.RED);
       else g.setColor(Color.BLUE);
-      final var yoff = (currentStage == 0) ? 10 : 0;
-      final var len = (nrOfBits + 3) / 4;
-      final var boxXpos = ((blockWidth - 30) / 2 + 30) - (len * 4);
+      final int yoff = (currentStage == 0) ? 10 : 0;
+      final int len = (nrOfBits + 3) / 4;
+      final int boxXpos = ((blockWidth - 30) / 2 + 30) - (len * 4);
       g.fillRect(realXpos + boxXpos, realYpos + yoff + 2, 2 + len * 8, 16);
       String value;
       if (data_value.isFullyDefined()) {
@@ -335,9 +335,9 @@ public class ShiftRegister extends InstanceFactory {
   }
 
   private ShiftRegisterData getData(InstanceState state) {
-    final var width = state.getAttributeValue(StdAttr.WIDTH);
-    final var lenObj = state.getAttributeValue(ATTR_LENGTH);
-    final var length = lenObj == null ? 8 : lenObj;
+    final com.cburch.logisim.data.BitWidth width = state.getAttributeValue(StdAttr.WIDTH);
+    final java.lang.Integer lenObj = state.getAttributeValue(ATTR_LENGTH);
+    final int length = lenObj == null ? 8 : lenObj;
     com.cburch.logisim.std.memory.ShiftRegisterData data = (ShiftRegisterData) state.getData();
     if (data == null) {
       data = new ShiftRegisterData(width, length);
@@ -349,15 +349,15 @@ public class ShiftRegister extends InstanceFactory {
   }
 
   private void updateData(Instance instance) {
-    final var comp = instance.getComponent().getInstanceStateImpl();
+    final com.cburch.logisim.instance.InstanceStateImpl comp = instance.getComponent().getInstanceStateImpl();
     if (comp == null) return;
-    final var circuitState = comp.getCircuitState();
+    final com.cburch.logisim.circuit.CircuitState circuitState = comp.getCircuitState();
     if (circuitState == null) return;
-    final var state = circuitState.getInstanceState(instance);
+    final com.cburch.logisim.instance.InstanceState state = circuitState.getInstanceState(instance);
     if (state == null) return;
-    final var data = (ShiftRegisterData) state.getData();
+    final com.cburch.logisim.std.memory.ShiftRegisterData data = (ShiftRegisterData) state.getData();
     if (data == null) return;
-    final var lenObj = state.getAttributeValue(ATTR_LENGTH);
+    final java.lang.Integer lenObj = state.getAttributeValue(ATTR_LENGTH);
     data.setDimensions(state.getAttributeValue(StdAttr.WIDTH), lenObj == null ? 8 : lenObj);
   }
 
@@ -399,16 +399,16 @@ public class ShiftRegister extends InstanceFactory {
   private void paintInstanceEvolution(InstancePainter painter) {
     // draw boundary, label
     painter.drawLabel();
-    final var xpos = painter.getLocation().getX();
-    final var ypos = painter.getLocation().getY();
-    final var wid = painter.getAttributeValue(StdAttr.WIDTH).getWidth();
-    final var lenObj = painter.getAttributeValue(ATTR_LENGTH);
-    final var len = lenObj == null ? 8 : lenObj;
-    final var parallelObj = painter.getAttributeValue(ATTR_LOAD);
-    final var negEdge =
+    final int xpos = painter.getLocation().getX();
+    final int ypos = painter.getLocation().getY();
+    final int wid = painter.getAttributeValue(StdAttr.WIDTH).getWidth();
+    final java.lang.Integer lenObj = painter.getAttributeValue(ATTR_LENGTH);
+    final int len = lenObj == null ? 8 : lenObj;
+    final java.lang.Boolean parallelObj = painter.getAttributeValue(ATTR_LOAD);
+    final boolean negEdge =
         painter.getAttributeValue(StdAttr.EDGE_TRIGGER).equals(StdAttr.TRIG_FALLING);
     drawControl(painter, xpos, ypos, len, wid, parallelObj, negEdge);
-    final var data = (ShiftRegisterData) painter.getData();
+    final com.cburch.logisim.std.memory.ShiftRegisterData data = (ShiftRegisterData) painter.getData();
 
     // In the case data is null we assume that the different value are null. This allow the user to
     // instantiate the shift register without simulation mode
@@ -430,14 +430,14 @@ public class ShiftRegister extends InstanceFactory {
     // draw state
     boolean parallel = painter.getAttributeValue(ATTR_LOAD);
     if (parallel) {
-      final var widObj = painter.getAttributeValue(StdAttr.WIDTH);
-      final var wid = widObj.getWidth();
-      final var lenObj = painter.getAttributeValue(ATTR_LENGTH);
-      final var len = lenObj == null ? 8 : lenObj;
+      final com.cburch.logisim.data.BitWidth widObj = painter.getAttributeValue(StdAttr.WIDTH);
+      final int wid = widObj.getWidth();
+      final java.lang.Integer lenObj = painter.getAttributeValue(ATTR_LENGTH);
+      final int len = lenObj == null ? 8 : lenObj;
       if (painter.getShowState()) {
         if (wid <= 4) {
-          final var data = getData(painter);
-          final var bds = painter.getBounds();
+          final com.cburch.logisim.std.memory.ShiftRegisterData data = getData(painter);
+          final com.cburch.logisim.data.Bounds bds = painter.getBounds();
           int x = bds.getX() + 20;
           int y = bds.getY();
           Object label = painter.getAttributeValue(StdAttr.LABEL);
@@ -446,24 +446,24 @@ public class ShiftRegister extends InstanceFactory {
           } else {
             y += 3 * bds.getHeight() / 4;
           }
-          final var g = painter.getGraphics();
+          final java.awt.Graphics g = painter.getGraphics();
           for (int i = 0; i < len; i++) {
             if (data != null && data.get(len - 1 - i) != null) {
-              final var s = data.get(len - 1 - i).toHexString();
+              final java.lang.String s = data.get(len - 1 - i).toHexString();
               GraphicsUtil.drawCenteredText(g, s, x, y);
             }
             x += 10;
           }
         }
       } else {
-        final var bds = painter.getBounds();
-        final var x = bds.getX() + bds.getWidth() / 2;
-        final var y = bds.getY();
-        final var h = bds.getHeight();
-        final var g = painter.getGraphics();
+        final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+        final int x = bds.getX() + bds.getWidth() / 2;
+        final int y = bds.getY();
+        final int h = bds.getHeight();
+        final java.awt.Graphics g = painter.getGraphics();
         Object label = painter.getAttributeValue(StdAttr.LABEL);
         if (label == null || label.equals("")) {
-          final var a = S.get("shiftRegisterLabel1");
+          final java.lang.String a = S.get("shiftRegisterLabel1");
           GraphicsUtil.drawCenteredText(g, a, x, y + h / 4);
         }
         java.lang.String b = S.get("shiftRegisterLabel2", "" + len, "" + wid);
@@ -472,7 +472,7 @@ public class ShiftRegister extends InstanceFactory {
     }
 
     // draw input and output ports
-    final var ports = painter.getInstance().getPorts().size();
+    final int ports = painter.getInstance().getPorts().size();
     for (int i = 0; i < ports; i++) {
       if (i != CK) painter.drawPort(i);
     }
@@ -482,11 +482,11 @@ public class ShiftRegister extends InstanceFactory {
   @Override
   public void propagate(InstanceState state) {
     Object triggerType = state.getAttributeValue(StdAttr.EDGE_TRIGGER);
-    final var parallel = state.getAttributeValue(ATTR_LOAD);
+    final java.lang.Boolean parallel = state.getAttributeValue(ATTR_LOAD);
     ShiftRegisterData data = getData(state);
-    final var len = data.getLength();
+    final int len = data.getLength();
 
-    final var triggered = data.updateClock(state.getPortValue(CK), triggerType);
+    final boolean triggered = data.updateClock(state.getPortValue(CK), triggerType);
     if (state.getPortValue(CLR) == Value.TRUE) {
       data.clear();
     } else if (triggered) {

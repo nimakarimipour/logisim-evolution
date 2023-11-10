@@ -38,7 +38,7 @@ public abstract class HdlContent implements HdlModel, Cloneable {
 
   @Override
   public HdlContent clone() throws CloneNotSupportedException {
-    final var ret = (HdlContent) super.clone();
+    final com.cburch.logisim.std.hdl.HdlContent ret = (HdlContent) super.clone();
     ret.listeners = null;
     return ret;
   }

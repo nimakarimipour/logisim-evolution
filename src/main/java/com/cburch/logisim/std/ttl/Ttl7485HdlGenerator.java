@@ -48,8 +48,8 @@ public class Ttl7485HdlGenerator extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist netlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer();
-    final var decoder = new WithSelectHdlGenerator("dec1", "compIn", 3, "compOut", 3)
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
+    final com.cburch.logisim.fpga.hdlgenerator.WithSelectHdlGenerator decoder = new WithSelectHdlGenerator("dec1", "compIn", 3, "compOut", 3)
         .setDefault("001")
         .add("100", "100")
         .add("010", "010")

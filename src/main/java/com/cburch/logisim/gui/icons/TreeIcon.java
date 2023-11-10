@@ -70,7 +70,7 @@ public class TreeIcon extends BaseIcon {
         AppPreferences.getScaled(11),
         AppPreferences.getScaled(6));
     path = new GeneralPath();
-    final var frontSheet = closed ? frontsheetClosed : frontsheetOpen;
+    final int[] frontSheet = closed ? frontsheetClosed : frontsheetOpen;
     path.moveTo(AppPreferences.getScaled(frontSheet[0]), AppPreferences.getScaled(frontSheet[1]));
     for (int i = 2; i < frontSheet.length; i += 2)
       path.lineTo(

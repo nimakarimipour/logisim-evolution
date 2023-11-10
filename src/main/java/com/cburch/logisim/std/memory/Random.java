@@ -46,7 +46,7 @@ public class Random extends InstanceFactory {
   public static class Logger extends InstanceLogger {
     @Override
     public String getLogName(InstanceState state, Object option) {
-      final var ret = state.getAttributeValue(StdAttr.LABEL);
+      final java.lang.String ret = state.getAttributeValue(StdAttr.LABEL);
       return ret != null && !ret.equals("") ? ret : null;
     }
 
@@ -59,7 +59,7 @@ public class Random extends InstanceFactory {
     public Value getLogValue(InstanceState state, Object option) {
       com.cburch.logisim.data.BitWidth dataWidth = state.getAttributeValue(StdAttr.WIDTH);
       if (dataWidth == null) dataWidth = BitWidth.create(0);
-      final var data = (StateData) state.getData();
+      final com.cburch.logisim.std.memory.Random.StateData data = (StateData) state.getData();
       if (data == null) return Value.createKnown(dataWidth, 0);
       return Value.createKnown(dataWidth, data.value);
     }
@@ -168,7 +168,7 @@ public class Random extends InstanceFactory {
   protected void configureNewInstance(Instance instance) {
     instance.addAttributeListener();
     updatePorts(instance);
-    final var bds = instance.getBounds();
+    final com.cburch.logisim.data.Bounds bds = instance.getBounds();
     instance.setTextField(
         StdAttr.LABEL,
         StdAttr.LABEL_FONT,
@@ -179,7 +179,7 @@ public class Random extends InstanceFactory {
   }
 
   private void updatePorts(Instance instance) {
-    final var ps = new Port[4];
+    final com.cburch.logisim.instance.Port[] ps = new Port[4];
     if (instance.getAttributeValue(StdAttr.APPEARANCE) == StdAttr.APPEAR_CLASSIC) {
       ps[OUT] = new Port(40, 20, Port.OUTPUT, StdAttr.WIDTH);
       ps[CK] = new Port(10, 40, Port.INPUT, 1);
@@ -207,7 +207,7 @@ public class Random extends InstanceFactory {
   }
 
   private void drawControl(InstancePainter painter, int xpos, int ypos, int nrOfBits) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     GraphicsUtil.switchToWidth(g, 2);
     g.drawLine(xpos + 10, ypos, xpos + 70, ypos);
     g.drawLine(xpos + 10, ypos, xpos + 10, ypos + 60);
@@ -216,7 +216,7 @@ public class Random extends InstanceFactory {
     g.drawLine(xpos + 60, ypos + 60, xpos + 70, ypos + 60);
     g.drawLine(xpos + 20, ypos + 60, xpos + 20, ypos + 70);
     g.drawLine(xpos + 60, ypos + 60, xpos + 60, ypos + 70);
-    final var Name = "RNG" + nrOfBits;
+    final java.lang.String Name = "RNG" + nrOfBits;
     GraphicsUtil.drawText(
         g, Name, xpos + 40, ypos + 8, GraphicsUtil.H_CENTER, GraphicsUtil.V_CENTER);
     g.drawLine(xpos, ypos + 30, xpos + 10, ypos + 30);
@@ -238,11 +238,11 @@ public class Random extends InstanceFactory {
   }
 
   private void drawData(InstancePainter painter, int xpos, int ypos, int nrOfBits, int value) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     GraphicsUtil.switchToWidth(g, 2);
     g.drawRect(xpos, ypos, 80, 20);
     if (painter.getShowState()) {
-      final var str = StringUtil.toHexString(nrOfBits, value);
+      final java.lang.String str = StringUtil.toHexString(nrOfBits, value);
       GraphicsUtil.drawCenteredText(g, str, xpos + 40, ypos + 10);
     }
     painter.drawPort(OUT);
@@ -250,22 +250,22 @@ public class Random extends InstanceFactory {
   }
 
   private void paintInstanceClassic(InstancePainter painter) {
-    final var g = painter.getGraphics();
-    final var bds = painter.getBounds();
-    final var state = (StateData) painter.getData();
-    final var widthVal = painter.getAttributeValue(StdAttr.WIDTH);
-    final var width = widthVal == null ? 8 : widthVal.getWidth();
+    final java.awt.Graphics g = painter.getGraphics();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+    final com.cburch.logisim.std.memory.Random.StateData state = (StateData) painter.getData();
+    final com.cburch.logisim.data.BitWidth widthVal = painter.getAttributeValue(StdAttr.WIDTH);
+    final int width = widthVal == null ? 8 : widthVal.getWidth();
 
     // determine text to draw in label
     String a;
     String b = null;
     if (painter.getShowState()) {
       int val = state == null ? 0 : state.value;
-      final var str = StringUtil.toHexString(width, val);
+      final java.lang.String str = StringUtil.toHexString(width, val);
       if (str.length() <= 4) {
         a = str;
       } else {
-        final var split = str.length() - 4;
+        final int split = str.length() - 4;
         a = str.substring(0, split);
         b = str.substring(split);
       }
@@ -301,13 +301,13 @@ public class Random extends InstanceFactory {
   }
 
   private void paintInstanceEvolution(InstancePainter painter) {
-    final var bds = painter.getBounds();
-    final var x = bds.getX();
-    final var y = bds.getY();
-    final var state = (StateData) painter.getData();
-    final var val = state == null ? 0 : state.value;
-    final var widthVal = painter.getAttributeValue(StdAttr.WIDTH);
-    final var width = widthVal == null ? 8 : widthVal.getWidth();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+    final int x = bds.getX();
+    final int y = bds.getY();
+    final com.cburch.logisim.std.memory.Random.StateData state = (StateData) painter.getData();
+    final int val = state == null ? 0 : state.value;
+    final com.cburch.logisim.data.BitWidth widthVal = painter.getAttributeValue(StdAttr.WIDTH);
+    final int width = widthVal == null ? 8 : widthVal.getWidth();
 
     painter.drawLabel();
     drawControl(painter, x, y, width);
@@ -334,9 +334,9 @@ public class Random extends InstanceFactory {
       state.setData(data);
     }
 
-    final var dataWidth = state.getAttributeValue(StdAttr.WIDTH);
+    final com.cburch.logisim.data.BitWidth dataWidth = state.getAttributeValue(StdAttr.WIDTH);
     Object triggerType = state.getAttributeValue(StdAttr.EDGE_TRIGGER);
-    final var triggered = data.updateClock(state.getPortValue(CK), triggerType);
+    final boolean triggered = data.updateClock(state.getPortValue(CK), triggerType);
 
     data.propagateReset(state.getPortValue(RST), state.getAttributeValue(ATTR_SEED));
     if (state.getPortValue(RST) == Value.TRUE) {

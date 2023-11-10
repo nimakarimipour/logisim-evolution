@@ -72,7 +72,7 @@ public class BitSelector extends InstanceFactory {
 
   @Override
   public String getHDLName(AttributeSet attrs) {
-    final var completeName = new StringBuilder();
+    final java.lang.StringBuilder completeName = new StringBuilder();
     completeName.append(CorrectLabel.getCorrectLabel(this.getName()));
     if (attrs.getValue(GROUP_ATTR).getWidth() > 1) completeName.append("_bus");
     return completeName.toString();
@@ -80,8 +80,8 @@ public class BitSelector extends InstanceFactory {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    final var facing = attrs.getValue(StdAttr.FACING);
-    final var base = Bounds.create(-30, -15, 30, 30);
+    final com.cburch.logisim.data.Direction facing = attrs.getValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Bounds base = Bounds.create(-30, -15, 30, 30);
     return base.rotate(Direction.EAST, facing, 0, 0);
   }
 
@@ -103,11 +103,11 @@ public class BitSelector extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var g = painter.getGraphics();
-    final var facing = painter.getAttributeValue(StdAttr.FACING);
+    final java.awt.Graphics g = painter.getGraphics();
+    final com.cburch.logisim.data.Direction facing = painter.getAttributeValue(StdAttr.FACING);
 
     PlexersLibrary.drawTrapezoid(g, painter.getBounds(), facing, 9);
-    final var bds = painter.getBounds();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
     g.setColor(Color.BLACK);
     GraphicsUtil.drawCenteredText(
         g, "Sel", bds.getX() + bds.getWidth() / 2, bds.getY() + bds.getHeight() / 2);
@@ -116,9 +116,9 @@ public class BitSelector extends InstanceFactory {
 
   @Override
   public void propagate(InstanceState state) {
-    final var data = state.getPortValue(1);
-    final var select = state.getPortValue(2);
-    final var groupBits = state.getAttributeValue(GROUP_ATTR);
+    final com.cburch.logisim.data.Value data = state.getPortValue(1);
+    final com.cburch.logisim.data.Value select = state.getPortValue(2);
+    final com.cburch.logisim.data.BitWidth groupBits = state.getAttributeValue(GROUP_ATTR);
     Value group;
     if (!select.isFullyDefined()) {
       group = Value.createUnknown(groupBits);
@@ -144,10 +144,10 @@ public class BitSelector extends InstanceFactory {
   }
 
   private void updatePorts(Instance instance) {
-    final var facing = instance.getAttributeValue(StdAttr.FACING);
-    final var selectLoc = instance.getAttributeValue(StdAttr.SELECT_LOC);
-    final var data = instance.getAttributeValue(StdAttr.WIDTH);
-    final var group = instance.getAttributeValue(GROUP_ATTR);
+    final com.cburch.logisim.data.Direction facing = instance.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.AttributeOption selectLoc = instance.getAttributeValue(StdAttr.SELECT_LOC);
+    final com.cburch.logisim.data.BitWidth data = instance.getAttributeValue(StdAttr.WIDTH);
+    final com.cburch.logisim.data.BitWidth group = instance.getAttributeValue(GROUP_ATTR);
     int groups = (data.getWidth() + group.getWidth() - 1) / group.getWidth() - 1;
     int selectBits = 1;
     if (groups > 0) {
@@ -156,9 +156,9 @@ public class BitSelector extends InstanceFactory {
         selectBits++;
       }
     }
-    final var select = BitWidth.create(selectBits);
+    final com.cburch.logisim.data.BitWidth select = BitWidth.create(selectBits);
     instance.getAttributeSet().setValue(SELECT_ATTR, select.getWidth());
-    final var maxGroups = (int) Math.pow(2d, select.getWidth());
+    final int maxGroups = (int) Math.pow(2d, select.getWidth());
     instance.getAttributeSet().setValue(EXTENDED_ATTR, maxGroups * group.getWidth() + 1);
 
     Location inPt;
@@ -181,7 +181,7 @@ public class BitSelector extends InstanceFactory {
       else selPt = Location.create(-10, -10, true);
     }
 
-    final var ps = new Port[3];
+    final com.cburch.logisim.instance.Port[] ps = new Port[3];
     ps[0] = new Port(0, 0, Port.OUTPUT, group.getWidth());
     ps[1] = new Port(inPt.getX(), inPt.getY(), Port.INPUT, data.getWidth());
     ps[2] = new Port(selPt.getX(), selPt.getY(), Port.INPUT, select.getWidth());

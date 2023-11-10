@@ -35,7 +35,7 @@ public abstract class EditPopup extends JPopupMenu {
 
   private boolean add(LogisimMenuItem item, String display) {
     if (shouldShow(item)) {
-      final var menu = new JMenuItem(display);
+      final javax.swing.JMenuItem menu = new JMenuItem(display);
       items.put(item, menu);
       menu.setEnabled(isEnabled(item));
       menu.addActionListener(listener);
@@ -84,8 +84,8 @@ public abstract class EditPopup extends JPopupMenu {
   private class Listener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-      final var source = e.getSource();
-      for (final var entry : items.entrySet()) {
+      final java.lang.Object source = e.getSource();
+      for (final java.util.Map.Entry<com.cburch.logisim.gui.menu.LogisimMenuItem,javax.swing.JMenuItem> entry : items.entrySet()) {
         if (entry.getValue() == source) {
           fire(entry.getKey());
           return;

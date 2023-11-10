@@ -49,15 +49,15 @@ class CanvasPainter implements PropertyChangeListener {
   }
 
   private void drawWidthIncompatibilityData(Graphics base, Graphics g, Project proj) {
-    final var exceptions = proj.getCurrentCircuit().getWidthIncompatibilityData();
+    final java.util.Set<com.cburch.logisim.circuit.WidthIncompatibilityData> exceptions = proj.getCurrentCircuit().getWidthIncompatibilityData();
     if (CollectionUtil.isNullOrEmpty(exceptions)) return;
 
-    final var fm = base.getFontMetrics(g.getFont());
-    for (final var ex : exceptions) {
-      final var common = ex.getCommonBitWidth();
+    final java.awt.FontMetrics fm = base.getFontMetrics(g.getFont());
+    for (final com.cburch.logisim.circuit.WidthIncompatibilityData ex : exceptions) {
+      final com.cburch.logisim.data.BitWidth common = ex.getCommonBitWidth();
       for (int i = 0; i < ex.size(); i++) {
-        final var p = ex.getPoint(i);
-        final var w = ex.getBitWidth(i);
+        final com.cburch.logisim.data.Location p = ex.getPoint(i);
+        final com.cburch.logisim.data.BitWidth w = ex.getBitWidth(i);
 
         // ensure it hasn't already been drawn
         boolean drawn = false;
@@ -101,8 +101,8 @@ class CanvasPainter implements PropertyChangeListener {
   }
 
   private void drawWithUserState(Graphics base, Graphics g, Project proj) {
-    final var circ = proj.getCurrentCircuit();
-    final var sel = proj.getSelection();
+    final com.cburch.logisim.circuit.Circuit circ = proj.getCurrentCircuit();
+    final com.cburch.logisim.gui.main.Selection sel = proj.getSelection();
     com.cburch.logisim.tools.Tool dragTool = canvas.getDragTool();
     Set<Component> hidden;
     if (dragTool == null) {
@@ -113,18 +113,18 @@ class CanvasPainter implements PropertyChangeListener {
     }
 
     // draw halo around component whose attributes we are viewing
-    final var showHalo = AppPreferences.ATTRIBUTE_HALO.getBoolean();
+    final boolean showHalo = AppPreferences.ATTRIBUTE_HALO.getBoolean();
     if (showHalo
         && haloedComponent != null
         && haloedCircuit == circ
         && !hidden.contains(haloedComponent)) {
       GraphicsUtil.switchToWidth(g, 3);
       g.setColor(Canvas.HALO_COLOR);
-      final var bds = haloedComponent.getBounds(g).expand(5);
-      final var width = bds.getWidth();
-      final var height = bds.getHeight();
-      final var a = Canvas.SQRT_2 * width;
-      final var b = Canvas.SQRT_2 * height;
+      final com.cburch.logisim.data.Bounds bds = haloedComponent.getBounds(g).expand(5);
+      final int width = bds.getWidth();
+      final int height = bds.getHeight();
+      final double a = Canvas.SQRT_2 * width;
+      final double b = Canvas.SQRT_2 * height;
       g.drawOval(
           (int) Math.round(bds.getX() + width / 2.0 - a / 2.0),
           (int) Math.round(bds.getY() + height / 2.0 - b / 2.0),
@@ -135,16 +135,16 @@ class CanvasPainter implements PropertyChangeListener {
     }
 
     // draw circuit and selection
-    final var circState = proj.getCircuitState();
-    final var context = new ComponentDrawContext(canvas, circ, circState, base, g, false);
+    final com.cburch.logisim.circuit.CircuitState circState = proj.getCircuitState();
+    final com.cburch.logisim.comp.ComponentDrawContext context = new ComponentDrawContext(canvas, circ, circState, base, g, false);
     context.setHighlightedWires(highlightedWires);
     circ.draw(context, hidden);
     sel.draw(context, hidden);
 
     // draw tool
-    final var tool = dragTool != null ? dragTool : proj.getTool();
+    final com.cburch.logisim.tools.Tool tool = dragTool != null ? dragTool : proj.getTool();
     if (tool != null && !canvas.isPopupMenuUp()) {
-      final var gfxCopy = g.create();
+      final java.awt.Graphics gfxCopy = g.create();
       context.setGraphics(gfxCopy);
       tool.draw(canvas, context);
       gfxCopy.dispose();
@@ -152,13 +152,13 @@ class CanvasPainter implements PropertyChangeListener {
   }
 
   private void exposeHaloedComponent(Graphics gfx) {
-    final var comp = haloedComponent;
+    final com.cburch.logisim.comp.Component comp = haloedComponent;
     if (comp == null) return;
-    final var bds = comp.getBounds(gfx).expand(7);
-    final var width = bds.getWidth();
-    final var height = bds.getHeight();
-    final var a = Canvas.SQRT_2 * width;
-    final var b = Canvas.SQRT_2 * height;
+    final com.cburch.logisim.data.Bounds bds = comp.getBounds(gfx).expand(7);
+    final int width = bds.getWidth();
+    final int height = bds.getHeight();
+    final double a = Canvas.SQRT_2 * width;
+    final double b = Canvas.SQRT_2 * height;
     canvas.repaint(
         (int) Math.round(bds.getX() + width / 2.0 - a / 2.0),
         (int) Math.round(bds.getY() + height / 2.0 - b / 2.0),
@@ -222,7 +222,7 @@ class CanvasPainter implements PropertyChangeListener {
 
   void setHaloedComponent(Circuit circ, Component comp) {
     if (comp == haloedComponent) return;
-    final var g = canvas.getGraphics();
+    final java.awt.Graphics g = canvas.getGraphics();
     exposeHaloedComponent(g);
     haloedCircuit = circ;
     haloedComponent = comp;

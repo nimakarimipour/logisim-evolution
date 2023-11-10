@@ -44,7 +44,7 @@ public class ClockSourceContainer {
     if (!(comp.getFactory() instanceof Clock)) {
       return -1;
     }
-    for (final var clock : sources) {
+    for (final com.cburch.logisim.comp.Component clock : sources) {
       if (equals(comp, clock)) {
         return sources.indexOf(clock);
       }

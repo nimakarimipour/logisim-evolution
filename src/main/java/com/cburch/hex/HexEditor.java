@@ -138,14 +138,14 @@ public class HexEditor extends JComponent implements Scrollable {
   @Override
   protected void paintComponent(Graphics gfx) {
     if (AppPreferences.AntiAliassing.getBoolean()) {
-      final var g2 = (Graphics2D) gfx;
+      final java.awt.Graphics2D g2 = (Graphics2D) gfx;
       g2.setRenderingHint(
           RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
     measures.ensureComputed(gfx);
 
-    final var clip = gfx.getClipBounds();
+    final java.awt.Rectangle clip = gfx.getClipBounds();
     if (isOpaque()) {
       gfx.setColor(getBackground());
       gfx.fillRect(clip.x, clip.y, clip.width, clip.height);
@@ -160,10 +160,10 @@ public class HexEditor extends JComponent implements Scrollable {
     highlighter.paint(gfx, xaddr0, xaddr1);
 
     gfx.setColor(getForeground());
-    final var baseFont = gfx.getFont();
-    final var baseFm = gfx.getFontMetrics(baseFont);
-    final var labelFont = baseFont.deriveFont(Font.ITALIC);
-    final var labelFm = gfx.getFontMetrics(labelFont);
+    final java.awt.Font baseFont = gfx.getFont();
+    final java.awt.FontMetrics baseFm = gfx.getFontMetrics(baseFont);
+    final java.awt.Font labelFont = baseFont.deriveFont(Font.ITALIC);
+    final java.awt.FontMetrics labelFm = gfx.getFontMetrics(labelFont);
     int cols = measures.getColumnCount();
     int baseX = measures.getBaseX();
     int baseY = measures.toY(xaddr0) + baseFm.getAscent() + baseFm.getLeading() / 2;
@@ -173,7 +173,7 @@ public class HexEditor extends JComponent implements Scrollable {
     int cellWidth = measures.getCellWidth();
     int cellChars = measures.getCellChars();
     for (long a = xaddr0; a < xaddr1; a += cols, baseY += dy) {
-      final var label = toHex(a, labelChars);
+      final java.lang.String label = toHex(a, labelChars);
       gfx.setFont(labelFont);
       gfx.drawString(
           label, baseX - labelWidth + (labelWidth - labelFm.stringWidth(label)) / 2, baseY);
@@ -181,8 +181,8 @@ public class HexEditor extends JComponent implements Scrollable {
       long b = a;
       for (int j = 0; j < cols; j++, b++) {
         if (b >= addr0 && b <= addr1) {
-          final var val = toHex(model.get(b), cellChars);
-          final var x = measures.toX(b) + (cellWidth - baseFm.stringWidth(val)) / 2;
+          final java.lang.String val = toHex(model.get(b), cellChars);
+          final int x = measures.toX(b) + (cellWidth - baseFm.stringWidth(val)) / 2;
           gfx.drawString(val, x, baseY);
         }
       }
@@ -234,7 +234,7 @@ public class HexEditor extends JComponent implements Scrollable {
   }
 
   private String toHex(long value, int chars) {
-    final var ret = String.format("%0" + chars + "x", value);
+    final java.lang.String ret = String.format("%0" + chars + "x", value);
     return (ret.length() > chars) ? ret.substring(ret.length() - chars) : ret;
   }
 

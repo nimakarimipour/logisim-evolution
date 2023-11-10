@@ -67,8 +67,8 @@ public abstract class AbstractComponentFactory implements ComponentFactory {
   @Override
   public void drawGhost(
       ComponentDrawContext context, Color color, int x, int y, AttributeSet attrs) {
-    final var g = context.getGraphics();
-    final var bds = getOffsetBounds(attrs);
+    final java.awt.Graphics g = context.getGraphics();
+    final com.cburch.logisim.data.Bounds bds = getOffsetBounds(attrs);
     g.setColor(color);
     GraphicsUtil.switchToWidth(g, 2);
     g.drawRect(x + bds.getX(), y + bds.getY(), bds.getWidth(), bds.getHeight());
@@ -143,7 +143,7 @@ public abstract class AbstractComponentFactory implements ComponentFactory {
 
   @Override
   public void paintIcon(ComponentDrawContext context, int x, int y, AttributeSet attrs) {
-    final var g = context.getGraphics();
+    final java.awt.Graphics g = context.getGraphics();
     if (toolIcon != null) {
       toolIcon.paintIcon(context.getDestination(), g, x + 2, y + 2);
     } else {

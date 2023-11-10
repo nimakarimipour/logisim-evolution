@@ -58,7 +58,7 @@ public class SocPio extends SocInstanceFactory {
   protected void configureNewInstance(Instance instance) {
     instance.addAttributeListener();
     updatePorts(instance);
-    final var bds = instance.getBounds();
+    final com.cburch.logisim.data.Bounds bds = instance.getBounds();
     instance.setTextField(
         StdAttr.LABEL,
         StdAttr.LABEL_FONT,
@@ -69,14 +69,14 @@ public class SocPio extends SocInstanceFactory {
   }
 
   private void updatePorts(Instance instance) {
-    final var nrBits = instance.getAttributeValue(StdAttr.WIDTH).getWidth();
+    final int nrBits = instance.getAttributeValue(StdAttr.WIDTH).getWidth();
     int nrOfPorts = nrBits;
-    final var dir = instance.getAttributeValue(PioAttributes.PIO_DIRECTION);
-    final var hasIrq = hasIrqPin(instance.getAttributeSet());
+    final com.cburch.logisim.data.AttributeOption dir = instance.getAttributeValue(PioAttributes.PIO_DIRECTION);
+    final boolean hasIrq = hasIrqPin(instance.getAttributeSet());
     if (dir == PioAttributes.PORT_INOUT) nrOfPorts *= 2;
     int index = hasIrq ? 2 : 1;
     nrOfPorts += index;
-    final var ps = new Port[nrOfPorts];
+    final com.cburch.logisim.instance.Port[] ps = new Port[nrOfPorts];
     if (hasIrq) {
       ps[IRQ_INDEX] = new Port(20, 0, Port.OUTPUT, 1);
       ps[IRQ_INDEX].setToolTip(S.getter("SocPioIrqOutput"));
@@ -93,7 +93,7 @@ public class SocPio extends SocInstanceFactory {
     if (dir == PioAttributes.PORT_INOUT
         || dir == PioAttributes.PORT_OUTPUT
         || dir == PioAttributes.PORT_BIDIR) {
-      final var portType = (dir == PioAttributes.PORT_BIDIR) ? Port.INOUT : Port.OUTPUT;
+      final java.lang.String portType = (dir == PioAttributes.PORT_BIDIR) ? Port.INOUT : Port.OUTPUT;
       for (int b = 0; b < nrBits; b++) {
         ps[index + b] = new Port(370 - b * 10, 0, portType, 1);
         ps[index + b].setToolTip(
@@ -125,7 +125,7 @@ public class SocPio extends SocInstanceFactory {
   private void paintPins(InstancePainter painter, Graphics2D g2, Location loc) {
     painter.drawPort(RESET_INDEX, "Reset", Direction.EAST);
     int nrBits = painter.getAttributeValue(StdAttr.WIDTH).getWidth();
-    final var dir = painter.getAttributeValue(PioAttributes.PIO_DIRECTION);
+    final com.cburch.logisim.data.AttributeOption dir = painter.getAttributeValue(PioAttributes.PIO_DIRECTION);
     int index = 1;
     if (hasIrqPin(painter.getAttributeSet())) {
       index++;
@@ -153,7 +153,7 @@ public class SocPio extends SocInstanceFactory {
         || dir == PioAttributes.PORT_BIDIR) {
       for (int b = 0; b < nrBits; b++) painter.drawPort(index + b);
       if (!painter.isPrintView()) {
-        final var name =
+        final java.lang.String name =
             (dir == PioAttributes.PORT_BIDIR) ? S.get("SocPioBidirs") : S.get("SocPioOutputs");
         g2.drawRect(loc.getX() + 40, loc.getY(), 340, 40);
         GraphicsUtil.drawCenteredText(g2, name, loc.getX() + 210, loc.getY() + 25);
@@ -172,18 +172,18 @@ public class SocPio extends SocInstanceFactory {
 
   @Override
   public void propagate(InstanceState state) {
-    final var myState = state.getAttributeValue(PioAttributes.PIO_STATE);
+    final com.cburch.logisim.soc.pio.PioState myState = state.getAttributeValue(PioAttributes.PIO_STATE);
     myState.handleOperations(state, false);
   }
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var g2 = (Graphics2D) painter.getGraphics();
-    final var loc = painter.getLocation();
+    final java.awt.Graphics2D g2 = (Graphics2D) painter.getGraphics();
+    final com.cburch.logisim.data.Location loc = painter.getLocation();
     painter.drawBounds();
     painter.drawLabel();
     paintPins(painter, g2, loc);
-    final var f = g2.getFont();
+    final java.awt.Font f = g2.getFont();
     g2.setFont(StdAttr.DEFAULT_LABEL_FONT);
     GraphicsUtil.drawCenteredText(g2, "SOC parallel IO", loc.getX() + 210, loc.getY() + 50);
     g2.setFont(f);

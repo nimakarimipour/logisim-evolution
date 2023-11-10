@@ -46,7 +46,7 @@ public class BcdToSevenSegmentDisplay extends InstanceFactory {
     super(_ID, S.getter("BCD2SevenSegment"), new BcdToSevenSegmentDisplayHdlGeneratorFactory());
     setAttributes(new Attribute[] {StdAttr.DUMMY}, new Object[] {""});
     setOffsetBounds(Bounds.create(-10, -20, 50, 100));
-    final var ps = new Port[8];
+    final com.cburch.logisim.instance.Port[] ps = new Port[8];
     ps[SEGMENT_A] = new Port(20, 0, Port.OUTPUT, 1);
     ps[SEGMENT_B] = new Port(30, 0, Port.OUTPUT, 1);
     ps[SEGMENT_C] = new Port(20, 60, Port.OUTPUT, 1);
@@ -68,8 +68,8 @@ public class BcdToSevenSegmentDisplay extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var gfx = painter.getGraphics();
-    final var myBounds = painter.getBounds();
+    final java.awt.Graphics gfx = painter.getGraphics();
+    final com.cburch.logisim.data.Bounds myBounds = painter.getBounds();
     if (!painter.isPrintView()) gfx.setColor(Color.BLUE);
     painter.drawRectangle(myBounds, "");
     painter.drawPort(BCD_IN, "BCD", Direction.SOUTH);
@@ -92,9 +92,9 @@ public class BcdToSevenSegmentDisplay extends InstanceFactory {
    * @param portValues Binary encoded port values (0/1). Segment A is bit 0, segment G is bit 6.
    */
   private void setKnown(InstanceState state, int portValues) {
-    final var mask = 0b00000001;
+    final int mask = 0b00000001;
     for (int idx = SEGMENT_A; idx <= SEGMENT_G; idx++) {
-      final var value = (portValues & mask) == 0 ? 0 : 1;
+      final int value = (portValues & mask) == 0 ? 0 : 1;
       state.setPort(idx, Value.createKnown(BitWidth.create(1), value), PER_DELAY);
       portValues >>= 1;
     }

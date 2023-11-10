@@ -59,7 +59,7 @@ public class VhdlEntityAttributes extends AbstractAttributeSet {
 
   @Override
   protected void copyInto(AbstractAttributeSet dest) {
-    final var attr = (VhdlEntityAttributes) dest;
+    final com.cburch.logisim.std.hdl.VhdlEntityAttributes attr = (VhdlEntityAttributes) dest;
     attr.labelFont = labelFont;
     attr.content = content.clone();
   }
@@ -94,12 +94,12 @@ public class VhdlEntityAttributes extends AbstractAttributeSet {
   @Override
   public <V> void setValue(Attribute<V> attr, V value) {
     if (attr == VhdlEntityComponent.CONTENT_ATTR) {
-      final var newContent = (VhdlContentComponent) value;
+      final com.cburch.logisim.std.hdl.VhdlContentComponent newContent = (VhdlContentComponent) value;
       if (!content.equals(newContent)) content = newContent;
       fireAttributeValueChanged(attr, value, null);
     }
     if (attr == StdAttr.LABEL && value instanceof String newLabel) {
-      final var oldlabel = label;
+      final java.lang.String oldlabel = label;
       if (label.equals(newLabel)) return;
       label = newLabel;
       fireAttributeValueChanged(attr, value, (V) oldlabel);
@@ -110,13 +110,13 @@ public class VhdlEntityAttributes extends AbstractAttributeSet {
       fireAttributeValueChanged(attr, value, null);
     }
     if (attr == StdAttr.LABEL_VISIBILITY) {
-      final var newVis = (Boolean) value;
+      final java.lang.Boolean newVis = (Boolean) value;
       if (labelVisible.equals(newVis)) return;
       labelVisible = newVis;
       fireAttributeValueChanged(attr, value, null);
     }
     if (attr == VhdlSimConstants.SIM_NAME_ATTR) {
-      final var name = (String) value;
+      final java.lang.String name = (String) value;
       if (value.equals(simName)) return;
       simName = name;
       fireAttributeValueChanged(attr, value, null);

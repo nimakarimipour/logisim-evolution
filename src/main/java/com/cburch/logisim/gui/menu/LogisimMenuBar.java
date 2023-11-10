@@ -125,7 +125,7 @@ public class LogisimMenuBar extends JMenuBar {
   }
 
   public void addActionListener(LogisimMenuItem which, ActionListener l) {
-    final var item = menuItems.get(which);
+    final com.cburch.logisim.gui.menu.MenuItem item = menuItems.get(which);
     if (item != null) item.addActionListener(l);
   }
 
@@ -134,18 +134,18 @@ public class LogisimMenuBar extends JMenuBar {
   }
 
   public void doAction(LogisimMenuItem which) {
-    final var item = menuItems.get(which);
+    final com.cburch.logisim.gui.menu.MenuItem item = menuItems.get(which);
     item.actionPerformed(new ActionEvent(item, ActionEvent.ACTION_PERFORMED, which.toString()));
   }
 
   public KeyStroke getAccelerator(LogisimMenuItem which) {
-    final var item = menuItems.get(which);
+    final com.cburch.logisim.gui.menu.MenuItem item = menuItems.get(which);
     return item == null ? null : item.getAccelerator();
   }
 
   void fireEnableChanged() {
-    final var e = new ChangeEvent(this);
-    for (final var listener : enableListeners) {
+    final javax.swing.event.ChangeEvent e = new ChangeEvent(this);
+    for (final javax.swing.event.ChangeListener listener : enableListeners) {
       listener.stateChanged(e);
     }
   }
@@ -173,7 +173,7 @@ public class LogisimMenuBar extends JMenuBar {
   }
 
   public boolean isEnabled(LogisimMenuItem item) {
-    final var menuItem = menuItems.get(item);
+    final com.cburch.logisim.gui.menu.MenuItem menuItem = menuItems.get(item);
     return menuItem != null && menuItem.isEnabled();
   }
 
@@ -182,7 +182,7 @@ public class LogisimMenuBar extends JMenuBar {
   }
 
   public void removeActionListener(LogisimMenuItem which, ActionListener l) {
-    final var item = menuItems.get(which);
+    final com.cburch.logisim.gui.menu.MenuItem item = menuItems.get(which);
     if (item != null) item.removeActionListener(l);
   }
 
@@ -195,7 +195,7 @@ public class LogisimMenuBar extends JMenuBar {
   }
 
   public void setEnabled(LogisimMenuItem which, boolean value) {
-    final var item = menuItems.get(which);
+    final com.cburch.logisim.gui.menu.MenuItem item = menuItems.get(which);
     if (item != null) item.setEnabled(value);
   }
 

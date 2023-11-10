@@ -62,8 +62,8 @@ public abstract class DownloadBase {
   }
 
   protected boolean mapDesign(String circuitName) {
-    final var myFile = myProject.getLogisimFile();
-    final var rootSheet = myFile.getCircuit(circuitName);
+    final com.cburch.logisim.file.LogisimFile myFile = myProject.getLogisimFile();
+    final com.cburch.logisim.circuit.Circuit rootSheet = myFile.getCircuit(circuitName);
     if (rootSheet == null) {
       Reporter.report.addError("INTERNAL ERROR: Circuit not found ?!?");
       return false;
@@ -73,9 +73,9 @@ public abstract class DownloadBase {
       return false;
     }
 
-    final var boardComponents = myBoardInformation.getComponents();
+    final java.util.Map<java.lang.String,java.util.ArrayList<java.lang.Integer>> boardComponents = myBoardInformation.getComponents();
     Reporter.report.addInfo("The Board " + myBoardInformation.getBoardName() + " has:");
-    for (final var key : boardComponents.keySet()) {
+    for (final java.lang.String key : boardComponents.keySet()) {
       Reporter.report.addInfo(boardComponents.get(key).size() + " " + key + "(s)");
     }
     /*
@@ -98,7 +98,7 @@ public abstract class DownloadBase {
 
   protected boolean mapDesignCheckIOs() {
     if (myMappableResources.isCompletelyMapped()) return true;
-    final var confirm =
+    final int confirm =
         OptionPane.showConfirmDialog(
             myProject.getFrame(),
             S.get("FpgaNotCompleteMap"),
@@ -108,8 +108,8 @@ public abstract class DownloadBase {
   }
 
   protected boolean performDrc(String circuitName, String HDLType) {
-    final var root = myProject.getLogisimFile().getCircuit(circuitName);
-    final var sheetNames = new ArrayList<String>();
+    final com.cburch.logisim.circuit.Circuit root = myProject.getLogisimFile().getCircuit(circuitName);
+    final java.util.ArrayList<java.lang.String> sheetNames = new ArrayList<String>();
     int drcResult = Netlist.DRC_PASSED;
     if (root == null) {
       drcResult |= Netlist.DRC_ERROR;
@@ -143,8 +143,8 @@ public abstract class DownloadBase {
               + "\"");
       return false;
     }
-    final var projectDir = getProjDir(selectedCircuit);
-    final var rootSheet = myProject.getLogisimFile().getCircuit(selectedCircuit);
+    final java.lang.String projectDir = getProjDir(selectedCircuit);
+    final com.cburch.logisim.circuit.Circuit rootSheet = myProject.getLogisimFile().getCircuit(selectedCircuit);
     if (!cleanDirectory(projectDir)) {
       Reporter.report.addFatalError(
           "Unable to cleanup old project files in directory: \"" + projectDir + "\"");
@@ -154,7 +154,7 @@ public abstract class DownloadBase {
       Reporter.report.addFatalError("Unable to create directory: \"" + projectDir + "\"");
       return false;
     }
-    for (final var hdlPath : HDLPaths) {
+    for (final java.lang.String hdlPath : HDLPaths) {
       if (!genDirectory(projectDir + hdlPath)) {
         Reporter.report.addFatalError(
             "Unable to create directory: \"" + projectDir + hdlPath + "\"");
@@ -162,7 +162,7 @@ public abstract class DownloadBase {
       }
     }
 
-    final var generatedHDLComponents = new HashSet<String>();
+    final java.util.HashSet<java.lang.String> generatedHDLComponents = new HashSet<String>();
     com.cburch.logisim.fpga.hdlgenerator.HdlGeneratorFactory worker = rootSheet.getSubcircuitFactory().getHDLGenerator(rootSheet.getStaticAttributes());
     if (worker == null) {
       Reporter.report.addFatalError("Internal error on HDL generation, null pointer exception");
@@ -173,7 +173,7 @@ public abstract class DownloadBase {
     }
     /* Here we generate the top-level shell */
     if (rootSheet.getNetList().numberOfClockTrees() > 0) {
-      final var ticker =
+      final com.cburch.logisim.fpga.hdlgenerator.TickComponentHdlGeneratorFactory ticker =
           new TickComponentHdlGeneratorFactory(
               myBoardInformation.fpga.getClockFrequency(),
               frequency /* , boardFreq.isSelected() */);
@@ -192,7 +192,7 @@ public abstract class DownloadBase {
         return false;
       }
 
-      final var clockGen =
+      final com.cburch.logisim.fpga.hdlgenerator.HdlGeneratorFactory clockGen =
           rootSheet
               .getNetList()
               .getAllClockSources()
@@ -200,7 +200,7 @@ public abstract class DownloadBase {
               .getFactory()
               .getHDLGenerator(
                   rootSheet.getNetList().getAllClockSources().get(0).getAttributeSet());
-      final var compName =
+      final java.lang.String compName =
           rootSheet.getNetList().getAllClockSources().get(0).getFactory().getHDLName(null);
       if (!Hdl.writeEntity(
           projectDir + clockGen.getRelativeDirectory(),
@@ -215,14 +215,14 @@ public abstract class DownloadBase {
         return false;
       }
     }
-    final var top =
+    final com.cburch.logisim.fpga.hdlgenerator.ToplevelHdlGeneratorFactory top =
         new ToplevelHdlGeneratorFactory(
             myBoardInformation.fpga.getClockFrequency(), frequency, rootSheet, myMappableResources);
     if (top.hasLedArray()) {
       for (java.lang.String type : LedArrayDriving.DRIVING_STRINGS) {
         if (top.hasLedArrayType(type)) {
           worker = LedArrayGenericHdlGeneratorFactory.getSpecificHDLGenerator(type);
-          final var name = LedArrayGenericHdlGeneratorFactory.getSpecificHDLName(type);
+          final java.lang.String name = LedArrayGenericHdlGeneratorFactory.getSpecificHDLName(type);
           if (worker != null && name != null) {
             if (!Hdl.writeEntity(
                 projectDir + worker.getRelativeDirectory(),
@@ -270,9 +270,9 @@ public abstract class DownloadBase {
       ArrayList<String> entities,
       ArrayList<String> behaviors,
       String type) {
-    final var dir = new File(path);
-    final var files = dir.listFiles();
-    for (final var thisFile : files) {
+    final java.io.File dir = new File(path);
+    final java.io.File[] files = dir.listFiles();
+    for (final java.io.File thisFile : files) {
       if (thisFile.isDirectory()) {
         if (path.endsWith(File.separator)) {
           getVhdlFiles(sourcePath, path + thisFile.getName(), entities, behaviors, type);
@@ -281,9 +281,9 @@ public abstract class DownloadBase {
               sourcePath, path + File.separator + thisFile.getName(), entities, behaviors, type);
         }
       } else {
-        final var entityMask =
+        final java.lang.String entityMask =
             (type.equals(HdlGeneratorFactory.VHDL)) ? FileWriter.ENTITY_EXTENSION + ".vhd" : ".v";
-        final var architectureMask =
+        final java.lang.String architectureMask =
             (type.equals(HdlGeneratorFactory.VHDL))
                 ? FileWriter.ARCHITECTURE_EXTENSION + ".vhd"
                 : "#not_searched#";
@@ -297,7 +297,7 @@ public abstract class DownloadBase {
   }
 
   public static String getDirectoryLocation(String projectBase, int identifier) {
-    final var base =
+    final java.lang.String base =
         (projectBase.endsWith(File.separator)) ? projectBase : projectBase + File.separator;
     if (identifier >= HDLPaths.length) return null;
     return base + HDLPaths[identifier] + File.separator;
@@ -305,7 +305,7 @@ public abstract class DownloadBase {
 
   private boolean cleanDirectory(String dir) {
     try {
-      final var thisDir = new File(dir);
+      final java.io.File thisDir = new File(dir);
       if (!thisDir.exists()) return true;
       for (java.io.File theFiles : thisDir.listFiles()) {
         if (theFiles.isDirectory()) {
@@ -323,9 +323,9 @@ public abstract class DownloadBase {
 
   public static Map<String, String> getLedArrayMaps(
       MappableResourcesContainer maps, Netlist nets, BoardInformation board) {
-    final var ledArrayMaps = new HashMap<String, String>();
+    final java.util.HashMap<java.lang.String,java.lang.String> ledArrayMaps = new HashMap<String, String>();
     boolean hasMappedClockedArray = false;
-    for (final var comp : maps.getIoComponentInformation().getComponents()) {
+    for (final com.cburch.logisim.fpga.data.FpgaIoInformationContainer comp : maps.getIoComponentInformation().getComponents()) {
       if (comp.getType().equals(IoComponentTypes.LedArray)) {
         if (comp.hasMap()) {
           hasMappedClockedArray |=

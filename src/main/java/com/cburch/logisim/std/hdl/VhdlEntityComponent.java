@@ -54,7 +54,7 @@ public class VhdlEntityComponent extends InstanceFactory {
 
     @Override
     public java.awt.Component getCellEditor(Window source, VhdlContentComponent value) {
-      final var proj = (source instanceof Frame frame) ? frame.getProject() : null;
+      final com.cburch.logisim.proj.Project proj = (source instanceof Frame frame) ? frame.getProject() : null;
       return VhdlEntityAttributes.getContentEditor(source, value, proj);
     }
 
@@ -113,22 +113,22 @@ public class VhdlEntityComponent extends InstanceFactory {
 
   public void setSimName(AttributeSet attrs, String SName) {
     if (attrs == null) return;
-    final var atrs = (VhdlEntityAttributes) attrs;
-    final var label = (!attrs.getValue(StdAttr.LABEL).equals("")) ? getHDLTopName(attrs) : SName;
+    final com.cburch.logisim.std.hdl.VhdlEntityAttributes atrs = (VhdlEntityAttributes) attrs;
+    final java.lang.String label = (!attrs.getValue(StdAttr.LABEL).equals("")) ? getHDLTopName(attrs) : SName;
     if (atrs.containsAttribute(VhdlSimConstants.SIM_NAME_ATTR))
       atrs.setValue(VhdlSimConstants.SIM_NAME_ATTR, label);
   }
 
   public String getSimName(AttributeSet attrs) {
     if (attrs == null) return null;
-    final var atrs = (VhdlEntityAttributes) attrs;
+    final com.cburch.logisim.std.hdl.VhdlEntityAttributes atrs = (VhdlEntityAttributes) attrs;
     return atrs.getValue(VhdlSimConstants.SIM_NAME_ATTR);
   }
 
   @Override
   protected void configureNewInstance(Instance instance) {
-    final var content = instance.getAttributeValue(CONTENT_ATTR);
-    final var listener = new VhdlEntityListener(instance);
+    final com.cburch.logisim.std.hdl.VhdlContentComponent content = instance.getAttributeValue(CONTENT_ATTR);
+    final com.cburch.logisim.std.hdl.VhdlEntityComponent.VhdlEntityListener listener = new VhdlEntityListener(instance);
 
     contentListeners.put(instance, listener);
     content.addHdlModelListener(listener);
@@ -159,9 +159,9 @@ public class VhdlEntityComponent extends InstanceFactory {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    final var content = attrs.getValue(CONTENT_ATTR);
-    final var nbInputs = content.getInputsNumber();
-    final var nbOutputs = content.getOutputsNumber();
+    final com.cburch.logisim.std.hdl.VhdlContentComponent content = attrs.getValue(CONTENT_ATTR);
+    final int nbInputs = content.getInputsNumber();
+    final int nbOutputs = content.getOutputsNumber();
 
     return Bounds.create(0, 0, WIDTH, Math.max(nbInputs, nbOutputs) * PORT_GAP + HEIGHT);
   }
@@ -176,13 +176,13 @@ public class VhdlEntityComponent extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var g = painter.getGraphics();
-    final var content = painter.getAttributeValue(CONTENT_ATTR);
+    final java.awt.Graphics g = painter.getGraphics();
+    final com.cburch.logisim.std.hdl.VhdlContentComponent content = painter.getAttributeValue(CONTENT_ATTR);
     java.awt.FontMetrics metric = g.getFontMetrics();
 
-    final var bds = painter.getBounds();
-    final var x0 = bds.getX() + (bds.getWidth() / 2);
-    final var y0 = bds.getY() + metric.getHeight() + 12;
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+    final int x0 = bds.getX() + (bds.getWidth() / 2);
+    final int y0 = bds.getY() + metric.getHeight() + 12;
     GraphicsUtil.drawText(
         g,
         StringUtil.resizeString(content.getName(), metric, WIDTH),
@@ -191,9 +191,9 @@ public class VhdlEntityComponent extends InstanceFactory {
         GraphicsUtil.H_CENTER,
         GraphicsUtil.V_BOTTOM);
 
-    final var glbLabel = painter.getAttributeValue(StdAttr.LABEL);
+    final java.lang.String glbLabel = painter.getAttributeValue(StdAttr.LABEL);
     if (glbLabel != null) {
-      final var font = g.getFont();
+      final java.awt.Font font = g.getFont();
       g.setFont(painter.getAttributeValue(StdAttr.LABEL_FONT));
       GraphicsUtil.drawCenteredText(
           g, glbLabel, bds.getX() + bds.getWidth() / 2, bds.getY() - g.getFont().getSize());
@@ -204,8 +204,8 @@ public class VhdlEntityComponent extends InstanceFactory {
     g.setFont(g.getFont().deriveFont((float) 10));
     metric = g.getFontMetrics();
 
-    final var inputs = content.getInputs();
-    final var outputs = content.getOutputs();
+    final com.cburch.logisim.instance.Port[] inputs = content.getInputs();
+    final com.cburch.logisim.instance.Port[] outputs = content.getOutputs();
 
     for (int i = 0; i < inputs.length; i++)
       GraphicsUtil.drawText(
@@ -245,9 +245,9 @@ public class VhdlEntityComponent extends InstanceFactory {
 
       VhdlSimulatorTop vhdlSimulator = state.getProject().getVhdlSimulator();
 
-      for (final var p : state.getInstance().getPorts()) {
-        final var index = state.getPortIndex(p);
-        final var val = state.getPortValue(index);
+      for (final com.cburch.logisim.instance.Port p : state.getInstance().getPorts()) {
+        final int index = state.getPortIndex(p);
+        final com.cburch.logisim.data.Value val = state.getPortValue(index);
 
         String vhdlEntityName = getSimName(state.getAttributeSet());
 
@@ -273,14 +273,14 @@ public class VhdlEntityComponent extends InstanceFactory {
           && server_response.length() > 0
           && !server_response.equals("sync")) {
 
-        final var parameters = server_response.split(":");
+        final java.lang.String[] parameters = server_response.split(":");
 
-        final var busValue = parameters[1];
+        final java.lang.String busValue = parameters[1];
 
-        final var vector_values = new Value[busValue.length()];
+        final com.cburch.logisim.data.Value[] vector_values = new Value[busValue.length()];
 
         int k = busValue.length() - 1;
-        for (final var bit : busValue.toCharArray()) {
+        for (final char bit : busValue.toCharArray()) {
           try {
             switch (Character.getNumericValue(bit)) {
               case 0 -> vector_values[k] = Value.FALSE;
@@ -299,12 +299,12 @@ public class VhdlEntityComponent extends InstanceFactory {
       /* VhdlSimulation stopped/disabled */
     } else {
 
-      for (final var p : state.getInstance().getPorts()) {
+      for (final com.cburch.logisim.instance.Port p : state.getInstance().getPorts()) {
         int index = state.getPortIndex(p);
 
         /* If it is an output */
         if (p.getType() == 2) {
-          final var vector_values = new Value[p.getFixedBitWidth().getWidth()];
+          final com.cburch.logisim.data.Value[] vector_values = new Value[p.getFixedBitWidth().getWidth()];
           for (int k = 0; k < p.getFixedBitWidth().getWidth(); k++) {
             vector_values[k] = Value.UNKNOWN;
           }

@@ -44,7 +44,7 @@ class ToolbarButton extends JComponent implements BaseMouseListenerContract {
 
   @Override
   public Dimension getPreferredSize() {
-    final var dim = item.getDimension(toolbar.getOrientation());
+    final java.awt.Dimension dim = item.getDimension(toolbar.getOrientation());
     dim.width += 2 * BORDER;
     dim.height += 2 * BORDER;
     return dim;
@@ -93,14 +93,14 @@ class ToolbarButton extends JComponent implements BaseMouseListenerContract {
   public void paintComponent(Graphics g) {
     if (toolbar.getPressed() == this) {
       if (item instanceof ToolbarClickableItem clickableItem) {
-        final var g2 = g.create();
+        final java.awt.Graphics g2 = g.create();
         g2.translate(BORDER, BORDER);
         clickableItem.paintPressedIcon(ToolbarButton.this, g2);
         g2.dispose();
         return;
       }
-      final var dim = item.getDimension(toolbar.getOrientation());
-      final var defaultColor = g.getColor();
+      final java.awt.Dimension dim = item.getDimension(toolbar.getOrientation());
+      final java.awt.Color defaultColor = g.getColor();
       GraphicsUtil.switchToWidth(g, 2);
       g.setColor(Color.GRAY);
       g.fillRect(BORDER, BORDER, dim.width, dim.height);
@@ -108,14 +108,14 @@ class ToolbarButton extends JComponent implements BaseMouseListenerContract {
       g.setColor(defaultColor);
     }
 
-    final var g2 = g.create();
+    final java.awt.Graphics g2 = g.create();
     g2.translate(BORDER, BORDER);
     item.paintIcon(ToolbarButton.this, g2);
     g2.dispose();
 
     // draw selection indicator
     if (toolbar.getToolbarModel().isSelected(item)) {
-      final var dim = item.getDimension(toolbar.getOrientation());
+      final java.awt.Dimension dim = item.getDimension(toolbar.getOrientation());
       GraphicsUtil.switchToWidth(g, 2);
       g.setColor(Color.BLACK);
       g.drawRect(BORDER, BORDER, dim.width, dim.height);

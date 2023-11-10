@@ -35,9 +35,9 @@ public class Ttl7464 extends AbstractTtlGate {
   @Override
   public void paintInternal(InstancePainter painter, int x, int y, int height, boolean up) {
     super.paintBase(painter, false, false);
-    final var isIEC = AppPreferences.GATE_SHAPE.get().equals(AppPreferences.SHAPE_RECTANGULAR);
-    final var AndOffset = isIEC ? 10 : 0;
-    final var gfx = painter.getGraphics();
+    final boolean isIEC = AppPreferences.GATE_SHAPE.get().equals(AppPreferences.SHAPE_RECTANGULAR);
+    final int AndOffset = isIEC ? 10 : 0;
+    final java.awt.Graphics gfx = painter.getGraphics();
     Drawgates.paintOr(gfx, x + 125, y + 35, 10, isIEC ? 40 : 10, true, false);
     Drawgates.paintAnd(gfx, x + 105 + AndOffset, y + 20, 10, 10, false);
     Drawgates.paintAnd(gfx, x + 105 + AndOffset, y + 30, 10, 10, false);
@@ -85,14 +85,14 @@ public class Ttl7464 extends AbstractTtlGate {
 
   @Override
   public void propagateTtl(InstanceState state) {
-    final var val1 = state.getPortValue(1).and(state.getPortValue(2));
-    final var val2 = state.getPortValue(3).and(state.getPortValue(4).and(state.getPortValue(5)));
-    final var val3 = state.getPortValue(7).and(state.getPortValue(8));
-    final var val4 =
+    final com.cburch.logisim.data.Value val1 = state.getPortValue(1).and(state.getPortValue(2));
+    final com.cburch.logisim.data.Value val2 = state.getPortValue(3).and(state.getPortValue(4).and(state.getPortValue(5)));
+    final com.cburch.logisim.data.Value val3 = state.getPortValue(7).and(state.getPortValue(8));
+    final com.cburch.logisim.data.Value val4 =
         state
             .getPortValue(9)
             .and(state.getPortValue(10).and(state.getPortValue(11).and(state.getPortValue(0))));
-    final var val5 = val1.or(val2.or(val3.or(val4)));
+    final com.cburch.logisim.data.Value val5 = val1.or(val2.or(val3.or(val4)));
     state.setPort(6, val5.not(), 7);
   }
 }

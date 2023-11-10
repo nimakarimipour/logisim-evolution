@@ -37,15 +37,15 @@ public class LedShape extends DynamicElement {
 
   @Override
   public boolean contains(Location loc, boolean assumeFilled) {
-    final var x = bounds.getX();
-    final var y = bounds.getY();
-    final var w = bounds.getWidth();
-    final var h = bounds.getHeight();
-    final var qx = loc.getX();
-    final var qy = loc.getY();
-    final var dx = qx - (x + 0.5 * w);
-    final var dy = qy - (y + 0.5 * h);
-    final var sum = (dx * dx) / (w * w) + (dy * dy) / (h * h);
+    final int x = bounds.getX();
+    final int y = bounds.getY();
+    final int w = bounds.getWidth();
+    final int h = bounds.getHeight();
+    final int qx = loc.getX();
+    final int qy = loc.getY();
+    final double dx = qx - (x + 0.5 * w);
+    final double dy = qy - (y + 0.5 * h);
+    final double sum = (dx * dx) / (w * w) + (dy * dy) / (h * h);
 
     return sum <= 0.25;
   }
@@ -60,22 +60,22 @@ public class LedShape extends DynamicElement {
 
   @Override
   public void paintDynamic(Graphics g, CircuitState state) {
-    final var offColor = path.leaf().getAttributeSet().getValue(IoLibrary.ATTR_OFF_COLOR);
-    final var onColor = path.leaf().getAttributeSet().getValue(IoLibrary.ATTR_ON_COLOR);
-    final var x = bounds.getX() + 1;
-    final var y = bounds.getY() + 1;
-    final var w = bounds.getWidth() - 2;
-    final var h = bounds.getHeight() - 2;
+    final java.awt.Color offColor = path.leaf().getAttributeSet().getValue(IoLibrary.ATTR_OFF_COLOR);
+    final java.awt.Color onColor = path.leaf().getAttributeSet().getValue(IoLibrary.ATTR_ON_COLOR);
+    final int x = bounds.getX() + 1;
+    final int y = bounds.getY() + 1;
+    final int w = bounds.getWidth() - 2;
+    final int h = bounds.getHeight() - 2;
     GraphicsUtil.switchToWidth(g, strokeWidth);
     if (state == null) {
       g.setColor(offColor);
       g.fillOval(x, y, w, h);
       g.setColor(DynamicElement.COLOR);
     } else {
-      final var activ = path.leaf().getAttributeSet().getValue(IoLibrary.ATTR_ACTIVE);
+      final java.lang.Boolean activ = path.leaf().getAttributeSet().getValue(IoLibrary.ATTR_ACTIVE);
       Object desired = activ ? Value.TRUE : Value.FALSE;
-      final var data = (InstanceDataSingleton) getData(state);
-      final var val = data == null ? Value.FALSE : (Value) data.getValue();
+      final com.cburch.logisim.instance.InstanceDataSingleton data = (InstanceDataSingleton) getData(state);
+      final com.cburch.logisim.data.Value val = data == null ? Value.FALSE : (Value) data.getValue();
       g.setColor(val == desired ? onColor : offColor);
       g.fillOval(x, y, w, h);
       g.setColor(Color.darkGray);

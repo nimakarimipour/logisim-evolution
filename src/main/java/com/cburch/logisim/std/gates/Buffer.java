@@ -46,18 +46,18 @@ class Buffer extends InstanceFactory {
   // static methods - shared with other classes
   //
   static Value repair(InstanceState state, Value v) {
-    final var opts = state.getProject().getOptions().getAttributeSet();
+    final com.cburch.logisim.data.AttributeSet opts = state.getProject().getOptions().getAttributeSet();
     Object onUndefined = opts.getValue(Options.ATTR_GATE_UNDEFINED);
-    final var errorIfUndefined = onUndefined.equals(Options.GATE_UNDEFINED_ERROR);
+    final boolean errorIfUndefined = onUndefined.equals(Options.GATE_UNDEFINED_ERROR);
     Value repaired;
     if (errorIfUndefined) {
-      final var vw = v.getWidth();
-      final var w = state.getAttributeValue(StdAttr.WIDTH);
-      final var ww = w.getWidth();
+      final int vw = v.getWidth();
+      final com.cburch.logisim.data.BitWidth w = state.getAttributeValue(StdAttr.WIDTH);
+      final int ww = w.getWidth();
       if (vw == ww && v.isFullyDefined()) return v;
-      final var vs = new Value[w.getWidth()];
+      final com.cburch.logisim.data.Value[] vs = new Value[w.getWidth()];
       for (int i = 0; i < vs.length; i++) {
-        final var ini = i < vw ? v.get(i) : Value.ERROR;
+        final com.cburch.logisim.data.Value ini = i < vw ? v.get(i) : Value.ERROR;
         vs[i] = ini.isFullyDefined() ? ini : Value.ERROR;
       }
       repaired = Value.create(vs);
@@ -103,21 +103,21 @@ class Buffer extends InstanceFactory {
   }
 
   private void configurePorts(Instance instance) {
-    final var facing = instance.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Direction facing = instance.getAttributeValue(StdAttr.FACING);
 
-    final var ports = new Port[2];
+    final com.cburch.logisim.instance.Port[] ports = new Port[2];
     ports[0] = new Port(0, 0, Port.OUTPUT, StdAttr.WIDTH);
-    final var out = Location.create(0, 0, true).translate(facing, -20);
+    final com.cburch.logisim.data.Location out = Location.create(0, 0, true).translate(facing, -20);
     ports[1] = new Port(out.getX(), out.getY(), Port.INPUT, StdAttr.WIDTH);
     instance.setPorts(ports);
   }
 
   @Override
   public String getHDLName(AttributeSet attrs) {
-    final var completeName = new StringBuilder();
+    final java.lang.StringBuilder completeName = new StringBuilder();
     completeName.append(CorrectLabel.getCorrectLabel(this.getName()).toUpperCase());
     completeName.append("_COMPONENT");
-    final var width = attrs.getValue(StdAttr.WIDTH);
+    final com.cburch.logisim.data.BitWidth width = attrs.getValue(StdAttr.WIDTH);
     if (width.getWidth() > 1) completeName.append("_BUS");
     return completeName.toString();
   }
@@ -126,9 +126,9 @@ class Buffer extends InstanceFactory {
   public Object getInstanceFeature(final Instance instance, Object key) {
     if (key == ExpressionComputer.class) {
       return (ExpressionComputer) expressionMap -> {
-        final var width = instance.getAttributeValue(StdAttr.WIDTH).getWidth();
+        final int width = instance.getAttributeValue(StdAttr.WIDTH).getWidth();
         for (int b = 0; b < width; b++) {
-          final var e = expressionMap.get(instance.getPortLocation(1), b);
+          final com.cburch.logisim.analyze.model.Expression e = expressionMap.get(instance.getPortLocation(1), b);
           if (e != null) {
             expressionMap.put(instance.getPortLocation(0), b, e);
           }
@@ -140,7 +140,7 @@ class Buffer extends InstanceFactory {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    final var facing = attrs.getValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Direction facing = attrs.getValue(StdAttr.FACING);
     if (facing == Direction.SOUTH) return Bounds.create(-9, -20, 18, 20);
     if (facing == Direction.NORTH) return Bounds.create(-9, 0, 18, 20);
     if (facing == Direction.WEST) return Bounds.create(0, -9, 20, 18);
@@ -164,11 +164,11 @@ class Buffer extends InstanceFactory {
   }
 
   private void paintBase(InstancePainter painter) {
-    final var facing = painter.getAttributeValue(StdAttr.FACING);
-    final var loc = painter.getLocation();
-    final var x = loc.getX();
-    final var y = loc.getY();
-    final var g = painter.getGraphics();
+    final com.cburch.logisim.data.Direction facing = painter.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Location loc = painter.getLocation();
+    final int x = loc.getX();
+    final int y = loc.getY();
+    final java.awt.Graphics g = painter.getGraphics();
     g.translate(x, y);
     double rotate = 0.0d;
     if (facing != Direction.EAST && g instanceof Graphics2D g2d) {
@@ -177,13 +177,13 @@ class Buffer extends InstanceFactory {
     }
 
     GraphicsUtil.switchToWidth(g, 2);
-    final var shape = painter.getGateShape();
+    final java.lang.Object shape = painter.getGateShape();
     if (shape == AppPreferences.SHAPE_RECTANGULAR) {
       g.drawRect(-19, -9, 18, 18);
       GraphicsUtil.drawCenteredText(g, "1", -10, 0);
     } else {
-      final var xp = new int[4];
-      final var yp = new int[4];
+      final int[] xp = new int[4];
+      final int[] yp = new int[4];
       xp[0] = 0;
       yp[0] = 0;
       xp[1] = -19;
@@ -210,7 +210,7 @@ class Buffer extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     g.setColor(Color.BLACK);
     paintBase(painter);
     painter.drawPorts();
@@ -219,13 +219,13 @@ class Buffer extends InstanceFactory {
 
   @Override
   public void propagate(InstanceState state) {
-    final var in = Buffer.repair(state, state.getPortValue(1));
+    final com.cburch.logisim.data.Value in = Buffer.repair(state, state.getPortValue(1));
     state.setPort(0, in, GateAttributes.DELAY);
   }
 
   @Override
   public void paintIcon(InstancePainter painter) {
-    final var g = (Graphics2D) painter.getGraphics();
+    final java.awt.Graphics2D g = (Graphics2D) painter.getGraphics();
     if (painter.getGateShape() == AppPreferences.SHAPE_RECTANGULAR)
       AbstractGate.paintIconIEC(g, "1", false, true);
     else

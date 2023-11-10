@@ -123,16 +123,16 @@ public class Buzzer extends InstanceFactory {
 
   public static void stopBuzzerSound(Component comp, CircuitState circState) {
     // static method, have to check if the comp parameter is a Buzzer or contains it
-    final var compFact = comp.getFactory();
+    final com.cburch.logisim.comp.ComponentFactory compFact = comp.getFactory();
     // if it is a buzzer, stop its sound thread
     if (compFact instanceof Buzzer) {
-      final var d = (Data) circState.getData(comp);
+      final com.cburch.logisim.std.io.extra.Buzzer.Data d = (Data) circState.getData(comp);
       if (d != null && d.thread.isAlive()) {
         d.isOn.set(false);
       }
     } else if (compFact instanceof SubcircuitFactory) {
       // if it's a subcircuit search other buzzer's instances inside it and stop all sound threads
-      for (final var subComponent :
+      for (final com.cburch.logisim.comp.Component subComponent :
           ((SubcircuitFactory) comp.getFactory()).getSubcircuit().getComponents()) {
         // recursive if there are other subcircuits
         stopBuzzerSound(subComponent, ((SubcircuitFactory) compFact).getSubstate(circState, comp));
@@ -156,7 +156,7 @@ public class Buzzer extends InstanceFactory {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    final var dir = attrs.getValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Direction dir = attrs.getValue(StdAttr.FACING);
     return (dir == Direction.EAST || dir == Direction.WEST)
         ? Bounds.create(-40, -20, 40, 40).rotate(Direction.EAST, dir, 0, 0)
         : Bounds.create(-20, 0, 40, 40).rotate(Direction.NORTH, dir, 0, 0);
@@ -179,20 +179,20 @@ public class Buzzer extends InstanceFactory {
 
   @Override
   public void paintGhost(InstancePainter painter) {
-    final var b = painter.getBounds();
-    final var g = painter.getGraphics();
+    final com.cburch.logisim.data.Bounds b = painter.getBounds();
+    final java.awt.Graphics g = painter.getGraphics();
     g.setColor(Color.GRAY);
     g.drawOval(b.getX(), b.getY(), 40, 40);
   }
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var g = painter.getGraphics();
-    final var b = painter.getBounds();
-    final var x = b.getX();
-    final var y = b.getY();
-    final var height = (byte) b.getHeight();
-    final var width = (byte) b.getWidth();
+    final java.awt.Graphics g = painter.getGraphics();
+    final com.cburch.logisim.data.Bounds b = painter.getBounds();
+    final int x = b.getX();
+    final int y = b.getY();
+    final byte height = (byte) b.getHeight();
+    final byte width = (byte) b.getWidth();
     g.setColor(Color.DARK_GRAY);
     g.fillOval(x, y, 40, 40);
     g.setColor(Color.GRAY);
@@ -222,7 +222,7 @@ public class Buzzer extends InstanceFactory {
 
   @Override
   public void propagate(InstanceState state) {
-    final var data = getData(state);
+    final com.cburch.logisim.std.io.extra.Buzzer.Data data = getData(state);
     boolean active = state.getPortValue(ENABLE) == Value.TRUE;
     data.isOn.set(active);
     int freq = (int) state.getPortValue(FREQ).toLongValue();
@@ -243,8 +243,8 @@ public class Buzzer extends InstanceFactory {
     data.smoothLevel = state.getAttributeValue(SMOOTH_LEVEL);
     data.smoothWidth = state.getAttributeValue(SMOOTH_WIDTH);
     if (state.getPortValue(VOL).isFullyDefined()) {
-      final var vol = (int) state.getPortValue(VOL).toLongValue();
-      final var volumeWidth = (byte) state.getAttributeValue(VOLUME_WIDTH).getWidth();
+      final int vol = (int) state.getPortValue(VOL).toLongValue();
+      final byte volumeWidth = (byte) state.getAttributeValue(VOLUME_WIDTH).getWidth();
       data.vol = ((vol & 0xffffffffL) * 32767) / (Math.pow(2, volumeWidth) - 1);
     } else {
       data.vol = 0.5;
@@ -256,9 +256,9 @@ public class Buzzer extends InstanceFactory {
   }
 
   private void updateports(Instance instance) {
-    final var facing = instance.getAttributeValue(StdAttr.FACING);
-    final var volumeWidth = (byte) instance.getAttributeValue(VOLUME_WIDTH).getWidth();
-    final var ports = new Port[4];
+    final com.cburch.logisim.data.Direction facing = instance.getAttributeValue(StdAttr.FACING);
+    final byte volumeWidth = (byte) instance.getAttributeValue(VOLUME_WIDTH).getWidth();
+    final com.cburch.logisim.instance.Port[] ports = new Port[4];
     if (facing == Direction.EAST || facing == Direction.WEST) {
       ports[FREQ] = new Port(0, -10, Port.INPUT, 14);
       ports[VOL] = new Port(0, 10, Port.INPUT, volumeWidth);
@@ -270,7 +270,7 @@ public class Buzzer extends InstanceFactory {
     ports[VOL].setToolTip(S.getter("buzzerVolume"));
     ports[ENABLE] = new Port(0, 0, Port.INPUT, 1);
     ports[ENABLE].setToolTip(S.getter("enableSound"));
-    final var selectLoc = instance.getAttributeValue(StdAttr.SELECT_LOC);
+    final com.cburch.logisim.data.AttributeOption selectLoc = instance.getAttributeValue(StdAttr.SELECT_LOC);
     int xPw = 20;
     int yPw = 20;
     if (facing == Direction.NORTH || facing == Direction.SOUTH) {

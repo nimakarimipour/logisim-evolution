@@ -43,7 +43,7 @@ public class CoverColor implements PreferenceChangeListener {
           AppPreferences.KMAP16_COLOR);
 
   public CoverColor() {
-    for (final var color : availableColors) {
+    for (final com.cburch.logisim.prefs.PrefMonitor<java.lang.Integer> color : availableColors) {
       colors.add(new Color(color.get()));
     }
   }
@@ -77,7 +77,7 @@ public class CoverColor implements PreferenceChangeListener {
     int idx = 0;
     Color newColor = null;
 
-    for (final var color : availableColors) {
+    for (final com.cburch.logisim.prefs.PrefMonitor<java.lang.Integer> color : availableColors) {
       if (evt.getKey().contentEquals(color.getIdentifier())) {
         newColor = new Color(color.get());
         break;

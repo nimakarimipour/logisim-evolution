@@ -43,7 +43,7 @@ public class MessageBox {
       textArea.setText(description);
       textArea.setCaretPosition(0);
 
-      final var scrollPane = new JScrollPane(textArea);
+      final javax.swing.JScrollPane scrollPane = new JScrollPane(textArea);
       scrollPane.setPreferredSize(new Dimension(640, 480));
       OptionPane.showMessageDialog(null, scrollPane, title, type);
     } else {

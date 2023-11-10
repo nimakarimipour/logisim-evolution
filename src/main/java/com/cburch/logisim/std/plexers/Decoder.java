@@ -95,10 +95,10 @@ public class Decoder extends InstanceFactory {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    final var facing = attrs.getValue(StdAttr.FACING);
-    final var selectLoc = attrs.getValue(StdAttr.SELECT_LOC);
-    final var select = attrs.getValue(PlexersLibrary.ATTR_SELECT);
-    final var outputs = 1 << select.getWidth();
+    final com.cburch.logisim.data.Direction facing = attrs.getValue(StdAttr.FACING);
+    final com.cburch.logisim.data.AttributeOption selectLoc = attrs.getValue(StdAttr.SELECT_LOC);
+    final com.cburch.logisim.data.BitWidth select = attrs.getValue(PlexersLibrary.ATTR_SELECT);
+    final int outputs = 1 << select.getWidth();
     Bounds bds;
     boolean reversed = facing == Direction.WEST || facing == Direction.NORTH;
     if (selectLoc == StdAttr.SELECT_TOP_RIGHT) reversed = !reversed;
@@ -135,9 +135,9 @@ public class Decoder extends InstanceFactory {
 
   @Override
   public void paintGhost(InstancePainter painter) {
-    final var facing = painter.getAttributeValue(StdAttr.FACING);
-    final var select = painter.getAttributeValue(PlexersLibrary.ATTR_SELECT);
-    final var bds = painter.getBounds();
+    final com.cburch.logisim.data.Direction facing = painter.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.BitWidth select = painter.getAttributeValue(PlexersLibrary.ATTR_SELECT);
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
 
     if (select.getWidth() == 1) {
       if (facing == Direction.EAST || facing == Direction.WEST) {
@@ -160,29 +160,29 @@ public class Decoder extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var g = painter.getGraphics();
-    final var bds = painter.getBounds();
-    final var facing = painter.getAttributeValue(StdAttr.FACING);
+    final java.awt.Graphics g = painter.getGraphics();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+    final com.cburch.logisim.data.Direction facing = painter.getAttributeValue(StdAttr.FACING);
     Object selectLoc = painter.getAttributeValue(StdAttr.SELECT_LOC);
-    final var select = painter.getAttributeValue(PlexersLibrary.ATTR_SELECT);
+    final com.cburch.logisim.data.BitWidth select = painter.getAttributeValue(PlexersLibrary.ATTR_SELECT);
     boolean enable = painter.getAttributeValue(PlexersLibrary.ATTR_ENABLE);
     int selMult = selectLoc == StdAttr.SELECT_TOP_RIGHT ? -1 : 1;
     int outputs = 1 << select.getWidth();
 
     // draw stubs for select and enable ports
     GraphicsUtil.switchToWidth(g, 3);
-    final var vertical = facing == Direction.NORTH || facing == Direction.SOUTH;
-    final var dx = vertical ? selMult : 0;
-    final var dy = vertical ? 0 : -selMult;
+    final boolean vertical = facing == Direction.NORTH || facing == Direction.SOUTH;
+    final int dx = vertical ? selMult : 0;
+    final int dy = vertical ? 0 : -selMult;
     if (outputs == 2) { // draw select wire
       if (painter.getShowState()) {
         g.setColor(painter.getPortValue(outputs).getColor());
       }
-      final var pt = painter.getInstance().getPortLocation(outputs);
+      final com.cburch.logisim.data.Location pt = painter.getInstance().getPortLocation(outputs);
       g.drawLine(pt.getX(), pt.getY(), pt.getX() + 2 * dx, pt.getY() + 2 * dy);
     }
     if (enable) {
-      final var en = painter.getInstance().getPortLocation(outputs + 1);
+      final com.cburch.logisim.data.Location en = painter.getInstance().getPortLocation(outputs + 1);
       int len = outputs == 2 ? 6 : 4;
       if (painter.getShowState()) {
         g.setColor(painter.getPortValue(outputs + 1).getColor());
@@ -246,10 +246,10 @@ public class Decoder extends InstanceFactory {
   @Override
   public void propagate(InstanceState state) {
     // get attributes
-    final var data = BitWidth.ONE;
-    final var select = state.getAttributeValue(PlexersLibrary.ATTR_SELECT);
-    final var threeState = state.getAttributeValue(PlexersLibrary.ATTR_TRISTATE);
-    final var enable = state.getAttributeValue(PlexersLibrary.ATTR_ENABLE);
+    final com.cburch.logisim.data.BitWidth data = BitWidth.ONE;
+    final com.cburch.logisim.data.BitWidth select = state.getAttributeValue(PlexersLibrary.ATTR_SELECT);
+    final java.lang.Boolean threeState = state.getAttributeValue(PlexersLibrary.ATTR_TRISTATE);
+    final java.lang.Boolean enable = state.getAttributeValue(PlexersLibrary.ATTR_ENABLE);
     int outputs = 1 << select.getWidth();
 
     // determine default output values
@@ -263,15 +263,15 @@ public class Decoder extends InstanceFactory {
     // determine selected output value
     int outIndex = -1; // the special output
     Value out = null;
-    final var en = enable ? state.getPortValue(outputs + 1) : Value.TRUE;
+    final com.cburch.logisim.data.Value en = enable ? state.getPortValue(outputs + 1) : Value.TRUE;
     if (en == Value.FALSE) {
       Object opt = state.getAttributeValue(PlexersLibrary.ATTR_DISABLED);
-      final var base = opt == PlexersLibrary.DISABLED_ZERO ? Value.FALSE : Value.UNKNOWN;
+      final com.cburch.logisim.data.Value base = opt == PlexersLibrary.DISABLED_ZERO ? Value.FALSE : Value.UNKNOWN;
       others = Value.repeat(base, data.getWidth());
     } else if (en == Value.ERROR && state.isPortConnected(outputs + 1)) {
       others = Value.createError(data);
     } else {
-      final var sel = state.getPortValue(outputs);
+      final com.cburch.logisim.data.Value sel = state.getPortValue(outputs);
       if (sel.isFullyDefined()) {
         outIndex = (int) sel.toLongValue();
         out = Value.TRUE;
@@ -289,12 +289,12 @@ public class Decoder extends InstanceFactory {
   }
 
   private void updatePorts(Instance instance) {
-    final var facing = instance.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Direction facing = instance.getAttributeValue(StdAttr.FACING);
     Object selectLoc = instance.getAttributeValue(StdAttr.SELECT_LOC);
-    final var select = instance.getAttributeValue(PlexersLibrary.ATTR_SELECT);
-    final var enable = instance.getAttributeValue(PlexersLibrary.ATTR_ENABLE);
+    final com.cburch.logisim.data.BitWidth select = instance.getAttributeValue(PlexersLibrary.ATTR_SELECT);
+    final java.lang.Boolean enable = instance.getAttributeValue(PlexersLibrary.ATTR_ENABLE);
     int outputs = 1 << select.getWidth();
-    final var ps = new Port[outputs + (enable ? 2 : 1)];
+    final com.cburch.logisim.instance.Port[] ps = new Port[outputs + (enable ? 2 : 1)];
     if (outputs == 2) {
       Location end0;
       Location end1;
@@ -341,7 +341,7 @@ public class Decoder extends InstanceFactory {
         dy += ddy;
       }
     }
-    final var en = Location.create(0, 0, true).translate(facing, -10);
+    final com.cburch.logisim.data.Location en = Location.create(0, 0, true).translate(facing, -10);
     ps[outputs] = new Port(0, 0, Port.INPUT, select.getWidth());
     if (enable) {
       ps[outputs + 1] = new Port(en.getX(), en.getY(), Port.INPUT, BitWidth.ONE);

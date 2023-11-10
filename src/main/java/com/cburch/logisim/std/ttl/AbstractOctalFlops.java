@@ -40,23 +40,23 @@ public class AbstractOctalFlops extends AbstractTtlGate {
     boolean isPressed = true;
 
     private boolean isInside(InstanceState state, MouseEvent e) {
-      final var p = getTranslatedTtlXY(state, e);
+      final java.awt.Point p = getTranslatedTtlXY(state, e);
       boolean inside = false;
       for (int i = 0; i < 8; i++) {
-        final var dx = p.x - (95 + i * 10);
-        final var dy = p.y - 40;
-        final var d2 = dx * dx + dy * dy;
+        final int dx = p.x - (95 + i * 10);
+        final int dy = p.y - 40;
+        final int d2 = dx * dx + dy * dy;
         inside |= (d2 < 4 * 4);
       }
       return inside;
     }
 
     private int getIndex(InstanceState state, MouseEvent e) {
-      final var p = getTranslatedTtlXY(state, e);
+      final java.awt.Point p = getTranslatedTtlXY(state, e);
       for (int i = 0; i < 8; i++) {
-        final var dx = p.x - (95 + i * 10);
-        final var dy = p.y - 40;
-        final var d2 = dx * dx + dy * dy;
+        final int dx = p.x - (95 + i * 10);
+        final int dy = p.y - 40;
+        final int d2 = dx * dx + dy * dy;
         if (d2 < 4 * 4) return i;
       }
       return 0;
@@ -71,10 +71,10 @@ public class AbstractOctalFlops extends AbstractTtlGate {
     public void mouseReleased(InstanceState state, MouseEvent e) {
       if (!state.getAttributeValue(TtlLibrary.DRAW_INTERNAL_STRUCTURE)) return;
       if (isPressed && isInside(state, e)) {
-        final var index = getIndex(state, e);
+        final int index = getIndex(state, e);
         TtlRegisterData myState = (TtlRegisterData) state.getData();
         if (myState == null) return;
-        final var values = myState.getValue().getAll();
+        final com.cburch.logisim.data.Value[] values = myState.getValue().getAll();
         if (values[index].isFullyDefined()) values[index] = values[index].not();
         else values[index] = Value.createKnown(1, 0);
         myState.setValue(Value.create(values));
@@ -91,7 +91,7 @@ public class AbstractOctalFlops extends AbstractTtlGate {
   @Override
   public void paintInternal(InstancePainter painter, int x, int y, int height, boolean up) {
     super.paintBase(painter, false, false);
-    final var g = (Graphics2D) painter.getGraphics();
+    final java.awt.Graphics2D g = (Graphics2D) painter.getGraphics();
     for (int i = 0; i < 8; i++) {
       g.drawRect(x + 90 + i * 10, y + 25, 10, 30);
     }
@@ -132,10 +132,10 @@ public class AbstractOctalFlops extends AbstractTtlGate {
       g.drawLine(x + 95 + i * 10, y + 55, x + 95 + i * 10, y + 60);
       g.drawLine(x + 95 + i * 10, y + 60, x + 95 + i * 10 + 3, y + 63);
     }
-    final var dincr = new int[] {20, 60, 20, 0};
+    final int[] dincr = new int[] {20, 60, 20, 0};
     int dpos1 = 50;
     int dpos2 = 150;
-    final var qincr = new int[] {60, 20, 60, 0};
+    final int[] qincr = new int[] {60, 20, 60, 0};
     int qpos1 = 30;
     int qpos2 = 170;
     for (int i = 0; i < 4; i++) {
@@ -175,7 +175,7 @@ public class AbstractOctalFlops extends AbstractTtlGate {
       state.setData(data);
     }
     boolean changed = false;
-    final var triggered = data.updateClock(state.getPortValue(9));
+    final boolean triggered = data.updateClock(state.getPortValue(9));
     com.cburch.logisim.data.Value[] values = data.getValue().getAll();
     if (hasWe) {
       if (triggered && (state.getPortValue(0).equals(Value.FALSE))) {

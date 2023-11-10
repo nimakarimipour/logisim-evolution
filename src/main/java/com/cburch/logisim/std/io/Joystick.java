@@ -45,9 +45,9 @@ public class Joystick extends InstanceFactory {
   public static class Poker extends InstancePoker {
     @Override
     public void mouseDragged(InstanceState state, MouseEvent e) {
-      final var loc = state.getInstance().getLocation();
-      final var cx = loc.getX() - 15;
-      final var cy = loc.getY() + 5;
+      final com.cburch.logisim.data.Location loc = state.getInstance().getLocation();
+      final int cx = loc.getX() - 15;
+      final int cy = loc.getY() + 5;
       updateState(state, e.getX() - cx, e.getY() - cy);
     }
 
@@ -68,20 +68,20 @@ public class Joystick extends InstanceFactory {
         state = new State(0, 0);
         painter.setData(state);
       }
-      final var loc = painter.getLocation();
-      final var x = loc.getX();
-      final var y = loc.getY();
-      final var g = painter.getGraphics();
+      final com.cburch.logisim.data.Location loc = painter.getLocation();
+      final int x = loc.getX();
+      final int y = loc.getY();
+      final java.awt.Graphics g = painter.getGraphics();
       g.fillOval(x - 19, y + 1, 8, 8);
       GraphicsUtil.switchToWidth(g, 3);
-      final var dx = state.xPos;
-      final var dy = state.yPos;
-      final var x0 = x - 15 + (dx > 5 ? 1 : dx < -5 ? -1 : 0);
-      final var y0 = y + 5 + (dy > 5 ? 1 : dy < 0 ? -1 : 0);
-      final var x1 = x - 15 + dx;
-      final var y1 = y + 5 + dy;
+      final int dx = state.xPos;
+      final int dy = state.yPos;
+      final int x0 = x - 15 + (dx > 5 ? 1 : dx < -5 ? -1 : 0);
+      final int y0 = y + 5 + (dy > 5 ? 1 : dy < 0 ? -1 : 0);
+      final int x1 = x - 15 + dx;
+      final int y1 = y + 5 + dy;
       g.drawLine(x0, y0, x1, y1);
-      final var ballColor = painter.getAttributeValue(IoLibrary.ATTR_COLOR);
+      final java.awt.Color ballColor = painter.getAttributeValue(IoLibrary.ATTR_COLOR);
       Joystick.drawBall(g, x1, y1, ballColor, true);
     }
 
@@ -162,7 +162,7 @@ public class Joystick extends InstanceFactory {
   }
 
   private void updatePorts(Instance instance) {
-    final var facing = instance.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Direction facing = instance.getAttributeValue(StdAttr.FACING);
     int x0, y0;
     int x1, y1;
     if (facing == Direction.NORTH) {
@@ -186,7 +186,7 @@ public class Joystick extends InstanceFactory {
       x1 = 0;
       y1 = 10;
     }
-    final var ports = new Port[2];
+    final com.cburch.logisim.instance.Port[] ports = new Port[2];
     ports[0] = new Port(x0, y0, Port.OUTPUT, ATTR_WIDTH);
     ports[0].setToolTip(S.getter("joystickCoordinateX"));
     ports[1] = new Port(x1, y1, Port.OUTPUT, ATTR_WIDTH);
@@ -196,18 +196,18 @@ public class Joystick extends InstanceFactory {
 
   @Override
   public void paintGhost(InstancePainter painter) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     GraphicsUtil.switchToWidth(g, 2);
     g.drawRoundRect(-30, -10, 30, 30, 8, 8);
   }
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var loc = painter.getLocation();
-    final var x = loc.getX();
-    final var y = loc.getY();
+    final com.cburch.logisim.data.Location loc = painter.getLocation();
+    final int x = loc.getX();
+    final int y = loc.getY();
 
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     g.setColor(painter.getAttributeValue(IoLibrary.ATTR_BACKGROUND));
     g.fillRoundRect(x - 30, y - 10, 30, 30, 8, 8);
     g.setColor(Color.BLACK);
@@ -231,7 +231,7 @@ public class Joystick extends InstanceFactory {
 
   @Override
   public void propagate(InstanceState state) {
-    final var bits = state.getAttributeValue(ATTR_WIDTH);
+    final com.cburch.logisim.data.BitWidth bits = state.getAttributeValue(ATTR_WIDTH);
     int dx;
     int dy;
     State s = (State) state.getData();

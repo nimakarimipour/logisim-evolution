@@ -65,26 +65,26 @@ public class LoadedLibrary extends Library implements LibraryEventSource {
   }
 
   private static AttributeSet createAttributes(ComponentFactory factory, AttributeSet src) {
-    final var dest = factory.createAttributeSet();
+    final com.cburch.logisim.data.AttributeSet dest = factory.createAttributeSet();
     copyAttributes(dest, src);
     return dest;
   }
 
   private static void replaceAll(Circuit circuit, Map<ComponentFactory, ComponentFactory> compMap) {
     ArrayList<Component> toReplace = null;
-    for (final var comp : circuit.getNonWires()) {
+    for (final com.cburch.logisim.comp.Component comp : circuit.getNonWires()) {
       if (compMap.containsKey(comp.getFactory())) {
         if (toReplace == null) toReplace = new ArrayList<>();
         toReplace.add(comp);
       }
     }
     if (toReplace != null) {
-      final var xn = new CircuitMutation(circuit);
-      for (final var comp : toReplace) {
+      final com.cburch.logisim.circuit.CircuitMutation xn = new CircuitMutation(circuit);
+      for (final com.cburch.logisim.comp.Component comp : toReplace) {
         xn.remove(comp);
-        final var factory = compMap.get(comp.getFactory());
+        final com.cburch.logisim.comp.ComponentFactory factory = compMap.get(comp.getFactory());
         if (factory != null) {
-          final var newAttrs = createAttributes(factory, comp.getAttributeSet());
+          final com.cburch.logisim.data.AttributeSet newAttrs = createAttributes(factory, comp.getAttributeSet());
           xn.add(factory.createComponent(comp.getLocation(), newAttrs));
         }
       }
@@ -95,26 +95,26 @@ public class LoadedLibrary extends Library implements LibraryEventSource {
   private static void replaceAll(LogisimFile file, Map<ComponentFactory, ComponentFactory> compMap, Map<Tool, Tool> toolMap) {
     file.getOptions().getToolbarData().replaceAll(toolMap);
     file.getOptions().getMouseMappings().replaceAll(toolMap);
-    for (final var circuit : file.getCircuits()) {
+    for (final com.cburch.logisim.circuit.Circuit circuit : file.getCircuits()) {
       replaceAll(circuit, compMap);
     }
   }
 
   private static void replaceAll(Map<ComponentFactory, ComponentFactory> compMap, Map<Tool, Tool> toolMap) {
-    for (final var proj : Projects.getOpenProjects()) {
-      final var oldTool = proj.getTool();
-      final var oldCircuit = proj.getCurrentCircuit();
+    for (final com.cburch.logisim.proj.Project proj : Projects.getOpenProjects()) {
+      final com.cburch.logisim.tools.Tool oldTool = proj.getTool();
+      final com.cburch.logisim.circuit.Circuit oldCircuit = proj.getCurrentCircuit();
       if (toolMap.containsKey(oldTool)) {
         proj.setTool(toolMap.get(oldTool));
       }
-      final var oldFactory = oldCircuit.getSubcircuitFactory();
+      final com.cburch.logisim.circuit.SubcircuitFactory oldFactory = oldCircuit.getSubcircuitFactory();
       if (compMap.containsKey(oldFactory)) {
-        final var newFactory = (SubcircuitFactory) compMap.get(oldFactory);
+        final com.cburch.logisim.circuit.SubcircuitFactory newFactory = (SubcircuitFactory) compMap.get(oldFactory);
         proj.setCurrentCircuit(newFactory.getSubcircuit());
       }
       replaceAll(proj.getLogisimFile(), compMap, toolMap);
     }
-    for (final var file : LibraryManager.instance.getLogisimLibraries()) {
+    for (final com.cburch.logisim.file.LogisimFile file : LibraryManager.instance.getLogisimLibraries()) {
       replaceAll(file, compMap, toolMap);
     }
   }
@@ -132,7 +132,7 @@ public class LoadedLibrary extends Library implements LibraryEventSource {
     if (event.getSource() != this) {
       event = new LibraryEvent(this, event.getAction(), event.getData());
     }
-    for (final var l : listeners) {
+    for (final com.cburch.logisim.file.LibraryListener l : listeners) {
       l.libraryChanged(event);
     }
   }
@@ -183,28 +183,28 @@ public class LoadedLibrary extends Library implements LibraryEventSource {
       fireLibraryEvent(LibraryEvent.SET_NAME, base.getDisplayName());
     }
 
-    final var changes = new HashSet<>(old.getLibraries());
+    final java.util.HashSet<com.cburch.logisim.tools.Library> changes = new HashSet<>(old.getLibraries());
     base.getLibraries().forEach(changes::remove);
-    for (final var lib : changes) {
+    for (final com.cburch.logisim.tools.Library lib : changes) {
       fireLibraryEvent(LibraryEvent.REMOVE_LIBRARY, lib);
     }
 
     changes.clear();
     changes.addAll(base.getLibraries());
     old.getLibraries().forEach(changes::remove);
-    for (final var lib : changes) {
+    for (final com.cburch.logisim.tools.Library lib : changes) {
       fireLibraryEvent(LibraryEvent.ADD_LIBRARY, lib);
     }
 
-    final var componentMap = new HashMap<ComponentFactory, ComponentFactory>();
-    final var toolMap = new HashMap<Tool, Tool>();
-    for (final var oldTool : old.getTools()) {
-      final var newTool = base.getTool(oldTool.getName());
+    final java.util.HashMap<com.cburch.logisim.comp.ComponentFactory,com.cburch.logisim.comp.ComponentFactory> componentMap = new HashMap<ComponentFactory, ComponentFactory>();
+    final java.util.HashMap<com.cburch.logisim.tools.Tool,com.cburch.logisim.tools.Tool> toolMap = new HashMap<Tool, Tool>();
+    for (final com.cburch.logisim.tools.Tool oldTool : old.getTools()) {
+      final com.cburch.logisim.tools.Tool newTool = base.getTool(oldTool.getName());
       toolMap.put(oldTool, newTool);
       if (oldTool instanceof AddTool tool) {
-        final var oldFactory = tool.getFactory();
+        final com.cburch.logisim.comp.ComponentFactory oldFactory = tool.getFactory();
         if (newTool instanceof AddTool) {
-          final var newFactory = tool.getFactory();
+          final com.cburch.logisim.comp.ComponentFactory newFactory = tool.getFactory();
           componentMap.put(oldFactory, newFactory);
         } else {
           componentMap.put(oldFactory, null);
@@ -230,7 +230,7 @@ public class LoadedLibrary extends Library implements LibraryEventSource {
     if (base instanceof LibraryEventSource src) {
       src.removeLibraryListener(myListener);
     }
-    final var old = base;
+    final com.cburch.logisim.tools.Library old = base;
     base = value;
     resolveChanges(old);
     if (base instanceof LibraryEventSource src) {

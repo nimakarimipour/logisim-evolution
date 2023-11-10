@@ -118,11 +118,11 @@ public class VhdlParser {
   }
 
   public void parse() throws IllegalVhdlContentException {
-    final var input = removeComments();
-    final var pattern = Pattern.compile(ENTITY_PATTERN, Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+    final java.lang.String input = removeComments();
+    final java.util.regex.Pattern pattern = Pattern.compile(ENTITY_PATTERN, Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
-    final var parts = pattern.split(input);
-    final var matcher = pattern.matcher(input);
+    final java.lang.String[] parts = pattern.split(input);
+    final java.util.regex.Matcher matcher = pattern.matcher(input);
 
     if (parts.length > 2) {
       throw new IllegalVhdlContentException(S.get("duplicatedEntityException"));
@@ -141,7 +141,7 @@ public class VhdlParser {
   }
 
   private void parseContent(String input) {
-    final var matcher =
+    final java.util.regex.Matcher matcher =
         Pattern.compile(ARCH_PATTERN, Pattern.DOTALL | Pattern.CASE_INSENSITIVE).matcher(input);
 
     if (matcher.find()) {
@@ -152,14 +152,14 @@ public class VhdlParser {
   }
 
   private void parseLibraries(String input) {
-    final var result = new StringBuilder();
-    final var library = Pattern.compile(LIBRARY_PATTERN, Pattern.CASE_INSENSITIVE).matcher(input);
+    final java.lang.StringBuilder result = new StringBuilder();
+    final java.util.regex.Matcher library = Pattern.compile(LIBRARY_PATTERN, Pattern.CASE_INSENSITIVE).matcher(input);
     while (library.find()) {
       result.append(library.group().trim().replaceAll("\\s+", " "));
       result.append(System.getProperty("line.separator"));
     }
 
-    final var using = Pattern.compile(USING_PATTERN, Pattern.CASE_INSENSITIVE).matcher(input);
+    final java.util.regex.Matcher using = Pattern.compile(USING_PATTERN, Pattern.CASE_INSENSITIVE).matcher(input);
     while (using.find()) {
       result.append(using.group().trim().replaceAll("\\s+", " "));
       result.append(System.getProperty("line.separator"));
@@ -181,27 +181,27 @@ public class VhdlParser {
   }
 
   private void parseMultiplePorts(String line) throws IllegalVhdlContentException {
-    final var index = line.indexOf(':');
+    final int index = line.indexOf(':');
     if (index == -1)
       throw new IllegalVhdlContentException(S.get("multiplePortsDeclarationException"));
 
     java.util.Scanner local = new Scanner(line.substring(0, index));
     local.useDelimiter(",");
 
-    final var names = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> names = new ArrayList<String>();
     while (local.hasNext()) names.add(local.next().trim());
 
     local.close();
     local = new Scanner(line);
 
     int width;
-    final var type = new StringBuilder();
+    final java.lang.StringBuilder type = new StringBuilder();
     if (line.toLowerCase().contains("std_logic_vector"))
       width = parseVector(local, type);
     else
       width = parseLine(local, type);
 
-    for (final var name : names) {
+    for (final java.lang.String name : names) {
       if (type.toString().equals(Port.INPUT))
         inputs.add(new PortDescription(name, type.toString(), width));
       else outputs.add(new PortDescription(name, type.toString(), width));
@@ -211,17 +211,17 @@ public class VhdlParser {
   }
 
   private void parsePort(String line) throws IllegalVhdlContentException {
-    final var local = new Scanner(line);
+    final java.util.Scanner local = new Scanner(line);
 
     if (local.findWithinHorizon(Pattern.compile(PORT_PATTERN, Pattern.CASE_INSENSITIVE), 0)
         == null) {
       local.close();
       throw new IllegalVhdlContentException(S.get("portDeclarationException"));
     }
-    final var name = local.match().group().trim();
+    final java.lang.String name = local.match().group().trim();
 
     int width;
-    final var type = new StringBuilder();
+    final java.lang.StringBuilder type = new StringBuilder();
     if (line.toLowerCase().contains("std_logic_vector"))
       width = parseVector(local, type);
     else
@@ -236,15 +236,15 @@ public class VhdlParser {
   }
 
   private void parsePorts(String input) throws IllegalVhdlContentException {
-    final var matcher =
+    final java.util.regex.Matcher matcher =
         Pattern.compile(PORTS_PATTERN, Pattern.DOTALL | Pattern.CASE_INSENSITIVE).matcher(input);
     if (!matcher.find() || matcher.groupCount() != 1) return;
-    final var ports = matcher.group(1);
+    final java.lang.String ports = matcher.group(1);
 
-    final var scanner = new Scanner(ports);
+    final java.util.Scanner scanner = new Scanner(ports);
     scanner.useDelimiter(";");
     while (scanner.hasNext()) {
-      final var statement = scanner.next();
+      final java.lang.String statement = scanner.next();
       if (statement.contains(",")) parseMultiplePorts(statement.trim());
       else parsePort(statement.trim());
     }
@@ -255,7 +255,7 @@ public class VhdlParser {
   private int parseVector(Scanner scanner, StringBuilder type) throws IllegalVhdlContentException {
     if (scanner.findWithinHorizon(Pattern.compile(VECTOR_PATTERN, Pattern.CASE_INSENSITIVE), 0)
         == null) throw new IllegalVhdlContentException(S.get("vectorDeclarationException"));
-    final var result = scanner.match();
+    final java.util.regex.MatchResult result = scanner.match();
 
     if (result.groupCount() != 3)
       throw new IllegalVhdlContentException(S.get("vectorDeclarationException"));

@@ -24,10 +24,10 @@ public class RomHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
   public LineBuffer getInlinedCode(
       Netlist nets, Long componentId, netlistComponent componentInfo, String circuitName) {
     AttributeSet attrs = componentInfo.getComponent().getAttributeSet();
-    final var addressWidth = attrs.getValue(Mem.ADDR_ATTR).getWidth();
-    final var dataWidth = attrs.getValue(Mem.DATA_ATTR).getWidth();
-    final var romContents = attrs.getValue(Rom.CONTENTS_ATTR);
-    final var generator =
+    final int addressWidth = attrs.getValue(Mem.ADDR_ATTR).getWidth();
+    final int dataWidth = attrs.getValue(Mem.DATA_ATTR).getWidth();
+    final com.cburch.logisim.std.memory.MemContents romContents = attrs.getValue(Rom.CONTENTS_ATTR);
+    final com.cburch.logisim.fpga.hdlgenerator.WithSelectHdlGenerator generator =
         (new WithSelectHdlGenerator(
                 componentInfo.getComponent().getAttributeSet().getValue(StdAttr.LABEL),
                 Hdl.getBusName(componentInfo, RamAppearance.getAddrIndex(0, attrs), nets),
@@ -36,7 +36,7 @@ public class RomHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
                 dataWidth))
             .setDefault(0L);
     for (long addr = 0L; addr < (1L << addressWidth); addr++) {
-      final var romValue = romContents.get(addr);
+      final long romValue = romContents.get(addr);
       if (romValue != 0L) generator.add(addr, romValue);
     }
     return LineBuffer.getBuffer().add(generator.getHdlCode());

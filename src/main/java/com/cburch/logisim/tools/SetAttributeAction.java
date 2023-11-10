@@ -40,25 +40,25 @@ public class SetAttributeAction extends Action {
 
   @Override
   public void doIt(Project proj) {
-    final var xn = new CircuitMutation(circuit);
-    final var len = values.size();
+    final com.cburch.logisim.circuit.CircuitMutation xn = new CircuitMutation(circuit);
+    final int len = values.size();
     oldValues.clear();
     for (int i = 0; i < len; i++) {
-      final var comp = comps.get(i);
-      final var attr = attrs.get(i);
-      final var value = values.get(i);
+      final com.cburch.logisim.comp.Component comp = comps.get(i);
+      final com.cburch.logisim.data.Attribute<java.lang.Object> attr = attrs.get(i);
+      final java.lang.Object value = values.get(i);
       if (circuit.contains(comp)) {
         oldValues.add(null);
         xn.set(comp, attr, value);
       } else {
-        final var compAttrs = comp.getAttributeSet();
+        final com.cburch.logisim.data.AttributeSet compAttrs = comp.getAttributeSet();
         oldValues.add(compAttrs.getValue(attr));
         compAttrs.setValue(attr, value);
       }
     }
 
     if (!xn.isEmpty()) {
-      final var result = xn.execute();
+      final com.cburch.logisim.circuit.CircuitTransactionResult result = xn.execute();
       xnReverse = result.getReverseTransaction();
     }
   }
@@ -74,7 +74,7 @@ public class SetAttributeAction extends Action {
 
   public void set(Component comp, Attribute<?> attr, Object value) {
     @SuppressWarnings("unchecked")
-    final var a = (Attribute<Object>) attr;
+    final Attribute<Object> a = (Attribute<Object>) attr;
     comps.add(comp);
     attrs.add(a);
     values.add(value);
@@ -84,9 +84,9 @@ public class SetAttributeAction extends Action {
   public void undo(Project proj) {
     if (xnReverse != null) xnReverse.execute();
     for (int i = oldValues.size() - 1; i >= 0; i--) {
-      final var comp = comps.get(i);
-      final var attr = attrs.get(i);
-      final var value = oldValues.get(i);
+      final com.cburch.logisim.comp.Component comp = comps.get(i);
+      final com.cburch.logisim.data.Attribute<java.lang.Object> attr = attrs.get(i);
+      final java.lang.Object value = oldValues.get(i);
       if (value != null) {
         comp.getAttributeSet().setValue(attr, value);
       }

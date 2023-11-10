@@ -81,11 +81,11 @@ public class PlaRomData implements InstanceData {
     if (str == null || str.equals("")) return;
     // split the attribute content string in an array of strings with a single
     // information each one
-    final var datas = str.split(" ");
+    final java.lang.String[] datas = str.split(" ");
     String[] tmp;
     byte value;
     int cnt = 0;
-    for (final var data : datas) {
+    for (final java.lang.String data : datas) {
       // if contains a '*' it has to fill the array with the first value for x (second
       // number) cycles
       if (data.contains("*")) {
@@ -167,7 +167,7 @@ public class PlaRomData implements InstanceData {
   }
 
   public Value[] getOutputValues() {
-    final var outputValueCopy = new Value[getOutputs()];
+    final com.cburch.logisim.data.Value[] outputValueCopy = new Value[getOutputs()];
     // reverse array
     for (byte i = (byte) (getOutputs() - 1); i >= 0; i--) {
       outputValueCopy[i] = outputValue[outputValue.length - i - 1];
@@ -326,8 +326,8 @@ public class PlaRomData implements InstanceData {
       this.inputs = inputs;
       this.outputs = outputs;
       this.and = and;
-      final var oldInputAnd = Arrays.copyOf(inputAnd, inputAnd.length);
-      final var oldAndOutput = Arrays.copyOf(andOutput, andOutput.length);
+      final boolean[][] oldInputAnd = Arrays.copyOf(inputAnd, inputAnd.length);
+      final boolean[][] oldAndOutput = Arrays.copyOf(andOutput, andOutput.length);
       inputAnd = new boolean[getAnd()][getInputs() * 2];
       andOutput = new boolean[getAnd()][getOutputs()];
       inputValue = new Value[getInputs()];

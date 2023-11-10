@@ -73,15 +73,15 @@ public class VhdlEntity extends InstanceFactory implements HdlModelListener {
 
   public void setSimName(AttributeSet attrs, String sName) {
     if (attrs == null) return;
-    final var atrs = (VhdlEntityAttributes) attrs;
-    final var label = (!attrs.getValue(StdAttr.LABEL).equals("")) ? getHDLTopName(attrs) : sName;
+    final com.cburch.logisim.vhdl.base.VhdlEntityAttributes atrs = (VhdlEntityAttributes) attrs;
+    final java.lang.String label = (!attrs.getValue(StdAttr.LABEL).equals("")) ? getHDLTopName(attrs) : sName;
     if (atrs.containsAttribute(VhdlSimConstants.SIM_NAME_ATTR))
       atrs.setValue(VhdlSimConstants.SIM_NAME_ATTR, label);
   }
 
   public String getSimName(AttributeSet attrs) {
     if (attrs == null) return null;
-    final var atrs = (VhdlEntityAttributes) attrs;
+    final com.cburch.logisim.vhdl.base.VhdlEntityAttributes atrs = (VhdlEntityAttributes) attrs;
     return atrs.getValue(VhdlSimConstants.SIM_NAME_ATTR);
   }
 
@@ -103,7 +103,7 @@ public class VhdlEntity extends InstanceFactory implements HdlModelListener {
 
   @Override
   protected void configureNewInstance(Instance instance) {
-    final var attrs = (VhdlEntityAttributes) instance.getAttributeSet();
+    final com.cburch.logisim.vhdl.base.VhdlEntityAttributes attrs = (VhdlEntityAttributes) instance.getAttributeSet();
     attrs.setInstance(instance);
     instance.addAttributeListener();
     updatePorts(instance);
@@ -131,7 +131,7 @@ public class VhdlEntity extends InstanceFactory implements HdlModelListener {
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
     if (appearance == null) return Bounds.create(0, 0, 100, 100);
-    final var facing = attrs.getValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Direction facing = attrs.getValue(StdAttr.FACING);
     return appearance.getOffsetBounds().rotate(Direction.EAST, facing, 0, 0);
   }
 
@@ -140,7 +140,7 @@ public class VhdlEntity extends InstanceFactory implements HdlModelListener {
     if (attr == StdAttr.FACING) {
       updatePorts(instance);
     } else if (attr == StdAttr.APPEARANCE) {
-      for (final var j : myInstances) {
+      for (final com.cburch.logisim.instance.Instance j : myInstances) {
         updatePorts(j);
       }
     }
@@ -148,20 +148,20 @@ public class VhdlEntity extends InstanceFactory implements HdlModelListener {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var attrs = (VhdlEntityAttributes) painter.getAttributeSet();
-    final var facing = attrs.getFacing();
-    final var gfx = painter.getGraphics();
+    final com.cburch.logisim.vhdl.base.VhdlEntityAttributes attrs = (VhdlEntityAttributes) painter.getAttributeSet();
+    final com.cburch.logisim.data.Direction facing = attrs.getFacing();
+    final java.awt.Graphics gfx = painter.getGraphics();
 
-    final var loc = painter.getLocation();
+    final com.cburch.logisim.data.Location loc = painter.getLocation();
     gfx.translate(loc.getX(), loc.getY());
     appearance.paintSubcircuit(painter, gfx, facing);
     gfx.translate(-loc.getX(), -loc.getY());
 
-    final var label = painter.getAttributeValue(StdAttr.LABEL);
+    final java.lang.String label = painter.getAttributeValue(StdAttr.LABEL);
     if (label != null && painter.getAttributeValue(StdAttr.LABEL_VISIBILITY)) {
-      final var bds = painter.getBounds();
-      final var oldFont = gfx.getFont();
-      final var color = gfx.getColor();
+      final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+      final java.awt.Font oldFont = gfx.getFont();
+      final java.awt.Color color = gfx.getColor();
       gfx.setFont(painter.getAttributeValue(StdAttr.LABEL_FONT));
       gfx.setColor(StdAttr.DEFAULT_LABEL_COLOR);
       GraphicsUtil.drawCenteredText(gfx, label, bds.getX() + bds.getWidth() / 2, bds.getY() - gfx.getFont().getSize());
@@ -186,12 +186,12 @@ public class VhdlEntity extends InstanceFactory implements HdlModelListener {
     if (state.getProject().getVhdlSimulator().isEnabled()
         && state.getProject().getVhdlSimulator().isRunning()) {
 
-      final var vhdlSimulator = state.getProject().getVhdlSimulator();
+      final com.cburch.logisim.vhdl.sim.VhdlSimulatorTop vhdlSimulator = state.getProject().getVhdlSimulator();
 
-      for (final var singlePort : state.getInstance().getPorts()) {
-        final var index = state.getPortIndex(singlePort);
-        final var val = state.getPortValue(index);
-        final var vhdlEntityName = getSimName(state.getAttributeSet());
+      for (final com.cburch.logisim.instance.Port singlePort : state.getInstance().getPorts()) {
+        final int index = state.getPortIndex(singlePort);
+        final com.cburch.logisim.data.Value val = state.getPortValue(index);
+        final java.lang.String vhdlEntityName = getSimName(state.getAttributeSet());
 
         String message =
             singlePort.getType()
@@ -215,12 +215,12 @@ public class VhdlEntity extends InstanceFactory implements HdlModelListener {
           && serverResponse.length() > 0
           && !serverResponse.equals("sync")) {
 
-        final var parameters = serverResponse.split(":");
-        final var busValue = parameters[1];
-        final var vectorValues = new Value[busValue.length()];
+        final java.lang.String[] parameters = serverResponse.split(":");
+        final java.lang.String busValue = parameters[1];
+        final com.cburch.logisim.data.Value[] vectorValues = new Value[busValue.length()];
 
         int idx = busValue.length() - 1;
-        for (final var bit : busValue.toCharArray()) {
+        for (final char bit : busValue.toCharArray()) {
 
           try {
             vectorValues[idx] = switch (Character.getNumericValue(bit)) {
@@ -240,12 +240,12 @@ public class VhdlEntity extends InstanceFactory implements HdlModelListener {
       /* VhdlSimulation stopped/disabled */
     } else {
 
-      for (final var port : state.getInstance().getPorts()) {
-        final var index = state.getPortIndex(port);
+      for (final com.cburch.logisim.instance.Port port : state.getInstance().getPorts()) {
+        final int index = state.getPortIndex(port);
 
         /* If it is an output */
         if (port.getType() == 2) {
-          final var vectorValues = new Value[port.getFixedBitWidth().getWidth()];
+          final com.cburch.logisim.data.Value[] vectorValues = new Value[port.getFixedBitWidth().getWidth()];
           for (int k = 0; k < port.getFixedBitWidth().getWidth(); k++) {
             vectorValues[k] = Value.UNKNOWN;
           }
@@ -287,15 +287,15 @@ public class VhdlEntity extends InstanceFactory implements HdlModelListener {
   private VhdlAppearance appearance;
 
   private ArrayList<Instance> getPins() {
-    final var pins = new ArrayList<Instance>();
+    final java.util.ArrayList<com.cburch.logisim.instance.Instance> pins = new ArrayList<Instance>();
     int yPos = 0;
-    for (final var port : content.getPorts()) {
-      final var attr = Pin.FACTORY.createAttributeSet();
+    for (final com.cburch.logisim.vhdl.base.VhdlParser.PortDescription port : content.getPorts()) {
+      final com.cburch.logisim.data.AttributeSet attr = Pin.FACTORY.createAttributeSet();
       attr.setValue(StdAttr.LABEL, port.getName());
       attr.setValue(Pin.ATTR_TYPE, !port.getType().equals(Port.INPUT));
       attr.setValue(StdAttr.FACING, !port.getType().equals(Port.INPUT) ? Direction.WEST : Direction.EAST);
       attr.setValue(StdAttr.WIDTH, port.getWidth());
-      final var component = (InstanceComponent) Pin.FACTORY.createComponent(Location.create(100, yPos, true), attr);
+      final com.cburch.logisim.instance.InstanceComponent component = (InstanceComponent) Pin.FACTORY.createComponent(Location.create(100, yPos, true), attr);
       pins.add(component.getInstance());
       yPos += 10;
     }

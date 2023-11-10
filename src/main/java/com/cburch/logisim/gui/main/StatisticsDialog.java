@@ -45,7 +45,7 @@ public class StatisticsDialog extends JDialog implements ActionListener {
         new CompareString("", S.get("statsTotalWithout"), S.get("statsTotalWith"));
     mySorter.setColumnComparator(String.class, comp);
     table.setModel(mySorter);
-    final var tablePane = new JScrollPane(table);
+    final javax.swing.JScrollPane tablePane = new JScrollPane(table);
 
     javax.swing.JButton button = new JButton(S.get("statsCloseButton"));
     button.addActionListener(this);

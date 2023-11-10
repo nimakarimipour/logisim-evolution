@@ -58,7 +58,7 @@ public class About {
     public AboutPanel(boolean includeCredits) {
       setLayout(null);
 
-      final var prefWidth = PANEL_WIDTH + 2 * PADDING;
+      final int prefWidth = PANEL_WIDTH + 2 * PADDING;
       int prefHeight = LOGO_HEIGHT + 2 * PADDING;
       if (includeCredits) {
         prefHeight += SCROLLER_HEIGHT;
@@ -68,7 +68,7 @@ public class About {
       setBackground(Color.WHITE);
       addAncestorListener(this);
 
-      final var logo = new JLabel(new ImageIcon(getClass().getClassLoader().getResource(LOGO_IMG)));
+      final javax.swing.JLabel logo = new JLabel(new ImageIcon(getClass().getClassLoader().getResource(LOGO_IMG)));
       logo.setBounds(0, 20, prefWidth, LOGO_HEIGHT);
       add(logo);
 

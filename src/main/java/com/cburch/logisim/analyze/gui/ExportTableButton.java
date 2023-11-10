@@ -48,14 +48,14 @@ public class ExportTableButton extends JButton {
       if (c != null) lastFile = new File(c.getName() + ".txt");
       else lastFile = new File("truthtable.txt");
     }
-    final var chooser = JFileChoosers.createSelected(lastFile);
+    final javax.swing.JFileChooser chooser = JFileChoosers.createSelected(lastFile);
     chooser.setDialogTitle(S.get("saveButton"));
     chooser.addChoosableFileFilter(TruthtableTextFile.FILE_FILTER);
     chooser.addChoosableFileFilter(TruthtableCsvFile.FILE_FILTER);
     chooser.setFileFilter(TruthtableTextFile.FILE_FILTER);
-    final var choice = chooser.showSaveDialog(parent);
+    final int choice = chooser.showSaveDialog(parent);
     if (choice == JFileChooser.APPROVE_OPTION) {
-      final var file = chooser.getSelectedFile();
+      final java.io.File file = chooser.getSelectedFile();
       if (file.isDirectory()) {
         OptionPane.showMessageDialog(
             parent,
@@ -73,7 +73,7 @@ public class ExportTableButton extends JButton {
         return;
       }
       if (file.exists()) {
-        final var confirm =
+        final int confirm =
             OptionPane.showConfirmDialog(
                 parent,
                 S.get("confirmOverwriteMessage", file.getName()),
@@ -82,9 +82,9 @@ public class ExportTableButton extends JButton {
         if (confirm != OptionPane.YES_OPTION) return;
       }
       try {
-        final var fileName = file.getName();
-        final var idx = fileName.lastIndexOf(".");
-        final var ext = fileName.substring(idx + 1);
+        final java.lang.String fileName = file.getName();
+        final int idx = fileName.lastIndexOf(".");
+        final java.lang.String ext = fileName.substring(idx + 1);
         if (ext.equals("txt")) {
           TruthtableTextFile.doSave(file, model);
         } else if (ext.equals("csv")) {

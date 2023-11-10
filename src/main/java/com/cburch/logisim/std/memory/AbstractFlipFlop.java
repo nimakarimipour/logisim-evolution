@@ -42,7 +42,7 @@ abstract class AbstractFlipFlop extends InstanceFactory {
   public static class Logger extends InstanceLogger {
     @Override
     public String getLogName(InstanceState state, Object option) {
-      final var ret = state.getAttributeValue(StdAttr.LABEL);
+      final java.lang.String ret = state.getAttributeValue(StdAttr.LABEL);
       return ret != null && !ret.equals("") ? ret : null;
     }
 
@@ -53,7 +53,7 @@ abstract class AbstractFlipFlop extends InstanceFactory {
 
     @Override
     public Value getLogValue(InstanceState state, Object option) {
-      final var s = (StateData) state.getData();
+      final com.cburch.logisim.std.memory.AbstractFlipFlop.StateData s = (StateData) state.getData();
       return s == null ? Value.FALSE : s.curValue;
     }
   }
@@ -62,7 +62,7 @@ abstract class AbstractFlipFlop extends InstanceFactory {
     boolean isPressed = true;
 
     private boolean isInside(InstanceState state, MouseEvent e) {
-      final var loc = state.getInstance().getLocation();
+      final com.cburch.logisim.data.Location loc = state.getInstance().getLocation();
       int dx;
       int dy;
       if (state.getAttributeValue(StdAttr.APPEARANCE) == StdAttr.APPEAR_CLASSIC) {
@@ -84,7 +84,7 @@ abstract class AbstractFlipFlop extends InstanceFactory {
     @Override
     public void mouseReleased(InstanceState state, MouseEvent e) {
       if (isPressed && isInside(state, e)) {
-        final var myState = (StateData) state.getData();
+        final com.cburch.logisim.std.memory.AbstractFlipFlop.StateData myState = (StateData) state.getData();
         if (myState == null) return;
 
         myState.curValue = myState.curValue.not();
@@ -95,9 +95,9 @@ abstract class AbstractFlipFlop extends InstanceFactory {
 
     @Override
     public void keyTyped(InstanceState state, KeyEvent e) {
-      final var val = Character.digit(e.getKeyChar(), 16);
+      final int val = Character.digit(e.getKeyChar(), 16);
       if (val < 0) return;
-      final var myState = (StateData) state.getData();
+      final com.cburch.logisim.std.memory.AbstractFlipFlop.StateData myState = (StateData) state.getData();
       if (myState == null) return;
       if (val == 0 && myState.curValue != Value.FALSE) {
         myState.curValue = Value.FALSE;
@@ -110,7 +110,7 @@ abstract class AbstractFlipFlop extends InstanceFactory {
 
     @Override
     public void keyPressed(InstanceState state, KeyEvent e) {
-      final var myState = (StateData) state.getData();
+      final com.cburch.logisim.std.memory.AbstractFlipFlop.StateData myState = (StateData) state.getData();
       if (myState == null) return;
       if (e.getKeyCode() == KeyEvent.VK_DOWN && myState.curValue != Value.FALSE) {
         myState.curValue = Value.FALSE;
@@ -172,7 +172,7 @@ abstract class AbstractFlipFlop extends InstanceFactory {
   }
 
   private void updatePorts(Instance instance) {
-    final var ps = new Port[numInputs + STD_PORTS];
+    final com.cburch.logisim.instance.Port[] ps = new Port[numInputs + STD_PORTS];
     if (instance.getAttributeValue(StdAttr.APPEARANCE) == StdAttr.APPEAR_CLASSIC) {
       if (numInputs == 1) {
         ps[0] = new Port(-40, 20, Port.INPUT, 1);
@@ -228,7 +228,7 @@ abstract class AbstractFlipFlop extends InstanceFactory {
   protected void configureNewInstance(Instance instance) {
     instance.addAttributeListener();
     updatePorts(instance);
-    final var bds = instance.getBounds();
+    final com.cburch.logisim.data.Bounds bds = instance.getBounds();
     instance.setTextField(
         StdAttr.LABEL,
         StdAttr.LABEL_FONT,
@@ -240,8 +240,8 @@ abstract class AbstractFlipFlop extends InstanceFactory {
 
   @Override
   public String getHDLName(AttributeSet attrs) {
-    final var completeName = new StringBuilder();
-    final var parts = this.getName().split(" ");
+    final java.lang.StringBuilder completeName = new StringBuilder();
+    final java.lang.String[] parts = this.getName().split(" ");
     completeName.append(parts[0].replace("-", "_").toUpperCase());
     completeName.append("_");
     if (attrs.containsAttribute(StdAttr.EDGE_TRIGGER)) {
@@ -276,12 +276,12 @@ abstract class AbstractFlipFlop extends InstanceFactory {
   }
 
   private void paintInstanceClassic(InstancePainter painter) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     painter.drawBounds();
     painter.drawLabel();
     if (painter.getShowState()) {
-      final var loc = painter.getLocation();
-      final var myState = (StateData) painter.getData();
+      final com.cburch.logisim.data.Location loc = painter.getLocation();
+      final com.cburch.logisim.std.memory.AbstractFlipFlop.StateData myState = (StateData) painter.getData();
       if (myState != null) {
         int x = loc.getX();
         int y = loc.getY();
@@ -307,9 +307,9 @@ abstract class AbstractFlipFlop extends InstanceFactory {
   }
 
   private void paintInstanceEvolution(InstancePainter painter) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     painter.drawLabel();
-    final var loc = painter.getLocation();
+    final com.cburch.logisim.data.Location loc = painter.getLocation();
     int x = loc.getX();
     int y = loc.getY();
 
@@ -319,7 +319,7 @@ abstract class AbstractFlipFlop extends InstanceFactory {
 
     // Draw info circle
     if (painter.getShowState()) {
-      final var myState = (StateData) painter.getData();
+      final com.cburch.logisim.std.memory.AbstractFlipFlop.StateData myState = (StateData) painter.getData();
       if (myState != null) {
         g.setColor(myState.curValue.getColor());
         g.fillOval(x + 13, y + 23, 14, 14);
@@ -343,7 +343,7 @@ abstract class AbstractFlipFlop extends InstanceFactory {
       GraphicsUtil.drawCenteredText(g, getInputName(i), x + 8, y + 8 + i * 20);
     }
 
-    final var trigger = painter.getAttributeValue(triggerAttribute);
+    final com.cburch.logisim.data.AttributeOption trigger = painter.getAttributeValue(triggerAttribute);
     // Draw clock or enable symbol
     if (trigger.equals(StdAttr.TRIG_RISING) || trigger.equals(StdAttr.TRIG_FALLING)) {
       painter.drawClockSymbol(x, y + 50);
@@ -397,12 +397,12 @@ abstract class AbstractFlipFlop extends InstanceFactory {
       data.curValue = Value.TRUE;
     } else if (triggered /* && state.getPortValue(n + 5) != Value.FALSE */) {
       // Clock has triggered and flip-flop is enabled: Update the state
-      final var inputs = new Value[n];
+      final com.cburch.logisim.data.Value[] inputs = new Value[n];
       for (int i = 0; i < n; i++) {
         inputs[i] = state.getPortValue(i);
       }
 
-      final var newVal = computeValue(inputs, data.curValue);
+      final com.cburch.logisim.data.Value newVal = computeValue(inputs, data.curValue);
       if (newVal == Value.TRUE || newVal == Value.FALSE) {
         // changed |= data.curValue != newVal;
         data.curValue = newVal;

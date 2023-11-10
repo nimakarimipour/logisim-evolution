@@ -85,11 +85,11 @@ public class RamAppearance {
 
   public static int getNrBEPorts(AttributeSet attrs) {
     if (!attrs.containsAttribute(Mem.ENABLES_ATTR)) return 0;
-    final var async = !synchronous(attrs);
+    final boolean async = !synchronous(attrs);
     if (attrs.getValue(Mem.ENABLES_ATTR).equals(Mem.USEBYTEENABLES)
         && attrs.getValue(RamAttributes.ATTR_ByteEnables).equals(RamAttributes.BUS_WITH_BYTEENABLES)
         && !async) {
-      final var nrBits = attrs.getValue(Mem.DATA_ATTR).getWidth();
+      final int nrBits = attrs.getValue(Mem.DATA_ATTR).getWidth();
       return (nrBits < 9) ? 0 : (nrBits + 7) >> 3;
     }
     return 0;
@@ -170,8 +170,8 @@ public class RamAppearance {
   }
 
   public static void configurePorts(Instance instance) {
-    final var attrs = instance.getAttributeSet();
-    final var ps = new Port[getNrOfPorts(attrs)];
+    final com.cburch.logisim.data.AttributeSet attrs = instance.getAttributeSet();
+    final com.cburch.logisim.instance.Port[] ps = new Port[getNrOfPorts(attrs)];
     for (int i = 0; i < getNrAddrPorts(attrs); i++)
       ps[getAddrIndex(i, attrs)] = getAddrPort(i, attrs);
     for (int i = 0; i < getNrDataInPorts(attrs); i++)
@@ -208,14 +208,14 @@ public class RamAppearance {
   }
 
   public static void drawRamClassic(InstancePainter painter) {
-    final var attrs = painter.getAttributeSet();
-    final var g = painter.getGraphics();
-    final var bds = painter.getBounds();
-    final var inst = painter.getInstance();
+    final com.cburch.logisim.data.AttributeSet attrs = painter.getAttributeSet();
+    final java.awt.Graphics g = painter.getGraphics();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+    final com.cburch.logisim.instance.Instance inst = painter.getInstance();
     /* draw label */
-    final var Label = painter.getAttributeValue(StdAttr.LABEL);
+    final java.lang.String Label = painter.getAttributeValue(StdAttr.LABEL);
     if (Label != null && painter.getAttributeValue(StdAttr.LABEL_VISIBILITY)) {
-      final var font = g.getFont();
+      final java.awt.Font font = g.getFont();
       g.setFont(painter.getAttributeValue(StdAttr.LABEL_FONT));
       GraphicsUtil.drawCenteredText(g, Label, bds.getX() + bds.getWidth() / 2, bds.getY() - g.getFont().getSize());
       g.setFont(font);
@@ -225,7 +225,7 @@ public class RamAppearance {
     /* draw connections */
     drawConnections(inst, attrs, painter);
     /* draw the size */
-    final var type = inst.getFactory() instanceof Ram ? "RAM " : "ROM ";  // FIXME: hardcoded string
+    final java.lang.String type = inst.getFactory() instanceof Ram ? "RAM " : "ROM ";  // FIXME: hardcoded string
     GraphicsUtil.drawCenteredText(g,
             type + Mem.getSizeLabel(painter.getAttributeValue(Mem.ADDR_ATTR).getWidth())
                 + " x " + painter.getAttributeValue(Mem.DATA_ATTR).getWidth(),
@@ -248,14 +248,14 @@ public class RamAppearance {
   }
 
   public static void drawRamEvolution(InstancePainter painter) {
-    final var attrs = painter.getAttributeSet();
-    final var g = painter.getGraphics();
-    final var bds = painter.getBounds();
-    final var inst = painter.getInstance();
+    final com.cburch.logisim.data.AttributeSet attrs = painter.getAttributeSet();
+    final java.awt.Graphics g = painter.getGraphics();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+    final com.cburch.logisim.instance.Instance inst = painter.getInstance();
     /* draw label */
-    final var Label = painter.getAttributeValue(StdAttr.LABEL);
+    final java.lang.String Label = painter.getAttributeValue(StdAttr.LABEL);
     if (Label != null && painter.getAttributeValue(StdAttr.LABEL_VISIBILITY)) {
-      final var font = g.getFont();
+      final java.awt.Font font = g.getFont();
       g.setFont(painter.getAttributeValue(StdAttr.LABEL_FONT));
       GraphicsUtil.drawCenteredText(g, Label, bds.getX() + bds.getWidth() / 2, bds.getY() - g.getFont().getSize());
       g.setFont(font);
@@ -266,14 +266,14 @@ public class RamAppearance {
     /* draw connections */
     drawConnections(inst, attrs, painter);
     /* draw the size */
-    final var type = inst.getFactory() instanceof Ram ? "RAM " : "ROM ";  // FIXME hardcoded string
+    final java.lang.String type = inst.getFactory() instanceof Ram ? "RAM " : "ROM ";  // FIXME hardcoded string
     GraphicsUtil.drawCenteredText(g,
             type + Mem.getSizeLabel(painter.getAttributeValue(Mem.ADDR_ATTR).getWidth())
                 + " x " + painter.getAttributeValue(Mem.DATA_ATTR).getWidth(),
             bds.getX() + (Mem.SymbolWidth / 2) + 20, bds.getY() + 6);
     /* draw the contents */
     if (painter.getShowState()) {
-      final var state = (MemState) inst.getData(painter.getCircuitState());
+      final com.cburch.logisim.std.memory.MemState state = (MemState) inst.getData(painter.getCircuitState());
       if (state != null)
         state.paint(
             painter.getGraphics(),
@@ -293,7 +293,7 @@ public class RamAppearance {
       if (!classicAppearance(attrs)) result += 30;
       result += getNrLEPorts(attrs) * 10;
     } else if (attrs.containsAttribute(StdAttr.TRIGGER)) {
-      final var async = !synchronous(attrs);
+      final boolean async = !synchronous(attrs);
       result += 20;
       if (!async) result += 10;
       result += getNrBEPorts(attrs) * 10;
@@ -341,21 +341,21 @@ public class RamAppearance {
   }
 
   private static Port getAddrPort(int portIndex, AttributeSet attrs) {
-    final var result = new Port(0, 10, Port.INPUT, attrs.getValue(Mem.ADDR_ATTR));
+    final com.cburch.logisim.instance.Port result = new Port(0, 10, Port.INPUT, attrs.getValue(Mem.ADDR_ATTR));
     result.setToolTip(S.getter("memAddrTip"));
     return result;
   }
 
   private static Port getDataInPort(int portIndex, AttributeSet attrs) {
-    final var nrDins = getNrDataInPorts(attrs);
+    final int nrDins = getNrDataInPorts(attrs);
     if (nrDins == 0 || portIndex < 0) return null;
     if (portIndex >= nrDins) return null;
     int ypos = getControlHeight(attrs);
-    final var classic = classicAppearance(attrs);
-    final var bits = attrs.getValue(Mem.DATA_ATTR);
+    final boolean classic = classicAppearance(attrs);
+    final com.cburch.logisim.data.BitWidth bits = attrs.getValue(Mem.DATA_ATTR);
     if (!classic && bits.getWidth() == 1) ypos += 10;
     ypos += portIndex * 10;
-    final var result = new Port(0, ypos, Port.INPUT, bits);
+    final com.cburch.logisim.instance.Port result = new Port(0, ypos, Port.INPUT, bits);
     switch (portIndex) {
       case 0:
         if (nrDins == 1) result.setToolTip(S.getter("ramInTip"));
@@ -377,7 +377,7 @@ public class RamAppearance {
   }
 
   private static Port getDataOutPort(int portIndex, AttributeSet attrs) {
-    final var nrDouts = getNrDataOutPorts(attrs);
+    final int nrDouts = getNrDataOutPorts(attrs);
     if (nrDouts == 0 || portIndex < 0) return null;
     if (portIndex >= nrDouts) return null;
     int ypos = getControlHeight(attrs);
@@ -387,11 +387,11 @@ public class RamAppearance {
       xpos += 10;
       portType = Port.INOUT;
     }
-    final var classic = classicAppearance(attrs);
-    final var bits = attrs.getValue(Mem.DATA_ATTR);
+    final boolean classic = classicAppearance(attrs);
+    final com.cburch.logisim.data.BitWidth bits = attrs.getValue(Mem.DATA_ATTR);
     if (!classic && bits.getWidth() == 1) ypos += 10;
     ypos += portIndex * 10;
-    final var result = new Port(xpos, ypos, portType, bits);
+    final com.cburch.logisim.instance.Port result = new Port(xpos, ypos, portType, bits);
     switch (portIndex) {
       case 0:
         if (nrDouts == 1) result.setToolTip(S.getter("memDataTip"));
@@ -413,31 +413,31 @@ public class RamAppearance {
   }
 
   private static Port getOEPort(int portIndex, AttributeSet attrs) {
-    final var nrOEs = getNrOEPorts(attrs);
+    final int nrOEs = getNrOEPorts(attrs);
     if (nrOEs == 0 || portIndex < 0) return null;
     if (portIndex >= nrOEs) return null;
     int ypos = 60;
     if (attrs.getValue(Mem.ENABLES_ATTR).equals(Mem.USELINEENABLES) && classicAppearance(attrs))
       ypos = 20;
-    final var result = new Port(0, ypos, Port.INPUT, 1);
+    final com.cburch.logisim.instance.Port result = new Port(0, ypos, Port.INPUT, 1);
     result.setToolTip(S.getter("ramOETip"));
     return result;
   }
 
   private static Port getWEPort(int portIndex, AttributeSet attrs) {
-    final var nrWEs = getNrWEPorts(attrs);
+    final int nrWEs = getNrWEPorts(attrs);
     if (nrWEs == 0 || portIndex < 0) return null;
     if (portIndex >= nrWEs) return null;
     int ypos = 50;
     if (attrs.getValue(Mem.ENABLES_ATTR).equals(Mem.USELINEENABLES) && classicAppearance(attrs))
       ypos = 30;
-    final var result = new Port(0, ypos, Port.INPUT, 1);
+    final com.cburch.logisim.instance.Port result = new Port(0, ypos, Port.INPUT, 1);
     result.setToolTip(S.getter("ramWETip"));
     return result;
   }
 
   private static Port getClkPort(int portIndex, AttributeSet attrs) {
-    final var nrClks = getNrClkPorts(attrs);
+    final int nrClks = getNrClkPorts(attrs);
     if (nrClks == 0 || portIndex < 0) return null;
     if (portIndex >= nrClks) return null;
     int ypos = 70;
@@ -445,20 +445,20 @@ public class RamAppearance {
       ypos = 40;
     ypos += getNrLEPorts(attrs) * 10;
     ypos += getNrBEPorts(attrs) * 10;
-    final var result = new Port(0, ypos, Port.INPUT, 1);
+    final com.cburch.logisim.instance.Port result = new Port(0, ypos, Port.INPUT, 1);
     result.setToolTip(S.getter("ramClkTip"));
     return result;
   }
 
   private static Port getLEPort(int portIndex, AttributeSet attrs) {
-    final var nrLEs = getNrLEPorts(attrs);
+    final int nrLEs = getNrLEPorts(attrs);
     if (nrLEs == 0 || portIndex < 0) return null;
     if (portIndex >= nrLEs) return null;
     int ypos = 70;
     if (attrs.getValue(Mem.ENABLES_ATTR).equals(Mem.USELINEENABLES) && classicAppearance(attrs))
       ypos = 40;
     ypos += portIndex * 10;
-    final var result = new Port(0, ypos, Port.INPUT, 1);
+    final com.cburch.logisim.instance.Port result = new Port(0, ypos, Port.INPUT, 1);
     switch (portIndex) {
       case 0 -> result.setToolTip(S.getter("ramLETip0"));
       case 1 -> result.setToolTip(S.getter("ramLETip1"));
@@ -472,11 +472,11 @@ public class RamAppearance {
   }
 
   private static Port getBEPort(int portIndex, AttributeSet attrs) {
-    final var nrBEs = getNrBEPorts(attrs);
+    final int nrBEs = getNrBEPorts(attrs);
     if (nrBEs == 0 || portIndex < 0) return null;
     if (portIndex >= nrBEs) return null;
-    final var ypos = 70 + (nrBEs - portIndex - 1) * 10;
-    final var result = new Port(0, ypos, Port.INPUT, 1);
+    final int ypos = 70 + (nrBEs - portIndex - 1) * 10;
+    final com.cburch.logisim.instance.Port result = new Port(0, ypos, Port.INPUT, 1);
     switch (portIndex) {
       case 0 -> result.setToolTip(S.getter("ramByteEnableTip0"));
       case 1 -> result.setToolTip(S.getter("ramByteEnableTip1"));
@@ -491,7 +491,7 @@ public class RamAppearance {
 
   private static Port getClrPort(int portIndex, AttributeSet attrs) {
     if (getNrClrPorts(attrs) == 0 || portIndex != 0) return null;
-    final var result = new Port(40, 0, Port.INPUT, 1);
+    final com.cburch.logisim.instance.Port result = new Port(40, 0, Port.INPUT, 1);
     result.setToolTip(S.getter("ramClrPin"));
     return result;
   }
@@ -509,24 +509,24 @@ public class RamAppearance {
 
   private static void drawConnections(Instance inst, AttributeSet attrs, InstancePainter painter) {
     boolean classic = classicAppearance(attrs);
-    final var g = (Graphics2D) painter.getGraphics().create();
-    final var font = g.getFont();
+    final java.awt.Graphics2D g = (Graphics2D) painter.getGraphics().create();
+    final java.awt.Font font = g.getFont();
     g.setStroke(new BasicStroke(4));
     String label;
-    final var nrOfBits = attrs.getValue(Mem.DATA_ATTR).getWidth();
-    final var nrOfDataPorts = Math.max(getNrDataInPorts(attrs), getNrDataOutPorts(attrs));
+    final int nrOfBits = attrs.getValue(Mem.DATA_ATTR).getWidth();
+    final int nrOfDataPorts = Math.max(getNrDataInPorts(attrs), getNrDataOutPorts(attrs));
     for (int i = 0; i < getNrDataInPorts(attrs); i++) {
       label = !classic ? "" : getNrDataInPorts(attrs) == 1 ? "D" : "D" + i;
-      final var idx = getDataInIndex(i, attrs);
+      final int idx = getDataInIndex(i, attrs);
       if (!classic) {
-        final var loc = inst.getPortLocation(idx);
-        final var x = loc.getX();
-        final var y = loc.getY();
+        final com.cburch.logisim.data.Location loc = inst.getPortLocation(idx);
+        final int x = loc.getX();
+        final int y = loc.getY();
         if (nrOfBits == 1) {
           g.setStroke(new BasicStroke(2));
           if (nrOfDataPorts > 1) {
-            final var xpos = new int[4];
-            final var ypos = new int[4];
+            final int[] xpos = new int[4];
+            final int[] ypos = new int[4];
             xpos[0] = x;
             xpos[1] = xpos[2] = x + 4 + i * 4;
             xpos[3] = x + 20;
@@ -544,8 +544,8 @@ public class RamAppearance {
             else
               g.drawLine(loc.getX(), loc.getY(), loc.getX() + 4, loc.getY() + 4);
           } else {
-            final var xpos = new int[3];
-            final var ypos = new int[3];
+            final int[] xpos = new int[3];
+            final int[] ypos = new int[3];
             xpos[0] = x;
             xpos[1] = xpos[2] = x + 5;
             ypos[0] = y;
@@ -577,15 +577,15 @@ public class RamAppearance {
       label = !classic ? "" : getNrDataOutPorts(attrs) == 1 ? "D" : "D" + i;
       int idx = getDataOutIndex(i, attrs);
       if (!classic) {
-        final var seperate = seperatedBus(attrs) || !attrs.containsAttribute(RamAttributes.ATTR_DBUS);
-        final var loc = inst.getPortLocation(idx);
-        final var x = loc.getX();
-        final var y = loc.getY();
+        final boolean seperate = seperatedBus(attrs) || !attrs.containsAttribute(RamAttributes.ATTR_DBUS);
+        final com.cburch.logisim.data.Location loc = inst.getPortLocation(idx);
+        final int x = loc.getX();
+        final int y = loc.getY();
         if (nrOfBits == 1) {
           g.setStroke(new BasicStroke(2));
           if (nrOfDataPorts > 1) {
-            final var xpos = new int[4];
-            final var ypos = new int[4];
+            final int[] xpos = new int[4];
+            final int[] ypos = new int[4];
             xpos[0] = x;
             xpos[1] = xpos[2] = x - (i + 1) * 4;
             xpos[3] = x - 20;
@@ -604,8 +604,8 @@ public class RamAppearance {
             else
               g.drawLine(x - 4, y + 4, x, y);
           } else {
-            final var xpos = new int[3];
-            final var ypos = new int[3];
+            final int[] xpos = new int[3];
+            final int[] ypos = new int[3];
             xpos[0] = x;
             xpos[1] = xpos[2] = x - 5;
             ypos[0] = y;
@@ -638,11 +638,11 @@ public class RamAppearance {
       label = !classic ? "" : getNrAddrPorts(attrs) == 1 ? "A" : "A" + i;
       int idx = getAddrIndex(i, attrs);
       if (!classic) {
-        final var loc = inst.getPortLocation(idx);
+        final com.cburch.logisim.data.Location loc = inst.getPortLocation(idx);
         int x = loc.getX();
         int y = loc.getY();
-        final var xpos = new int[3];
-        final var ypos = new int[3];
+        final int[] xpos = new int[3];
+        final int[] ypos = new int[3];
         xpos[0] = x;
         xpos[1] = xpos[2] = x + 5;
         ypos[0] = y;
@@ -669,9 +669,9 @@ public class RamAppearance {
     g.setStroke(new BasicStroke(2));
     for (int i = 0; i < getNrOEPorts(attrs); i++) {
       label = !classic ? "" : getNrOEPorts(attrs) == 1 ? "OE" : "OE" + i;
-      final var idx = getOEIndex(i, attrs);
+      final int idx = getOEIndex(i, attrs);
       if (!classic) {
-        final var loc = inst.getPortLocation(idx);
+        final com.cburch.logisim.data.Location loc = inst.getPortLocation(idx);
         g.drawLine(loc.getX(), loc.getY(), loc.getX() + 20, loc.getY());
       }
       painter.drawPort(idx, label, Direction.EAST);
@@ -679,18 +679,18 @@ public class RamAppearance {
 
     for (int i = 0; i < getNrWEPorts(attrs); i++) {
       label = !classic ? "" : getNrWEPorts(attrs) == 1 ? "WE" : "WE" + i;
-      final var idx = getWEIndex(i, attrs);
+      final int idx = getWEIndex(i, attrs);
       if (!classic) {
-        final var loc = inst.getPortLocation(idx);
+        final com.cburch.logisim.data.Location loc = inst.getPortLocation(idx);
         g.drawLine(loc.getX(), loc.getY(), loc.getX() + 20, loc.getY());
       }
       painter.drawPort(idx, label, Direction.EAST);
     }
 
     for (int i = 0; i < getNrClkPorts(attrs); i++) {
-      final var idx = getClkIndex(i, attrs);
+      final int idx = getClkIndex(i, attrs);
       if (!classic) {
-        final var loc = inst.getPortLocation(idx);
+        final com.cburch.logisim.data.Location loc = inst.getPortLocation(idx);
         int xend = 20;
         if (attrs.getValue(StdAttr.TRIGGER).equals(StdAttr.TRIG_FALLING)
             || attrs.getValue(StdAttr.TRIGGER).equals(StdAttr.TRIG_LOW)) {
@@ -710,9 +710,9 @@ public class RamAppearance {
 
     for (int i = 0; i < getNrLEPorts(attrs); i++) {
       label = !classic ? "" : getNrLEPorts(attrs) == 1 ? "LE" : "LE" + i;
-      final var idx = getLEIndex(i, attrs);
+      final int idx = getLEIndex(i, attrs);
       if (!classic) {
-        final var loc = inst.getPortLocation(idx);
+        final com.cburch.logisim.data.Location loc = inst.getPortLocation(idx);
         g.drawLine(loc.getX(), loc.getY(), loc.getX() + 20, loc.getY());
       }
       painter.drawPort(idx, label, Direction.EAST);
@@ -722,25 +722,25 @@ public class RamAppearance {
       label = !classic ? "" : getNrBEPorts(attrs) == 1 ? "BE" : "BE" + i;
       int idx = getBEIndex(i, attrs);
       if (!classic) {
-        final var loc = inst.getPortLocation(idx);
+        final com.cburch.logisim.data.Location loc = inst.getPortLocation(idx);
         g.drawLine(loc.getX(), loc.getY(), loc.getX() + 20, loc.getY());
       }
       painter.drawPort(idx, label, Direction.EAST);
     }
 
     for (int i = 0; i < getNrClrPorts(attrs); i++) {
-      final var idx = getClrIndex(i, attrs);
+      final int idx = getClrIndex(i, attrs);
       painter.drawPort(idx);
     }
     g.dispose();
   }
 
   private static void drawControlBlock(Instance inst, AttributeSet attrs, InstancePainter painter) {
-    final var g = (Graphics2D) painter.getGraphics().create();
-    final var xpos = new int[8];
-    final var ypos = new int[8];
-    final var x = painter.getBounds().getX();
-    final var y = painter.getBounds().getY();
+    final java.awt.Graphics2D g = (Graphics2D) painter.getGraphics().create();
+    final int[] xpos = new int[8];
+    final int[] ypos = new int[8];
+    final int x = painter.getBounds().getX();
+    final int y = painter.getBounds().getY();
     xpos[0] = xpos[1] = x + 30;
     xpos[2] = xpos[3] = x + 20;
     xpos[4] = xpos[5] = x + Mem.SymbolWidth + 20;
@@ -751,46 +751,46 @@ public class RamAppearance {
     GraphicsUtil.switchToWidth(g, 2);
     g.drawPolyline(xpos, ypos, 8);
     for (int i = 0; i < getNrAddrPorts(attrs); i++) {
-      final var idx = getAddrIndex(i, attrs);
-      final var loc = inst.getPortLocation(idx);
+      final int idx = getAddrIndex(i, attrs);
+      final com.cburch.logisim.data.Location loc = inst.getPortLocation(idx);
       drawAddress(g, loc.getX(), loc.getY(), attrs.getValue(Mem.ADDR_ATTR).getWidth());
     }
 
     int cidx = 1;
     for (int i = 0; i < getNrClkPorts(attrs); i++) {
-      final var idx = getClkIndex(i, attrs);
-      final var loc = inst.getPortLocation(idx);
-      final var label = synchronous(attrs) ? "C" + cidx : "E" + cidx;
+      final int idx = getClkIndex(i, attrs);
+      final com.cburch.logisim.data.Location loc = inst.getPortLocation(idx);
+      final java.lang.String label = synchronous(attrs) ? "C" + cidx : "E" + cidx;
       cidx++;
       g.drawString(label, loc.getX() + 33, loc.getY() + 5);
     }
 
     for (int i = 0; i < getNrOEPorts(attrs); i++) {
-      final var idx = getOEIndex(i, attrs);
-      final var loc = inst.getPortLocation(idx);
-      final var label = "M" + cidx + " [Output enable]";
+      final int idx = getOEIndex(i, attrs);
+      final com.cburch.logisim.data.Location loc = inst.getPortLocation(idx);
+      final java.lang.String label = "M" + cidx + " [Output enable]";
       cidx++;
       g.drawString(label, loc.getX() + 33, loc.getY() + 5);
     }
 
     for (int i = 0; i < getNrWEPorts(attrs); i++) {
-      final var idx = getWEIndex(i, attrs);
-      final var loc = inst.getPortLocation(idx);
-      final var label = "M" + cidx + " [Write enable]";
+      final int idx = getWEIndex(i, attrs);
+      final com.cburch.logisim.data.Location loc = inst.getPortLocation(idx);
+      final java.lang.String label = "M" + cidx + " [Write enable]";
       cidx++;
       g.drawString(label, loc.getX() + 33, loc.getY() + 5);
     }
     for (int i = 0; i < getNrLEPorts(attrs); i++) {
-      final var idx = getLEIndex(i, attrs);
-      final var loc = inst.getPortLocation(idx);
-      final var label = "M" + cidx + " [Line enable " + i + "]";
+      final int idx = getLEIndex(i, attrs);
+      final com.cburch.logisim.data.Location loc = inst.getPortLocation(idx);
+      final java.lang.String label = "M" + cidx + " [Line enable " + i + "]";
       cidx++;
       g.drawString(label, loc.getX() + 33, loc.getY() + 5);
     }
     for (int i = 0; i < getNrBEPorts(attrs); i++) {
-      final var idx = getBEIndex(i, attrs);
-      final var loc = inst.getPortLocation(idx);
-      final var label = "M" + cidx + " [Byte enable " + i + "]";
+      final int idx = getBEIndex(i, attrs);
+      final com.cburch.logisim.data.Location loc = inst.getPortLocation(idx);
+      final java.lang.String label = "M" + cidx + " [Byte enable " + i + "]";
       cidx++;
       g.drawString(label, loc.getX() + 33, loc.getY() + 5);
     }
@@ -798,21 +798,21 @@ public class RamAppearance {
   }
 
   private static void drawDataBlocks(Instance inst, AttributeSet attrs, InstancePainter painter) {
-    final var g = (Graphics2D) painter.getGraphics().create();
-    final var x = painter.getBounds().getX() + 20;
+    final java.awt.Graphics2D g = (Graphics2D) painter.getGraphics().create();
+    final int x = painter.getBounds().getX() + 20;
     int y = painter.getBounds().getY() + getControlHeight(attrs);
-    final var width = Mem.SymbolWidth;
-    final var height = 20;
+    final int width = Mem.SymbolWidth;
+    final int height = 20;
     g.setFont(g.getFont().deriveFont(9.0f));
-    final var nrOfBits = attrs.getValue(Mem.DATA_ATTR).getWidth();
-    final var doutLabel = new StringBuilder();
-    final var dinLabel = new StringBuilder();
+    final int nrOfBits = attrs.getValue(Mem.DATA_ATTR).getWidth();
+    final java.lang.StringBuilder doutLabel = new StringBuilder();
+    final java.lang.StringBuilder dinLabel = new StringBuilder();
     doutLabel.append("A");
     dinLabel.append("A");
     int cidx = 1;
-    final var async = !synchronous(attrs) || (attrs.containsAttribute(Mem.ASYNC_READ) && attrs.getValue(Mem.ASYNC_READ));
-    final var drawDin = attrs.containsAttribute(RamAttributes.ATTR_DBUS);
-    final var seperate = seperatedBus(attrs) || !drawDin;
+    final boolean async = !synchronous(attrs) || (attrs.containsAttribute(Mem.ASYNC_READ) && attrs.getValue(Mem.ASYNC_READ));
+    final boolean drawDin = attrs.containsAttribute(RamAttributes.ATTR_DBUS);
+    final boolean seperate = seperatedBus(attrs) || !drawDin;
     for (int i = 0; i < getNrClkPorts(attrs); i++) {
       if (!async) doutLabel.append(",").append(cidx);
       dinLabel.append(",").append(cidx);
@@ -830,16 +830,16 @@ public class RamAppearance {
       dinLabel.append(",").append(cidx);
       cidx++;
     }
-    final var appendBE = getNrBEPorts(attrs) > 0;
-    final var DLabel = seperate ? "" : "D";
+    final boolean appendBE = getNrBEPorts(attrs) > 0;
+    final java.lang.String DLabel = seperate ? "" : "D";
     for (int i = 0; i < nrOfBits; i++) {
       g.setStroke(new BasicStroke(2));
       g.drawRect(x, y, width, height);
       g.setStroke(new BasicStroke(1));
       GraphicsUtil.drawText(g, doutLabel.toString(), x - (seperate ? 3 : 10) + Mem.SymbolWidth, y + (seperate ? 10 : 5), GraphicsUtil.H_RIGHT, GraphicsUtil.V_CENTER);
       if (!seperate) {
-        final var xpos = new int[3];
-        final var ypos = new int[3];
+        final int[] xpos = new int[3];
+        final int[] ypos = new int[3];
         xpos[0] = x - 8 + Mem.SymbolWidth;
         xpos[1] = x - 5 + Mem.SymbolWidth;
         xpos[2] = x - 2 + Mem.SymbolWidth;
@@ -849,7 +849,7 @@ public class RamAppearance {
       }
       java.lang.String BEIndex = "";
       if (appendBE) {
-        final var beIdx = cidx + (i >> 3);
+        final int beIdx = cidx + (i >> 3);
         BEIndex = "," + beIdx;
       }
       if (drawDin)
@@ -866,8 +866,8 @@ public class RamAppearance {
   }
 
   private static void drawBidir(Graphics2D g, int x, int y) {
-    final var xpos = new int[4];
-    final var ypos = new int[4];
+    final int[] xpos = new int[4];
+    final int[] ypos = new int[4];
     xpos[0] = xpos[3] = x - 10;
     xpos[1] = xpos[2] = x;
     ypos[0] = ypos[1] = y - 5;
@@ -904,10 +904,10 @@ public class RamAppearance {
     g.drawLine(xpos + 48, ypos + 20, xpos + 45, ypos + 23);
     g.drawLine(xpos + 45, ypos + 23, xpos + 45, ypos + 30);
     g.drawLine(xpos + 40, ypos + 35, xpos + 45, ypos + 30);
-    final var size = Long.toString((1 << nrAddressBits) - 1);
-    final var font = g.getFont();
-    final var fm = g.getFontMetrics(font);
-    final var StrSize = fm.stringWidth(size);
+    final java.lang.String size = Long.toString((1 << nrAddressBits) - 1);
+    final java.awt.Font font = g.getFont();
+    final java.awt.FontMetrics fm = g.getFontMetrics(font);
+    final int StrSize = fm.stringWidth(size);
     g.drawLine(xpos + 60, ypos + 20, xpos + 60 + StrSize, ypos + 20);
     GraphicsUtil.drawText(g, "0", xpos + 60 + (StrSize / 2), ypos + 19, GraphicsUtil.H_CENTER, GraphicsUtil.V_BOTTOM);
     GraphicsUtil.drawText(g, size, xpos + 60 + (StrSize / 2), ypos + 21, GraphicsUtil.H_CENTER, GraphicsUtil.V_TOP);

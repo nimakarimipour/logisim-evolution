@@ -41,7 +41,7 @@ class AboutCredits extends JComponent {
   private final Lines lines;
 
   public AboutCredits(int width, int height) {
-    final var jvm =
+    final java.lang.String jvm =
         LineBuffer.format(
             "{{1}} v{{2}} ({{3}})",
             System.getProperty("java.vm.name"),
@@ -102,19 +102,19 @@ class AboutCredits extends JComponent {
       lines.initialize(getGraphics(), getWidth(), getHeight());
     }
 
-    final var height = getHeight();
-    final var maxOffsetY = lines.totalScrollLinesHeight + height;
-    final var offsetY =
+    final int height = getHeight();
+    final int maxOffsetY = lines.totalScrollLinesHeight + height;
+    final int offsetY =
         ((int) (System.currentTimeMillis() - startMillis) / MILLIS_PER_RASTER) % maxOffsetY;
-    final var yPos = offsetY - height;
+    final int yPos = offsetY - height;
 
-    for (final var line : lines) {
-      final var y = line.startY - yPos;
+    for (final com.cburch.logisim.gui.start.AboutCredits.CreditsLine line : lines) {
+      final int y = line.startY - yPos;
       // do not attempt to draw line contents if it'd be outside of visible area anyway
       if ((y < -line.displayHeight) && (y > height + line.displayHeight)) continue;
 
       // Drawing of each line is kept outside its class for performance reasons.
-      final var cls = line.getClass();
+      final java.lang.Class<? extends com.cburch.logisim.gui.start.AboutCredits.CreditsLine> cls = line.getClass();
       if (cls.equals(ImgLine.class)) {
         g.drawImage(line.img.getImage(), line.x, y, this);
       } else if (cls.equals(TextLine.class)) {
@@ -135,7 +135,7 @@ class AboutCredits extends JComponent {
       if (initialized) return;
 
       // Lets's calculate at what Y value given lines should be drawn
-      for (final var line : lines) {
+      for (final com.cburch.logisim.gui.start.AboutCredits.CreditsLine line : lines) {
         line.init(g, displayWidth, displayHeight, totalScrollLinesHeight);
         totalScrollLinesHeight += line.displayHeight;
       }
@@ -234,7 +234,7 @@ class AboutCredits extends JComponent {
       super.init(g, displayAreaWidth, displayAreaHeight, currentY);
 
       // total padding around image top/bottom
-      final var padding = 20;
+      final int padding = 20;
       displayHeight = img.getIconHeight();
       displayWidth = img.getIconWidth();
       startY = currentY + (padding / 2);
@@ -276,8 +276,8 @@ class AboutCredits extends JComponent {
       }
 
       if (color != null) {
-        final var alpha = displayAreaHeight / 4;
-        final var derrived = new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
+        final int alpha = displayAreaHeight / 4;
+        final java.awt.Color derrived = new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
         paint = new GradientPaint(0.0f, 0.0f, derrived, 0.0f, alpha, color);
       }
     }

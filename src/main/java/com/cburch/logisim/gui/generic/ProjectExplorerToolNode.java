@@ -32,7 +32,7 @@ public class ProjectExplorerToolNode extends ProjectExplorerModel.Node<Tool> imp
   public ProjectExplorerToolNode(ProjectExplorerModel model, Tool tool) {
     super(model, tool);
     if (tool instanceof AddTool) {
-      final var factory = ((AddTool) tool).getFactory();
+      final com.cburch.logisim.comp.ComponentFactory factory = ((AddTool) tool).getFactory();
 
       if (factory instanceof SubcircuitFactory sub) {
         circuit = sub.getSubcircuit();
@@ -63,7 +63,7 @@ public class ProjectExplorerToolNode extends ProjectExplorerModel.Node<Tool> imp
 
   @Override
   public void circuitChanged(CircuitEvent event) {
-    final var act = event.getAction();
+    final int act = event.getAction();
     if (act == CircuitEvent.ACTION_SET_NAME || act == CircuitEvent.ACTION_DISPLAY_CHANGE) {
       fireNodeChanged();
     }

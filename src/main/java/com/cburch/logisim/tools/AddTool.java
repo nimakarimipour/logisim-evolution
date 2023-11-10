@@ -130,7 +130,7 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
     this.bounds = null;
     this.attrs = new FactoryAttributes(source);
     attrs.addAttributeListener(new MyAttributeListener());
-    final var value = (Boolean) source.getFeature(ComponentFactory.SHOULD_SNAP, attrs);
+    final java.lang.Boolean value = (Boolean) source.getFeature(ComponentFactory.SHOULD_SNAP, attrs);
     this.shouldSnap = value == null || value;
     if (this.attrs.containsAttribute(StdAttr.APPEARANCE)) {
       AppPreferences.DefaultAppearance.addPropertyChangeListener(this);
@@ -163,11 +163,11 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
   }
 
   private Tool determineNext(Project proj) {
-    final var afterAdd = AppPreferences.ADD_AFTER.get();
+    final java.lang.String afterAdd = AppPreferences.ADD_AFTER.get();
     if (afterAdd.equals(AppPreferences.ADD_AFTER_UNCHANGED)) {
       return null;
     } else { // switch to Edit Tool
-      final var base = proj.getLogisimFile().getLibrary(BaseLibrary._ID);
+      final com.cburch.logisim.tools.Library base = proj.getLogisimFile().getLibrary(BaseLibrary._ID);
       if (base == null) {
         return null;
       } else {
@@ -180,13 +180,13 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
   public void draw(Canvas canvas, ComponentDrawContext context) {
     // next "if" suggested roughly by Kevin Walsh of Cornell to take care of
     // repaint problems on OpenJDK under Ubuntu
-    final var x = lastX;
-    final var y = lastY;
+    final int x = lastX;
+    final int y = lastY;
     if (x == INVALID_COORD || y == INVALID_COORD) return;
-    final var source = getFactory();
+    final com.cburch.logisim.comp.ComponentFactory source = getFactory();
     if (source == null) return;
-    final var base = getBaseAttributes();
-    final var bds = source.getOffsetBounds(base);
+    final com.cburch.logisim.data.AttributeSet base = getBaseAttributes();
+    final com.cburch.logisim.data.Bounds bds = source.getOffsetBounds(base);
     Color DrawColor;
     /* take care of coloring the components differently that require a label */
     if (state == SHOW_GHOST) {
@@ -229,7 +229,7 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
   }
 
   private void expose(java.awt.Component c, int x, int y) {
-    final var bds = getBounds();
+    final com.cburch.logisim.data.Bounds bds = getBounds();
     c.repaint(x + bds.getX(), y + bds.getY(), bds.getWidth(), bds.getHeight());
   }
 
@@ -253,9 +253,9 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
       if (source == null) {
         ret = Bounds.EMPTY_BOUNDS;
       } else {
-        final var base = getBaseAttributes();
-        final var bds = source.getOffsetBounds(base);
-        final var mbds = Bounds.create(bds.getX(), bds.getY(), bds.getWidth() * 2, bds.getHeight() * 2);
+        final com.cburch.logisim.data.AttributeSet base = getBaseAttributes();
+        final com.cburch.logisim.data.Bounds bds = source.getOffsetBounds(base);
+        final com.cburch.logisim.data.Bounds mbds = Bounds.create(bds.getX(), bds.getY(), bds.getWidth() * 2, bds.getHeight() * 2);
         ret = mbds.expand(5);
       }
       bounds = ret;
@@ -276,11 +276,11 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
   @Override
   public String getDescription() {
     String ret;
-    final var desc = description;
+    final com.cburch.logisim.tools.FactoryDescription desc = description;
     if (desc != null) {
       ret = desc.getToolTip();
     } else {
-      final var source = getFactory();
+      final com.cburch.logisim.comp.ComponentFactory source = getFactory();
       if (source != null) {
         ret = (String) source.getFeature(ComponentFactory.TOOL_TIP, getAttributeSet());
       } else {
@@ -295,7 +295,7 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
 
   @Override
   public String getDisplayName() {
-    final var desc = description;
+    final com.cburch.logisim.tools.FactoryDescription desc = description;
     return desc == null ? factory.getDisplayName() : desc.getDisplayName();
   }
 
@@ -304,8 +304,8 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
     if (ret == null && !sourceLoadAttempted) {
       ret = description.getFactory(descriptionBase);
       if (ret != null) {
-        final var base = getBaseAttributes();
-        final var value = (Boolean) ret.getFeature(ComponentFactory.SHOULD_SNAP, base);
+        final com.cburch.logisim.data.AttributeSet base = getBaseAttributes();
+        final java.lang.Boolean value = (Boolean) ret.getFeature(ComponentFactory.SHOULD_SNAP, base);
         shouldSnap = value == null || value;
       }
       factory = ret;
@@ -342,8 +342,8 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
     processKeyEvent(canvas, event, KeyConfigurationEvent.KEY_PRESSED);
 
     if (!event.isConsumed() && event.getModifiersEx() == 0) {
-      final var keyEventB = event.getKeyCode();
-      final var component = getFactory().getDisplayName();
+      final int keyEventB = event.getKeyCode();
+      final java.lang.String component = getFactory().getDisplayName();
       if (!GateKeyboardModifier.tookKeyboardStrokes(keyEventB, null, attrs, canvas, null, false))
         if (autoLabeler.labelKeyboardHandler(keyEventB,
             getAttributeSet(),
@@ -373,19 +373,19 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
               setFacing(canvas, Direction.EAST);
               break;
             case KeyEvent.VK_R:
-              final var current = getFacing();
+              final com.cburch.logisim.data.Direction current = getFacing();
               if (current == Direction.NORTH) setFacing(canvas, Direction.EAST);
               else if (current == Direction.EAST) setFacing(canvas, Direction.SOUTH);
               else if (current == Direction.SOUTH) setFacing(canvas, Direction.WEST);
               else setFacing(canvas, Direction.NORTH);
               break;
             case KeyEvent.VK_ESCAPE:
-              final var proj = canvas.getProject();
-              final var base = proj.getLogisimFile().getLibrary(BaseLibrary._ID);
-              final var next = (base == null) ? null : base.getTool(EditTool._ID);
+              final com.cburch.logisim.proj.Project proj = canvas.getProject();
+              final com.cburch.logisim.tools.Library base = proj.getLogisimFile().getLibrary(BaseLibrary._ID);
+              final com.cburch.logisim.tools.Tool next = (base == null) ? null : base.getTool(EditTool._ID);
               if (next != null) {
                 proj.setTool(next);
-                final var act = SelectionActions.dropAll(canvas.getSelection());
+                final com.cburch.logisim.proj.Action act = SelectionActions.dropAll(canvas.getSelection());
                 if (act != null) {
                   proj.doAction(act);
                 }
@@ -452,13 +452,13 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
   @Override
   public void mousePressed(Canvas canvas, Graphics g, MouseEvent e) {
     // verify the addition would be valid
-    final var circ = canvas.getCircuit();
+    final com.cburch.logisim.circuit.Circuit circ = canvas.getCircuit();
     if (!canvas.getProject().getLogisimFile().contains(circ)) {
       canvas.setErrorMessage(S.getter("cannotModifyError"));
       return;
     }
     if (factory instanceof SubcircuitFactory circFact) {
-      final var depends = canvas.getProject().getDependencies();
+      final com.cburch.logisim.proj.Dependencies depends = canvas.getProject().getDependencies();
       if (!depends.canAdd(circ, circFact.getSubcircuit())) {
         canvas.setErrorMessage(S.getter("circularError"));
         return;
@@ -472,14 +472,14 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
 
   @Override
   public void mouseReleased(Canvas canvas, Graphics gfx, MouseEvent event) {
-    final var added = new ArrayList<Component>();
+    final java.util.ArrayList<com.cburch.logisim.comp.Component> added = new ArrayList<Component>();
     if (state == SHOW_ADD) {
-      final var circ = canvas.getCircuit();
+      final com.cburch.logisim.circuit.Circuit circ = canvas.getCircuit();
       if (!canvas.getProject().getLogisimFile().contains(circ)) return;
       if (shouldSnap) Canvas.snapToGrid(event);
       moveTo(canvas, gfx, event.getX(), event.getY());
 
-      final var source = getFactory();
+      final com.cburch.logisim.comp.ComponentFactory source = getFactory();
       if (source == null) return;
       String label = null;
       if (attrs.containsAttribute(StdAttr.LABEL)) {
@@ -495,12 +495,12 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
           autoLabeler.setLabel("", canvas.getCircuit(), source);
       }
 
-      final var matrix = new MatrixPlacerInfo(label);
+      final com.cburch.logisim.tools.MatrixPlacerInfo matrix = new MatrixPlacerInfo(label);
       if (matrixPlace) {
-        final var base = getBaseAttributes();
-        final var bds = source.getOffsetBounds(base).expand(5);
+        final com.cburch.logisim.data.AttributeSet base = getBaseAttributes();
+        final com.cburch.logisim.data.Bounds bds = source.getOffsetBounds(base).expand(5);
         matrix.setBounds(bds);
-        final var dialog = new MatrixPlacerDialog(matrix, source.getName(), autoLabeler.isActive(canvas.getCircuit()));
+        final com.cburch.logisim.tools.MatrixPlacerDialog dialog = new MatrixPlacerDialog(matrix, source.getName(), autoLabeler.isActive(canvas.getCircuit()));
         boolean okay = false;
         while (!okay) {
           if (!dialog.execute()) return;
@@ -527,13 +527,13 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
       }
 
       try {
-        final var mutation = new CircuitMutation(circ);
+        final com.cburch.logisim.circuit.CircuitMutation mutation = new CircuitMutation(circ);
 
         for (int x = 0; x < matrix.getCopiesCountX(); x++) {
           for (int y = 0; y < matrix.getCopiesCountY(); y++) {
-            final var loc = Location.create(event.getX() + (matrix.getDeltaX() * x),
+            final com.cburch.logisim.data.Location loc = Location.create(event.getX() + (matrix.getDeltaX() * x),
                 event.getY() + (matrix.getDeltaY() * y), true);
-            final var attrsCopy = (AttributeSet) attrs.clone();
+            final com.cburch.logisim.data.AttributeSet attrsCopy = (AttributeSet) attrs.clone();
             if (matrix.getLabel() != null) {
               if (matrixPlace)
                 attrsCopy.setValue(StdAttr.LABEL, autoLabeler.getMatrixLabel(canvas.getCircuit(),
@@ -542,14 +542,14 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
                 attrsCopy.setValue(StdAttr.LABEL, matrix.getLabel());
               }
             }
-            final var comp = source.createComponent(loc, attrsCopy);
+            final com.cburch.logisim.comp.Component comp = source.createComponent(loc, attrsCopy);
 
             if (circ.hasConflict(comp)) {
               canvas.setErrorMessage(S.getter("exclusiveError"));
               return;
             }
 
-            final var bds = comp.getBounds(gfx);
+            final com.cburch.logisim.data.Bounds bds = comp.getBounds(gfx);
             if (bds.getX() < 0 || bds.getY() < 0) {
               canvas.setErrorMessage(S.getter("negativeCoordError"));
               return;
@@ -559,7 +559,7 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
             added.add(comp);
           }
         }
-        final var action = mutation.toAction(S.getter("addComponentAction", factory.getDisplayGetter()));
+        final com.cburch.logisim.proj.Action action = mutation.toAction(S.getter("addComponentAction", factory.getDisplayGetter()));
         canvas.getProject().doAction(action);
         lastAddition = action;
         canvas.repaint();
@@ -573,11 +573,11 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
       setState(canvas, SHOW_NONE);
     }
 
-    final var proj = canvas.getProject();
-    final var next = determineNext(proj);
+    final com.cburch.logisim.proj.Project proj = canvas.getProject();
+    final com.cburch.logisim.tools.Tool next = determineNext(proj);
     if (next != null) {
       proj.setTool(next);
-      final var act = SelectionActions.dropAll(canvas.getSelection());
+      final com.cburch.logisim.proj.Action act = SelectionActions.dropAll(canvas.getSelection());
       if (act != null) {
         proj.doAction(act);
       }
@@ -594,9 +594,9 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
 
   @Override
   public void paintIcon(ComponentDrawContext c, int x, int y) {
-    final var desc = description;
+    final com.cburch.logisim.tools.FactoryDescription desc = description;
     if (desc != null && !desc.isFactoryLoaded()) {
-      final var icon = desc.getIcon();
+      final javax.swing.Icon icon = desc.getIcon();
       if (icon != null) {
         icon.paintIcon(c.getDestination(), c.getGraphics(), x + 2, y + 2);
         return;
@@ -605,7 +605,7 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
 
     ComponentFactory source = getFactory();
     if (source != null) {
-      final var base = getBaseAttributes();
+      final com.cburch.logisim.data.AttributeSet base = getBaseAttributes();
       source.paintIcon(c, x, y, base);
     }
   }
@@ -613,19 +613,19 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
   private void processKeyEvent(Canvas canvas, KeyEvent event, int type) {
     com.cburch.logisim.tools.key.KeyConfigurator handler = keyHandler;
     if (!keyHandlerTried) {
-      final var source = getFactory();
-      final var baseAttrs = getBaseAttributes();
+      final com.cburch.logisim.comp.ComponentFactory source = getFactory();
+      final com.cburch.logisim.data.AttributeSet baseAttrs = getBaseAttributes();
       handler = (KeyConfigurator) source.getFeature(KeyConfigurator.class, baseAttrs);
       keyHandler = handler;
       keyHandlerTried = true;
     }
 
     if (handler != null) {
-      final var baseAttrs = getBaseAttributes();
-      final var e = new KeyConfigurationEvent(type, baseAttrs, event, this);
-      final var r = handler.keyEventReceived(e);
+      final com.cburch.logisim.data.AttributeSet baseAttrs = getBaseAttributes();
+      final com.cburch.logisim.tools.key.KeyConfigurationEvent e = new KeyConfigurationEvent(type, baseAttrs, event, this);
+      final com.cburch.logisim.tools.key.KeyConfigurationResult r = handler.keyEventReceived(e);
       if (r != null) {
-        final var act = ToolAttributeAction.create(r);
+        final com.cburch.logisim.proj.Action act = ToolAttributeAction.create(r);
         canvas.getProject().doAction(act);
       }
     }
@@ -638,22 +638,22 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
   }
 
   private void setFacing(Canvas canvas, Direction facing) {
-    final var source = getFactory();
+    final com.cburch.logisim.comp.ComponentFactory source = getFactory();
     if (source == null) return;
-    final var base = getBaseAttributes();
+    final com.cburch.logisim.data.AttributeSet base = getBaseAttributes();
     Object feature = source.getFeature(ComponentFactory.FACING_ATTRIBUTE_KEY, base);
     @SuppressWarnings("unchecked")
     Attribute<Direction> attr = (Attribute<Direction>) feature;
     if (attr != null) {
-      final var act = ToolAttributeAction.create(this, attr, facing);
+      final com.cburch.logisim.proj.Action act = ToolAttributeAction.create(this, attr, facing);
       canvas.getProject().doAction(act);
     }
   }
 
   private Direction getFacing() {
-    final var source = getFactory();
+    final com.cburch.logisim.comp.ComponentFactory source = getFactory();
     if (source == null) return Direction.NORTH;
-    final var base = getBaseAttributes();
+    final com.cburch.logisim.data.AttributeSet base = getBaseAttributes();
     Object feature = source.getFeature(ComponentFactory.FACING_ATTRIBUTE_KEY, base);
     @SuppressWarnings("unchecked")
     Attribute<Direction> attr = (Attribute<Direction>) feature;

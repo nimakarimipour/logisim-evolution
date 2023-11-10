@@ -29,9 +29,9 @@ public final class FileUtil {
 
   public static File createTmpFile(String content, String prefix, String suffix)
       throws IOException {
-    final var tmp = File.createTempFile(prefix, suffix);
+    final java.io.File tmp = File.createTempFile(prefix, suffix);
 
-    try (final var out = new BufferedWriter(new FileWriter(tmp))) {
+    try (final java.io.BufferedWriter out = new BufferedWriter(new FileWriter(tmp))) {
       out.write(content, 0, content.length());
     }
     return tmp;
@@ -47,7 +47,7 @@ public final class FileUtil {
       buf = new byte[size];
       len = is.read(buf, 0, size);
     } else {
-      final var bos = new ByteArrayOutputStream();
+      final java.io.ByteArrayOutputStream bos = new ByteArrayOutputStream();
       buf = new byte[size];
       while ((len = is.read(buf, 0, size)) != -1) bos.write(buf, 0, len);
       buf = bos.toByteArray();

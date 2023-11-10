@@ -64,7 +64,7 @@ public class FpToInt extends InstanceFactory {
     setOffsetBounds(Bounds.create(-40, -20, 40, 40));
     setIcon(new ArithmeticIcon("FP\u2192I", 2));
 
-    final var ps = new Port[3];
+    final com.cburch.logisim.instance.Port[] ps = new Port[3];
     ps[IN] = new Port(-40, 0, Port.INPUT, StdAttr.FP_WIDTH);
     ps[OUT] = new Port(0, 0, Port.OUTPUT, StdAttr.WIDTH);
     ps[ERR] = new Port(-20, 20, Port.OUTPUT, 1);
@@ -76,7 +76,7 @@ public class FpToInt extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     painter.drawBounds();
 
     g.setColor(Color.GRAY);
@@ -88,13 +88,13 @@ public class FpToInt extends InstanceFactory {
   @Override
   public void propagate(InstanceState state) {
     // get attributes
-    final var dataWidthIn = state.getAttributeValue(StdAttr.FP_WIDTH);
-    final var dataWidthOut = state.getAttributeValue(StdAttr.WIDTH);
-    final var roundMode = state.getAttributeValue(MODE_ATTRIBUTE);
+    final com.cburch.logisim.data.BitWidth dataWidthIn = state.getAttributeValue(StdAttr.FP_WIDTH);
+    final com.cburch.logisim.data.BitWidth dataWidthOut = state.getAttributeValue(StdAttr.WIDTH);
+    final com.cburch.logisim.data.AttributeOption roundMode = state.getAttributeValue(MODE_ATTRIBUTE);
 
     // compute outputs
-    final var a = state.getPortValue(IN);
-    final var a_val = dataWidthIn.getWidth() == 64 ? a.toDoubleValue() : a.toFloatValue();
+    final com.cburch.logisim.data.Value a = state.getPortValue(IN);
+    final double a_val = dataWidthIn.getWidth() == 64 ? a.toDoubleValue() : a.toFloatValue();
 
     long out_val;
 
@@ -103,10 +103,10 @@ public class FpToInt extends InstanceFactory {
     else if (roundMode.getValue().equals("round")) out_val = Math.round(a_val);
     else out_val = (long) a_val;
 
-    final var out = Value.createKnown(dataWidthOut, out_val);
+    final com.cburch.logisim.data.Value out = Value.createKnown(dataWidthOut, out_val);
 
     // propagate them
-    final var delay = (dataWidthOut.getWidth() + 2) * PER_DELAY;
+    final int delay = (dataWidthOut.getWidth() + 2) * PER_DELAY;
     state.setPort(OUT, out, delay);
     state.setPort(ERR, Value.createKnown(BitWidth.create(1), Double.isNaN(a_val) ? 1 : 0), delay);
   }

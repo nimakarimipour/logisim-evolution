@@ -49,7 +49,7 @@ public class LogFrame extends LFrame.SubWindowWithSimulation {
 
     @Override
     public void libraryChanged(LibraryEvent event) {
-      final var action = event.getAction();
+      final int action = event.getAction();
       if (action == LibraryEvent.SET_NAME) {
         setTitle(computeTitle(curModel, project));
       }
@@ -68,7 +68,7 @@ public class LogFrame extends LFrame.SubWindowWithSimulation {
 
     @Override
     public void projectChanged(ProjectEvent event) {
-      final var action = event.getAction();
+      final int action = event.getAction();
       if (action == ProjectEvent.ACTION_SET_STATE) {
         setSimulator(event.getProject().getSimulator(), event.getProject().getCircuitState());
       } else if (action == ProjectEvent.ACTION_SET_FILE) {
@@ -129,7 +129,7 @@ public class LogFrame extends LFrame.SubWindowWithSimulation {
 
     @Override
     public void localeChanged() {
-      final var title = proj.getLogisimFile().getDisplayName();
+      final java.lang.String title = proj.getLogisimFile().getDisplayName();
       setText(S.get("logFrameMenuItem", title));
     }
 
@@ -142,7 +142,7 @@ public class LogFrame extends LFrame.SubWindowWithSimulation {
   }
 
   private static String computeTitle(Model data, Project proj) {
-    final var name = data == null ? "???" : data.getCircuitState().getCircuit().getName();
+    final java.lang.String name = data == null ? "???" : data.getCircuitState().getCircuit().getName();
     return S.get("logFrameTitle", name, proj.getLogisimFile().getDisplayName());
   }
 
@@ -183,7 +183,7 @@ public class LogFrame extends LFrame.SubWindowWithSimulation {
   }
 
   public JButton makeSelectionButton() {
-    final var button = new JButton(S.get("addRemoveSignals"));
+    final javax.swing.JButton button = new JButton(S.get("addRemoveSignals"));
     button.addActionListener(event -> SelectionPanel.doDialog(LogFrame.this));
     return button;
   }
@@ -208,8 +208,8 @@ public class LogFrame extends LFrame.SubWindowWithSimulation {
     tabbedPane.addChangeListener(myChangeListener);
     myChangeListener.stateChanged(null);
 
-    final var contents = getContentPane();
-    final var w = Math.max(550, project.getFrame().getWidth());
+    final java.awt.Container contents = getContentPane();
+    final int w = Math.max(550, project.getFrame().getWidth());
     int h = 300;
     tabbedPane.setPreferredSize(new Dimension(w, h));
     contents.add(tabbedPane, BorderLayout.CENTER);
@@ -221,8 +221,8 @@ public class LogFrame extends LFrame.SubWindowWithSimulation {
 
     // Try to place below circuit window, or at least near bottom of screen,
     // using same width as circuit window.
-    final var d = Toolkit.getDefaultToolkit().getScreenSize();
-    final var r = project.getFrame().getBounds();
+    final java.awt.Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+    final java.awt.Rectangle r = project.getFrame().getBounds();
     int x = r.x;
     int y = r.y + r.height;
     if (y + h > d.height) { // too small below circuit
@@ -276,7 +276,7 @@ public class LogFrame extends LFrame.SubWindowWithSimulation {
     if (curSimulator != null) curSimulator.removeSimulatorListener(myListener);
     if (curModel != null) curModel.setSelected(false);
 
-    final var oldModel = curModel;
+    final com.cburch.logisim.gui.log.Model oldModel = curModel;
     Model data = null;
     if (value != null) {
       data = modelMap.get(value.getCircuitState());

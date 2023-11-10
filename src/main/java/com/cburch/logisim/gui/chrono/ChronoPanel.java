@@ -77,12 +77,12 @@ public class ChronoPanel extends LogPanel implements Model.Listener {
 
   private void configure() {
     setLayout(new BorderLayout());
-    final var logFrame = getLogFrame();
-    final var simTools = new SimulationToolbarModel(getProject(), logFrame.getMenuListener());
-    final var toolbar = new Toolbar(simTools);
-    final var toolpanel = new JPanel();
-    final var gb = new GridBagLayout();
-    final var gc = new GridBagConstraints();
+    final com.cburch.logisim.gui.log.LogFrame logFrame = getLogFrame();
+    final com.cburch.logisim.gui.main.SimulationToolbarModel simTools = new SimulationToolbarModel(getProject(), logFrame.getMenuListener());
+    final com.cburch.draw.toolbar.Toolbar toolbar = new Toolbar(simTools);
+    final javax.swing.JPanel toolpanel = new JPanel();
+    final java.awt.GridBagLayout gb = new GridBagLayout();
+    final java.awt.GridBagConstraints gc = new GridBagConstraints();
     toolpanel.setLayout(gb);
     gc.fill = GridBagConstraints.NONE;
     gc.weightx = gc.weighty = 0.0;
@@ -90,7 +90,7 @@ public class ChronoPanel extends LogPanel implements Model.Listener {
     gb.setConstraints(toolbar, gc);
     toolpanel.add(toolbar);
 
-    final var b = logFrame.makeSelectionButton();
+    final javax.swing.JButton b = logFrame.makeSelectionButton();
     b.setFont(b.getFont().deriveFont(10.0f));
     Insets insets = gc.insets;
     gc.insets = new Insets(2, 0, 2, 0);
@@ -99,7 +99,7 @@ public class ChronoPanel extends LogPanel implements Model.Listener {
     toolpanel.add(b);
     gc.insets = insets;
 
-    final var filler = Box.createHorizontalGlue();
+    final java.awt.Component filler = Box.createHorizontalGlue();
     gc.fill = GridBagConstraints.HORIZONTAL;
     gc.weightx = 1.0;
     gc.gridx = 2;
@@ -112,8 +112,8 @@ public class ChronoPanel extends LogPanel implements Model.Listener {
     splitPane.setDividerSize(5);
     splitPane.setResizeWeight(0.0);
     add(BorderLayout.CENTER, splitPane);
-    final var inputMap = getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-    final var actionMap = getActionMap();
+    final javax.swing.InputMap inputMap = getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    final javax.swing.ActionMap actionMap = getActionMap();
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ClearSelection");
     actionMap.put(
         "ClearSelection",
@@ -136,7 +136,7 @@ public class ChronoPanel extends LogPanel implements Model.Listener {
             ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
-    final var p = rightScroll == null ? 0 : rightScroll.getHorizontalScrollBar().getValue();
+    final int p = rightScroll == null ? 0 : rightScroll.getHorizontalScrollBar().getValue();
     if (rightPanel == null) rightPanel = new RightPanel(this, leftPanel.getSelectionModel());
     rightScroll =
         new JScrollPane(
@@ -149,7 +149,7 @@ public class ChronoPanel extends LogPanel implements Model.Listener {
     leftScroll.getVerticalScrollBar().setModel(rightScroll.getVerticalScrollBar().getModel());
 
     // zoom on control+scrollwheel
-    final var zoomer =
+    final java.awt.event.MouseAdapter zoomer =
         new MouseAdapter() {
           @Override
           public void mouseWheelMoved(MouseWheelEvent e) {
@@ -225,7 +225,7 @@ public class ChronoPanel extends LogPanel implements Model.Listener {
   }
 
   public void changeSpotlight(Signal s) {
-    final var old = model.setSpotlight(s);
+    final com.cburch.logisim.gui.log.Signal old = model.setSpotlight(s);
     if (old == s) return;
     rightPanel.changeSpotlight(old, s);
     leftPanel.changeSpotlight(old, s);
@@ -304,14 +304,14 @@ public class ChronoPanel extends LogPanel implements Model.Listener {
 
   public Color[] rowColors(SignalInfo item, boolean isSelected) {
     if (isSelected) return selectColors;
-    final var spotlight = model.getSpotlight();
+    final com.cburch.logisim.gui.log.Signal spotlight = model.getSpotlight();
     return (spotlight != null && spotlight.info == item) ? SPOT : PLAIN;
   }
 
   private static Color darker(Color c) {
     if (c == null) return null;
-    final var hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
-    final var s = 0.8f;
+    final float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
+    final float s = 0.8f;
     return (hsb[1] == 0.0)
         ? Color.getHSBColor(hsb[0], hsb[1] + hsb[1], hsb[2] * s)
         : Color.getHSBColor(hsb[0], 1.0f - (1.0f - hsb[1]) * s, hsb[2]);
@@ -345,7 +345,7 @@ public class ChronoPanel extends LogPanel implements Model.Listener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-          final var action = e.getSource();
+          final java.lang.Object action = e.getSource();
           leftPanel.getActionMap().get(action).actionPerformed(e);
         }
       };
@@ -359,17 +359,17 @@ public class ChronoPanel extends LogPanel implements Model.Listener {
       new PrintHandler() {
         @Override
         public Dimension getExportImageSize() {
-          final var l = leftPanel.getPreferredSize();
-          final var r = rightPanel.getPreferredSize();
-          final var width = l.width + 3 + r.width;
-          final var height = HEADER_HEIGHT + l.height;
+          final java.awt.Dimension l = leftPanel.getPreferredSize();
+          final java.awt.Dimension r = rightPanel.getPreferredSize();
+          final int width = l.width + 3 + r.width;
+          final int height = HEADER_HEIGHT + l.height;
           return new Dimension(width, height);
         }
 
         @Override
         public void paintExportImage(BufferedImage img, Graphics2D g) {
-          final var l = leftPanel.getPreferredSize();
-          final var r = rightPanel.getPreferredSize();
+          final java.awt.Dimension l = leftPanel.getPreferredSize();
+          final java.awt.Dimension r = rightPanel.getPreferredSize();
 
           g.setClip(0, 0, l.width, HEADER_HEIGHT);
           leftPanel.getTableHeader().print(g);
@@ -395,9 +395,9 @@ public class ChronoPanel extends LogPanel implements Model.Listener {
           if (pageNum != 0) return Printable.NO_SUCH_PAGE;
 
           // shrink horizontally to fit
-          final var fm = g.getFontMetrics();
-          final var d = getExportImageSize();
-          final var headerHeight = fm.getHeight() * 1.5;
+          final java.awt.FontMetrics fm = g.getFontMetrics();
+          final java.awt.Dimension d = getExportImageSize();
+          final double headerHeight = fm.getHeight() * 1.5;
           double scale = 1.0D;
           if (d.width > w || d.height > (h - headerHeight))
             scale = Math.min(w / d.width, (h - headerHeight) / d.height);

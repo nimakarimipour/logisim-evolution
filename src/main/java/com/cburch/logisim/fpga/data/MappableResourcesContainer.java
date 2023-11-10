@@ -61,7 +61,7 @@ public class MappableResourcesContainer {
   public IoComponentsInformation getIoComponentInformation() {
     if (ioComps == null) {
       ioComps = new IoComponentsInformation(null, true);
-      for (final var io : myIOComponents) {
+      for (final com.cburch.logisim.fpga.data.FpgaIoInformationContainer io : myIOComponents) {
         ioComps.addComponent(io, 1);
       }
       /* TODO: build-up info */
@@ -144,9 +144,9 @@ public class MappableResourcesContainer {
   }
 
   private ArrayList<String> getHierarchyName(String mapKey) {
-    final var split1 = mapKey.split(" ");
-    final var hier = split1[split1.length - 1];
-    final var split2 = hier.split("#");
+    final java.lang.String[] split1 = mapKey.split(" ");
+    final java.lang.String hier = split1[split1.length - 1];
+    final java.lang.String[] split2 = hier.split("#");
     java.util.ArrayList<java.lang.String> result = new ArrayList<String>();
     result.add(currentUsedBoard.getBoardName());
     for (java.lang.String key : split2[0].split("/")) if (!key.isEmpty()) result.add(key);
@@ -167,13 +167,13 @@ public class MappableResourcesContainer {
   }
 
   public List<String> getMappedIoPinNames() {
-    final var result = new ArrayList<String>();
-    for (final var key : myMappableResources.keySet()) {
-      final var map = myMappableResources.get(key);
+    final java.util.ArrayList<java.lang.String> result = new ArrayList<String>();
+    for (final java.util.ArrayList<java.lang.String> key : myMappableResources.keySet()) {
+      final com.cburch.logisim.fpga.data.MapComponent map = myMappableResources.get(key);
       for (int i = 0; i < map.getNrOfPins(); i++) {
         if (!map.isIo(i) || map.isInternalMapped(i)) continue;
         if (map.isBoardMapped(i)) {
-          final var sb = new StringBuilder();
+          final java.lang.StringBuilder sb = new StringBuilder();
           if (map.isExternalInverted(i)) sb.append("n_");
           sb.append(map.getHdlString(i));
           result.add(sb.toString());
@@ -184,13 +184,13 @@ public class MappableResourcesContainer {
   }
 
   public List<String> getMappedInputPinNames() {
-    final var result = new ArrayList<String>();
-    for (final var key : myMappableResources.keySet()) {
-      final var map = myMappableResources.get(key);
+    final java.util.ArrayList<java.lang.String> result = new ArrayList<String>();
+    for (final java.util.ArrayList<java.lang.String> key : myMappableResources.keySet()) {
+      final com.cburch.logisim.fpga.data.MapComponent map = myMappableResources.get(key);
       for (int i = 0; i < map.getNrOfPins(); i++) {
         if (!map.isInput(i) || map.isInternalMapped(i)) continue;
         if (map.isBoardMapped(i)) {
-          final var sb = new StringBuilder();
+          final java.lang.StringBuilder sb = new StringBuilder();
           if (map.isExternalInverted(i)) sb.append("n_");
           sb.append(map.getHdlString(i));
           result.add(sb.toString());
@@ -201,13 +201,13 @@ public class MappableResourcesContainer {
   }
 
   public List<String> getMappedOutputPinNames() {
-    final var result = new ArrayList<String>();
-    for (final var key : myMappableResources.keySet()) {
-      final var map = myMappableResources.get(key);
+    final java.util.ArrayList<java.lang.String> result = new ArrayList<String>();
+    for (final java.util.ArrayList<java.lang.String> key : myMappableResources.keySet()) {
+      final com.cburch.logisim.fpga.data.MapComponent map = myMappableResources.get(key);
       for (int i = 0; i < map.getNrOfPins(); i++) {
         if (!map.isOutput(i) || map.isInternalMapped(i)) continue;
         if (map.isBoardMapped(i)) {
-          final var sb = new StringBuilder();
+          final java.lang.StringBuilder sb = new StringBuilder();
           if (map.isExternalInverted(i)) sb.append("n_");
           sb.append(map.getHdlString(i));
           result.add(sb.toString());

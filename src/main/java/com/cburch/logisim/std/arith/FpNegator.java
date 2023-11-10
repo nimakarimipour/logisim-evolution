@@ -47,7 +47,7 @@ public class FpNegator extends InstanceFactory {
     setOffsetBounds(Bounds.create(-40, -20, 40, 40));
     setIcon(new ArithmeticIcon("-x"));
 
-    final var ps = new Port[3];
+    final com.cburch.logisim.instance.Port[] ps = new Port[3];
     ps[IN] = new Port(-40, 0, Port.INPUT, StdAttr.FP_WIDTH);
     ps[OUT] = new Port(0, 0, Port.OUTPUT, StdAttr.FP_WIDTH);
     ps[ERR] = new Port(-20, 20, Port.OUTPUT, 1);
@@ -59,7 +59,7 @@ public class FpNegator extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     painter.drawBounds();
 
     g.setColor(Color.GRAY);
@@ -67,9 +67,9 @@ public class FpNegator extends InstanceFactory {
     painter.drawPort(OUT, "-x", Direction.WEST);
     painter.drawPort(ERR);
 
-    final var loc = painter.getLocation();
-    final var x = loc.getX();
-    final var y = loc.getY();
+    final com.cburch.logisim.data.Location loc = painter.getLocation();
+    final int x = loc.getX();
+    final int y = loc.getY();
     GraphicsUtil.switchToWidth(g, 2);
     g.setColor(Color.BLACK);
     g.drawLine(x - 35, y - 15, x - 35, y + 5);
@@ -81,20 +81,20 @@ public class FpNegator extends InstanceFactory {
   @Override
   public void propagate(InstanceState state) {
     // get attributes
-    final var dataWidth = state.getAttributeValue(StdAttr.FP_WIDTH);
+    final com.cburch.logisim.data.BitWidth dataWidth = state.getAttributeValue(StdAttr.FP_WIDTH);
 
     // compute outputs
-    final var a = state.getPortValue(IN);
-    final var a_val = dataWidth.getWidth() == 64 ? a.toDoubleValue() : a.toFloatValue();
+    final com.cburch.logisim.data.Value a = state.getPortValue(IN);
+    final double a_val = dataWidth.getWidth() == 64 ? a.toDoubleValue() : a.toFloatValue();
 
-    final var out_val = a_val * -1;
-    final var out =
+    final double out_val = a_val * -1;
+    final com.cburch.logisim.data.Value out =
         dataWidth.getWidth() == 64
             ? Value.createKnown(out_val)
             : Value.createKnown((float) out_val);
 
     // propagate them
-    final var delay = (dataWidth.getWidth() + 2) * PER_DELAY;
+    final int delay = (dataWidth.getWidth() + 2) * PER_DELAY;
     state.setPort(OUT, out, delay);
     state.setPort(ERR, Value.createKnown(BitWidth.create(1), Double.isNaN(out_val) ? 1 : 0), delay);
   }

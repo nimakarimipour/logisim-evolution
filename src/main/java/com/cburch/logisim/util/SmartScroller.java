@@ -101,7 +101,7 @@ public class SmartScroller implements AdjustmentListener {
     Component view = scrollPane.getViewport().getView();
 
     if (view instanceof JTextComponent textComponent) {
-      final var caret = (DefaultCaret) textComponent.getCaret();
+      final javax.swing.text.DefaultCaret caret = (DefaultCaret) textComponent.getCaret();
       caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
     }
   }
@@ -120,14 +120,14 @@ public class SmartScroller implements AdjustmentListener {
     // The scroll bar listModel contains information needed to determine
     // whether the viewport should be repositioned or not.
 
-    final var scrollBar = (JScrollBar) e.getSource();
-    final var listModel = scrollBar.getModel();
+    final javax.swing.JScrollBar scrollBar = (JScrollBar) e.getSource();
+    final javax.swing.BoundedRangeModel listModel = scrollBar.getModel();
     int value = listModel.getValue();
-    final var extent = listModel.getExtent();
-    final var maximum = listModel.getMaximum();
+    final int extent = listModel.getExtent();
+    final int maximum = listModel.getMaximum();
 
-    final var valueChanged = previousValue != value;
-    final var maximumChanged = previousMaximum != maximum;
+    final boolean valueChanged = previousValue != value;
+    final boolean maximumChanged = previousMaximum != maximum;
 
     // Check if the user has manually repositioned the scrollbar
 

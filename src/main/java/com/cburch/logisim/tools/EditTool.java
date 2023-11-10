@@ -104,12 +104,12 @@ public class EditTool extends Tool {
    * There is some duplication code here. The function attemptReface
    * can be merged with this one */
   private void attemptRotate(Canvas canvas, KeyEvent e) {
-    final var circuit = canvas.getCircuit();
-    final var sel = canvas.getSelection();
-    final var act = new SetAttributeAction(circuit, S.getter("selectionRefaceAction"));
-    for (final var comp : sel.getComponents()) {
+    final com.cburch.logisim.circuit.Circuit circuit = canvas.getCircuit();
+    final com.cburch.logisim.gui.main.Selection sel = canvas.getSelection();
+    final com.cburch.logisim.tools.SetAttributeAction act = new SetAttributeAction(circuit, S.getter("selectionRefaceAction"));
+    for (final com.cburch.logisim.comp.Component comp : sel.getComponents()) {
       if (!(comp instanceof Wire)) {
-        final var attr = getFacingAttribute(comp);
+        final com.cburch.logisim.data.Attribute<com.cburch.logisim.data.Direction> attr = getFacingAttribute(comp);
         com.cburch.logisim.data.Direction d = comp.getAttributeSet().getValue(StdAttr.FACING);
         if (d != null) {
           d = d.getRight();
@@ -127,12 +127,12 @@ public class EditTool extends Tool {
 
   private void attemptReface(Canvas canvas, final Direction facing, KeyEvent e) {
     if (e.getModifiersEx() == 0) {
-      final var circuit = canvas.getCircuit();
-      final var sel = canvas.getSelection();
-      final var act = new SetAttributeAction(circuit, S.getter("selectionRefaceAction"));
-      for (final var comp : sel.getComponents()) {
+      final com.cburch.logisim.circuit.Circuit circuit = canvas.getCircuit();
+      final com.cburch.logisim.gui.main.Selection sel = canvas.getSelection();
+      final com.cburch.logisim.tools.SetAttributeAction act = new SetAttributeAction(circuit, S.getter("selectionRefaceAction"));
+      for (final com.cburch.logisim.comp.Component comp : sel.getComponents()) {
         if (!(comp instanceof Wire)) {
-          final var attr = getFacingAttribute(comp);
+          final com.cburch.logisim.data.Attribute<com.cburch.logisim.data.Direction> attr = getFacingAttribute(comp);
           if (attr != null) {
             act.set(comp, attr, facing);
           }
@@ -150,18 +150,18 @@ public class EditTool extends Tool {
     current = select;
     canvas.getSelection().setSuppressHandles(null);
     cache.clear();
-    final var circ = canvas.getCircuit();
+    final com.cburch.logisim.circuit.Circuit circ = canvas.getCircuit();
     if (circ != null) circ.removeCircuitListener(listener);
     canvas.getSelection().removeListener(listener);
   }
 
   @Override
   public void draw(Canvas canvas, ComponentDrawContext context) {
-    final var loc = wireLoc;
+    final com.cburch.logisim.data.Location loc = wireLoc;
     if (loc != NULL_LOCATION && current != wiring) {
-      final var x = loc.getX();
-      final var y = loc.getY();
-      final var g = context.getGraphics();
+      final int x = loc.getX();
+      final int y = loc.getY();
+      final java.awt.Graphics g = context.getGraphics();
       g.setColor(Value.trueColor);
       GraphicsUtil.switchToWidth(g, 2);
       g.drawOval(x - 5, y - 5, 10, 10);
@@ -202,7 +202,7 @@ public class EditTool extends Tool {
   }
 
   private Attribute<Direction> getFacingAttribute(Component comp) {
-    final var attrs = comp.getAttributeSet();
+    final com.cburch.logisim.data.AttributeSet attrs = comp.getAttributeSet();
     Object key = ComponentFactory.FACING_ATTRIBUTE_KEY;
     Attribute<?> a = (Attribute<?>) comp.getFactory().getFeature(key, attrs);
     @SuppressWarnings("unchecked")
@@ -226,12 +226,12 @@ public class EditTool extends Tool {
   }
 
   private boolean isClick(MouseEvent e) {
-    final var px = pressX;
+    final int px = pressX;
     if (px < 0) {
       return false;
     } else {
-      final var dx = e.getX() - px;
-      final var dy = e.getY() - pressY;
+      final int dx = e.getX() - px;
+      final int dy = e.getY() - pressY;
       if (dx * dx + dy * dy <= 4) {
         return true;
       } else {
@@ -242,13 +242,13 @@ public class EditTool extends Tool {
   }
 
   private boolean isWiringPoint(Canvas canvas, Location loc, int modsEx) {
-    final var wiring = (modsEx & MouseEvent.ALT_DOWN_MASK) == 0;
-    final var select = !wiring;
+    final boolean wiring = (modsEx & MouseEvent.ALT_DOWN_MASK) == 0;
+    final boolean select = !wiring;
 
     if (canvas != null && canvas.getSelection() != null) {
       Collection<Component> sel = canvas.getSelection().getComponents();
       if (sel != null) {
-        for (final var c : sel) {
+        for (final com.cburch.logisim.comp.Component c : sel) {
           if (c instanceof final Wire w) {
             if (w.contains(loc) && !w.endsAt(loc)) return select;
           }
@@ -256,11 +256,11 @@ public class EditTool extends Tool {
       }
     }
 
-    final var circ = canvas.getCircuit();
+    final com.cburch.logisim.circuit.Circuit circ = canvas.getCircuit();
     if (circ == null) return false;
-    final var at = circ.getComponents(loc);
+    final java.util.Collection<? extends com.cburch.logisim.comp.Component> at = circ.getComponents(loc);
     if (CollectionUtil.isNotEmpty(at)) return wiring;
-    for (final var w : circ.getWires()) {
+    for (final com.cburch.logisim.circuit.Wire w : circ.getWires()) {
       if (w.contains(loc)) return wiring;
     }
     return select;
@@ -275,7 +275,7 @@ public class EditTool extends Tool {
       case KeyEvent.VK_BACK_SPACE:
       case KeyEvent.VK_DELETE:
         if (!canvas.getSelection().isEmpty()) {
-          final var act = SelectionActions.clear(canvas.getSelection());
+          final com.cburch.logisim.proj.Action act = SelectionActions.clear(canvas.getSelection());
           canvas.getProject().doAction(act);
           e.consume();
         } else {
@@ -283,7 +283,7 @@ public class EditTool extends Tool {
         }
         break;
       case KeyEvent.VK_INSERT:
-        final var act = SelectionActions.duplicate(canvas.getSelection());
+        final com.cburch.logisim.proj.Action act = SelectionActions.duplicate(canvas.getSelection());
         canvas.getProject().doAction(act);
         e.consume();
         break;
@@ -363,16 +363,16 @@ public class EditTool extends Tool {
   public void mousePressed(Canvas canvas, Graphics g, MouseEvent e) {
     canvas.requestFocusInWindow();
     boolean wire = updateLocation(canvas, e);
-    final var oldWireLoc = wireLoc;
+    final com.cburch.logisim.data.Location oldWireLoc = wireLoc;
     wireLoc = NULL_LOCATION;
     lastX = Integer.MIN_VALUE;
     if (wire) {
       current = wiring;
-      final var sel = canvas.getSelection();
-      final var circ = canvas.getCircuit();
-      final var selected = sel.getAnchoredComponents();
+      final com.cburch.logisim.gui.main.Selection sel = canvas.getSelection();
+      final com.cburch.logisim.circuit.Circuit circ = canvas.getCircuit();
+      final java.util.Collection<com.cburch.logisim.comp.Component> selected = sel.getAnchoredComponents();
       ArrayList<Component> suppress = null;
-      for (final var w : circ.getWires()) {
+      for (final com.cburch.logisim.circuit.Wire w : circ.getWires()) {
         if (selected.contains(w)) {
           if (w.contains(oldWireLoc)) {
             if (suppress == null) suppress = new ArrayList<>();
@@ -391,7 +391,7 @@ public class EditTool extends Tool {
 
   @Override
   public void mouseReleased(Canvas canvas, Graphics g, MouseEvent e) {
-    final var click = isClick(e) && current == wiring;
+    final boolean click = isClick(e) && current == wiring;
     canvas.getSelection().setSuppressHandles(null);
     current.mouseReleased(canvas, g, e);
     if (click) {
@@ -414,7 +414,7 @@ public class EditTool extends Tool {
     current = select;
     lastCanvas = canvas;
     cache.clear();
-    final var circ = canvas.getCircuit();
+    final com.cburch.logisim.circuit.Circuit circ = canvas.getCircuit();
     if (circ != null) circ.addCircuitListener(listener);
     canvas.getSelection().addListener(listener);
     select.select(canvas);
@@ -428,15 +428,15 @@ public class EditTool extends Tool {
   private boolean updateLocation(Canvas canvas, int mx, int my, int mods) {
     int snapx = Canvas.snapXToGrid(mx);
     int snapy = Canvas.snapYToGrid(my);
-    final var dx = mx - snapx;
-    final var dy = my - snapy;
+    final int dx = mx - snapx;
+    final int dy = my - snapy;
     boolean isEligible = dx * dx + dy * dy < 36;
     if ((mods & MouseEvent.ALT_DOWN_MASK) != 0) isEligible = true;
     if (!isEligible) {
       snapx = -1;
       snapy = -1;
     }
-    final var modsSame = lastMods == mods;
+    final boolean modsSame = lastMods == mods;
     lastCanvas = canvas;
     lastRawX = mx;
     lastRawY = my;
@@ -444,7 +444,7 @@ public class EditTool extends Tool {
     if (lastX == snapx && lastY == snapy && modsSame) { // already computed
       return wireLoc != NULL_LOCATION;
     } else {
-      final var snap = Location.create(snapx, snapy, false);
+      final com.cburch.logisim.data.Location snap = Location.create(snapx, snapy, false);
       if (modsSame) {
         Object o = cache.get(snap);
         if (o != null) {
@@ -460,7 +460,7 @@ public class EditTool extends Tool {
         cache.clear();
       }
 
-      final var oldWireLoc = wireLoc;
+      final com.cburch.logisim.data.Location oldWireLoc = wireLoc;
       boolean ret = isEligible && isWiringPoint(canvas, snap, mods);
       wireLoc = ret ? snap : NULL_LOCATION;
       cache.put(snap, ret);

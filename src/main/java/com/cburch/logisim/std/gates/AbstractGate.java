@@ -47,7 +47,7 @@ abstract class AbstractGate extends InstanceFactory {
     if (outType == GateAttributes.OUTPUT_01) {
       return value;
     } else {
-      final var v = value.getAll();
+      final com.cburch.logisim.data.Value[] v = value.getAll();
       if (outType == GateAttributes.OUTPUT_0Z) {
         for (int i = 0; i < v.length; i++) {
           if (v[i] == Value.TRUE) v[i] = Value.UNKNOWN;
@@ -85,16 +85,16 @@ abstract class AbstractGate extends InstanceFactory {
   protected abstract Expression computeExpression(Expression[] inputs, int numInputs);
 
   private void computeLabel(Instance instance) {
-    final var attrs = (GateAttributes) instance.getAttributeSet();
-    final var facing = attrs.facing;
-    final var baseWidth = (Integer) attrs.size.getValue();
+    final com.cburch.logisim.std.gates.GateAttributes attrs = (GateAttributes) instance.getAttributeSet();
+    final com.cburch.logisim.data.Direction facing = attrs.facing;
+    final java.lang.Integer baseWidth = (Integer) attrs.size.getValue();
 
-    final var axis = baseWidth / 2 + (negateOutput ? 10 : 0);
+    final int axis = baseWidth / 2 + (negateOutput ? 10 : 0);
     int perp = 0;
     if (AppPreferences.GATE_SHAPE.get().equals(AppPreferences.SHAPE_RECTANGULAR)) {
       perp += 6;
     }
-    final var loc = instance.getLocation();
+    final com.cburch.logisim.data.Location loc = instance.getLocation();
     int cx;
     int cy;
     if (facing == Direction.NORTH) {
@@ -117,13 +117,13 @@ abstract class AbstractGate extends InstanceFactory {
   protected abstract Value computeOutput(Value[] inputs, int numInputs, InstanceState state);
 
   void computePorts(Instance instance) {
-    final var attrs = (GateAttributes) instance.getAttributeSet();
+    final com.cburch.logisim.std.gates.GateAttributes attrs = (GateAttributes) instance.getAttributeSet();
     int inputs = attrs.inputs;
 
-    final var ports = new Port[inputs + 1];
+    final com.cburch.logisim.instance.Port[] ports = new Port[inputs + 1];
     ports[0] = new Port(0, 0, Port.OUTPUT, StdAttr.WIDTH);
     for (int i = 0; i < inputs; i++) {
-      final var offs = getInputOffset(attrs, i);
+      final com.cburch.logisim.data.Location offs = getInputOffset(attrs, i);
       ports[i + 1] = new Port(offs.getX(), offs.getY(), Port.INPUT, StdAttr.WIDTH);
     }
     instance.setPorts(ports);
@@ -141,13 +141,13 @@ abstract class AbstractGate extends InstanceFactory {
 
   @Override
   public boolean contains(Location loc, AttributeSet attrsBase) {
-    final var attrs = (GateAttributes) attrsBase;
+    final com.cburch.logisim.std.gates.GateAttributes attrs = (GateAttributes) attrsBase;
     if (super.contains(loc, attrs)) {
       if (attrs.negated == 0) {
         return true;
       } else {
-        final var facing = attrs.facing;
-        final var bds = getOffsetBounds(attrsBase);
+        final com.cburch.logisim.data.Direction facing = attrs.facing;
+        final com.cburch.logisim.data.Bounds bds = getOffsetBounds(attrsBase);
         int delt;
         if (facing == Direction.NORTH) {
           delt = loc.getY() - (bds.getY() + bds.getHeight());
@@ -188,12 +188,12 @@ abstract class AbstractGate extends InstanceFactory {
 
   @Override
   public String getHDLName(AttributeSet attrs) {
-    final var myAttrs = (GateAttributes) attrs;
-    final var completeName = new StringBuilder();
+    final com.cburch.logisim.std.gates.GateAttributes myAttrs = (GateAttributes) attrs;
+    final java.lang.StringBuilder completeName = new StringBuilder();
     completeName.append(CorrectLabel.getCorrectLabel(this.getName()).toUpperCase());
-    final var width = myAttrs.getValue(StdAttr.WIDTH);
+    final com.cburch.logisim.data.BitWidth width = myAttrs.getValue(StdAttr.WIDTH);
     if (width.getWidth() > 1) completeName.append("_BUS");
-    final var inputCount = myAttrs.getValue(GateAttributes.ATTR_INPUTS);
+    final java.lang.Integer inputCount = myAttrs.getValue(GateAttributes.ATTR_INPUTS);
     if (inputCount > 2) {
       completeName.append("_").append(inputCount).append("_INPUTS");
     }
@@ -211,11 +211,11 @@ abstract class AbstractGate extends InstanceFactory {
   protected abstract Value getIdentity();
 
   Location getInputOffset(GateAttributes attrs, int index) {
-    final var inputs = attrs.inputs;
-    final var facing = attrs.facing;
-    final var size = (Integer) attrs.size.getValue();
-    final var axisLength = size + bonusWidth + (negateOutput ? 10 : 0);
-    final var negated = attrs.negated;
+    final int inputs = attrs.inputs;
+    final com.cburch.logisim.data.Direction facing = attrs.facing;
+    final java.lang.Integer size = (Integer) attrs.size.getValue();
+    final int axisLength = size + bonusWidth + (negateOutput ? 10 : 0);
+    final long negated = attrs.negated;
 
     int skipStart;
     int skipDist;
@@ -278,18 +278,18 @@ abstract class AbstractGate extends InstanceFactory {
     if (key == ExpressionComputer.class) {
       return (ExpressionComputer)
           expressionMap -> {
-            final var attrs = (GateAttributes) instance.getAttributeSet();
-            final var inputCount = attrs.inputs;
-            final var negated = attrs.negated;
-            final var width = attrs.width.getWidth();
+            final com.cburch.logisim.std.gates.GateAttributes attrs = (GateAttributes) instance.getAttributeSet();
+            final int inputCount = attrs.inputs;
+            final long negated = attrs.negated;
+            final int width = attrs.width.getWidth();
 
             for (int b = 0; b < width; b++) {
-              final var inputs = new Expression[inputCount];
+              final com.cburch.logisim.analyze.model.Expression[] inputs = new Expression[inputCount];
               int numInputs = 0;
               for (int i = 1; i <= inputCount; i++) {
                 Expression e = expressionMap.get(instance.getPortLocation(i), b);
                 if (e != null) {
-                  final var negatedBit = (int) (negated >> (i - 1)) & 1;
+                  final int negatedBit = (int) (negated >> (i - 1)) & 1;
                   if (negatedBit == 1) {
                     e = Expressions.not(e);
                   }
@@ -309,20 +309,20 @@ abstract class AbstractGate extends InstanceFactory {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrsBase) {
-    final var attrs = (GateAttributes) attrsBase;
-    final var facing = attrs.facing;
-    final var size = (Integer) attrs.size.getValue();
+    final com.cburch.logisim.std.gates.GateAttributes attrs = (GateAttributes) attrsBase;
+    final com.cburch.logisim.data.Direction facing = attrs.facing;
+    final java.lang.Integer size = (Integer) attrs.size.getValue();
     int inputs = attrs.inputs;
     if (inputs % 2 == 0) {
       inputs++;
     }
-    final var negated = attrs.negated;
+    final long negated = attrs.negated;
 
     int width = size + bonusWidth + (negateOutput ? 10 : 0);
     if (negated != 0) {
       width += 10;
     }
-    final var height = Math.max(10 * inputs, size);
+    final int height = Math.max(10 * inputs, size);
     if (facing == Direction.SOUTH) {
       return Bounds.create(-height / 2, -width, height, width);
     } else if (facing == Direction.NORTH) {
@@ -360,14 +360,14 @@ abstract class AbstractGate extends InstanceFactory {
   }
 
   private void paintBase(InstancePainter painter) {
-    final var attrs = (GateAttributes) painter.getAttributeSet();
-    final var facing = attrs.facing;
-    final var inputs = attrs.inputs;
-    final var negated = attrs.negated;
+    final com.cburch.logisim.std.gates.GateAttributes attrs = (GateAttributes) painter.getAttributeSet();
+    final com.cburch.logisim.data.Direction facing = attrs.facing;
+    final int inputs = attrs.inputs;
+    final long negated = attrs.negated;
 
     Object shape = painter.getGateShape();
-    final var loc = painter.getLocation();
-    final var bds = painter.getOffsetBounds();
+    final com.cburch.logisim.data.Location loc = painter.getLocation();
+    final com.cburch.logisim.data.Bounds bds = painter.getOffsetBounds();
     int width = bds.getWidth();
     int height = bds.getHeight();
     if (facing == Direction.NORTH || facing == Direction.SOUTH) {
@@ -379,8 +379,8 @@ abstract class AbstractGate extends InstanceFactory {
       width -= 10;
     }
 
-    final var g = painter.getGraphics();
-    final var baseColor = g.getColor();
+    final java.awt.Graphics g = painter.getGraphics();
+    final java.awt.Color baseColor = g.getColor();
     if (shape == AppPreferences.SHAPE_SHAPED && paintInputLines) {
       PainterShaped.paintInputLines(painter, this);
     } else if (negated != 0) {
@@ -437,10 +437,10 @@ abstract class AbstractGate extends InstanceFactory {
 
   @Override
   public final void paintIcon(InstancePainter painter) {
-    final var g = (Graphics2D) painter.getGraphics().create();
+    final java.awt.Graphics2D g = (Graphics2D) painter.getGraphics().create();
     g.setColor(Color.black);
     GraphicsUtil.switchToWidth(g, AppPreferences.getScaled(1));
-    final var border = AppPreferences.getIconBorder();
+    final int border = AppPreferences.getIconBorder();
     if (painter.getGateShape().equals(AppPreferences.SHAPE_RECTANGULAR))
       paintIconIEC(g, getRectangularLabel(painter.getAttributeSet()), negateOutput, false);
     else
@@ -451,18 +451,18 @@ abstract class AbstractGate extends InstanceFactory {
 
   protected static void paintIconIEC(Graphics2D g, String label, boolean negateOutput, boolean singleInput) {
     GraphicsUtil.switchToWidth(g, AppPreferences.getScaled(1));
-    final var iconBorder = AppPreferences.getIconBorder();
-    final var iconSize = AppPreferences.getIconSize() - (iconBorder << 1);
-    final var negateDiameter = AppPreferences.getScaled(4);
-    final var yoffset = singleInput ? (int) (iconSize / 6.0) : 0;
-    final var ysize = singleInput ? iconSize - (yoffset << 1) : iconSize;
-    final var af = g.getTransform();
+    final int iconBorder = AppPreferences.getIconBorder();
+    final int iconSize = AppPreferences.getIconSize() - (iconBorder << 1);
+    final int negateDiameter = AppPreferences.getScaled(4);
+    final int yoffset = singleInput ? (int) (iconSize / 6.0) : 0;
+    final int ysize = singleInput ? iconSize - (yoffset << 1) : iconSize;
+    final java.awt.geom.AffineTransform af = g.getTransform();
     g.translate(iconBorder, iconBorder);
     g.drawRect(0, yoffset, iconSize - negateDiameter, ysize);
-    final var iconFont = g.getFont().deriveFont(((float) iconSize) / 2).deriveFont(Font.BOLD);
+    final java.awt.Font iconFont = g.getFont().deriveFont(((float) iconSize) / 2).deriveFont(Font.BOLD);
     g.setFont(iconFont);
     if (label.length() < 3) {
-      final var txt = new TextLayout(label, iconFont, g.getFontRenderContext());
+      final java.awt.font.TextLayout txt = new TextLayout(label, iconFont, g.getFontRenderContext());
       float xpos =
           ((float) iconSize - (float) negateDiameter) / 2 - (float) txt.getBounds().getCenterX();
       float ypos = ((float) iconSize) / 2 - (float) txt.getBounds().getCenterY();
@@ -502,17 +502,17 @@ abstract class AbstractGate extends InstanceFactory {
 
   protected static void paintIconBufferAnsi(Graphics2D gfx, boolean negate, boolean controlled) {
     GraphicsUtil.switchToWidth(gfx, AppPreferences.getScaled(1));
-    final var borderSize = AppPreferences.getIconBorder();
-    final var iconSize = AppPreferences.getIconSize() - (borderSize << 1);
-    final var negateSize = AppPreferences.getScaled(4);
-    final var af = gfx.getTransform();
+    final int borderSize = AppPreferences.getIconBorder();
+    final int iconSize = AppPreferences.getIconSize() - (borderSize << 1);
+    final int negateSize = AppPreferences.getScaled(4);
+    final java.awt.geom.AffineTransform af = gfx.getTransform();
     gfx.translate(borderSize, borderSize);
-    final var ystart = negateSize >> 1;
-    final var yend = iconSize - ystart;
-    final var xstart = 0;
-    final var xend = iconSize - negateSize;
-    final var xpos = new int[] {xstart, xend, xstart, xstart};
-    final var ypos = new int[] {ystart, iconSize >> 1, yend, ystart};
+    final int ystart = negateSize >> 1;
+    final int yend = iconSize - ystart;
+    final int xstart = 0;
+    final int xend = iconSize - negateSize;
+    final int[] xpos = new int[] {xstart, xend, xstart, xstart};
+    final int[] ypos = new int[] {ystart, iconSize >> 1, yend, ystart};
     gfx.drawPolygon(xpos, ypos, 4);
     paintIconPins(gfx, iconSize, borderSize, negateSize, negate, true);
     if (controlled) gfx.drawLine(xend >> 1, ((3 * (yend - ystart)) >> 2) + ystart, xend >> 1, yend);
@@ -530,8 +530,8 @@ abstract class AbstractGate extends InstanceFactory {
   }
 
   protected void paintRectangular(InstancePainter painter, int width, int height) {
-    final var don = negateOutput ? 10 : 0;
-    final var attrs = painter.getAttributeSet();
+    final int don = negateOutput ? 10 : 0;
+    final com.cburch.logisim.data.AttributeSet attrs = painter.getAttributeSet();
     painter.drawRectangle(-width, -height / 2, width - don, height, getRectangularLabel(attrs));
     if (negateOutput) {
       painter.drawDongle(-5, 0);
@@ -542,19 +542,19 @@ abstract class AbstractGate extends InstanceFactory {
 
   @Override
   public void propagate(InstanceState state) {
-    final var attrs = (GateAttributes) state.getAttributeSet();
-    final var inputCount = attrs.inputs;
-    final var negated = attrs.negated;
-    final var opts = state.getProject().getOptions().getAttributeSet();
-    final var errorIfUndefined =
+    final com.cburch.logisim.std.gates.GateAttributes attrs = (GateAttributes) state.getAttributeSet();
+    final int inputCount = attrs.inputs;
+    final long negated = attrs.negated;
+    final com.cburch.logisim.data.AttributeSet opts = state.getProject().getOptions().getAttributeSet();
+    final boolean errorIfUndefined =
         opts.getValue(Options.ATTR_GATE_UNDEFINED).equals(Options.GATE_UNDEFINED_ERROR);
 
-    final var inputs = new Value[inputCount];
+    final com.cburch.logisim.data.Value[] inputs = new Value[inputCount];
     int numInputs = 0;
     boolean error = false;
     for (int i = 1; i <= inputCount; i++) {
       if (state.isPortConnected(i)) {
-        final var negatedBit = (int) (negated >> (i - 1)) & 1;
+        final int negatedBit = (int) (negated >> (i - 1)) & 1;
         if (negatedBit == 1) {
           inputs[numInputs] = state.getPortValue(i).not();
         } else {
@@ -568,7 +568,7 @@ abstract class AbstractGate extends InstanceFactory {
       }
     }
 
-    final var out = (numInputs == 0 || error)
+    final com.cburch.logisim.data.Value out = (numInputs == 0 || error)
             ? Value.createError(attrs.width)
             : pullOutput(computeOutput(inputs, numInputs, state), attrs.out);
     state.setPort(0, out, GateAttributes.DELAY);

@@ -29,24 +29,24 @@ public class CircuitLocker {
   }
 
   static Map<Circuit, Lock> acquireLocks(CircuitTransaction xn, CircuitMutatorImpl mutator) {
-    final var requests = xn.getAccessedCircuits();
-    final var circuitLocks = new HashMap<Circuit, Lock>();
+    final java.util.Map<com.cburch.logisim.circuit.Circuit,java.lang.Integer> requests = xn.getAccessedCircuits();
+    final java.util.HashMap<com.cburch.logisim.circuit.Circuit,java.util.concurrent.locks.Lock> circuitLocks = new HashMap<Circuit, Lock>();
     // Acquire locks in serial-number order to avoid deadlock
-    final var lockOrder = requests.keySet().toArray(new Circuit[0]);
+    final com.cburch.logisim.circuit.Circuit[] lockOrder = requests.keySet().toArray(new Circuit[0]);
     Arrays.sort(lockOrder, new CircuitComparator());
     try {
-      for (final var circ : lockOrder) {
-        final var access = requests.get(circ);
-        final var locker = circ.getLocker();
+      for (final com.cburch.logisim.circuit.Circuit circ : lockOrder) {
+        final java.lang.Integer access = requests.get(circ);
+        final com.cburch.logisim.circuit.CircuitLocker locker = circ.getLocker();
         if (access == CircuitTransaction.READ_ONLY) {
-          final var lock = locker.circuitLock.readLock();
+          final java.util.concurrent.locks.Lock lock = locker.circuitLock.readLock();
           lock.lock();
           circuitLocks.put(circ, lock);
         } else if (access == CircuitTransaction.READ_WRITE) {
-          final var curThread = Thread.currentThread();
+          final java.lang.Thread curThread = Thread.currentThread();
           if (locker.mutatingThread == curThread) { // nothing to do - thread already has lock
           } else {
-            final var lock = locker.circuitLock.writeLock();
+            final java.util.concurrent.locks.Lock lock = locker.circuitLock.writeLock();
             lock.lock();
             circuitLocks.put(circ, lock);
             locker.mutatingThread = Thread.currentThread();
@@ -65,11 +65,11 @@ public class CircuitLocker {
   }
 
   static void releaseLocks(Map<Circuit, Lock> locks) {
-    final var curThread = Thread.currentThread();
-    for (final var entry : locks.entrySet()) {
-      final var circ = entry.getKey();
-      final var lock = entry.getValue();
-      final var locker = circ.getLocker();
+    final java.lang.Thread curThread = Thread.currentThread();
+    for (final java.util.Map.Entry<com.cburch.logisim.circuit.Circuit,java.util.concurrent.locks.Lock> entry : locks.entrySet()) {
+      final com.cburch.logisim.circuit.Circuit circ = entry.getKey();
+      final java.util.concurrent.locks.Lock lock = entry.getValue();
+      final com.cburch.logisim.circuit.CircuitLocker locker = circ.getLocker();
       if (locker.mutatingThread == curThread) {
         locker.mutatingThread = null;
         locker.mutatingMutator = null;

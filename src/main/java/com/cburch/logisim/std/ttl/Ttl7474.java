@@ -45,21 +45,21 @@ public class Ttl7474 extends AbstractTtlGate {
     boolean isPressed = true;
 
     private boolean isInside(InstanceState state, MouseEvent e) {
-      final var p = getTranslatedTtlXY(state, e);
+      final java.awt.Point p = getTranslatedTtlXY(state, e);
       int dx = p.x - 37;
       int dy = p.y - 35;
       int d2 = dx * dx + dy * dy;
       dx = p.x - 107;
       dy = p.y - 32;
-      final var d3 = dx * dx + dy * dy;
+      final int d3 = dx * dx + dy * dy;
       return ((d2 < 5 * 5) || (d3 < 5 * 5));
     }
 
     private int getIndex(InstanceState state, MouseEvent e) {
-      final var p = getTranslatedTtlXY(state, e);
-      final var dx = p.x - 37;
-      final var dy = p.y - 35;
-      final var d2 = dx * dx + dy * dy;
+      final java.awt.Point p = getTranslatedTtlXY(state, e);
+      final int dx = p.x - 37;
+      final int dy = p.y - 35;
+      final int d2 = dx * dx + dy * dy;
       return (d2 < 5 * 5) ? 0 : 1;
     }
 
@@ -72,10 +72,10 @@ public class Ttl7474 extends AbstractTtlGate {
     public void mouseReleased(InstanceState state, MouseEvent e) {
       if (!state.getAttributeValue(TtlLibrary.DRAW_INTERNAL_STRUCTURE)) return;
       if (isPressed && isInside(state, e)) {
-        final var index = getIndex(state, e);
-        final var myState = (TtlRegisterData) state.getData();
+        final int index = getIndex(state, e);
+        final com.cburch.logisim.std.ttl.TtlRegisterData myState = (TtlRegisterData) state.getData();
         if (myState == null) return;
-        final var values = myState.getValue().getAll();
+        final com.cburch.logisim.data.Value[] values = myState.getValue().getAll();
         if (values[index].isFullyDefined()) values[index] = values[index].not();
         else values[index] = Value.createKnown(1, 0);
         myState.setValue(Value.create(values));
@@ -87,8 +87,8 @@ public class Ttl7474 extends AbstractTtlGate {
 
   @Override
   public void paintInternal(InstancePainter painter, int x, int y, int height, boolean up) {
-    final var g = painter.getGraphics();
-    final var state = (TtlRegisterData) painter.getData();
+    final java.awt.Graphics g = painter.getGraphics();
+    final com.cburch.logisim.std.ttl.TtlRegisterData state = (TtlRegisterData) painter.getData();
     super.paintBase(painter, false, false);
     drawflop(g, x, y + 1);
     drawflop(g, x + 70, y - 2);
@@ -105,9 +105,9 @@ public class Ttl7474 extends AbstractTtlGate {
       data = new TtlRegisterData(BitWidth.create(2));
       state.setData(data);
     }
-    final var triggered1 = data.updateClock(state.getPortValue(2), 0);
-    final var triggered2 = data.updateClock(state.getPortValue(9), 1);
-    final var values = data.getValue().getAll();
+    final boolean triggered1 = data.updateClock(state.getPortValue(2), 0);
+    final boolean triggered2 = data.updateClock(state.getPortValue(9), 1);
+    final com.cburch.logisim.data.Value[] values = data.getValue().getAll();
     if ((state.getPortValue(0) == Value.FALSE) && (state.getPortValue(3) == Value.FALSE)) {
       values[0] = Value.createUnknown(BitWidth.create(1));
     } else if (state.getPortValue(0) == Value.FALSE) {

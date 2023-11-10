@@ -179,9 +179,9 @@ public class Startup implements AWTEventListener {
    * @throws IllegalArgumentException
    */
   protected static boolean parseBool(String option) throws IllegalArgumentException {
-    final var positives = List.of("yes", "y", "1", "true", "t");
-    final var negatives = List.of("no", "n", "0", "false", "f");
-    final var flag = option.toLowerCase();
+    final java.util.List<java.lang.String> positives = List.of("yes", "y", "1", "true", "t");
+    final java.util.List<java.lang.String> negatives = List.of("no", "n", "0", "false", "f");
+    final java.lang.String flag = option.toLowerCase();
     if (positives.contains(flag)) return true;
     if (negatives.contains(flag)) return false;
     // FIXME: hardcoded string
@@ -200,7 +200,7 @@ public class Startup implements AWTEventListener {
   protected static RC printHelp(Options opts) {
     printVersion();
     System.out.println();
-    final var formatter = new HelpFormatter();
+    final org.apache.commons.cli.HelpFormatter formatter = new HelpFormatter();
     formatter.setWidth(100);  // Arbitrary chosen value.
     formatter.printHelp(BuildInfo.name, null, opts, null, true);
     return RC.QUIT;
@@ -262,9 +262,9 @@ public class Startup implements AWTEventListener {
    * @param expectedArgsCount Number of required option arguments.
    */
   protected static void addOption(Options opts, String stringBaseKey, String longKey, String shortKey, int expectedArgsCount) {
-    final var builder = Option.builder(shortKey).longOpt(longKey).desc(S.get(stringBaseKey));
+    final org.apache.commons.cli.Option.Builder builder = Option.builder(shortKey).longOpt(longKey).desc(S.get(stringBaseKey));
     if (expectedArgsCount == Option.UNLIMITED_VALUES || expectedArgsCount > 0) {
-      final var argNameKey = LineBuffer.format("{{1}}ArgName", stringBaseKey);
+      final java.lang.String argNameKey = LineBuffer.format("{{1}}ArgName", stringBaseKey);
       builder.argName(S.get(argNameKey));
       builder.numberOfArgs(expectedArgsCount);
     }
@@ -304,7 +304,7 @@ public class Startup implements AWTEventListener {
    */
   public static Startup parseArgs(String[] args) {
 
-    final var opts = new Options();
+    final org.apache.commons.cli.Options opts = new Options();
     addOption(opts, "argHelpOption", ARG_HELP_LONG, ARG_HELP_SHORT);
     addOption(opts, "argVersionOption", ARG_VERSION_LONG, ARG_VERSION_SHORT);
 
@@ -359,7 +359,7 @@ public class Startup implements AWTEventListener {
     }
 
     // Initialize startup object.
-    final var startup = new Startup(isTty);
+    final com.cburch.logisim.gui.start.Startup startup = new Startup(isTty);
     startupTemp = startup;
     if (!isTty) {
       MacOsAdapter.addListeners();
@@ -371,12 +371,12 @@ public class Startup implements AWTEventListener {
 
     // Iterate over parsed arguments and invoke option handler
     // for each detected argument.
-    final var optionIter = cmd.iterator();
+    final java.util.Iterator<org.apache.commons.cli.Option> optionIter = cmd.iterator();
     while (optionIter.hasNext()) {
-      final var opt = optionIter.next();
+      final org.apache.commons.cli.Option opt = optionIter.next();
       // Note: you should have handler for each option. So number of `case`s
       // here should equal number of calls to `addOption()` above.
-      final var optHandlerRc = switch (opt.getLongOpt()) {
+      final com.cburch.logisim.gui.start.Startup.RC optHandlerRc = switch (opt.getLongOpt()) {
         case ARG_HELP_LONG -> printHelp(opts);
         case ARG_VERSION_LONG -> printVersion();
         case ARG_TTY_LONG -> handleArgTty(startup, opt);
@@ -405,7 +405,7 @@ public class Startup implements AWTEventListener {
     }
 
     // positional argument being files to load
-    for (final var arg : cmd.getArgs()) {
+    for (final java.lang.String arg : cmd.getArgs()) {
       startup.filesToOpen.add(new File(arg));
     }
 
@@ -451,12 +451,12 @@ public class Startup implements AWTEventListener {
 
   private static RC handleArgTty(Startup startup, Option opt) {
     // TTY format parsing
-    final var ttyVal = opt.getValue();
-    final var fmts = ttyVal.split(",");
+    final java.lang.String ttyVal = opt.getValue();
+    final java.lang.String[] fmts = ttyVal.split(",");
     if (fmts.length > 0) {
       // FIXME: why we support multiple TTY types in one invocation? fallback?
-      for (final var singleFmt : fmts) {
-        final var val = switch (singleFmt.trim()) {
+      for (final java.lang.String singleFmt : fmts) {
+        final int val = switch (singleFmt.trim()) {
           case "table" -> TtyInterface.FORMAT_TABLE;
           case "speed" -> TtyInterface.FORMAT_SPEED;
           case "tty" -> TtyInterface.FORMAT_TTY;
@@ -482,8 +482,8 @@ public class Startup implements AWTEventListener {
   }
 
   private static RC handleArgSubstitute(Startup startup, Option opt) {
-    final var fileA = new File(opt.getValues()[0]);
-    final var fileB = new File(opt.getValues()[1]);
+    final java.io.File fileA = new File(opt.getValues()[0]);
+    final java.io.File fileB = new File(opt.getValues()[1]);
     if (!startup.substitutions.containsKey(fileA)) {
       startup.substitutions.put(fileA, fileB);
       return RC.OK;
@@ -500,7 +500,7 @@ public class Startup implements AWTEventListener {
       // FIXME: shouldn't we quit here? -> RC.QUIT;
       return RC.WARN;
     }
-    final var fileName = opt.getValue();
+    final java.lang.String fileName = opt.getValue();
     startup.loadFile = new File(fileName);
     return RC.OK;
   }
@@ -510,13 +510,13 @@ public class Startup implements AWTEventListener {
       logger.error(S.get("saveMultipleError"));
       return RC.WARN;
     }
-    final var fileName = opt.getValue();
+    final java.lang.String fileName = opt.getValue();
     startup.saveFile = new File(fileName);
     return RC.OK;
   }
 
   private static RC handleArgGates(Startup startup, Option opt) {
-    final var gateShape = opt.getValue().toLowerCase();
+    final java.lang.String gateShape = opt.getValue().toLowerCase();
     if ("ansi".equals(gateShape)) {
       AppPreferences.GATE_SHAPE.set(AppPreferences.SHAPE_SHAPED);
       return RC.OK;
@@ -530,22 +530,22 @@ public class Startup implements AWTEventListener {
   }
 
   private static RC handleArgGeometry(Startup startup, Option opt) {
-    final var geometry = opt.getValue();
-    final var wxh = geometry.split("[xX]");
+    final java.lang.String geometry = opt.getValue();
+    final java.lang.String[] wxh = geometry.split("[xX]");
 
     if (wxh.length != 2 || wxh[0].length() < 1 || wxh[1].length() < 1) {
       logger.error(S.get("argGeometryError"));
       return RC.QUIT;
     }
 
-    final var p = wxh[1].indexOf('+', 1);
+    final int p = wxh[1].indexOf('+', 1);
     String loc = null;
     int x = 0;
     int y = 0;
     if (p >= 0) {
       loc = wxh[1].substring(p + 1);
       wxh[1] = wxh[1].substring(0, p);
-      final var xy = loc.split("\\+");
+      final java.lang.String[] xy = loc.split("\\+");
       if (xy.length != 2 || xy[0].length() < 1 || xy[1].length() < 1) {
         logger.error(S.get("argGeometryError"));
         return RC.QUIT;
@@ -591,9 +591,9 @@ public class Startup implements AWTEventListener {
       return RC.QUIT;
     }
     // first we get the option
-    final var option = opt.getValue();
+    final java.lang.String option = opt.getValue();
     // we look if it is a file
-    final var file = new File(option);
+    final java.io.File file = new File(option);
     if (file.exists()) {
       startup.templFile = file;
       if (!startup.templFile.canRead()) {
@@ -682,14 +682,14 @@ public class Startup implements AWTEventListener {
   private static boolean testFpgaFlagTickFreqSet = false;
 
   private static RC handleArgTestFpga(Startup startup, Option opt) {
-    final var optArgs = opt.getValues();
+    final java.lang.String[] optArgs = opt.getValues();
 
     if (optArgs == null) {
       logger.error(S.get("argTestInvalidArguments"));
       return RC.QUIT;
     }
 
-    final var argsCnt = optArgs.length;
+    final int argsCnt = optArgs.length;
     if (argsCnt < 3 || argsCnt > 5) {
       logger.error(S.get("argTestInvalidArguments"));
       return RC.QUIT;
@@ -717,7 +717,7 @@ public class Startup implements AWTEventListener {
   }
 
   private static RC handleArgTestCircuit(Startup startup, Option opt) {
-    final var fileName = opt.getValue();
+    final java.lang.String fileName = opt.getValue();
     startup.testCircuitPathInput = fileName;
     startup.filesToOpen.add(new File(fileName));
     startup.showSplash = false;
@@ -726,7 +726,7 @@ public class Startup implements AWTEventListener {
   }
 
   private static RC handleArgTestCircGen(Startup startup, Option opt) {
-    final var optArgs = opt.getValues();
+    final java.lang.String[] optArgs = opt.getValues();
     // This is to test the XML consistency over different version of the Logisim
     // This is the input path of the file to open
     startup.testCircPathInput = optArgs[0];
@@ -741,8 +741,8 @@ public class Startup implements AWTEventListener {
   /* ********************************************************************************************* */
 
   private static void setLocale(String lang) {
-    final var opts = S.getLocaleOptions();
-    for (final var locale : opts) {
+    final java.util.Locale[] opts = S.getLocaleOptions();
+    for (final java.util.Locale locale : opts) {
       if (lang.equals(locale.toString())) {
         LocaleManager.setLocale(locale);
         return;
@@ -751,7 +751,7 @@ public class Startup implements AWTEventListener {
     logger.warn(S.get("invalidLocaleError"));
     logger.warn(S.get("invalidLocaleOptionsHeader"));
 
-    for (final var opt : opts) {
+    for (final java.util.Locale opt : opts) {
       logger.warn("   {}", opt.toString());
     }
     System.exit(-1);
@@ -767,7 +767,7 @@ public class Startup implements AWTEventListener {
 
   private void doPrintFile(File file) {
     if (initialized) {
-      final var toPrint = ProjectActions.doOpen(null, null, file);
+      final com.cburch.logisim.proj.Project toPrint = ProjectActions.doOpen(null, null, file);
       Print.doPrint(toPrint);
       toPrint.getFrame().dispose();
     } else {
@@ -805,11 +805,11 @@ public class Startup implements AWTEventListener {
 
   boolean fpgaDownload(Project proj) {
     /* Testing synthesis */
-    final var mainCircuit = proj.getLogisimFile().getCircuit(testCircuitImpName);
+    final com.cburch.logisim.circuit.Circuit mainCircuit = proj.getLogisimFile().getCircuit(testCircuitImpName);
     if (mainCircuit == null) return false;
-    final var simTickFreq = mainCircuit.getTickFrequency();
-    final var downTickFreq = mainCircuit.getDownloadFrequency();
-    final var usedFrequency = (testTickFrequency > 0) ? testTickFrequency :
+    final double simTickFreq = mainCircuit.getTickFrequency();
+    final double downTickFreq = mainCircuit.getDownloadFrequency();
+    final double usedFrequency = (testTickFrequency > 0) ? testTickFrequency :
         (downTickFreq > 0) ? downTickFreq : simTickFreq;
     Download downloader =
         new Download(
@@ -870,8 +870,8 @@ public class Startup implements AWTEventListener {
     if (showSplash) {
       monitor.setProgress(SplashScreen.LIBRARIES);
     }
-    final var templLoader = new Loader(monitor);
-    final var count =
+    final com.cburch.logisim.file.Loader templLoader = new Loader(monitor);
+    final int count =
         templLoader.getBuiltin().getLibrary(BaseLibrary._ID).getTools().size()
             + templLoader.getBuiltin().getLibrary(GatesLibrary._ID).getTools().size();
     if (count < 0) {
@@ -917,7 +917,7 @@ public class Startup implements AWTEventListener {
 
     // load file
     if (filesToOpen.isEmpty()) {
-      final var proj = ProjectActions.doNew(monitor);
+      final com.cburch.logisim.proj.Project proj = ProjectActions.doNew(monitor);
       proj.setStartupScreen(true);
       if (showSplash) {
         monitor.close();
@@ -926,7 +926,7 @@ public class Startup implements AWTEventListener {
       int numOpened = 0;
       boolean first = true;
       Project proj;
-      for (final var fileToOpen : filesToOpen) {
+      for (final java.io.File fileToOpen : filesToOpen) {
         try {
           if (testVector != null) {
             proj = ProjectActions.doOpenNoWindow(monitor, fileToOpen);
@@ -939,7 +939,7 @@ public class Startup implements AWTEventListener {
             ProjectActions.doSave(proj, new File(testCircPathOutput));
           } else if (testCircuitPathInput != null) {
             /* Testing test bench*/
-            final var testB = new TestBench(testCircuitPathInput, monitor, substitutions);
+            final com.cburch.logisim.gui.test.TestBench testB = new TestBench(testCircuitPathInput, monitor, substitutions);
 
             if (testB.startTestBench()) {
               // FIXME: hardcoded string
@@ -969,7 +969,7 @@ public class Startup implements AWTEventListener {
       if (numOpened == 0) System.exit(-1);
     }
 
-    for (final var fileToPrint : filesToPrint) {
+    for (final java.io.File fileToPrint : filesToPrint) {
       doPrintFile(fileToPrint);
     }
 
@@ -981,9 +981,9 @@ public class Startup implements AWTEventListener {
   private boolean hasIcon(Component comp) {
     boolean result = false;
     if (comp instanceof JOptionPane pane) {
-      for (final var comp1 : pane.getComponents()) result |= hasIcon(comp1);
+      for (final java.awt.Component comp1 : pane.getComponents()) result |= hasIcon(comp1);
     } else if (comp instanceof JPanel panel) {
-      for (final var comp1 : panel.getComponents()) result |= hasIcon(comp1);
+      for (final java.awt.Component comp1 : panel.getComponents()) result |= hasIcon(comp1);
     } else if (comp instanceof JLabel label) {
       return label.getIcon() != null;
     }
@@ -994,7 +994,7 @@ public class Startup implements AWTEventListener {
   public void eventDispatched(AWTEvent event) {
     if (event instanceof ContainerEvent containerEvent) {
       if (containerEvent.getID() == ContainerEvent.COMPONENT_ADDED) {
-        final var container = containerEvent.getChild();
+        final java.awt.Component container = containerEvent.getChild();
         if ((container instanceof JButton)
             || (container instanceof JCheckBox)
             || (container instanceof JComboBox)

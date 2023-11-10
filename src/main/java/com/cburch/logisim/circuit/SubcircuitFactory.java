@@ -58,10 +58,10 @@ public class SubcircuitFactory extends InstanceFactory {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      final var superState = proj.getCircuitState();
+      final com.cburch.logisim.circuit.CircuitState superState = proj.getCircuitState();
       if (superState == null) return;
 
-      final var subState = getSubstate(superState, instance);
+      final com.cburch.logisim.circuit.CircuitState subState = getSubstate(superState, instance);
       if (subState == null) return;
       proj.setCircuitState(subState);
     }
@@ -69,27 +69,27 @@ public class SubcircuitFactory extends InstanceFactory {
     @Override
     public void configureMenu(JPopupMenu menu, Project proj) {
       this.proj = proj;
-      final var name = instance.getFactory().getDisplayName();
-      final var text = S.get("subcircuitViewItem", name);
-      final var item = new JMenuItem(text);
+      final java.lang.String name = instance.getFactory().getDisplayName();
+      final java.lang.String text = S.get("subcircuitViewItem", name);
+      final javax.swing.JMenuItem item = new JMenuItem(text);
       item.addActionListener(this);
       menu.add(item);
-      final var hi = new CircuitStateHolder.HierarchyInfo(proj.getCurrentCircuit());
+      final com.cburch.logisim.tools.CircuitStateHolder.HierarchyInfo hi = new CircuitStateHolder.HierarchyInfo(proj.getCurrentCircuit());
       hi.addComponent(instance.getComponent());
       getSubMenuItems(menu, proj, (CircuitState) instance.getData(proj.getCircuitState()), hi);
     }
 
     public void getSubMenuItems(JPopupMenu menu, Project proj, CircuitState state,
                                 CircuitStateHolder.HierarchyInfo hi) {
-      for (final var comp : source.getNonWires()) {
+      for (final com.cburch.logisim.comp.Component comp : source.getNonWires()) {
         if (comp instanceof InstanceComponent c) {
           if (c.getFactory() instanceof SubcircuitFactory) {
-            final var m = (CircuitFeature) c.getFeature(MenuExtender.class);
-            final var newhi = hi.getCopy();
+            final com.cburch.logisim.circuit.SubcircuitFactory.CircuitFeature m = (CircuitFeature) c.getFeature(MenuExtender.class);
+            final com.cburch.logisim.tools.CircuitStateHolder.HierarchyInfo newhi = hi.getCopy();
             newhi.addComponent(c);
             m.getSubMenuItems(menu, proj, (CircuitState) c.getInstance().getData(state), newhi);
           } else if (c.getInstance().getFactory().providesSubCircuitMenu()) {
-            final var m = (MenuExtender) c.getFeature(MenuExtender.class);
+            final com.cburch.logisim.tools.MenuExtender m = (MenuExtender) c.getFeature(MenuExtender.class);
             if (m instanceof CircuitStateHolder csh) {
               csh.setCircuitState(state);
               csh.setHierarchyName(hi);
@@ -117,27 +117,27 @@ public class SubcircuitFactory extends InstanceFactory {
   }
 
   void computePorts(Instance instance) {
-    final var facing = instance.getAttributeValue(StdAttr.FACING);
-    final var portLocs = source.getAppearance().getPortOffsets(facing);
-    final var ports = new Port[portLocs.size()];
-    final var pins = new Instance[portLocs.size()];
+    final com.cburch.logisim.data.Direction facing = instance.getAttributeValue(StdAttr.FACING);
+    final java.util.SortedMap<com.cburch.logisim.data.Location,com.cburch.logisim.instance.Instance> portLocs = source.getAppearance().getPortOffsets(facing);
+    final com.cburch.logisim.instance.Port[] ports = new Port[portLocs.size()];
+    final com.cburch.logisim.instance.Instance[] pins = new Instance[portLocs.size()];
     int i = -1;
-    for (final var portLoc : portLocs.entrySet()) {
+    for (final java.util.Map.Entry<com.cburch.logisim.data.Location,com.cburch.logisim.instance.Instance> portLoc : portLocs.entrySet()) {
       i++;
-      final var loc = portLoc.getKey();
-      final var pin = portLoc.getValue();
-      final var type = Pin.FACTORY.isInputPin(pin) ? Port.INPUT : Port.OUTPUT;
-      final var width = pin.getAttributeValue(StdAttr.WIDTH);
+      final com.cburch.logisim.data.Location loc = portLoc.getKey();
+      final com.cburch.logisim.instance.Instance pin = portLoc.getValue();
+      final java.lang.String type = Pin.FACTORY.isInputPin(pin) ? Port.INPUT : Port.OUTPUT;
+      final com.cburch.logisim.data.BitWidth width = pin.getAttributeValue(StdAttr.WIDTH);
       ports[i] = new Port(loc.getX(), loc.getY(), type, width);
       pins[i] = pin;
 
-      final var label = pin.getAttributeValue(StdAttr.LABEL);
+      final java.lang.String label = pin.getAttributeValue(StdAttr.LABEL);
       if (label != null && label.length() > 0) {
         ports[i].setToolTip(StringUtil.constantGetter(label));
       }
     }
 
-    final var attrs = (CircuitAttributes) instance.getAttributeSet();
+    final com.cburch.logisim.circuit.CircuitAttributes attrs = (CircuitAttributes) instance.getAttributeSet();
     attrs.setPinInstances(pins);
     instance.setPorts(ports);
     instance.recomputeBounds();
@@ -145,8 +145,8 @@ public class SubcircuitFactory extends InstanceFactory {
   }
 
   private void configureLabel(Instance instance) {
-    final var bds = instance.getBounds();
-    final var loc = instance.getAttributeValue(CircuitAttributes.LABEL_LOCATION_ATTR);
+    final com.cburch.logisim.data.Bounds bds = instance.getBounds();
+    final com.cburch.logisim.data.Direction loc = instance.getAttributeValue(CircuitAttributes.LABEL_LOCATION_ATTR);
 
     int x = bds.getX() + bds.getWidth() / 2;
     int y = bds.getY() + bds.getHeight() / 2;
@@ -173,7 +173,7 @@ public class SubcircuitFactory extends InstanceFactory {
   //
   @Override
   public void configureNewInstance(Instance instance) {
-    final var attrs = (CircuitAttributes) instance.getAttributeSet();
+    final com.cburch.logisim.circuit.CircuitAttributes attrs = (CircuitAttributes) instance.getAttributeSet();
     attrs.setSubcircuit(instance);
 
     instance.addAttributeListener();
@@ -187,8 +187,8 @@ public class SubcircuitFactory extends InstanceFactory {
   @Override
   public boolean contains(Location loc, AttributeSet attrs) {
     if (super.contains(loc, attrs)) {
-      final var facing = attrs.getValue(StdAttr.FACING);
-      final var defaultFacing = source.getAppearance().getFacing();
+      final com.cburch.logisim.data.Direction facing = attrs.getValue(StdAttr.FACING);
+      final com.cburch.logisim.data.Direction defaultFacing = source.getAppearance().getFacing();
       Location query;
 
       if (facing.equals(defaultFacing)) {
@@ -209,28 +209,28 @@ public class SubcircuitFactory extends InstanceFactory {
   }
 
   private void drawCircuitLabel(InstancePainter painter, Bounds bds, Direction facing, Direction defaultFacing) {
-    final var staticAttrs = source.getStaticAttributes();
+    final com.cburch.logisim.data.AttributeSet staticAttrs = source.getStaticAttributes();
 
     java.lang.String label = staticAttrs.getValue(CircuitAttributes.CIRCUIT_LABEL_ATTR);
 
     if (label != null && !label.equals("")) {
-      final var up = staticAttrs.getValue(CircuitAttributes.CIRCUIT_LABEL_FACING_ATTR);
-      final var font = staticAttrs.getValue(CircuitAttributes.CIRCUIT_LABEL_FONT_ATTR);
+      final com.cburch.logisim.data.Direction up = staticAttrs.getValue(CircuitAttributes.CIRCUIT_LABEL_FACING_ATTR);
+      final java.awt.Font font = staticAttrs.getValue(CircuitAttributes.CIRCUIT_LABEL_FONT_ATTR);
 
       int back = label.indexOf('\\');
       int lines = 1;
       boolean backs = false;
       while (back >= 0 && back <= label.length() - 2) {
-        final var c = label.charAt(back + 1);
+        final char c = label.charAt(back + 1);
         if (c == 'n') lines++;
         else if (c == '\\') backs = true;
         back = label.indexOf('\\', back + 2);
       }
 
-      final var x = bds.getX() + bds.getWidth() / 2;
+      final int x = bds.getX() + bds.getWidth() / 2;
       int y = bds.getY() + bds.getHeight() / 2;
-      final var g = painter.getGraphics().create();
-      final var angle = Math.PI / 2 - (up.toRadians() - defaultFacing.toRadians()) - facing.toRadians();
+      final java.awt.Graphics g = painter.getGraphics().create();
+      final double angle = Math.PI / 2 - (up.toRadians() - defaultFacing.toRadians()) - facing.toRadians();
       if (g instanceof Graphics2D g2 && Math.abs(angle) > 0.01) {
         g2.rotate(angle, x, y);
       }
@@ -238,14 +238,14 @@ public class SubcircuitFactory extends InstanceFactory {
       if (lines == 1 && !backs) {
         GraphicsUtil.drawCenteredText(g, label, x, y);
       } else {
-        final var fm = g.getFontMetrics();
-        final var height = fm.getHeight();
+        final java.awt.FontMetrics fm = g.getFontMetrics();
+        final int height = fm.getHeight();
         y = y - (height * lines - fm.getLeading()) / 2 + fm.getAscent();
         back = label.indexOf('\\');
         while (back >= 0 && back <= label.length() - 2) {
-          final var c = label.charAt(back + 1);
+          final char c = label.charAt(back + 1);
           if (c == 'n') {
-            final var line = label.substring(0, back);
+            final java.lang.String line = label.substring(0, back);
             GraphicsUtil.drawText(g, line, x, y, GraphicsUtil.H_CENTER, GraphicsUtil.V_BASELINE);
             y += height;
             label = label.substring(back + 2);
@@ -281,9 +281,9 @@ public class SubcircuitFactory extends InstanceFactory {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    final var facing = attrs.getValue(StdAttr.FACING);
-    final var defaultFacing = source.getAppearance().getFacing();
-    final var bds = source.getAppearance().getOffsetBounds();
+    final com.cburch.logisim.data.Direction facing = attrs.getValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Direction defaultFacing = source.getAppearance().getFacing();
+    final com.cburch.logisim.data.Bounds bds = source.getAppearance().getOffsetBounds();
     return bds.rotate(defaultFacing, facing, 0, 0);
   }
 
@@ -333,8 +333,8 @@ public class SubcircuitFactory extends InstanceFactory {
 
     @Override
     protected Map<Circuit, Integer> getAccessedCircuits() {
-      final var accessMap = new HashMap<Circuit, Integer>();
-      for (final var supercirc : source.getCircuitsUsingThis()) {
+      final java.util.HashMap<com.cburch.logisim.circuit.Circuit,java.lang.Integer> accessMap = new HashMap<Circuit, Integer>();
+      for (final com.cburch.logisim.circuit.Circuit supercirc : source.getCircuitsUsingThis()) {
         accessMap.put(supercirc, READ_WRITE);
       }
       return accessMap;
@@ -345,10 +345,10 @@ public class SubcircuitFactory extends InstanceFactory {
   }
 
   private void paintBase(InstancePainter painter, Graphics g) {
-    final var attrs = (CircuitAttributes) painter.getAttributeSet();
-    final var facing = attrs.getFacing();
-    final var defaultFacing = source.getAppearance().getFacing();
-    final var loc = painter.getLocation();
+    final com.cburch.logisim.circuit.CircuitAttributes attrs = (CircuitAttributes) painter.getAttributeSet();
+    final com.cburch.logisim.data.Direction facing = attrs.getFacing();
+    final com.cburch.logisim.data.Direction defaultFacing = source.getAppearance().getFacing();
+    final com.cburch.logisim.data.Location loc = painter.getLocation();
     g.translate(loc.getX(), loc.getY());
     source.getAppearance().paintSubcircuit(painter, g, facing);
     drawCircuitLabel(painter, getOffsetBounds(attrs), facing, defaultFacing);
@@ -361,8 +361,8 @@ public class SubcircuitFactory extends InstanceFactory {
   //
   @Override
   public void paintGhost(InstancePainter painter) {
-    final var g = painter.getGraphics();
-    final var fg = g.getColor();
+    final java.awt.Graphics g = painter.getGraphics();
+    final java.awt.Color fg = g.getColor();
     int v = fg.getRed() + fg.getGreen() + fg.getBlue();
     Composite oldComposite = null;
     if (g instanceof Graphics2D g2d && v > 50) {
@@ -384,22 +384,22 @@ public class SubcircuitFactory extends InstanceFactory {
 
   @Override
   public void propagate(InstanceState superState) {
-    final var subState = getSubstate(superState);
+    final com.cburch.logisim.circuit.CircuitState subState = getSubstate(superState);
 
-    final var attrs = (CircuitAttributes) superState.getAttributeSet();
-    final var pins = attrs.getPinInstances();
+    final com.cburch.logisim.circuit.CircuitAttributes attrs = (CircuitAttributes) superState.getAttributeSet();
+    final com.cburch.logisim.instance.Instance[] pins = attrs.getPinInstances();
     for (int i = 0; i < pins.length; i++) {
-      final var pin = pins[i];
-      final var pinState = subState.getInstanceState(pin);
+      final com.cburch.logisim.instance.Instance pin = pins[i];
+      final com.cburch.logisim.instance.InstanceState pinState = subState.getInstanceState(pin);
       if (Pin.FACTORY.isInputPin(pin)) {
-        final var newVal = superState.getPortValue(i);
-        final var oldVal = Pin.FACTORY.getValue(pinState);
+        final com.cburch.logisim.data.Value newVal = superState.getPortValue(i);
+        final com.cburch.logisim.data.Value oldVal = Pin.FACTORY.getValue(pinState);
         if (!newVal.equals(oldVal)) {
           Pin.FACTORY.setValue(pinState, newVal);
           Pin.FACTORY.propagate(pinState);
         }
       } else { // it is output-only
-        final var val = pinState.getPortValue(0);
+        final com.cburch.logisim.data.Value val = pinState.getPortValue(0);
         superState.setPort(i, val, 1);
       }
     }
@@ -407,8 +407,8 @@ public class SubcircuitFactory extends InstanceFactory {
 
   @Override
   public void paintIcon(InstancePainter painter) {
-    final var g2 = (Graphics2D) painter.getGraphics().create();
-    final var attrs = (CircuitAttributes) painter.getAttributeSet();
+    final java.awt.Graphics2D g2 = (Graphics2D) painter.getGraphics().create();
+    final com.cburch.logisim.circuit.CircuitAttributes attrs = (CircuitAttributes) painter.getAttributeSet();
     if (attrs.getValue(CircuitAttributes.APPEARANCE_ATTR).equals(CircuitAttributes.APPEAR_CLASSIC))
       paintClasicIcon(g2);
     else if (attrs
@@ -434,7 +434,7 @@ public class SubcircuitFactory extends InstanceFactory {
         AppPreferences.getScaled(1),
         AppPreferences.getScaled(12),
         AppPreferences.getScaled(14));
-    final var wh = AppPreferences.getScaled(3);
+    final int wh = AppPreferences.getScaled(3);
     for (int y = 0; y < 3; y++) {
       if (y == 1) g2.setColor(Value.trueColor);
       else g2.setColor(Value.falseColor);
@@ -454,13 +454,13 @@ public class SubcircuitFactory extends InstanceFactory {
         AppPreferences.getScaled(1),
         AppPreferences.getScaled(14),
         AppPreferences.getScaled(14));
-    final var f = g2.getFont().deriveFont((float) AppPreferences.getIconSize() / 4);
-    final var l = new TextLayout("main", f, g2.getFontRenderContext());
+    final java.awt.Font f = g2.getFont().deriveFont((float) AppPreferences.getIconSize() / 4);
+    final java.awt.font.TextLayout l = new TextLayout("main", f, g2.getFontRenderContext());
     l.draw(
         g2,
         (float) (AppPreferences.getIconSize() / 2 - l.getBounds().getCenterX()),
         (float) (AppPreferences.getIconSize() / 4 - l.getBounds().getCenterY()));
-    final var wh = AppPreferences.getScaled(3);
+    final int wh = AppPreferences.getScaled(3);
     for (int y = 1; y < 3; y++) {
       if (y == 1) g2.setColor(Value.trueColor);
       else g2.setColor(Value.falseColor);
@@ -496,8 +496,8 @@ public class SubcircuitFactory extends InstanceFactory {
             AppPreferences.getScaled(y * 4 + 2));
     }
     g2.setColor(Color.WHITE);
-    final var f = g2.getFont().deriveFont((float) AppPreferences.getIconSize() / 4);
-    final var l = new TextLayout("main", f, g2.getFontRenderContext());
+    final java.awt.Font f = g2.getFont().deriveFont((float) AppPreferences.getIconSize() / 4);
+    final java.awt.font.TextLayout l = new TextLayout("main", f, g2.getFontRenderContext());
     l.draw(g2,
             (float) (AppPreferences.getIconSize() / 2 - l.getBounds().getCenterX()),
             (float) ((7 * AppPreferences.getIconSize()) / 8 - l.getBounds().getCenterY()));

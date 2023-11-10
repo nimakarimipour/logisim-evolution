@@ -44,7 +44,7 @@ public class Ttl7442 extends AbstractTtlGate {
   @Override
   public void paintInternal(InstancePainter painter, int x, int y, int height, boolean up) {
     super.paintBase(painter, false, false);
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     g.drawRect(x + 18, y + 10, 84, 18);
     int mask = 1;
     for (int i = 0; i < 10; i++) {

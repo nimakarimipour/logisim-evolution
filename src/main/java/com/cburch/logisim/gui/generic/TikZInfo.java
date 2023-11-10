@@ -234,7 +234,7 @@ public class TikZInfo implements Cloneable {
 
   public void setFont(Font f) {
     curFont = f;
-    final var fontName = f.getFamily();
+    final java.lang.String fontName = f.getFamily();
     fontSize = f.getSize();
     fontBold = f.isBold();
     fontItalic = f.isItalic();
@@ -246,10 +246,10 @@ public class TikZInfo implements Cloneable {
   }
 
   public void copyArea(int x, int y, int width, int height, int dx, int dy) {
-    final var copyList = new ArrayList<DrawObject>();
-    for (final var obj : contents) {
+    final java.util.ArrayList<com.cburch.logisim.gui.generic.TikZInfo.DrawObject> copyList = new ArrayList<DrawObject>();
+    for (final com.cburch.logisim.gui.generic.TikZInfo.DrawObject obj : contents) {
       if (obj.insideArea(x, y, width, height)) {
-        final var objClone = obj.clone();
+        final com.cburch.logisim.gui.generic.TikZInfo.DrawObject objClone = obj.clone();
         objClone.move(dx, dy);
         copyList.add(objClone);
       }
@@ -267,22 +267,22 @@ public class TikZInfo implements Cloneable {
 
   public void drawGlyphVector(GlyphVector g, float x, float y) {
     for (int i = 0; i < g.getNumGlyphs(); i++) {
-      final var at = AffineTransform.getTranslateInstance(x, y);
-      final var p = g.getGlyphPosition(i);
+      final java.awt.geom.AffineTransform at = AffineTransform.getTranslateInstance(x, y);
+      final java.awt.geom.Point2D p = g.getGlyphPosition(i);
       at.transform(p, p);
-      final var shape = g.getGlyphOutline(i);
+      final java.awt.Shape shape = g.getGlyphOutline(i);
       contents.add(new TikZBezier(p, shape, true));
     }
   }
 
   private void optimize() {
-    final var l = contents.listIterator();
+    final java.util.ListIterator<com.cburch.logisim.gui.generic.TikZInfo.DrawObject> l = contents.listIterator();
     while (l.hasNext()) {
-      final var obj = l.next();
+      final com.cburch.logisim.gui.generic.TikZInfo.DrawObject obj = l.next();
       if (obj instanceof TikZLine lineA) {
         boolean merged = false;
         for (int i = contents.indexOf(obj) + 1; i < contents.size(); i++) {
-          final var n = contents.get(i);
+          final com.cburch.logisim.gui.generic.TikZInfo.DrawObject n = contents.get(i);
           if (n instanceof TikZLine lineB) {
             if (lineB.canMerge(lineA)) {
               merged = lineB.merge(lineA);
@@ -297,13 +297,13 @@ public class TikZInfo implements Cloneable {
   }
 
   private String getCharRepresentation(int i) {
-    final var repeat = i / 26;
-    final var charId = i % 26;
+    final int repeat = i / 26;
+    final int charId = i % 26;
     return String.valueOf((char) (charId + 'A')).repeat(repeat + 1);
   }
 
   private String getFontDefinition(int i) {
-    final var content = new StringBuilder();
+    final java.lang.StringBuilder content = new StringBuilder();
     boolean replaced = false;
     content
         .append("\\def\\logisimfont")
@@ -332,8 +332,8 @@ public class TikZInfo implements Cloneable {
   }
 
   private String getColorDefinitions() {
-    final var content = new StringBuilder();
-    for (final var key : customColors.keySet()) {
+    final java.lang.StringBuilder content = new StringBuilder();
+    for (final java.lang.String key : customColors.keySet()) {
       content
           .append("\\definecolor{")
           .append(key)
@@ -346,7 +346,7 @@ public class TikZInfo implements Cloneable {
 
   public void writeFile(File outfile) throws IOException {
     optimize();
-    final var writer = new FileWriter(outfile);
+    final java.io.FileWriter writer = new FileWriter(outfile);
     writer.write("% Important: If latex complains about unicode characters,\n");
     writer.write("% please use \"\\usepackage[utf8x]{inputenc}\" in your preamble\n");
     writer.write("% You can change the size of the picture by putting it into the construct:\n");
@@ -358,28 +358,28 @@ public class TikZInfo implements Cloneable {
     writer.write("\\begin{tikzpicture}[x=1pt,y=-1pt,line cap=rect]\n");
     for (int i = 0; i < usedFonts.size(); i++) writer.write(getFontDefinition(i));
     writer.write(getColorDefinitions());
-    for (final var obj : contents) writer.write(obj.getTikZCommand() + "\n");
+    for (final com.cburch.logisim.gui.generic.TikZInfo.DrawObject obj : contents) writer.write(obj.getTikZCommand() + "\n");
     writer.write("\\end{tikzpicture}\n\n");
     writer.close();
   }
 
   public void writeSvg(int width, int height, File outfile) throws ParserConfigurationException, TransformerException {
     optimize();
-    final var factory = XmlUtil.getHardenedBuilderFactory();
-    final var parser = factory.newDocumentBuilder();
-    final var svgInfo = parser.newDocument();
-    final var svg = svgInfo.createElement("svg");
+    final javax.xml.parsers.DocumentBuilderFactory factory = XmlUtil.getHardenedBuilderFactory();
+    final javax.xml.parsers.DocumentBuilder parser = factory.newDocumentBuilder();
+    final org.w3c.dom.Document svgInfo = parser.newDocument();
+    final org.w3c.dom.Element svg = svgInfo.createElement("svg");
     svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
     svg.setAttribute("version", "1.1");
     svg.setAttribute("viewBox", "0 0 " + width + " " + height);
     svgInfo.appendChild(svg);
-    for (final var obj : contents) obj.getSvgCommand(svgInfo, svg);
-    final var tranFactory = TransformerFactory.newInstance();
+    for (final com.cburch.logisim.gui.generic.TikZInfo.DrawObject obj : contents) obj.getSvgCommand(svgInfo, svg);
+    final javax.xml.transform.TransformerFactory tranFactory = TransformerFactory.newInstance();
     tranFactory.setAttribute("indent-number", 3);
-    final var transformer = tranFactory.newTransformer();
+    final javax.xml.transform.Transformer transformer = tranFactory.newTransformer();
     transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-    final var src = new DOMSource(svgInfo);
-    final var dest = new StreamResult(outfile);
+    final javax.xml.transform.dom.DOMSource src = new DOMSource(svgInfo);
+    final javax.xml.transform.stream.StreamResult dest = new StreamResult(outfile);
     transformer.transform(src, dest);
   }
 
@@ -427,14 +427,14 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public boolean insideArea(int x, int y, int width, int height) {
-      final var left = new Point(x, y);
-      final var right = new Point(x + width, y + height);
+      final java.awt.Point left = new Point(x, y);
+      final java.awt.Point right = new Point(x + width, y + height);
       transform(left, left);
       transform(right, right);
-      final var x1 = Math.min(left.x, right.x);
-      final var x2 = Math.max(left.x, right.x);
-      final var y1 = Math.min(left.y, right.y);
-      final var y2 = Math.max(left.y, right.y);
+      final int x1 = Math.min(left.x, right.x);
+      final int x2 = Math.max(left.x, right.x);
+      final int y1 = Math.min(left.y, right.y);
+      final int y2 = Math.max(left.y, right.y);
       boolean inside = true;
       if (points.isEmpty())
         return (start.x >= x1 && start.x <= x2)
@@ -442,7 +442,7 @@ public class TikZInfo implements Cloneable {
             && (end.x >= x1 && end.x <= x2)
             && (end.y >= y1 && end.y <= y2);
       else {
-        for (final var point : points) {
+        for (final java.awt.Point point : points) {
           inside &= (point.x >= x1 && point.x <= x2) && (point.y >= y1 && point.y <= y2);
         }
       }
@@ -456,13 +456,13 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public void move(int dx, int dy) {
-      final var move = new Point(dx, dy);
+      final java.awt.Point move = new Point(dx, dy);
       transform(move, move);
       if (points.isEmpty()) {
         start = new Point(start.x + move.x, start.y + move.y);
         end = new Point(end.x + move.x, start.y + move.y);
       } else {
-        for (final var point : points) {
+        for (final java.awt.Point point : points) {
           point.x += move.x;
           point.y += move.y;
         }
@@ -487,7 +487,7 @@ public class TikZInfo implements Cloneable {
       start = null;
       end = null;
       for (int i = 0; i < pointsCnt; i++) {
-        final var p = new Point(pointsX[i], pointsY[i]);
+        final java.awt.Point p = new Point(pointsX[i], pointsY[i]);
         transform(p, p);
         points.add(p);
       }
@@ -556,11 +556,11 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public String getTikZCommand() {
-      final var contents = new StringBuilder();
+      final java.lang.StringBuilder contents = new StringBuilder();
       if (filled) contents.append("\\fill ");
       else contents.append("\\draw ");
       contents.append("[line width=");
-      final var width = strokeWidth * BASIC_STROKE_WIDTH;
+      final double width = strokeWidth * BASIC_STROKE_WIDTH;
       contents.append(rounded(width)).append("pt, ").append(color).append(" ] ");
       if (points.isEmpty()) {
         contents.append(getPoint(start));
@@ -568,7 +568,7 @@ public class TikZInfo implements Cloneable {
         contents.append(getPoint(end));
       } else {
         boolean first = true;
-        for (final var point : points) {
+        for (final java.awt.Point point : points) {
           if (first) first = false;
           else contents.append("--");
           contents.append(getPoint(point));
@@ -581,12 +581,12 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public void getSvgCommand(Document root, Element e) {
-      final var content = new StringBuilder();
-      final var ne = root.createElement(close ? "polygon" : "polyline");
+      final java.lang.StringBuilder content = new StringBuilder();
+      final org.w3c.dom.Element ne = root.createElement(close ? "polygon" : "polyline");
       e.appendChild(ne);
       ne.setAttribute("fill", filled ? "rgb(" + customColors.get(color) + ")" : "none");
       ne.setAttribute("stroke", filled ? "none" : "rgb(" + customColors.get(color) + ")");
-      final var width = strokeWidth * BASIC_STROKE_WIDTH;
+      final double width = strokeWidth * BASIC_STROKE_WIDTH;
       ne.setAttribute("stroke-width", Double.toString(rounded(width)));
       ne.setAttribute("stroke-linecap", "square");
       if (points.isEmpty()) {
@@ -594,7 +594,7 @@ public class TikZInfo implements Cloneable {
             .append(end.y);
       } else {
         boolean first = true;
-        for (final var point : points) {
+        for (final java.awt.Point point : points) {
           if (first) first = false;
           else content.append(" ");
           content.append(point.x).append(",").append(point.y);
@@ -606,7 +606,7 @@ public class TikZInfo implements Cloneable {
     @SuppressWarnings("unchecked")
     @Override
     public DrawObject clone() {
-      final var newIns = new TikZLine();
+      final com.cburch.logisim.gui.generic.TikZInfo.TikZLine newIns = new TikZLine();
       newIns.start = (Point) start.clone();
       newIns.end = (Point) end.clone();
       newIns.strokeWidth = strokeWidth;
@@ -624,7 +624,7 @@ public class TikZInfo implements Cloneable {
     public TikZBezier() {}
 
     public TikZBezier(Shape s, boolean filled) {
-      final var p = new Point2D.Double();
+      final java.awt.geom.Point2D.Double p = new Point2D.Double();
       p.setLocation(0, 0);
       create(p, s, filled);
     }
@@ -638,31 +638,31 @@ public class TikZInfo implements Cloneable {
       this.color = getDrawColorString();
       this.alpha = (double) drawColor.getAlpha() / 255.0;
       this.strokeWidth = getStrokeWidth();
-      final var at = AffineTransform.getTranslateInstance(origin.getX(), origin.getY());
-      final var p = s.getPathIterator(at);
+      final java.awt.geom.AffineTransform at = AffineTransform.getTranslateInstance(origin.getX(), origin.getY());
+      final java.awt.geom.PathIterator p = s.getPathIterator(at);
       while (!p.isDone()) {
-        final var coords = new double[6];
-        final var type = p.currentSegment(coords);
+        final double[] coords = new double[6];
+        final int type = p.currentSegment(coords);
         if (type == PathIterator.SEG_MOVETO) {
-          final var current = new Point2D.Double();
+          final java.awt.geom.Point2D.Double current = new Point2D.Double();
           current.setLocation(coords[0], coords[1]);
           myPath.add(new BezierInfo(current, true, filled));
         } else if (type == PathIterator.SEG_LINETO) {
-          final var next = new Point2D.Double();
+          final java.awt.geom.Point2D.Double next = new Point2D.Double();
           next.setLocation(coords[0], coords[1]);
           myPath.add(new BezierInfo(next, false, false));
         } else if (type == PathIterator.SEG_CLOSE) {
           myPath.add(new BezierInfo());
         } else if (type == PathIterator.SEG_QUADTO) {
-          final var next = new Point2D.Double();
-          final var control = new Point2D.Double();
+          final java.awt.geom.Point2D.Double next = new Point2D.Double();
+          final java.awt.geom.Point2D.Double control = new Point2D.Double();
           control.setLocation(coords[0], coords[1]);
           next.setLocation(coords[2], coords[3]);
           myPath.add(new BezierInfo(control, next));
         } else if (type == PathIterator.SEG_CUBICTO) {
-          final var next = new Point2D.Double();
-          final var control1 = new Point2D.Double();
-          final var control2 = new Point2D.Double();
+          final java.awt.geom.Point2D.Double next = new Point2D.Double();
+          final java.awt.geom.Point2D.Double control1 = new Point2D.Double();
+          final java.awt.geom.Point2D.Double control2 = new Point2D.Double();
           control1.setLocation(coords[0], coords[1]);
           control2.setLocation(coords[2], coords[3]);
           next.setLocation(coords[4], coords[5]);
@@ -674,12 +674,12 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public String getTikZCommand() {
-      final var contents = new StringBuilder();
-      final var width = strokeWidth * BASIC_STROKE_WIDTH;
+      final java.lang.StringBuilder contents = new StringBuilder();
+      final double width = strokeWidth * BASIC_STROKE_WIDTH;
       contents.append(filled ? "\\fill " : "\\draw ").append("[line width=").append(rounded(width)).append("pt, ").append(color);
       if (filled && alpha != 1.0) contents.append(", fill opacity=").append(rounded(alpha));
       contents.append(" ] ");
-      for (final var point : myPath) {
+      for (final com.cburch.logisim.gui.generic.TikZInfo.TikZBezier.BezierInfo point : myPath) {
         contents.append(point.getTikZCommand());
       }
       contents.append(";");
@@ -688,16 +688,16 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public void getSvgCommand(Document root, Element e) {
-      final var ne = root.createElement("path");
+      final org.w3c.dom.Element ne = root.createElement("path");
       e.appendChild(ne);
       ne.setAttribute("fill", filled ? "rgb(" + customColors.get(color) + ")" : "none");
       if (filled && alpha != 1.0) ne.setAttribute("fill-opacity", Double.toString(rounded(alpha)));
       ne.setAttribute("stroke", filled ? "none" : "rgb(" + customColors.get(color) + ")");
-      final var width = strokeWidth * BASIC_STROKE_WIDTH;
+      final double width = strokeWidth * BASIC_STROKE_WIDTH;
       ne.setAttribute("stroke-width", Double.toString(rounded(width)));
       ne.setAttribute("stroke-linecap", "square");
-      final var content = new StringBuilder();
-      for (final var point : myPath) {
+      final java.lang.StringBuilder content = new StringBuilder();
+      for (final com.cburch.logisim.gui.generic.TikZInfo.TikZBezier.BezierInfo point : myPath) {
         content.append(point.getSvgPath());
       }
       ne.setAttribute("d", content.toString());
@@ -706,24 +706,24 @@ public class TikZInfo implements Cloneable {
     @Override
     public boolean insideArea(int x, int y, int width, int height) {
       boolean inside = true;
-      for (final var point : myPath) inside &= point.insideArea(x, y, width, height);
+      for (final com.cburch.logisim.gui.generic.TikZInfo.TikZBezier.BezierInfo point : myPath) inside &= point.insideArea(x, y, width, height);
       return inside;
     }
 
     @Override
     public DrawObject clone() {
-      final var newInst = new TikZBezier();
+      final com.cburch.logisim.gui.generic.TikZInfo.TikZBezier newInst = new TikZBezier();
       newInst.filled = filled;
       newInst.color = color;
       newInst.alpha = alpha;
       newInst.strokeWidth = strokeWidth;
-      for (final var point : myPath) newInst.myPath.add(point.clone());
+      for (final com.cburch.logisim.gui.generic.TikZInfo.TikZBezier.BezierInfo point : myPath) newInst.myPath.add(point.clone());
       return newInst;
     }
 
     @Override
     public void move(int dx, int dy) {
-      for (final var point : myPath) point.move(dx, dy);
+      for (final com.cburch.logisim.gui.generic.TikZInfo.TikZBezier.BezierInfo point : myPath) point.move(dx, dy);
     }
 
     private class BezierInfo implements Cloneable {
@@ -777,7 +777,7 @@ public class TikZInfo implements Cloneable {
 
       @Override
       public BezierInfo clone() {
-        final var newInst = new BezierInfo();
+        final com.cburch.logisim.gui.generic.TikZInfo.TikZBezier.BezierInfo newInst = new BezierInfo();
         newInst.startPoint = startPoint;
         newInst.controlPoint1 = controlPoint1;
         newInst.controlPoint2 = controlPoint2;
@@ -787,7 +787,7 @@ public class TikZInfo implements Cloneable {
       }
 
       public void move(int dx, int dy) {
-        final var at = AffineTransform.getTranslateInstance(dx, dy);
+        final java.awt.geom.AffineTransform at = AffineTransform.getTranslateInstance(dx, dy);
         if (startPoint != null) at.transform(startPoint, startPoint);
         if (controlPoint1 != null) at.transform(controlPoint1, controlPoint1);
         if (controlPoint2 != null) at.transform(controlPoint2, controlPoint2);
@@ -795,7 +795,7 @@ public class TikZInfo implements Cloneable {
       }
 
       public String getTikZCommand() {
-        final var contents = new StringBuilder();
+        final java.lang.StringBuilder contents = new StringBuilder();
         if (closePath) {
           contents.append("-- cycle ");
         } else if (startPoint != null) {
@@ -814,7 +814,7 @@ public class TikZInfo implements Cloneable {
       }
 
       public String getSvgPath() {
-        final var contents = new StringBuilder();
+        final java.lang.StringBuilder contents = new StringBuilder();
         if (closePath) {
           contents.append(" Z");
         } else if (startPoint != null) {
@@ -823,7 +823,7 @@ public class TikZInfo implements Cloneable {
           if (controlPoint1 == null && controlPoint2 == null) {
             contents.append(" L").append(endPoint.getX()).append(",").append(endPoint.getY());
           } else {
-            final var singlePoint = (controlPoint2 == null) ? controlPoint1 : controlPoint2;
+            final java.awt.geom.Point2D singlePoint = (controlPoint2 == null) ? controlPoint1 : controlPoint2;
             contents.append(" C").append(controlPoint1.getX()).append(",")
                 .append(controlPoint1.getY());
             contents.append(" ").append(singlePoint.getX()).append(",").append(singlePoint.getY());
@@ -836,8 +836,8 @@ public class TikZInfo implements Cloneable {
       public boolean insideArea(int x, int y, int width, int height) {
         if (closePath) return true;
         boolean inside = true;
-        final var x2 = x + width;
-        final var y2 = y + height;
+        final int x2 = x + width;
+        final int y2 = y + height;
         if (startPoint != null)
           inside &=
               (startPoint.getX() >= (double) x && startPoint.getX() <= x2)
@@ -876,7 +876,7 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public DrawObject clone() {
-      final var newIns = new TikZRectangle();
+      final com.cburch.logisim.gui.generic.TikZInfo.TikZRectangle newIns = new TikZRectangle();
       newIns.start = (Point) start.clone();
       newIns.end = (Point) end.clone();
       newIns.strokeWidth = strokeWidth;
@@ -889,11 +889,11 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public String getTikZCommand() {
-      final var contents = new StringBuilder();
+      final java.lang.StringBuilder contents = new StringBuilder();
       if (rad == null) {
         contents.append(filled ? "\\fill " : "\\draw ");
         contents.append("[line width=");
-        final var width = strokeWidth * BASIC_STROKE_WIDTH;
+        final double width = strokeWidth * BASIC_STROKE_WIDTH;
         contents.append(rounded(width)).append("pt, ").append(color);
         if (filled && alpha != 1.0) contents.append(", fill opacity=").append(rounded(alpha));
         contents.append(" ] ");
@@ -921,22 +921,22 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public void getSvgCommand(Document root, Element e) {
-      final var ne = root.createElement("rect");
+      final org.w3c.dom.Element ne = root.createElement("rect");
       e.appendChild(ne);
       ne.setAttribute("fill", filled ? "rgb(" + customColors.get(color) + ")" : "none");
       if (filled && alpha != 1.0) ne.setAttribute("fill-opacity", Double.toString(rounded(alpha)));
       ne.setAttribute("stroke", filled ? "none" : "rgb(" + customColors.get(color) + ")");
-      final var width = strokeWidth * BASIC_STROKE_WIDTH;
+      final double width = strokeWidth * BASIC_STROKE_WIDTH;
       ne.setAttribute("stroke-width", Double.toString(rounded(width)));
       ne.setAttribute("stroke-linecap", "square");
       if (rad != null) {
         ne.setAttribute("rx", Double.toString(rad.getX()));
         ne.setAttribute("ry", Double.toString(rad.getY()));
       }
-      final var xpos = Math.min(end.x, start.x);
-      final var bwidth = Math.abs(end.x - start.x);
-      final var ypos = Math.min(end.y, start.y);
-      final var bheight = Math.abs(end.y - start.y);
+      final int xpos = Math.min(end.x, start.x);
+      final int bwidth = Math.abs(end.x - start.x);
+      final int ypos = Math.min(end.y, start.y);
+      final int bheight = Math.abs(end.y - start.y);
       ne.setAttribute("x", Integer.toString(xpos));
       ne.setAttribute("y", Integer.toString(ypos));
       ne.setAttribute("width", Integer.toString(bwidth));
@@ -966,7 +966,7 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public DrawObject clone() {
-      final var newIns = new TikZElipse();
+      final com.cburch.logisim.gui.generic.TikZInfo.TikZElipse newIns = new TikZElipse();
       newIns.start = (Point) start.clone();
       newIns.end = (Point) end.clone();
       newIns.strokeWidth = strokeWidth;
@@ -981,7 +981,7 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public String getTikZCommand() {
-      final var contents = new StringBuilder();
+      final java.lang.StringBuilder contents = new StringBuilder();
       contents.append(filled ? "\\fill " : "\\draw ");
       contents.append("[line width=");
       double width = strokeWidth * BASIC_STROKE_WIDTH;
@@ -998,12 +998,12 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public void getSvgCommand(Document root, Element e) {
-      final var ne = root.createElement("ellipse");
+      final org.w3c.dom.Element ne = root.createElement("ellipse");
       e.appendChild(ne);
       ne.setAttribute("fill", filled ? "rgb(" + customColors.get(color) + ")" : "none");
       if (filled && alpha != 1.0) ne.setAttribute("fill-opacity", Double.toString(rounded(alpha)));
       ne.setAttribute("stroke", filled ? "none" : "rgb(" + customColors.get(color) + ")");
-      final var width = strokeWidth * BASIC_STROKE_WIDTH;
+      final double width = strokeWidth * BASIC_STROKE_WIDTH;
       ne.setAttribute("stroke-width", Double.toString(rounded(width)));
       if (rotation != 0)
         ne.setAttribute(
@@ -1030,8 +1030,8 @@ public class TikZInfo implements Cloneable {
       color = getDrawColorString();
       points.clear();
       close = false;
-      final var radius = new Point2D.Double();
-      final var center = new Point2D.Double();
+      final java.awt.geom.Point2D.Double radius = new Point2D.Double();
+      final java.awt.geom.Point2D.Double center = new Point2D.Double();
       radius.setLocation(((double) width) / 2.0, ((double) height) / 2.0);
       center.setLocation(((double) x) + radius.getX(), ((double) y) + radius.getY());
       final double startAnglePi = ((double) startAngle * Math.PI) / 180.0;
@@ -1057,7 +1057,7 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public DrawObject clone() {
-      final var newIns = new TikZArc();
+      final com.cburch.logisim.gui.generic.TikZInfo.TikZArc newIns = new TikZArc();
       newIns.strokeWidth = strokeWidth;
       newIns.color = color;
       newIns.filled = filled;
@@ -1074,10 +1074,10 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public String getTikZCommand() {
-      final var contents = new StringBuilder();
+      final java.lang.StringBuilder contents = new StringBuilder();
       contents.append(filled ? "\\fill " : "\\draw ");
       contents.append("[line width=");
-      final var width = strokeWidth * BASIC_STROKE_WIDTH;
+      final double width = strokeWidth * BASIC_STROKE_WIDTH;
       contents.append(rounded(width)).append("pt, ").append(color);
       if (filled && alpha != 1.0) contents.append(", fill opacity=").append(rounded(alpha));
       contents.append("] ");
@@ -1090,12 +1090,12 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public void getSvgCommand(Document root, Element e) {
-      final var ne = root.createElement("path");
+      final org.w3c.dom.Element ne = root.createElement("path");
       e.appendChild(ne);
       ne.setAttribute("fill", filled ? "rgb(" + customColors.get(color) + ")" : "none");
       if (filled && alpha != 1.0) ne.setAttribute("fill-opacity", Double.toString(rounded(alpha)));
       ne.setAttribute("stroke", filled ? "none" : "rgb(" + customColors.get(color) + ")");
-      final var width = strokeWidth * BASIC_STROKE_WIDTH;
+      final double width = strokeWidth * BASIC_STROKE_WIDTH;
       ne.setAttribute("stroke-width", Double.toString(rounded(width)));
       String info = startAngle > stopAngle ? " 0,0 " : " 0,1 ";
       String content = "M" + startPos.getX() + "," + startPos.getY()
@@ -1140,7 +1140,7 @@ public class TikZInfo implements Cloneable {
         isFontBold = str.getAttribute(TextAttribute.WEIGHT) == TextAttribute.WEIGHT_BOLD;
         isFontItalic = false;
         fontSize = (int) str.getAttribute(TextAttribute.SIZE);
-        final var fontName = (String) str.getAttribute(TextAttribute.FAMILY);
+        final java.lang.String fontName = (String) str.getAttribute(TextAttribute.FAMILY);
         if (!usedFonts.contains(fontName)) usedFonts.add(fontName);
         fontIndex = usedFonts.indexOf(fontName);
       }
@@ -1174,7 +1174,7 @@ public class TikZInfo implements Cloneable {
           } else content.append("}_{\\text{");
           while (strIter.getIndex() < strIter.getEndIndex()
               && strIter.getAttribute(TextAttribute.SUPERSCRIPT) == TextAttribute.SUPERSCRIPT_SUB) {
-            final var kar = strIter.current();
+            final char kar = strIter.current();
             if (kar == '_' && !svg) content.append("\\_");
             if (kar == '&' && !svg) content.append("\\&");
             else content.append(kar);
@@ -1214,7 +1214,7 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public String getTikZCommand() {
-      final var content = new StringBuilder();
+      final java.lang.StringBuilder content = new StringBuilder();
       content.append("\\logisimfont").append(getCharRepresentation(fontIndex)).append("{");
       content.append("\\fontsize{").append(fontSize).append("pt}{").append(fontSize).append("pt}");
       if (isFontBold) content.append("\\fontseries{bx}");
@@ -1238,7 +1238,7 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public void getSvgCommand(Document root, Element e) {
-      final var ne = root.createElement("text");
+      final org.w3c.dom.Element ne = root.createElement("text");
       ne.setAttribute("font-family", usedFonts.get(TikZInfo.this.fontIndex));
       ne.setAttribute("font-size", Integer.toString(fontSize));
       if (isFontBold) ne.setAttribute("font-weight", "bold");
@@ -1273,7 +1273,7 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public DrawObject clone() {
-      final var newInst = new TikZString();
+      final com.cburch.logisim.gui.generic.TikZInfo.TikZString newInst = new TikZString();
       newInst.fontIndex = fontIndex;
       newInst.fontSize = fontSize;
       newInst.isFontBold = isFontBold;

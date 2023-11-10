@@ -50,7 +50,7 @@ class TemplateOptions extends OptionsPanel {
   public TemplateOptions(PreferencesFrame window) {
     super(window);
 
-    final var bgroup = new ButtonGroup();
+    final javax.swing.ButtonGroup bgroup = new ButtonGroup();
     bgroup.add(plain);
     bgroup.add(empty);
     bgroup.add(custom);
@@ -62,8 +62,8 @@ class TemplateOptions extends OptionsPanel {
     templateButton.addActionListener(myListener);
     myListener.computeEnabled();
 
-    final var gridbag = new GridBagLayout();
-    final var gbc = new GridBagConstraints();
+    final java.awt.GridBagLayout gridbag = new GridBagLayout();
+    final java.awt.GridBagConstraints gbc = new GridBagConstraints();
     removeLibs = ((PrefMonitorBoolean) AppPreferences.REMOVE_UNUSED_LIBRARIES).getCheckBox();
     setLayout(gridbag);
     gbc.weightx = 1.0;
@@ -83,7 +83,7 @@ class TemplateOptions extends OptionsPanel {
     gbc.gridwidth = 1;
     gbc.gridy = 3;
     gbc.gridx = GridBagConstraints.RELATIVE;
-    final var strut = new JPanel();
+    final javax.swing.JPanel strut = new JPanel();
     strut.setMinimumSize(new Dimension(50, 1));
     strut.setPreferredSize(new Dimension(50, 1));
     gbc.weightx = 0.0;
@@ -128,20 +128,20 @@ class TemplateOptions extends OptionsPanel {
   private class MyListener implements ActionListener, PropertyChangeListener {
     @Override
     public void actionPerformed(ActionEvent event) {
-      final var src = event.getSource();
+      final java.lang.Object src = event.getSource();
       if (src == templateButton) {
-        final var chooser = JFileChoosers.create();
+        final javax.swing.JFileChooser chooser = JFileChoosers.create();
         chooser.setDialogTitle(S.get("selectDialogTitle"));
         chooser.setApproveButtonText(S.get("selectDialogButton"));
         int action = chooser.showOpenDialog(getPreferencesFrame());
         if (action == JFileChooser.APPROVE_OPTION) {
-          final var file = chooser.getSelectedFile();
+          final java.io.File file = chooser.getSelectedFile();
           FileInputStream reader = null;
           InputStream reader2 = null;
           try {
-            final var loader = new Loader(getPreferencesFrame());
+            final com.cburch.logisim.file.Loader loader = new Loader(getPreferencesFrame());
             reader = new FileInputStream(file);
-            final var template = Template.create(reader);
+            final com.cburch.logisim.prefs.Template template = Template.create(reader);
             reader2 = template.createStream();
             LogisimFile.load(reader2, loader); // to see if OK
             AppPreferences.setTemplateFile(file, template);
@@ -181,9 +181,9 @@ class TemplateOptions extends OptionsPanel {
 
     @Override
     public void propertyChange(PropertyChangeEvent event) {
-      final var prop = event.getPropertyName();
+      final java.lang.String prop = event.getPropertyName();
       if (prop.equals(AppPreferences.TEMPLATE_TYPE)) {
-        final var value = AppPreferences.getTemplateType();
+        final int value = AppPreferences.getTemplateType();
         plain.setSelected(value == AppPreferences.TEMPLATE_PLAIN);
         empty.setSelected(value == AppPreferences.TEMPLATE_EMPTY);
         custom.setSelected(value == AppPreferences.TEMPLATE_CUSTOM);

@@ -213,15 +213,15 @@ class MinimizedTab extends AnalyzerTab {
   private class MyListener implements OutputExpressionsListener, ActionListener, ItemListener {
     @Override
     public void actionPerformed(ActionEvent event) {
-      final var output = getCurrentVariable();
-      final var format = outputExprs.getMinimizedFormat(output);
+      final java.lang.String output = getCurrentVariable();
+      final int format = outputExprs.getMinimizedFormat(output);
       formatChoice.setSelectedIndex(FormatModel.getFormatIndex(format));
       outputExprs.setExpression(output, outputExprs.getMinimalExpression(output));
     }
 
     @Override
     public void expressionChanged(OutputExpressionsEvent event) {
-      final var output = getCurrentVariable();
+      final java.lang.String output = getCurrentVariable();
       if (event.getType() == OutputExpressionsEvent.OUTPUT_MINIMAL
           && event.getVariable().equals(output)) {
         minimizedExpr.setExpression(outputExprs.getMinimalExpression(output));
@@ -235,15 +235,15 @@ class MinimizedTab extends AnalyzerTab {
     @Override
     public void itemStateChanged(ItemEvent event) {
       if (event.getSource() == formatChoice) {
-        final var output = getCurrentVariable();
-        final var model = (FormatModel) formatChoice.getModel();
+        final java.lang.String output = getCurrentVariable();
+        final com.cburch.logisim.analyze.gui.MinimizedTab.FormatModel model = (FormatModel) formatChoice.getModel();
         outputExprs.setMinimizedFormat(output, model.getSelectedFormat());
         karnaughMap.setFormat(model.getSelectedFormat());
       } else if (event.getSource() == formatStyle) {
-        final var model = (StyleModel) formatStyle.getModel();
+        final com.cburch.logisim.analyze.gui.MinimizedTab.StyleModel model = (StyleModel) formatStyle.getModel();
         model.setStyle(karnaughMap);
       } else if (event.getSource() == notationChoice) {
-        final var notation = Notation.values()[notationChoice.getSelectedIndex()];
+        final com.cburch.logisim.analyze.model.Expression.Notation notation = Notation.values()[notationChoice.getSelectedIndex()];
         minimizedExpr.setNotation(notation);
         karnaughMap.setNotation(notation);
       } else {
@@ -289,11 +289,11 @@ class MinimizedTab extends AnalyzerTab {
     formatStyle.addItemListener(myListener);
     notationChoice.addItemListener(myListener);
 
-    final var buttons = new JPanel(new GridLayout(1, 1));
+    final javax.swing.JPanel buttons = new JPanel(new GridLayout(1, 1));
     buttons.add(setAsExpr);
 
-    final var gb = new GridBagLayout();
-    final var gc = new GridBagConstraints();
+    final java.awt.GridBagLayout gb = new GridBagLayout();
+    final java.awt.GridBagConstraints gc = new GridBagConstraints();
     setLayout(gb);
     gc.weightx = 1.0;
     gc.gridwidth = 1;
@@ -301,12 +301,12 @@ class MinimizedTab extends AnalyzerTab {
     gc.gridx = 0;
     gc.fill = GridBagConstraints.NONE;
     gc.anchor = GridBagConstraints.CENTER;
-    final var cntrl = control();
+    final javax.swing.JPanel cntrl = control();
     gb.setConstraints(cntrl, gc);
     add(cntrl);
     gb.setConstraints(karnaughMap, gc);
     add(karnaughMap);
-    final var oldInsets = gc.insets;
+    final java.awt.Insets oldInsets = gc.insets;
     gc.insets = new Insets(20, 0, 20, 0);
     gc.fill = GridBagConstraints.BOTH;
     gb.setConstraints(minimizedExpr, gc);
@@ -316,15 +316,15 @@ class MinimizedTab extends AnalyzerTab {
     gb.setConstraints(buttons, gc);
     add(buttons);
 
-    final var selected = selector.getSelectedOutput();
+    final java.lang.String selected = selector.getSelectedOutput();
     setAsExpr.setEnabled(selected != null && !outputExprs.isExpressionMinimal(selected));
     setTransferHandler(new MinimizedTransferHandler());
     karnaughMap.setTransferHandler(new KmapTransferHandler());
     minimizedExpr.setTransferHandler(new ExpressionTransferHandler());
 
-    final var inputMap1 = getInputMap();
-    final var inputMap2 = karnaughMap.getInputMap();
-    final var inputMap3 = minimizedExpr.getInputMap();
+    final javax.swing.InputMap inputMap1 = getInputMap();
+    final javax.swing.InputMap inputMap2 = karnaughMap.getInputMap();
+    final javax.swing.InputMap inputMap3 = minimizedExpr.getInputMap();
     for (LogisimMenuItem item : LogisimMenuBar.EDIT_ITEMS) {
       KeyStroke accel = menubar.getAccelerator(item);
       inputMap1.put(accel, item);
@@ -356,7 +356,7 @@ class MinimizedTab extends AnalyzerTab {
           }
         });
 
-    final var f =
+    final java.awt.event.FocusListener f =
         new FocusListener() {
           @Override
           public void focusGained(FocusEvent e) {
@@ -376,9 +376,9 @@ class MinimizedTab extends AnalyzerTab {
   }
 
   private JPanel control() {
-    final var control = new JPanel();
-    final var gb = new GridBagLayout();
-    final var gc = new GridBagConstraints();
+    final javax.swing.JPanel control = new JPanel();
+    final java.awt.GridBagLayout gb = new GridBagLayout();
+    final java.awt.GridBagConstraints gc = new GridBagConstraints();
     control.setLayout(gb);
     gc.weightx = 1.0;
     gc.gridwidth = 1;
@@ -435,7 +435,7 @@ class MinimizedTab extends AnalyzerTab {
   @SuppressWarnings("serial")
   @Override
   void updateTab() {
-    final var output = getCurrentVariable();
+    final java.lang.String output = getCurrentVariable();
     if (model.getTruthTable().getRowCount() > 4096) {
       (new Analyzer.PleaseWait<Void>(S.get("expressionCalc"), this) {
             @Override
@@ -447,7 +447,7 @@ class MinimizedTab extends AnalyzerTab {
           .get();
     }
     karnaughMap.setOutput(output);
-    final var format = outputExprs.getMinimizedFormat(output);
+    final int format = outputExprs.getMinimizedFormat(output);
     formatChoice.setSelectedIndex(FormatModel.getFormatIndex(format));
     minimizedExpr.setExpression(outputExprs.getMinimalExpression(output));
     setAsExpr.setEnabled(output != null && !outputExprs.isExpressionMinimal(output));
@@ -479,7 +479,7 @@ class MinimizedTab extends AnalyzerTab {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-          final var action = e.getSource();
+          final java.lang.Object action = e.getSource();
           if (minimizedExpr.isSelected())
             minimizedExpr.getActionMap().get(action).actionPerformed(e);
           else if (karnaughMap.isSelected())
@@ -572,10 +572,10 @@ class MinimizedTab extends AnalyzerTab {
 
   static class KmapSelection extends ImageSelection {
     public KmapSelection(KarnaughMapPanel kmap) {
-      final var w = kmap.getKMapDim().width;
-      final var h = kmap.getKMapDim().height;
-      final var img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-      final var g = img.createGraphics();
+      final int w = kmap.getKMapDim().width;
+      final int h = kmap.getKMapDim().height;
+      final java.awt.image.BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+      final java.awt.Graphics2D g = img.createGraphics();
       g.setColor(Color.WHITE);
       g.fillRect(0, 0, w, h);
       g.setColor(Color.BLACK);
@@ -588,11 +588,11 @@ class MinimizedTab extends AnalyzerTab {
   static class ExpressionSelection extends ImageSelection {
     public ExpressionSelection(ExpressionRenderData prettyView) {
       if (prettyView == null) return;
-      final var dim = prettyView.getPreferredSize();
-      final var w = dim.width;
-      final var h = dim.height;
-      final var img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-      final var g = img.createGraphics();
+      final java.awt.Dimension dim = prettyView.getPreferredSize();
+      final int w = dim.width;
+      final int h = dim.height;
+      final java.awt.image.BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+      final java.awt.Graphics2D g = img.createGraphics();
       g.setColor(Color.WHITE);
       g.fillRect(0, 0, w, h);
       g.setColor(Color.BLACK);
@@ -611,21 +611,21 @@ class MinimizedTab extends AnalyzerTab {
       new PrintHandler() {
         @Override
         public Dimension getExportImageSize() {
-          final var kWidth = karnaughMap.getKMapDim().width;
-          final var kHeight = karnaughMap.getKMapDim().height;
-          final var eWidth = minimizedExpr.getRenderData().getPreferredSize().width;
-          final var eHeight = minimizedExpr.getRenderData().getPreferredSize().height;
+          final int kWidth = karnaughMap.getKMapDim().width;
+          final int kHeight = karnaughMap.getKMapDim().height;
+          final int eWidth = minimizedExpr.getRenderData().getPreferredSize().width;
+          final int eHeight = minimizedExpr.getRenderData().getPreferredSize().height;
 
-          final var width = Math.max(kWidth, eWidth);
-          final var height = kHeight + 30 + eHeight;
+          final int width = Math.max(kWidth, eWidth);
+          final int height = kHeight + 30 + eHeight;
 
           return new Dimension(width, height);
         }
 
         @Override
         public void paintExportImage(BufferedImage img, Graphics2D g) {
-          final var width = img.getWidth();
-          final var height = img.getHeight();
+          final int width = img.getWidth();
+          final int height = img.getHeight();
           g.setClip(0, 0, width, height);
 
           doPrint(g, width);
@@ -638,13 +638,13 @@ class MinimizedTab extends AnalyzerTab {
         }
 
         private int doPrint(Graphics2D g, double width) {
-          final var xform = g.getTransform();
+          final java.awt.geom.AffineTransform xform = g.getTransform();
           g.translate((width - karnaughMap.getWidth()) / 2, 0);
           g.setColor(Color.BLACK);
           karnaughMap.paintKmap(g, false);
           g.setTransform(xform);
 
-          final var prettyView = minimizedExpr.getRenderData();
+          final com.cburch.logisim.analyze.data.ExpressionRenderData prettyView = minimizedExpr.getRenderData();
           g.translate((width - prettyView.getWidth()) / 2, karnaughMap.getKMapDim().height + 30);
           g.setColor(Color.BLACK);
           prettyView.paint(g, 0, 0);

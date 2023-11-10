@@ -34,8 +34,8 @@ public final class Projects {
 
     @Override
     public void windowClosed(WindowEvent event) {
-      final var frame = (Frame) event.getSource();
-      final var proj = frame.getProject();
+      final com.cburch.logisim.gui.main.Frame frame = (Frame) event.getSource();
+      final com.cburch.logisim.proj.Project proj = frame.getProject();
 
       if (frame == proj.getFrame()) {
         projectRemoved(proj, frame, this);
@@ -47,7 +47,7 @@ public final class Projects {
 
     @Override
     public void windowClosing(WindowEvent event) {
-      final var frame = (Frame) event.getSource();
+      final com.cburch.logisim.gui.main.Frame frame = (Frame) event.getSource();
       if ((frame.getExtendedState() & Frame.ICONIFIED) == 0) {
         mostRecentFrame = frame;
         try {
@@ -59,8 +59,8 @@ public final class Projects {
 
     @Override
     public void windowOpened(WindowEvent event) {
-      final var frame = (Frame) event.getSource();
-      final var proj = frame.getProject();
+      final com.cburch.logisim.gui.main.Frame frame = (Frame) event.getSource();
+      final com.cburch.logisim.proj.Project proj = frame.getProject();
 
       if (frame == proj.getFrame() && !openProjects.contains(proj)) {
         openProjects.add(proj);
@@ -92,12 +92,12 @@ public final class Projects {
   }
 
   public static Project findProjectFor(File query) {
-    for (final var proj : openProjects) {
-      final var loader = proj.getLogisimFile().getLoader();
+    for (final com.cburch.logisim.proj.Project proj : openProjects) {
+      final com.cburch.logisim.file.Loader loader = proj.getLogisimFile().getLoader();
       if (loader == null) {
         continue;
       }
-      final var f = loader.getMainFile();
+      final java.io.File f = loader.getMainFile();
       if (query.equals(f)) {
         return proj;
       }
@@ -109,7 +109,7 @@ public final class Projects {
     int x = 0;
     int y = 0;
 
-    final var topFrame = getTopFrame();
+    final com.cburch.logisim.gui.main.Frame topFrame = getTopFrame();
     if (topFrame != null) {
       x = topFrame.getX() + topFrame.getWidth() / 2;
       x -= width / 2;
@@ -132,8 +132,8 @@ public final class Projects {
     com.cburch.logisim.gui.main.Frame ret = mostRecentFrame;
     if (ret == null) {
       Frame backup = null;
-      for (final var proj : openProjects) {
-        final var frame = proj.getFrame();
+      for (final com.cburch.logisim.proj.Project proj : openProjects) {
+        final com.cburch.logisim.gui.main.Frame frame = proj.getFrame();
         if (ret == null) {
           ret = frame;
         }
@@ -175,18 +175,18 @@ public final class Projects {
 
     // locate the window
     Point lowest = null;
-    for (final var p : openProjects) {
-      final var f = p.getFrame();
+    for (final com.cburch.logisim.proj.Project p : openProjects) {
+      final com.cburch.logisim.gui.main.Frame f = p.getFrame();
       if (f == null) {
         continue;
       }
-      final var loc = p.getFrame().getLocation();
+      final java.awt.Point loc = p.getFrame().getLocation();
       if (lowest == null || loc.y > lowest.y) {
         lowest = loc;
       }
     }
     if (lowest != null) {
-      final var sz = frame.getToolkit().getScreenSize();
+      final java.awt.Dimension sz = frame.getToolkit().getScreenSize();
       int x = Math.min(lowest.x + 20, sz.width - 200);
       int y = Math.min(lowest.y + 20, sz.height - 200);
       if (x < 0) {
@@ -206,7 +206,7 @@ public final class Projects {
   }
 
   public static boolean windowNamed(String name) {
-    for (final var proj : openProjects) {
+    for (final com.cburch.logisim.proj.Project proj : openProjects) {
       if (proj.getLogisimFile().getName().equals(name)) {
         return true;
       }

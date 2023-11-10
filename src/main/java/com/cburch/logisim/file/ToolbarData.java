@@ -33,8 +33,8 @@ public class ToolbarData {
   }
 
   private void addAttributeListeners(Tool tool) {
-    for (final var l : toolListeners) {
-      final var attrs = tool.getAttributeSet();
+    for (final com.cburch.logisim.data.AttributeListener l : toolListeners) {
+      final com.cburch.logisim.data.AttributeSet attrs = tool.getAttributeSet();
       if (attrs != null) attrs.addAttributeListener(l);
     }
   }
@@ -62,9 +62,9 @@ public class ToolbarData {
   }
 
   public void addToolAttributeListener(AttributeListener l) {
-    for (final var tool : contents) {
+    for (final com.cburch.logisim.tools.Tool tool : contents) {
       if (tool != null) {
-        final var attrs = tool.getAttributeSet();
+        final com.cburch.logisim.data.AttributeSet attrs = tool.getAttributeSet();
         if (attrs != null) attrs.addAttributeListener(l);
       }
     }
@@ -83,19 +83,19 @@ public class ToolbarData {
   //
   public void copyFrom(ToolbarData other, LogisimFile file) {
     if (this == other) return;
-    for (final var tool : contents) {
+    for (final com.cburch.logisim.tools.Tool tool : contents) {
       if (tool != null) {
         removeAttributeListeners(tool);
       }
     }
     this.contents.clear();
-    for (final var srcTool : other.contents) {
+    for (final com.cburch.logisim.tools.Tool srcTool : other.contents) {
       if (srcTool == null) {
         this.addSeparator();
       } else {
-        final var toolCopy = file.findTool(srcTool);
+        final com.cburch.logisim.tools.Tool toolCopy = file.findTool(srcTool);
         if (toolCopy != null) {
-          final var dstTool = toolCopy.cloneTool();
+          final com.cburch.logisim.tools.Tool dstTool = toolCopy.cloneTool();
           AttributeSets.copy(srcTool.getAttributeSet(), dstTool.getAttributeSet());
           this.addTool(dstTool);
           addAttributeListeners(toolCopy);
@@ -106,7 +106,7 @@ public class ToolbarData {
   }
 
   public void fireToolbarChanged() {
-    for (final var l : listeners) {
+    for (final com.cburch.logisim.file.ToolbarData.ToolbarListener l : listeners) {
       l.toolbarChanged();
     }
   }
@@ -123,14 +123,14 @@ public class ToolbarData {
   }
 
   public Tool getFirstTool() {
-    for (final var tool : contents) {
+    for (final com.cburch.logisim.tools.Tool tool : contents) {
       if (tool != null) return tool;
     }
     return null;
   }
 
   public Object move(int from, int to) {
-    final var moved = contents.remove(from);
+    final com.cburch.logisim.tools.Tool moved = contents.remove(from);
     contents.add(to, moved);
     fireToolbarChanged();
     return moved;
@@ -144,16 +144,16 @@ public class ToolbarData {
   }
 
   private void removeAttributeListeners(Tool tool) {
-    for (final var l : toolListeners) {
-      final var attrs = tool.getAttributeSet();
+    for (final com.cburch.logisim.data.AttributeListener l : toolListeners) {
+      final com.cburch.logisim.data.AttributeSet attrs = tool.getAttributeSet();
       if (attrs != null) attrs.removeAttributeListener(l);
     }
   }
 
   public void removeToolAttributeListener(AttributeListener l) {
-    for (final var tool : contents) {
+    for (final com.cburch.logisim.tools.Tool tool : contents) {
       if (tool != null) {
-        final var attrs = tool.getAttributeSet();
+        final com.cburch.logisim.data.AttributeSet attrs = tool.getAttributeSet();
         if (attrs != null) attrs.removeAttributeListener(l);
       }
     }
@@ -169,16 +169,16 @@ public class ToolbarData {
   //
   void replaceAll(Map<Tool, Tool> toolMap) {
     boolean changed = false;
-    for (final var it = contents.listIterator(); it.hasNext(); ) {
+    for (final java.util.ListIterator<com.cburch.logisim.tools.Tool> it = contents.listIterator(); it.hasNext(); ) {
       Object old = it.next();
       if (toolMap.containsKey(old)) {
         changed = true;
         removeAttributeListeners((Tool) old);
-        final var newTool = toolMap.get(old);
+        final com.cburch.logisim.tools.Tool newTool = toolMap.get(old);
         if (newTool == null) {
           it.remove();
         } else {
-          final var addedTool = newTool.cloneTool();
+          final com.cburch.logisim.tools.Tool addedTool = newTool.cloneTool();
           addAttributeListeners(addedTool);
           LoadedLibrary.copyAttributes(addedTool.getAttributeSet(), ((Tool) old).getAttributeSet());
           it.set(addedTool);
@@ -193,7 +193,7 @@ public class ToolbarData {
   }
 
   boolean usesToolFromSource(Tool query) {
-    for (final var tool : contents) {
+    for (final com.cburch.logisim.tools.Tool tool : contents) {
       if (tool != null && tool.sharesSource(query)) return true;
     }
     return false;

@@ -28,36 +28,36 @@ public class DefaultClassicAppearance {
   private static final int OFFS = 50;
 
   public static List<CanvasObject> build(Collection<Instance> pins) {
-    final var edge = new HashMap<Direction, List<Instance>>();
+    final java.util.HashMap<com.cburch.logisim.data.Direction,java.util.List<com.cburch.logisim.instance.Instance>> edge = new HashMap<Direction, List<Instance>>();
     edge.put(Direction.NORTH, new ArrayList<>());
     edge.put(Direction.SOUTH, new ArrayList<>());
     edge.put(Direction.EAST, new ArrayList<>());
     edge.put(Direction.WEST, new ArrayList<>());
-    for (final var pin : pins) {
-      final var pinFacing = pin.getAttributeValue(StdAttr.FACING);
-      final var pinEdge = pinFacing.reverse();
-      final var e = edge.get(pinEdge);
+    for (final com.cburch.logisim.instance.Instance pin : pins) {
+      final com.cburch.logisim.data.Direction pinFacing = pin.getAttributeValue(StdAttr.FACING);
+      final com.cburch.logisim.data.Direction pinEdge = pinFacing.reverse();
+      final java.util.List<com.cburch.logisim.instance.Instance> e = edge.get(pinEdge);
       e.add(pin);
     }
 
-    for (final var entry : edge.entrySet()) {
+    for (final java.util.Map.Entry<com.cburch.logisim.data.Direction,java.util.List<com.cburch.logisim.instance.Instance>> entry : edge.entrySet()) {
       DefaultAppearance.sortPinList(entry.getValue(), entry.getKey());
     }
 
-    final var numNorth = edge.get(Direction.NORTH).size();
-    final var numSouth = edge.get(Direction.SOUTH).size();
-    final var numEast = edge.get(Direction.EAST).size();
-    final var numWest = edge.get(Direction.WEST).size();
-    final var maxVert = Math.max(numNorth, numSouth);
-    final var maxHorz = Math.max(numEast, numWest);
+    final int numNorth = edge.get(Direction.NORTH).size();
+    final int numSouth = edge.get(Direction.SOUTH).size();
+    final int numEast = edge.get(Direction.EAST).size();
+    final int numWest = edge.get(Direction.WEST).size();
+    final int maxVert = Math.max(numNorth, numSouth);
+    final int maxHorz = Math.max(numEast, numWest);
 
-    final var offsNorth = computeOffset(numNorth, numSouth, maxHorz);
-    final var offsSouth = computeOffset(numSouth, numNorth, maxHorz);
-    final var offsEast = computeOffset(numEast, numWest, maxVert);
-    final var offsWest = computeOffset(numWest, numEast, maxVert);
+    final int offsNorth = computeOffset(numNorth, numSouth, maxHorz);
+    final int offsSouth = computeOffset(numSouth, numNorth, maxHorz);
+    final int offsEast = computeOffset(numEast, numWest, maxVert);
+    final int offsWest = computeOffset(numWest, numEast, maxVert);
 
-    final var width = computeDimension(maxVert, maxHorz);
-    final var height = computeDimension(maxHorz, maxVert);
+    final int width = computeDimension(maxVert, maxHorz);
+    final int height = computeDimension(maxHorz, maxVert);
 
     // compute position of anchor relative to top left corner of box
     int ax;
@@ -80,19 +80,19 @@ public class DefaultClassicAppearance {
     }
 
     // place rectangle so anchor is on the grid
-    final var rX = Math.round((OFFS + ax) / 10) * 10;
-    final var rY = Math.round((OFFS + ay) / 10) * 10;
+    final int rX = Math.round((OFFS + ax) / 10) * 10;
+    final int rY = Math.round((OFFS + ay) / 10) * 10;
 
-    final var e0 = Location.create(rX + (width - 8) / 2, rY + 1, false);
-    final var e1 = Location.create(rX + (width + 8) / 2, rY + 1, false);
-    final var ct = Location.create(rX + width / 2, rY + 11, false);
-    final var notch = new Curve(e0, e1, ct);
+    final com.cburch.logisim.data.Location e0 = Location.create(rX + (width - 8) / 2, rY + 1, false);
+    final com.cburch.logisim.data.Location e1 = Location.create(rX + (width + 8) / 2, rY + 1, false);
+    final com.cburch.logisim.data.Location ct = Location.create(rX + width / 2, rY + 11, false);
+    final com.cburch.draw.shapes.Curve notch = new Curve(e0, e1, ct);
     notch.setValue(DrawAttr.STROKE_WIDTH, 2);
     notch.setValue(DrawAttr.STROKE_COLOR, Color.GRAY);
-    final var rect = new Rectangle(rX, rY, width, height);
+    final com.cburch.draw.shapes.Rectangle rect = new Rectangle(rX, rY, width, height);
     rect.setValue(DrawAttr.STROKE_WIDTH, 2);
 
-    final var ret = new ArrayList<CanvasObject>();
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> ret = new ArrayList<CanvasObject>();
     ret.add(notch);
     ret.add(rect);
     placePins(ret, edge.get(Direction.WEST), rX, rY + offsWest, 0, 10);
@@ -114,7 +114,7 @@ public class DefaultClassicAppearance {
   }
 
   private static int computeOffset(int numFacing, int numOpposite, int maxOthers) {
-    final var maxThis = Math.max(numFacing, numOpposite);
+    final int maxThis = Math.max(numFacing, numOpposite);
     int maxOffs = switch (maxThis) {
       case 0, 1 -> (maxOthers == 0 ? 15 : 10);
       case 2 -> 10;
@@ -124,7 +124,7 @@ public class DefaultClassicAppearance {
   }
 
   private static void placePins(List<CanvasObject> dest, List<Instance> pins, int x, int y, int dx, int dy) {
-    for (final var pin : pins) {
+    for (final com.cburch.logisim.instance.Instance pin : pins) {
       dest.add(new AppearancePort(Location.create(x, y, true), pin));
       x += dx;
       y += dy;

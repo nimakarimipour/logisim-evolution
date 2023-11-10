@@ -33,7 +33,7 @@ public class AttributeSets {
 
     @Override
     protected void copyInto(AbstractAttributeSet destSet) {
-      final var dest = (FixedSet) destSet;
+      final com.cburch.logisim.data.AttributeSets.FixedSet dest = (FixedSet) destSet;
       dest.attrs = this.attrs;
       dest.values = this.values.clone();
       dest.readOnly = this.readOnly;
@@ -46,7 +46,7 @@ public class AttributeSets {
 
     @Override
     public <V> V getValue(Attribute<V> attr) {
-      final var index = attrs.indexOf(attr);
+      final int index = attrs.indexOf(attr);
       if (index < 0) {
         return null;
       } else {
@@ -58,7 +58,7 @@ public class AttributeSets {
 
     @Override
     public boolean isReadOnly(Attribute<?> attr) {
-      final var index = attrs.indexOf(attr);
+      final int index = attrs.indexOf(attr);
       return (index < 0) ? true : isReadOnly(index);
     }
 
@@ -68,7 +68,7 @@ public class AttributeSets {
 
     @Override
     public void setReadOnly(Attribute<?> attr, boolean value) {
-      final var index = attrs.indexOf(attr);
+      final int index = attrs.indexOf(attr);
       if (index < 0) throw new IllegalArgumentException("attribute " + attr.getName() + " absent");
 
       if (value) readOnly |= (1 << index);
@@ -77,7 +77,7 @@ public class AttributeSets {
 
     @Override
     public <V> void setValue(Attribute<V> attr, V value) {
-      final var index = attrs.indexOf(attr);
+      final int index = attrs.indexOf(attr);
       if (index < 0) throw new IllegalArgumentException("attribute " + attr.getName() + " absent");
       if (isReadOnly(index)) throw new IllegalArgumentException("read only");
       @SuppressWarnings("unchecked")
@@ -100,7 +100,7 @@ public class AttributeSets {
 
     @Override
     protected void copyInto(AbstractAttributeSet destSet) {
-      final var dest = (SingletonSet) destSet;
+      final com.cburch.logisim.data.AttributeSets.SingletonSet dest = (SingletonSet) destSet;
       dest.attrs = this.attrs;
       dest.value = this.value;
       dest.readOnly = this.readOnly;
@@ -113,7 +113,7 @@ public class AttributeSets {
 
     @Override
     public <V> V getValue(Attribute<V> attr) {
-      final var index = attrs.indexOf(attr);
+      final int index = attrs.indexOf(attr);
       @SuppressWarnings("unchecked")
       V ret = (V) (index >= 0 ? value : null);
       return ret;
@@ -133,7 +133,7 @@ public class AttributeSets {
 
     @Override
     public <V> void setValue(Attribute<V> attr, V value) {
-      final var index = attrs.indexOf(attr);
+      final int index = attrs.indexOf(attr);
       if (index < 0) throw new IllegalArgumentException("attribute " + attr.getName() + " absent");
       if (readOnly) throw new IllegalArgumentException("read only");
       @SuppressWarnings("unchecked")

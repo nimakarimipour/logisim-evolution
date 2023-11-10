@@ -60,14 +60,14 @@ public class RgbLed extends InstanceFactory implements DynamicElementProvider {
 
     @Override
     public Value getLogValue(InstanceState state, Object option) {
-      final var data = (InstanceDataSingleton) state.getData();
+      final com.cburch.logisim.instance.InstanceDataSingleton data = (InstanceDataSingleton) state.getData();
       if (data == null) return Value.createUnknown(BITWIDTH);
       else return Value.createKnown(BITWIDTH, (Integer) data.getValue());
     }
   }
 
   public static List<String> getLabels() {
-    final var labelNames = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> labelNames = new ArrayList<String>();
     for (int i = 0; i < 3; i++) labelNames.add("");
     labelNames.set(RED, "RED");
     labelNames.set(GREEN, "GREEN");
@@ -114,8 +114,8 @@ public class RgbLed extends InstanceFactory implements DynamicElementProvider {
   }
 
   private void updatePorts(Instance instance) {
-    final var facing = instance.getAttributeValue(StdAttr.FACING);
-    final var ps = new Port[3];
+    final com.cburch.logisim.data.Direction facing = instance.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.instance.Port[] ps = new Port[3];
     int cx = 0;
     int cy = 0;
     int dx = 0;
@@ -173,27 +173,27 @@ public class RgbLed extends InstanceFactory implements DynamicElementProvider {
 
   @Override
   public void paintGhost(InstancePainter painter) {
-    final var g = painter.getGraphics();
-    final var bds = painter.getBounds();
+    final java.awt.Graphics g = painter.getGraphics();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
     GraphicsUtil.switchToWidth(g, 2);
     g.drawOval(bds.getX() + 1, bds.getY() + 1, bds.getWidth() - 2, bds.getHeight() - 2);
   }
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var data = (InstanceDataSingleton) painter.getData();
+    final com.cburch.logisim.instance.InstanceDataSingleton data = (InstanceDataSingleton) painter.getData();
     int sum = (data == null ? 0 : (Integer) data.getValue());
-    final var bds = painter.getBounds().expand(-1);
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds().expand(-1);
 
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     if (painter.getShowState()) {
-      final var activ = painter.getAttributeValue(IoLibrary.ATTR_ACTIVE);
-      final var mask = activ ? 0 : 7;
+      final java.lang.Boolean activ = painter.getAttributeValue(IoLibrary.ATTR_ACTIVE);
+      final int mask = activ ? 0 : 7;
       sum ^= mask;
-      final var red = ((sum >> RED) & 1) * 0xFF;
-      final var green = ((sum >> GREEN) & 1) * 0xFF;
-      final var blue = ((sum >> BLUE) & 1) * 0xFF;
-      final var ledColor = new Color(red, green, blue);
+      final int red = ((sum >> RED) & 1) * 0xFF;
+      final int green = ((sum >> GREEN) & 1) * 0xFF;
+      final int blue = ((sum >> BLUE) & 1) * 0xFF;
+      final java.awt.Color ledColor = new Color(red, green, blue);
       g.setColor(ledColor);
       g.fillOval(bds.getX(), bds.getY(), bds.getWidth(), bds.getHeight());
     }
@@ -209,11 +209,11 @@ public class RgbLed extends InstanceFactory implements DynamicElementProvider {
   public void propagate(InstanceState state) {
     int summary = 0;
     for (int i = 0; i < 3; i++) {
-      final var val = state.getPortValue(i);
+      final com.cburch.logisim.data.Value val = state.getPortValue(i);
       if (val == Value.TRUE) summary |= 1 << i;
     }
     Object value = summary;
-    final var data = (InstanceDataSingleton) state.getData();
+    final com.cburch.logisim.instance.InstanceDataSingleton data = (InstanceDataSingleton) state.getData();
     if (data == null) {
       state.setData(new InstanceDataSingleton(value));
     } else {

@@ -19,7 +19,7 @@ class PrefMonitorDouble extends AbstractPrefMonitor<Double> {
     super(name);
     this.dflt = dflt;
     this.value = dflt;
-    final var prefs = AppPreferences.getPrefs();
+    final java.util.prefs.Preferences prefs = AppPreferences.getPrefs();
     set(prefs.getDouble(name, dflt));
     prefs.addPreferenceChangeListener(this);
   }
@@ -29,9 +29,9 @@ class PrefMonitorDouble extends AbstractPrefMonitor<Double> {
   }
 
   public void preferenceChange(PreferenceChangeEvent event) {
-    final var prefs = event.getNode();
-    final var prop = event.getKey();
-    final var name = getIdentifier();
+    final java.util.prefs.Preferences prefs = event.getNode();
+    final java.lang.String prop = event.getKey();
+    final java.lang.String name = getIdentifier();
     if (prop.equals(name)) {
       double oldValue = value;
       double newValue = prefs.getDouble(name, dflt);

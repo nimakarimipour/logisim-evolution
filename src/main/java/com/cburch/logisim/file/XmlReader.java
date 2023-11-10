@@ -100,14 +100,14 @@ class XmlReader {
     }
 
     void addErrors(XmlReaderException exception, String context) {
-      for (final var msg : exception.getMessages()) {
+      for (final java.lang.String msg : exception.getMessages()) {
         messages.add(msg + " [" + context + "]");
       }
     }
 
     Library findLibrary(String libName) throws XmlReaderException {
       if (StringUtil.isNullOrEmpty(libName)) return file;
-      final var ret = libs.get(libName);
+      final com.cburch.logisim.tools.Library ret = libs.get(libName);
       if (ret == null) throw new XmlReaderException(S.get("libMissingError", libName));
       return ret;
     }
@@ -121,13 +121,13 @@ class XmlReader {
         throws XmlReaderException {
       List<String> messages = null;
 
-      final var attrsDefined = new HashMap<String, String>();
-      for (final var attrElt : XmlIterator.forChildElements(parent, "a")) {
+      final java.util.HashMap<java.lang.String,java.lang.String> attrsDefined = new HashMap<String, String>();
+      for (final org.w3c.dom.Element attrElt : XmlIterator.forChildElements(parent, "a")) {
         if (!attrElt.hasAttribute("name")) {
           if (messages == null) messages = new ArrayList<>();
           messages.add(S.get("attrNameMissingError"));
         } else {
-          final var attrName = attrElt.getAttribute("name");
+          final java.lang.String attrName = attrElt.getAttribute("name");
           String attrVal;
           if (attrElt.hasAttribute("val")) {
             attrVal = attrElt.getAttribute("val");
@@ -136,7 +136,7 @@ class XmlReader {
               java.lang.String dirPath = "";
               if (srcFilePath != null)
                 dirPath = srcFilePath.substring(0, srcFilePath.lastIndexOf(File.separator));
-              final var tmp = Paths.get(dirPath, attrVal);
+              final java.nio.file.Path tmp = Paths.get(dirPath, attrVal);
               attrVal = tmp.toString();
             }
           } else {
@@ -154,12 +154,12 @@ class XmlReader {
       // attribute list each time because it may change as we iterate
       // (as it will for a splitter).
       for (int i = 0; true; i++) {
-        final var attrList = attrs.getAttributes();
+        final java.util.List<com.cburch.logisim.data.Attribute<?>> attrList = attrs.getAttributes();
         if (i >= attrList.size()) break;
         @SuppressWarnings("unchecked")
         Attribute<Object> attr = (Attribute<Object>) attrList.get(i);
-        final var attrName = attr.getName();
-        final var attrVal = attrsDefined.get(attrName);
+        final java.lang.String attrName = attr.getName();
+        final java.lang.String attrVal = attrsDefined.get(attrName);
         if (attrVal == null) {
           if (attr.equals(ProbeAttributes.PROBEAPPEARANCE)) {
             attrs.setValue(ProbeAttributes.PROBEAPPEARANCE, StdAttr.APPEAR_CLASSIC);
@@ -194,8 +194,8 @@ class XmlReader {
     }
 
     private void initMouseMappings(Element elt, boolean isHolyCross, boolean isEvolution) {
-      final var map = file.getOptions().getMouseMappings();
-      for (final var sub_elt : XmlIterator.forChildElements(elt, "tool")) {
+      final com.cburch.logisim.file.MouseMappings map = file.getOptions().getMouseMappings();
+      for (final org.w3c.dom.Element sub_elt : XmlIterator.forChildElements(elt, "tool")) {
         Tool tool;
         try {
           tool = toTool(sub_elt);
@@ -204,7 +204,7 @@ class XmlReader {
           continue;
         }
 
-        final var modsStr = sub_elt.getAttribute("map");
+        final java.lang.String modsStr = sub_elt.getAttribute("map");
         if (modsStr == null || "".equals(modsStr)) {
           loader.showError(S.get("mappingMissingError"));
           continue;
@@ -229,8 +229,8 @@ class XmlReader {
     }
 
     private void initToolbarData(Element elt, boolean isHolyCross, boolean isEvolution) {
-      final var toolbar = file.getOptions().getToolbarData();
-      for (final var subElement : XmlIterator.forChildElements(elt)) {
+      final com.cburch.logisim.file.ToolbarData toolbar = file.getOptions().getToolbarData();
+      for (final org.w3c.dom.Element subElement : XmlIterator.forChildElements(elt)) {
         if ("sep".equals(subElement.getTagName())) {
           toolbar.addSeparator();
         } else if ("tool".equals(subElement.getTagName())) {
@@ -265,10 +265,10 @@ class XmlReader {
     }
 
     private Map<Element, Component> loadKnownComponents(Element elt, boolean isHolyCross, boolean isEvolution) {
-      final var known = new HashMap<Element, Component>();
-      for (final var sub : XmlIterator.forChildElements(elt, "comp")) {
+      final java.util.HashMap<org.w3c.dom.Element,com.cburch.logisim.comp.Component> known = new HashMap<Element, Component>();
+      for (final org.w3c.dom.Element sub : XmlIterator.forChildElements(elt, "comp")) {
         try {
-          final var comp = XmlCircuitReader.getComponent(sub, this, isHolyCross, isEvolution);
+          final com.cburch.logisim.comp.Component comp = XmlCircuitReader.getComponent(sub, this, isHolyCross, isEvolution);
           if (comp != null) known.put(sub, comp);
         } catch (XmlReaderException ignored) {
         }
@@ -277,10 +277,10 @@ class XmlReader {
     }
 
     void loadMap(Element board, String boardName, Circuit circ) {
-      final var map = new HashMap<String, CircuitMapInfo>();
-      for (final var cmap : XmlIterator.forChildElements(board, "mc")) {
+      final java.util.HashMap<java.lang.String,com.cburch.logisim.circuit.CircuitMapInfo> map = new HashMap<String, CircuitMapInfo>();
+      for (final org.w3c.dom.Element cmap : XmlIterator.forChildElements(board, "mc")) {
         int x, y, w, h;
-        final var key = cmap.getAttribute("key");
+        final java.lang.String key = cmap.getAttribute("key");
         if (StringUtil.isNullOrEmpty(key)) continue;
         if (cmap.hasAttribute("open")) {
           map.put(key, new CircuitMapInfo());
@@ -305,10 +305,10 @@ class XmlReader {
           } catch (NumberFormatException e) {
             continue;
           }
-          final var br = new BoardRectangle(x, y, w, h);
+          final com.cburch.logisim.fpga.data.BoardRectangle br = new BoardRectangle(x, y, w, h);
           map.put(key, new CircuitMapInfo(br));
         } else {
-          final var cmapi = MapComponent.getMapInfo(cmap);
+          final com.cburch.logisim.circuit.CircuitMapInfo cmapi = MapComponent.getMapInfo(cmap);
           if (cmapi != null)
             map.put(key, cmapi);
         }
@@ -317,21 +317,21 @@ class XmlReader {
     }
 
     void loadAppearance(Element appearElt, XmlReader.CircuitData circData, String context) {
-      final var pins = new ArrayList<AppearanceSvgReader.PinInfo>();
-      for (final var comp : circData.knownComponents.values()) {
+      final java.util.ArrayList<com.cburch.logisim.circuit.appear.AppearanceSvgReader.PinInfo> pins = new ArrayList<AppearanceSvgReader.PinInfo>();
+      for (final com.cburch.logisim.comp.Component comp : circData.knownComponents.values()) {
         if (comp.getFactory() == Pin.FACTORY) {
           pins.add(AppearanceSvgReader.getPinInfo(comp.getLocation(), Instance.getInstanceFor(comp)));
         }
       }
 
-      final var shapes = new ArrayList<AbstractCanvasObject>();
-      for (final var sub : XmlIterator.forChildElements(appearElt)) {
+      final java.util.ArrayList<com.cburch.draw.model.AbstractCanvasObject> shapes = new ArrayList<AbstractCanvasObject>();
+      for (final org.w3c.dom.Element sub : XmlIterator.forChildElements(appearElt)) {
         // Dynamic shapes are skipped here. They are resolved later in
         // XmlCircuitReader once the full Circuit tree has been built.
         // Static shapes (e.g. pins and anchors) need to be done here.
         if (sub.getTagName().startsWith("visible-")) continue;
         try {
-          final var m = AppearanceSvgReader.createShape(sub, pins, null);
+          final com.cburch.draw.model.AbstractCanvasObject m = AppearanceSvgReader.createShape(sub, pins, null);
           if (m == null) {
             addError(S.get("fileAppearanceNotFound", sub.getTagName()), context + "." + sub.getTagName());
           } else {
@@ -359,17 +359,17 @@ class XmlReader {
         loader.showError(S.get("libDescMissingError"));
         return null;
       }
-      final var name = elt.getAttribute("name");
-      final var desc = elt.getAttribute("desc");
-      final var ret = loader.loadLibrary(desc);
+      final java.lang.String name = elt.getAttribute("name");
+      final java.lang.String desc = elt.getAttribute("desc");
+      final com.cburch.logisim.tools.Library ret = loader.loadLibrary(desc);
       if (ret == null) return null;
       libs.put(name, ret);
-      for (final var subElt : XmlIterator.forChildElements(elt, "tool")) {
+      for (final org.w3c.dom.Element subElt : XmlIterator.forChildElements(elt, "tool")) {
         if (!subElt.hasAttribute("name")) {
           loader.showError(S.get("toolNameMissingError"));
         } else {
-          final var toolStr = subElt.getAttribute("name");
-          final var tool = ret.getTool(toolStr);
+          final java.lang.String toolStr = subElt.getAttribute("name");
+          final com.cburch.logisim.tools.Tool tool = ret.getTool(toolStr);
           if (tool != null) {
             try {
               initAttributeSet(subElt, tool.getAttributeSet(), tool, isHolyCross, isEvolution);
@@ -384,7 +384,7 @@ class XmlReader {
 
     private void toLogisimFile(Element elt, Project proj) {
       // determine the version producing this file
-      final var versionString = elt.getAttribute("source");
+      final java.lang.String versionString = elt.getAttribute("source");
       boolean isHolyCrossFile = false;
       boolean isEvolutionFile = true;
       if ("".equals(versionString)) {
@@ -415,11 +415,11 @@ class XmlReader {
       }
 
       // first, load the sublibraries
-      final var libsToAddAfter = new HashSet<Library>();
-      final var baseLibsToEnable = new HashSet<String>();
-      final var libsLoaded = new HashSet<String>();
-      for (final var o : XmlIterator.forChildElements(elt, "lib")) {
-        final var lib = toLibrary(o, isHolyCrossFile, isEvolutionFile);
+      final java.util.HashSet<com.cburch.logisim.tools.Library> libsToAddAfter = new HashSet<Library>();
+      final java.util.HashSet<java.lang.String> baseLibsToEnable = new HashSet<String>();
+      final java.util.HashSet<java.lang.String> libsLoaded = new HashSet<String>();
+      for (final org.w3c.dom.Element o : XmlIterator.forChildElements(elt, "lib")) {
+        final com.cburch.logisim.tools.Library lib = toLibrary(o, isHolyCrossFile, isEvolutionFile);
         if (lib instanceof LoadedLibrary loadedLib) {
           if (loadedLib.getBase() instanceof LogisimFile) {
             libsToAddAfter.add(lib);
@@ -432,29 +432,29 @@ class XmlReader {
         }
       }
       // do a post-processing on the .circ libraries
-      for (final var logiLib : libsToAddAfter) {
+      for (final com.cburch.logisim.tools.Library logiLib : libsToAddAfter) {
         // first cleanup step: remove unused libraries from loaded library
         LibraryManager.removeUnusedLibraries(logiLib);
         // second cleanup step: promote base libraries
         baseLibsToEnable.addAll(LibraryManager.getUsedBaseLibraries(logiLib));
       }
       // promote the none visible base libraries to toplevel
-      final var builtinLibraries = LibraryManager.getBuildinNames((Loader) loader);
-      for (final var lib : libsToAddAfter) {
-        final var libName = lib.getName();
+      final java.util.Set<java.lang.String> builtinLibraries = LibraryManager.getBuildinNames((Loader) loader);
+      for (final com.cburch.logisim.tools.Library lib : libsToAddAfter) {
+        final java.lang.String libName = lib.getName();
         if (baseLibsToEnable.contains(libName) || !builtinLibraries.contains(libName)) {
           baseLibsToEnable.remove(libName);
         }
       }
       // remove the promoted base libraries from the loaded library and add them
-      for (final var newLib : libsToAddAfter) {
+      for (final com.cburch.logisim.tools.Library newLib : libsToAddAfter) {
         LibraryManager.removeBaseLibraries(newLib, baseLibsToEnable);
         file.addLibrary(newLib);
       }
 
       // second, create the circuits - empty for now - and the vhdl entities
-      final var circuitsData = new ArrayList<CircuitData>();
-      for (final var circElt : XmlIterator.forChildElements(elt)) {
+      final java.util.ArrayList<com.cburch.logisim.file.XmlReader.CircuitData> circuitsData = new ArrayList<CircuitData>();
+      for (final org.w3c.dom.Element circElt : XmlIterator.forChildElements(elt)) {
         String name;
         switch (circElt.getTagName()) {
           case "vhdl" -> {
@@ -462,8 +462,8 @@ class XmlReader {
             if (name == null || "".equals(name)) {
               addError(S.get("circNameMissingError"), "C??");
             }
-            final var vhdl = circElt.getTextContent();
-            final var contents = VhdlContent.parse(name, vhdl, file);
+            final java.lang.String vhdl = circElt.getTextContent();
+            final com.cburch.logisim.vhdl.base.VhdlContent contents = VhdlContent.parse(name, vhdl, file);
             if (contents != null) {
               file.addVhdlContent(contents);
             }
@@ -473,15 +473,15 @@ class XmlReader {
             if (name == null || "".equals(name)) {
               addError(S.get("circNameMissingError"), "C??");
             }
-            final var circData = new CircuitData(circElt, new Circuit(name, file, proj));
+            final com.cburch.logisim.file.XmlReader.CircuitData circData = new CircuitData(circElt, new Circuit(name, file, proj));
             file.addCircuit(circData.circuit);
             circData.knownComponents = loadKnownComponents(circElt, isHolyCrossFile,
                 isEvolutionFile);
             for (Element appearElt : XmlIterator.forChildElements(circElt, "appear")) {
               loadAppearance(appearElt, circData, name + ".appear");
             }
-            for (final var boardMap : XmlIterator.forChildElements(circElt, "boardmap")) {
-              final var boardName = boardMap.getAttribute("boardname");
+            for (final org.w3c.dom.Element boardMap : XmlIterator.forChildElements(circElt, "boardmap")) {
+              final java.lang.String boardName = boardMap.getAttribute("boardname");
               if (StringUtil.isNullOrEmpty(boardName))
                 continue;
               loadMap(boardMap, boardName, circData.circuit);
@@ -496,7 +496,7 @@ class XmlReader {
 
       // third, process the other child elements
       for (Element sub_elt : XmlIterator.forChildElements(elt)) {
-        final var name = sub_elt.getTagName();
+        final java.lang.String name = sub_elt.getTagName();
 
         switch (name) {
           case "circuit":
@@ -523,8 +523,8 @@ class XmlReader {
             initToolbarData(sub_elt, isHolyCrossFile, isEvolutionFile);
             break;
           case "main":
-            final var main = sub_elt.getAttribute("name");
-            final var circ = file.getCircuit(main);
+            final java.lang.String main = sub_elt.getAttribute("name");
+            final com.cburch.logisim.circuit.Circuit circ = file.getCircuit(main);
             if (circ != null) {
               file.setMainCircuit(circ);
             }
@@ -544,12 +544,12 @@ class XmlReader {
     }
 
     Tool toTool(Element elt) throws XmlReaderException {
-      final var lib = findLibrary(elt.getAttribute("lib"));
-      final var name = elt.getAttribute("name");
+      final com.cburch.logisim.tools.Library lib = findLibrary(elt.getAttribute("lib"));
+      final java.lang.String name = elt.getAttribute("name");
       if (name == null || "".equals(name)) {
         throw new XmlReaderException(S.get("toolNameMissing"));
       }
-      final var tool = lib.getTool(name);
+      final com.cburch.logisim.tools.Tool tool = lib.getTool(name);
       if (tool == null) {
         throw new XmlReaderException(S.get("toolNotFound"));
       }
@@ -608,12 +608,12 @@ class XmlReader {
     if (root == null) throw new RuntimeException("Value of 'root' cannot be null");
 
     // Iterate on tools
-    for (final var toolElt : XmlIterator.forChildElements(root, "tool")) {
+    for (final org.w3c.dom.Element toolElt : XmlIterator.forChildElements(root, "tool")) {
       // Iterate on attribute nodes
-      for (final var attrElt : XmlIterator.forChildElements(toolElt, "a")) {
+      for (final org.w3c.dom.Element attrElt : XmlIterator.forChildElements(toolElt, "a")) {
         // Each attribute node should have a name field
         if (attrElt.hasAttribute("name")) {
-          final var aName = attrElt.getAttribute("name");
+          final java.lang.String aName = attrElt.getAttribute("name");
           if ("label".equals(aName)) {
             // Found a label node in a tool, clean it up!
             attrElt.setAttribute("val", "");
@@ -638,7 +638,7 @@ class XmlReader {
   }
 
   private static void findLibraryUses(ArrayList<Element> dest, String label, Iterable<Element> candidates) {
-    for (final var elt : candidates) {
+    for (final org.w3c.dom.Element elt : candidates) {
       String lib = elt.getAttribute("lib");
       if (lib.equals(label)) {
         dest.add(elt);
@@ -664,16 +664,16 @@ class XmlReader {
     if (nodeType.length() == 0) throw new RuntimeException("Empty string is not a valid value of 'nodeType'.");
     if (attrType.length() == 0) throw new RuntimeException("Empty string is not a valid value of 'attrType'.");
 
-    final var validLabels = new HashMap<String, String>();
+    final java.util.HashMap<java.lang.String,java.lang.String> validLabels = new HashMap<String, String>();
 
-    final var initialLabels = getXMLLabels(root, nodeType, attrType);
+    final java.util.List<java.lang.String> initialLabels = getXMLLabels(root, nodeType, attrType);
 
     for (java.lang.String label : initialLabels) {
       if (!validLabels.containsKey(label)) {
         // Check if the name is invalid, in which case create
         // a valid version and put it in the map
         if (VhdlContent.labelVHDLInvalid(label)) {
-          final var initialLabel = label;
+          final java.lang.String initialLabel = label;
           label = generateValidVHDLLabel(label);
           validLabels.put(initialLabel, label);
         }
@@ -778,7 +778,7 @@ class XmlReader {
     if (nodeType.length() == 0) throw new RuntimeException("Empty string is not a valid value of 'nodeType'.");
     if (attrType.length() == 0) throw new RuntimeException("Empty string is not a valid value of 'attrType'.");
 
-    final var attrValuesList = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> attrValuesList = new ArrayList<String>();
 
     switch (nodeType) {
       case "circuit" -> inspectCircuitNodes(root, attrType, attrValuesList);
@@ -803,20 +803,20 @@ class XmlReader {
     // Circuits are top-level in the XML file
     switch (attrType) {
       case "name":
-        for (final var circElt : XmlIterator.forChildElements(root, "circuit")) {
+        for (final org.w3c.dom.Element circElt : XmlIterator.forChildElements(root, "circuit")) {
           // Circuit's name is directly available as an attribute
-          final var name = circElt.getAttribute("name");
+          final java.lang.String name = circElt.getAttribute("name");
           attrValuesList.add(name);
         }
         break;
       case "label":
-        for (final var circElt : XmlIterator.forChildElements(root, "circuit")) {
+        for (final org.w3c.dom.Element circElt : XmlIterator.forChildElements(root, "circuit")) {
           // label is available through its a child node
-          for (final var attrElt : XmlIterator.forChildElements(circElt, "a")) {
+          for (final org.w3c.dom.Element attrElt : XmlIterator.forChildElements(circElt, "a")) {
             if (attrElt.hasAttribute("name")) {
-              final var aName = attrElt.getAttribute("name");
+              final java.lang.String aName = attrElt.getAttribute("name");
               if ("label".equals(aName)) {
-                final var label = attrElt.getAttribute("val");
+                final java.lang.String label = attrElt.getAttribute("val");
                 if (label.length() > 0) {
                   attrValuesList.add(label);
                 }
@@ -844,16 +844,16 @@ class XmlReader {
     if (attrValuesList == null) throw new RuntimeException("Value of 'attrValuesList' cannot be null.");
     if (!attrValuesList.isEmpty()) throw new RuntimeException("The 'attrValuesList' must be empty.");
 
-    for (final var circElt : XmlIterator.forChildElements(root, "circuit")) {
+    for (final org.w3c.dom.Element circElt : XmlIterator.forChildElements(root, "circuit")) {
       // In circuits, we have to look for components, then take just those components
       // that do have a lib attribute and look at their a child nodes.
-      for (final var compElt : XmlIterator.forChildElements(circElt, "comp")) {
+      for (final org.w3c.dom.Element compElt : XmlIterator.forChildElements(circElt, "comp")) {
         if (compElt.hasAttribute("lib")) {
-          for (final var attrElt : XmlIterator.forChildElements(compElt, "a")) {
+          for (final org.w3c.dom.Element attrElt : XmlIterator.forChildElements(compElt, "a")) {
             if (attrElt.hasAttribute("name")) {
-              final var aName = attrElt.getAttribute("name");
+              final java.lang.String aName = attrElt.getAttribute("name");
               if ("label".equals(aName)) {
-                final var label = attrElt.getAttribute("val");
+                final java.lang.String label = attrElt.getAttribute("val");
                 if (label.length() > 0) {
                   attrValuesList.add(label);
                 }
@@ -898,15 +898,15 @@ class XmlReader {
       case "name":
         // We have not only to replace the circuit names in each circuit,
         // but in the corresponding comps too!
-        for (final var circElt : XmlIterator.forChildElements(root, "circuit")) {
+        for (final org.w3c.dom.Element circElt : XmlIterator.forChildElements(root, "circuit")) {
           // Circuit's name is directly available as an attribute
-          final var name = circElt.getAttribute("name");
+          final java.lang.String name = circElt.getAttribute("name");
           if (validLabels.containsKey(name)) {
             circElt.setAttribute("name", validLabels.get(name));
             // Also, it is present as value for the "circuit" attribute
-            for (final var attrElt : XmlIterator.forChildElements(circElt, "a")) {
+            for (final org.w3c.dom.Element attrElt : XmlIterator.forChildElements(circElt, "a")) {
               if (attrElt.hasAttribute("name")) {
-                final var aName = attrElt.getAttribute("name");
+                final java.lang.String aName = attrElt.getAttribute("name");
                 if (aName.equals("circuit")) {
                   attrElt.setAttribute("val", validLabels.get(name));
                 }
@@ -914,11 +914,11 @@ class XmlReader {
             }
           }
           // Now do the comp part
-          for (final var compElt : XmlIterator.forChildElements(circElt, "comp")) {
+          for (final org.w3c.dom.Element compElt : XmlIterator.forChildElements(circElt, "comp")) {
             // Circuits are components without lib
             if (!compElt.hasAttribute("lib")) {
               if (compElt.hasAttribute("name")) {
-                final var cName = compElt.getAttribute("name");
+                final java.lang.String cName = compElt.getAttribute("name");
                 if (validLabels.containsKey(cName)) {
                   compElt.setAttribute("name", validLabels.get(cName));
                 }
@@ -928,13 +928,13 @@ class XmlReader {
         }
         break;
       case "label":
-        for (final var circElt : XmlIterator.forChildElements(root, "circuit")) {
+        for (final org.w3c.dom.Element circElt : XmlIterator.forChildElements(root, "circuit")) {
           // label is available through its a child node
-          for (final var attrElt : XmlIterator.forChildElements(circElt, "a")) {
+          for (final org.w3c.dom.Element attrElt : XmlIterator.forChildElements(circElt, "a")) {
             if (attrElt.hasAttribute("name")) {
-              final var aName = attrElt.getAttribute("name");
+              final java.lang.String aName = attrElt.getAttribute("name");
               if ("label".equals(aName)) {
-                final var label = attrElt.getAttribute("val");
+                final java.lang.String label = attrElt.getAttribute("val");
                 if (validLabels.containsKey(label)) {
                   attrElt.setAttribute("val", validLabels.get(label));
                 }
@@ -969,13 +969,13 @@ class XmlReader {
       // just those components that do have a lib attribute and look at
       // their
       // a child nodes
-      for (final var compElt : XmlIterator.forChildElements(circElt, "comp")) {
+      for (final org.w3c.dom.Element compElt : XmlIterator.forChildElements(circElt, "comp")) {
         if (compElt.hasAttribute("lib")) {
-          for (final var attrElt : XmlIterator.forChildElements(compElt, "a")) {
+          for (final org.w3c.dom.Element attrElt : XmlIterator.forChildElements(compElt, "a")) {
             if (attrElt.hasAttribute("name")) {
-              final var aName = attrElt.getAttribute("name");
+              final java.lang.String aName = attrElt.getAttribute("name");
               if ("label".equals(aName)) {
-                final var label = attrElt.getAttribute("val");
+                final java.lang.String label = attrElt.getAttribute("val");
                 if (validLabels.containsKey(label)) {
                   attrElt.setAttribute("val", validLabels.get(label));
                 }
@@ -989,24 +989,24 @@ class XmlReader {
 
   private void addToLabelMap(HashMap<String, String> labelMap, String srcLabel, String dstLabel, String toolNames) {
     if (srcLabel != null && dstLabel != null) {
-      for (final var tool : toolNames.split(";")) {
+      for (final java.lang.String tool : toolNames.split(";")) {
         labelMap.put(srcLabel + ":" + tool, dstLabel);
       }
     }
   }
 
   private void considerRepairs(Document doc, Element root) {
-    final var version = LogisimVersion.fromString(root.getAttribute("source"));
+    final com.cburch.logisim.LogisimVersion version = LogisimVersion.fromString(root.getAttribute("source"));
     if (version.compareTo(new LogisimVersion(2, 3, 0)) < 0) {
       // This file was saved before an Edit tool existed. Most likely
       // we should replace the Select and Wiring tools in the toolbar
       // with the Edit tool instead.
-      for (final var toolbar : XmlIterator.forChildElements(root, "toolbar")) {
+      for (final org.w3c.dom.Element toolbar : XmlIterator.forChildElements(root, "toolbar")) {
         Element wiring = null;
         Element select = null;
         Element edit = null;
-        for (final var elt : XmlIterator.forChildElements(toolbar, "tool")) {
-          final var eltName = elt.getAttribute("name");
+        for (final org.w3c.dom.Element elt : XmlIterator.forChildElements(toolbar, "tool")) {
+          final java.lang.String eltName = elt.getAttribute("name");
           if (StringUtil.isNotEmpty(eltName)) {
             if (eltName.equals(SelectTool._ID)) select = elt;
             if (eltName.equals(WiringTool._ID)) wiring = elt;
@@ -1020,9 +1020,9 @@ class XmlReader {
       }
     }
     if (version.compareTo(new LogisimVersion(2, 6, 3)) < 0) {
-      for (final var circElt : XmlIterator.forChildElements(root, "circuit")) {
-        for (final var attrElt : XmlIterator.forChildElements(circElt, "a")) {
-          final var name = attrElt.getAttribute("name");
+      for (final org.w3c.dom.Element circElt : XmlIterator.forChildElements(root, "circuit")) {
+        for (final org.w3c.dom.Element attrElt : XmlIterator.forChildElements(circElt, "a")) {
+          final java.lang.String name = attrElt.getAttribute("name");
           if (StringUtil.startsWith(name, "label")) {
             attrElt.setAttribute("name", "c" + name);
           }
@@ -1035,7 +1035,7 @@ class XmlReader {
   }
 
   private Document loadXmlFrom(InputStream is) throws SAXException, IOException {
-    final var factory = XmlUtil.getHardenedBuilderFactory();
+    final javax.xml.parsers.DocumentBuilderFactory factory = XmlUtil.getHardenedBuilderFactory();
     factory.setNamespaceAware(true);
     try {
       factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
@@ -1051,13 +1051,13 @@ class XmlReader {
   }
 
   LogisimFile readLibrary(InputStream is, Project proj) throws IOException, SAXException {
-    final var doc = loadXmlFrom(is);
+    final org.w3c.dom.Document doc = loadXmlFrom(is);
     org.w3c.dom.Element elt = doc.getDocumentElement();
     elt = ensureLogisimCompatibility(elt);
 
     considerRepairs(doc, elt);
-    final var file = new LogisimFile((Loader) loader);
-    final var context = new ReadContext(file);
+    final com.cburch.logisim.file.LogisimFile file = new LogisimFile((Loader) loader);
+    final com.cburch.logisim.file.XmlReader.ReadContext context = new ReadContext(file);
 
     context.toLogisimFile(elt, proj);
 
@@ -1065,8 +1065,8 @@ class XmlReader {
       file.addCircuit(new Circuit("main", file, proj));
     }
     if (!context.messages.isEmpty()) {
-      final var all = new StringBuilder();
-      for (final var msg : context.messages) {
+      final java.lang.StringBuilder all = new StringBuilder();
+      for (final java.lang.String msg : context.messages) {
         all.append(msg).append("\n");
       }
       loader.showError(all.substring(0, all.length() - 1));
@@ -1076,17 +1076,17 @@ class XmlReader {
 
   private void relocateTools(Element src, Element dest, HashMap<String, String> labelMap) {
     if (src == null || src == dest) return;
-    final var srcLabel = src.getAttribute("name");
+    final java.lang.String srcLabel = src.getAttribute("name");
     if (srcLabel == null) return;
 
-    final var toRemove = new ArrayList<Element>();
-    for (final var elt : XmlIterator.forChildElements(src, "tool")) {
-      final var name = elt.getAttribute("name");
+    final java.util.ArrayList<org.w3c.dom.Element> toRemove = new ArrayList<Element>();
+    for (final org.w3c.dom.Element elt : XmlIterator.forChildElements(src, "tool")) {
+      final java.lang.String name = elt.getAttribute("name");
       if (name != null && labelMap.containsKey(srcLabel + ":" + name)) {
         toRemove.add(elt);
       }
     }
-    for (final var elt : toRemove) {
+    for (final org.w3c.dom.Element elt : toRemove) {
       src.removeChild(elt);
       if (dest != null) {
         dest.appendChild(elt);
@@ -1097,9 +1097,9 @@ class XmlReader {
   private void repairForLegacyLibrary(Document doc, Element root) {
     Element legacyElt = null;
     String legacyLabel = null;
-    for (final var libElt : XmlIterator.forChildElements(root, "lib")) {
-      final var desc = libElt.getAttribute("desc");
-      final var label = libElt.getAttribute("name");
+    for (final org.w3c.dom.Element libElt : XmlIterator.forChildElements(root, "lib")) {
+      final java.lang.String desc = libElt.getAttribute("desc");
+      final java.lang.String label = libElt.getAttribute("name");
       if ("#Legacy".equals(desc)) {
         legacyElt = libElt;
         legacyLabel = label;
@@ -1109,16 +1109,16 @@ class XmlReader {
     if (legacyElt != null) {
       root.removeChild(legacyElt);
 
-      final var toRemove = new ArrayList<Element>();
+      final java.util.ArrayList<org.w3c.dom.Element> toRemove = new ArrayList<Element>();
       findLibraryUses(toRemove, legacyLabel, XmlIterator.forDescendantElements(root, "comp"));
       boolean componentsRemoved = !toRemove.isEmpty();
       findLibraryUses(toRemove, legacyLabel, XmlIterator.forDescendantElements(root, "tool"));
-      for (final var elt : toRemove) {
+      for (final org.w3c.dom.Element elt : toRemove) {
         elt.getParentNode().removeChild(elt);
       }
       if (componentsRemoved) {
-        final var error = "Some components have been deleted. The Legacy library is not supported.";
-        final var elt = doc.createElement("message");
+        final java.lang.String error = "Some components have been deleted. The Legacy library is not supported.";
+        final org.w3c.dom.Element elt = doc.createElement("message");
         elt.setAttribute("value", error);
         root.appendChild(elt);
       }
@@ -1133,9 +1133,9 @@ class XmlReader {
     int maxLabel = -1;
     Element firstLibElt = null;
     Element lastLibElt = null;
-    for (final var libElt : XmlIterator.forChildElements(root, "lib")) {
-      final var desc = libElt.getAttribute("desc");
-      final var label = libElt.getAttribute("name");
+    for (final org.w3c.dom.Element libElt : XmlIterator.forChildElements(root, "lib")) {
+      final java.lang.String desc = libElt.getAttribute("desc");
+      final java.lang.String label = libElt.getAttribute("name");
 
       if (desc != null) {
         switch (desc) {
@@ -1158,7 +1158,7 @@ class XmlReader {
       lastLibElt = libElt;
       try {
         if (label != null) {
-          final var thisLabel = Integer.parseInt(label);
+          final int thisLabel = Integer.parseInt(label);
           if (thisLabel > maxLabel) maxLabel = thisLabel;
         }
       } catch (NumberFormatException ignored) {
@@ -1190,7 +1190,7 @@ class XmlReader {
       newBaseElt = null;
     }
 
-    final var labelMap = new HashMap<String, String>();
+    final java.util.HashMap<java.lang.String,java.lang.String> labelMap = new HashMap<String, String>();
     addToLabelMap(
         labelMap,
         oldBaseLabel,
@@ -1228,11 +1228,11 @@ class XmlReader {
   }
 
   private void updateFromLabelMap(Iterable<Element> elts, HashMap<String, String> labelMap) {
-    for (final var elt : elts) {
-      final var oldLib = elt.getAttribute("lib");
-      final var name = elt.getAttribute("name");
+    for (final org.w3c.dom.Element elt : elts) {
+      final java.lang.String oldLib = elt.getAttribute("lib");
+      final java.lang.String name = elt.getAttribute("name");
       if (oldLib != null && name != null) {
-        final var newLib = labelMap.get(oldLib + ":" + name);
+        final java.lang.String newLib = labelMap.get(oldLib + ":" + name);
         if (newLib != null) {
           elt.setAttribute("lib", newLib);
         }

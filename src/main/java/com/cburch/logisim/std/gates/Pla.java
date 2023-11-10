@@ -190,7 +190,7 @@ class Pla extends InstanceFactory {
   @Override
   protected void configureNewInstance(Instance instance) {
     super.configureNewInstance(instance);
-    final var attributes = (PLAAttributes) instance.getAttributeSet();
+    final com.cburch.logisim.std.gates.Pla.PLAAttributes attributes = (PLAAttributes) instance.getAttributeSet();
     attributes.tt = new PlaTable(instance.getAttributeValue(ATTR_TABLE));
     attributes.tt.setLabel(instance.getAttributeValue(StdAttr.LABEL));
     instance.addAttributeListener();
@@ -199,7 +199,7 @@ class Pla extends InstanceFactory {
   }
 
   private void updatePorts(Instance instance) {
-    final var dir = instance.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Direction dir = instance.getAttributeValue(StdAttr.FACING);
     int dx = 0, dy = 0;
     if (dir == Direction.WEST) dx = -50;
     else if (dir == Direction.NORTH) dy = -50;
@@ -230,16 +230,16 @@ class Pla extends InstanceFactory {
 
   @Override
   public void propagate(InstanceState state) {
-    final var outWidth = state.getAttributeValue(ATTR_OUT_WIDTH);
-    final var tt = state.getAttributeValue(ATTR_TABLE);
-    final var input = state.getPortValue(IN_PORT);
+    final com.cburch.logisim.data.BitWidth outWidth = state.getAttributeValue(ATTR_OUT_WIDTH);
+    final com.cburch.logisim.std.gates.PlaTable tt = state.getAttributeValue(ATTR_TABLE);
+    final com.cburch.logisim.data.Value input = state.getPortValue(IN_PORT);
     long val = tt.valueFor(input.toLongValue());
     state.setPort(1, Value.createKnown(outWidth, val), 1);
   }
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    final var dir = attrs.getValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Direction dir = attrs.getValue(StdAttr.FACING);
     return Bounds.create(0, -25, 50, 50).rotate(Direction.EAST, dir, 0, 0);
   }
 
@@ -254,8 +254,8 @@ class Pla extends InstanceFactory {
   }
 
   void paintInstance(InstancePainter painter, boolean ghost) {
-    final var g = painter.getGraphics();
-    final var bds = painter.getBounds();
+    final java.awt.Graphics g = painter.getGraphics();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
     int x = bds.getX();
     int y = bds.getY();
     int w = bds.getWidth();
@@ -288,7 +288,7 @@ class Pla extends InstanceFactory {
 
   @Override
   public String getHDLName(AttributeSet attrs) {
-    final var name = CorrectLabel.getCorrectLabel(attrs.getValue(StdAttr.LABEL));
+    final java.lang.String name = CorrectLabel.getCorrectLabel(attrs.getValue(StdAttr.LABEL));
     if (name.length() == 0) return "PLA";
     else return "PLA_" + name;
   }

@@ -63,7 +63,7 @@ class Measures {
     if (fm == null) {
       charWidth = 8;
       spaceWidth = 6;
-      final var font = hex.getFont();
+      final java.awt.Font font = hex.getFont();
       lineHeight = (font == null) ? 16 : font.getSize();
     } else {
       guessed = false;
@@ -83,20 +83,20 @@ class Measures {
     cellHeight = lineHeight;
 
     // compute preferred size
-    final var width = headerWidth + cols * cellWidth + (cols / 4) * spacerWidth;
+    final int width = headerWidth + cols * cellWidth + (cols / 4) * spacerWidth;
     long height;
     if (model == null) {
       height = 16 * cellHeight;
     } else {
-      final var addr0 = getBaseAddress(model);
-      final var addr1 = model.getLastOffset();
-      final var rows = (int) (((addr1 - addr0 + 1) + cols - 1) / cols);
+      final long addr0 = getBaseAddress(model);
+      final long addr1 = model.getLastOffset();
+      final int rows = (int) (((addr1 - addr0 + 1) + cols - 1) / cols);
       height = rows * cellHeight;
       if (height > Integer.MAX_VALUE) height = Integer.MAX_VALUE;
     }
 
     // update preferred size
-    final var pref = hex.getPreferredSize();
+    final java.awt.Dimension pref = hex.getPreferredSize();
     if (pref.width != width || pref.height != height) {
       pref.width = width;
       pref.height = (int) height;

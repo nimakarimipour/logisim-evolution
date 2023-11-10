@@ -317,9 +317,9 @@ public class SocMemMapModel extends AbstractTableModel
   @Override
   public void mouseClicked(MouseEvent e) {
     if (e.getComponent() instanceof JTable table) {
-      final var row = table.rowAtPoint(e.getPoint());
+      final int row = table.rowAtPoint(e.getPoint());
       if (row >= 0 && row < slaveMap.size()) {
-        final var comp = slaveMap.getSlave(row).getComponent();
+        final com.cburch.logisim.instance.InstanceComponent comp = slaveMap.getSlave(row).getComponent();
         if (marked != null) marked.clearMarks();
         comp.markInstance();
         comp.getInstance().fireInvalidated();

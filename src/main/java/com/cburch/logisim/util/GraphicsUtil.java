@@ -45,8 +45,8 @@ public final class GraphicsUtil {
   }
 
   public static void drawArrow(Graphics g, int x0, int y0, int x1, int y1, int headLength, int headAngle) {
-    final var offs = headAngle * Math.PI / 180.0;
-    final var angle = Math.atan2(y0 - y1, x0 - x1);
+    final double offs = headAngle * Math.PI / 180.0;
+    final double angle = Math.atan2(y0 - y1, x0 - x1);
     int[] xs = {
       x1 + (int) (headLength * Math.cos(angle + offs)),
       x1,
@@ -66,7 +66,7 @@ public final class GraphicsUtil {
     int[] ys = {y0, y1, y2};
     GraphicsUtil.switchToWidth(g, 7);
     g.drawPolyline(xs, ys, 3);
-    final var oldColor = g.getColor();
+    final java.awt.Color oldColor = g.getColor();
     g.setColor(Color.WHITE);
     GraphicsUtil.switchToWidth(g, 3);
     g.drawPolyline(xs, ys, 3);
@@ -87,17 +87,17 @@ public final class GraphicsUtil {
   }
 
   public static void drawCenteredValue(Graphics2D gfx, Value value, RadixOption radix, int x, int y) {
-    final var valueString = radix.toString(value);
-    final var radixIdentifier = radix.getIndexChar();
-    final var fontMetrics = gfx.getFontMetrics();
-    final var valueBounds = fontMetrics.getStringBounds(valueString, gfx);
+    final java.lang.String valueString = radix.toString(value);
+    final java.lang.String radixIdentifier = radix.getIndexChar();
+    final java.awt.FontMetrics fontMetrics = gfx.getFontMetrics();
+    final java.awt.geom.Rectangle2D valueBounds = fontMetrics.getStringBounds(valueString, gfx);
     gfx.drawString(valueString, x - (int) (valueBounds.getWidth() / 2), y + (int) (valueBounds.getHeight() / 2));
     gfx.scale(0.7, 0.7);
-    final var radixBounds = fontMetrics.getStringBounds(radixIdentifier, gfx);
-    final var currentColor = gfx.getColor();
+    final java.awt.geom.Rectangle2D radixBounds = fontMetrics.getStringBounds(radixIdentifier, gfx);
+    final java.awt.Color currentColor = gfx.getColor();
     gfx.setColor(Color.BLUE);
-    final var radixXpos = x + (valueBounds.getWidth() / 2) + 1;
-    final var radixYpos = y + valueBounds.getHeight() - (radixBounds.getHeight() / 3);
+    final double radixXpos = x + (valueBounds.getWidth() / 2) + 1;
+    final double radixYpos = y + valueBounds.getHeight() - (radixBounds.getHeight() / 3);
     gfx.drawString(radixIdentifier, (int) (radixXpos / 0.7), (int) (radixYpos / 0.7));
     gfx.scale(1 / 0.7, 1 / 0.7);
     gfx.setColor(currentColor);
@@ -108,20 +108,20 @@ public final class GraphicsUtil {
   }
 
   public static Rectangle getTextCursor(Graphics g, String text, int x, int y, int pos, int halign, int valign) {
-    final var r = getTextBounds(g, text, x, y, halign, valign);
+    final java.awt.Rectangle r = getTextBounds(g, text, x, y, halign, valign);
     if (pos > 0) r.x += new TextMetrics(g, text.substring(0, pos)).width;
     r.width = 1;
     return r;
   }
 
   public static int getTextPosition(Graphics g, String text, int x, int y, int halign, int valign) {
-    final var r = getTextBounds(g, text, 0, 0, halign, valign);
+    final java.awt.Rectangle r = getTextBounds(g, text, 0, 0, halign, valign);
     x -= r.x;
     int last = 0;
-    final var font = g.getFont();
-    final var fr = ((Graphics2D) g).getFontRenderContext();
+    final java.awt.Font font = g.getFont();
+    final java.awt.font.FontRenderContext fr = ((Graphics2D) g).getFontRenderContext();
     for (int i = 0; i < text.length(); i++) {
-      final var cur = (int) font.getStringBounds(text.substring(0, i + 1), fr).getWidth();
+      final int cur = (int) font.getStringBounds(text.substring(0, i + 1), fr).getWidth();
       if (x <= (last + cur) / 2) {
         return i;
       }
@@ -140,7 +140,7 @@ public final class GraphicsUtil {
       int valign,
       Color fg,
       Color bg) {
-    final var oldfont = g.getFont();
+    final java.awt.Font oldfont = g.getFont();
     if (font != null) g.setFont(font);
     drawText(g, text, x, y, halign, valign, fg, bg);
     if (font != null) g.setFont(oldfont);
@@ -148,7 +148,7 @@ public final class GraphicsUtil {
 
   public static void drawText(
       Graphics g, Font font, String text, int x, int y, int halign, int valign) {
-    final var oldfont = g.getFont();
+    final java.awt.Font oldfont = g.getFont();
     if (font != null) g.setFont(font);
     drawText(g, text, x, y, halign, valign);
     if (font != null) g.setFont(oldfont);
@@ -156,15 +156,15 @@ public final class GraphicsUtil {
 
   public static void drawText(Graphics g, String text, int x, int y, int halign, int valign) {
     if (text.length() == 0) return;
-    final var bd = getTextBounds(g, text, x, y, halign, valign);
-    final var tm = new TextMetrics(g, text);
+    final java.awt.Rectangle bd = getTextBounds(g, text, x, y, halign, valign);
+    final com.cburch.draw.util.TextMetrics tm = new TextMetrics(g, text);
     g.drawString(text, bd.x, bd.y + tm.ascent);
   }
 
   public static void drawText(Graphics g, String text, int x, int y, int halign, int valign, Color fg, Color bg) {
     if (text.length() == 0) return;
-    final var bd = getTextBounds(g, text, x, y, halign, valign);
-    final var tm = new TextMetrics(g, text);
+    final java.awt.Rectangle bd = getTextBounds(g, text, x, y, halign, valign);
+    final com.cburch.draw.util.TextMetrics tm = new TextMetrics(g, text);
     if (g instanceof Graphics2D g2d) {
       g2d.setPaint(bg);
       g.fillRect(bd.x, bd.y, bd.width, bd.height);
@@ -174,10 +174,10 @@ public final class GraphicsUtil {
   }
 
   public static void outlineText(Graphics g, String text, int x, int y, Color fg, Color bg) {
-    final var g2 = (Graphics2D) g;
-    final var glyphVector = g2.getFont().createGlyphVector(g2.getFontRenderContext(), text);
-    final var textShape = glyphVector.getOutline();
-    final var transform = g2.getTransform();
+    final java.awt.Graphics2D g2 = (Graphics2D) g;
+    final java.awt.font.GlyphVector glyphVector = g2.getFont().createGlyphVector(g2.getFontRenderContext(), text);
+    final java.awt.Shape textShape = glyphVector.getOutline();
+    final java.awt.geom.AffineTransform transform = g2.getTransform();
     g2.translate(x, y);
     g2.setColor(bg);
     g2.draw(textShape);
@@ -188,9 +188,9 @@ public final class GraphicsUtil {
 
   public static Rectangle getTextBounds(Graphics g, Font font, String text, int x, int y, int halign, int valign) {
     if (g == null) return new Rectangle(x, y, 0, 0);
-    final var oldfont = g.getFont();
+    final java.awt.Font oldfont = g.getFont();
     if (font != null) g.setFont(font);
-    final var ret = getTextBounds(g, text, x, y, halign, valign);
+    final java.awt.Rectangle ret = getTextBounds(g, text, x, y, halign, valign);
     if (font != null) g.setFont(oldfont);
     return ret;
   }
@@ -198,12 +198,12 @@ public final class GraphicsUtil {
   public static Rectangle getTextBounds(Graphics g, String text, int x, int y, int halign, int valign) {
     if (g == null) return new Rectangle(x, y, 0, 0);
 
-    final var tm = new TextMetrics(g, text);
-    final var width = tm.width;
-    final var ascent = tm.ascent;
-    final var height = tm.height;
+    final com.cburch.draw.util.TextMetrics tm = new TextMetrics(g, text);
+    final int width = tm.width;
+    final int ascent = tm.ascent;
+    final int height = tm.height;
 
-    final var ret = new Rectangle(x, y, width, height);
+    final java.awt.Rectangle ret = new Rectangle(x, y, width, height);
     switch (halign) {
       case H_CENTER -> ret.translate(-(width / 2), 0);
       case H_RIGHT -> ret.translate(-width, 0);

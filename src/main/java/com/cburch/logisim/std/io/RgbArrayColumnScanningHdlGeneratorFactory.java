@@ -41,7 +41,7 @@ public class RgbArrayColumnScanningHdlGeneratorFactory extends LedArrayColumnSca
   }
 
   public static LineBuffer getPortMap(int id) {
-    final var ports = new HashMap<String, String>();
+    final java.util.HashMap<java.lang.String,java.lang.String> ports = new HashMap<String, String>();
     ports.put(LedArrayGenericHdlGeneratorFactory.LedArrayColumnAddress, String.format("%s%d", LedArrayGenericHdlGeneratorFactory.LedArrayColumnAddress, id));
     ports.put(TickComponentHdlGeneratorFactory.FPGA_CLOCK, TickComponentHdlGeneratorFactory.FPGA_CLOCK);
     ports.put(LedArrayGenericHdlGeneratorFactory.LedArrayRowRedOutputs, String.format("%s%d", LedArrayGenericHdlGeneratorFactory.LedArrayRowRedOutputs, id));
@@ -55,7 +55,7 @@ public class RgbArrayColumnScanningHdlGeneratorFactory extends LedArrayColumnSca
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist netlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer()
         .pair("nrOfLeds", NR_OF_LEDS_STRING)
         .pair("nrOfRows", NR_OF_ROWS_STRING)
         .pair("activeLow", ACTIVE_LOW_STRING)

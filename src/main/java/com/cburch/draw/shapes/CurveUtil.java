@@ -38,25 +38,25 @@ public final class CurveUtil {
   // (costs about 80 multiplications+additions)
   // note: p0 and p2 are endpoints, p1 is control point
   public static double[] findNearestPoint(double[] q, double[] p0, double[] p1, double[] p2) {
-    final var A = computeA(p0, p1);
-    final var B = computeB(p0, p1, p2);
+    final double[] A = computeA(p0, p1);
+    final double[] B = computeB(p0, p1, p2);
 
     // a temporary util vect = p0 - (x,y)
     double[] pos = {p0[0] - q[0], p0[1] - q[1]};
     // search points P of bezier curve with PM.(dP / dt) = 0
     // a calculus leads to a 3d degree equation :
-    final var a = B[0] * B[0] + B[1] * B[1];
-    final var b = 3 * (A[0] * B[0] + A[1] * B[1]);
-    final var c = 2 * (A[0] * A[0] + A[1] * A[1]) + pos[0] * B[0] + pos[1] * B[1];
-    final var d = pos[0] * A[0] + pos[1] * A[1];
-    final var roots = solveCubic(a, b, c, d);
+    final double a = B[0] * B[0] + B[1] * B[1];
+    final double b = 3 * (A[0] * B[0] + A[1] * B[1]);
+    final double c = 2 * (A[0] * A[0] + A[1] * A[1]) + pos[0] * B[0] + pos[1] * B[1];
+    final double d = pos[0] * A[0] + pos[1] * A[1];
+    final double[] roots = solveCubic(a, b, c, d);
     if (roots == null) return null;
 
     // find the closest point:
     double tMin = Double.MAX_VALUE;
     double dist2Min = Double.MAX_VALUE;
-    final var posMin = new double[2];
-    for (final var root : roots) {
+    final double[] posMin = new double[2];
+    for (final double root : roots) {
       double t;
       if (root < 0) {
         t = 0;
@@ -67,9 +67,9 @@ public final class CurveUtil {
       }
 
       getPos(pos, t, p0, p1, p2);
-      final var lx = q[0] - pos[0];
-      final var ly = q[1] - pos[1];
-      final var dist2 = lx * lx + ly * ly;
+      final double lx = q[0] - pos[0];
+      final double ly = q[1] - pos[1];
+      final double dist2 = lx * lx + ly * ly;
       if (dist2 < dist2Min) {
         // minimum found!
         tMin = root;
@@ -84,8 +84,8 @@ public final class CurveUtil {
 
   // note: p0 and p2 are endpoints, p1 is control point
   public static Bounds getBounds(double[] p0, double[] p1, double[] p2) {
-    final var A = computeA(p0, p1);
-    final var B = computeB(p0, p1, p2);
+    final double[] A = computeA(p0, p1);
+    final double[] B = computeB(p0, p1, p2);
 
     // rough evaluation of bounds:
     double xMin = Math.min(p0[0], Math.min(p1[0], p2[0]));
@@ -114,10 +114,10 @@ public final class CurveUtil {
       }
     }
 
-    final var x = (int) xMin;
-    final var y = (int) yMin;
-    final var w = (int) Math.ceil(xMax) - x;
-    final var h = (int) Math.ceil(yMax) - y;
+    final int x = (int) xMin;
+    final int y = (int) yMin;
+    final int w = (int) Math.ceil(xMax) - x;
+    final int h = (int) Math.ceil(yMax) - y;
 
     return Bounds.create(x, y, w, h);
   }
@@ -144,24 +144,24 @@ public final class CurveUtil {
   public static double[] interpolate(double[] end0, double[] end1, double[] mid) {
     double dx = mid[0] - end0[0];
     double dy = mid[1] - end0[1];
-    final var d0 = Math.sqrt(dx * dx + dy * dy);
+    final double d0 = Math.sqrt(dx * dx + dy * dy);
 
     dx = mid[0] - end1[0];
     dy = mid[1] - end1[1];
-    final var d1 = Math.sqrt(dx * dx + dy * dy);
+    final double d1 = Math.sqrt(dx * dx + dy * dy);
 
     if (d0 < zeroMax || d1 < zeroMax) {
       return new double[] {(end0[0] + end1[0]) / 2, (end0[1] + end1[1]) / 2};
     }
 
-    final var t = d0 / (d0 + d1);
-    final var u = 1.0 - t;
-    final var t2 = t * t;
-    final var u2 = u * u;
-    final var den = 2 * t * u;
+    final double t = d0 / (d0 + d1);
+    final double u = 1.0 - t;
+    final double t2 = t * t;
+    final double u2 = u * u;
+    final double den = 2 * t * u;
 
-    final var xNum = mid[0] - u2 * end0[0] - t2 * end1[0];
-    final var yNum = mid[1] - u2 * end0[1] - t2 * end1[1];
+    final double xNum = mid[0] - u2 * end0[0] - t2 * end1[0];
+    final double yNum = mid[1] - u2 * end0[1] - t2 * end1[1];
 
     return new double[] {xNum / den, yNum / den};
   }
@@ -179,11 +179,11 @@ public final class CurveUtil {
       c = d / z;
       // we solve using Cardan formula:
       // http://fr.wikipedia.org/wiki/M%C3%A9thode_de_Cardan
-      final var p = b - a * a / 3;
-      final var q = a * (2 * a * a - 9 * b) / 27 + c;
-      final var p3 = p * p * p;
-      final var D = q * q + 4 * p3 / 27;
-      final var offset = -a / 3;
+      final double p = b - a * a / 3;
+      final double q = a * (2 * a * a - 9 * b) / 27 + c;
+      final double p3 = p * p * p;
+      final double D = q * q + 4 * p3 / 27;
+      final double offset = -a / 3;
       if (D > zeroMax) {
         // D positive
         z = Math.sqrt(D);
@@ -194,8 +194,8 @@ public final class CurveUtil {
         return new double[] {u + v + offset};
       } else if (D < -zeroMax) {
         // D negative
-        final var u = 2 * Math.sqrt(-p / 3);
-        final var v = Math.acos(-Math.sqrt(-27 / p3) * q / 2) / 3;
+        final double u = 2 * Math.sqrt(-p / 3);
+        final double v = Math.acos(-Math.sqrt(-27 / p3) * q / 2) / 3;
         return new double[] {
           u * Math.cos(v) + offset,
           u * Math.cos(v + 2 * Math.PI / 3) + offset,
@@ -203,7 +203,7 @@ public final class CurveUtil {
         };
       } else {
         // D zero
-        final var u = (q < 0) ? Math.pow(-q / 2, 1. / 3) : -Math.pow(q / 2, 1. / 3);
+        final double u = (q < 0) ? Math.pow(-q / 2, 1. / 3) : -Math.pow(q / 2, 1. / 3);
         return new double[] {2 * u + offset, -u + offset};
       }
     } else if (Math.abs(b) > zeroMax) {

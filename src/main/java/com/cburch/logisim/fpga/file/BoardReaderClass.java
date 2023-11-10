@@ -168,14 +168,14 @@ public class BoardReaderClass {
     String flashName = null;
     String flashPos = null;
     if (fpgaList.getLength() != 1) return null;
-    final var thisFpga = fpgaList.item(0);
-    final var fpgaParams = thisFpga.getChildNodes();
+    final org.w3c.dom.Node thisFpga = fpgaList.item(0);
+    final org.w3c.dom.NodeList fpgaParams = thisFpga.getChildNodes();
     for (int i = 0; i < fpgaParams.getLength(); i++) {
       if (fpgaParams
           .item(i)
           .getNodeName()
           .equals(BoardWriterClass.CLOCK_INFORMATION_SECTION_STRING)) {
-        final var clockAttrs = fpgaParams.item(i).getAttributes();
+        final org.w3c.dom.NamedNodeMap clockAttrs = fpgaParams.item(i).getAttributes();
         for (int j = 0; j < clockAttrs.getLength(); j++) {
           if (clockAttrs.item(j).getNodeName().equals(BoardWriterClass.CLOCK_SECTION_STRINGS[0]))
             frequency = Long.parseLong(clockAttrs.item(j).getNodeValue());
@@ -188,7 +188,7 @@ public class BoardReaderClass {
         }
       }
       if (fpgaParams.item(i).getNodeName().equals(BoardWriterClass.UNUSED_PINS_STRING)) {
-        final var unusedAttrs = fpgaParams.item(i).getAttributes();
+        final org.w3c.dom.NamedNodeMap unusedAttrs = fpgaParams.item(i).getAttributes();
         for (int j = 0; j < unusedAttrs.getLength(); j++)
           if (unusedAttrs.item(j).getNodeName().equals("PullBehavior"))
             unusedPull = unusedAttrs.item(j).getNodeValue();
@@ -197,7 +197,7 @@ public class BoardReaderClass {
           .item(i)
           .getNodeName()
           .equals(BoardWriterClass.FPGA_INFORMATION_SECTION_STRING)) {
-        final var fpgaAttrs = fpgaParams.item(i).getAttributes();
+        final org.w3c.dom.NamedNodeMap fpgaAttrs = fpgaParams.item(i).getAttributes();
         for (int j = 0; j < fpgaAttrs.getLength(); j++) {
           if (fpgaAttrs.item(j).getNodeName().equals(BoardWriterClass.FPGA_SECTION_STRINGS[0]))
             vendor = fpgaAttrs.item(j).getNodeValue();
@@ -263,7 +263,7 @@ public class BoardReaderClass {
       tempNode = compList.item(0);
       compList = tempNode.getChildNodes();
       for (int i = 0; i < compList.getLength(); i++) {
-        final var newComp = new FpgaIoInformationContainer(compList.item(i));
+        final com.cburch.logisim.fpga.data.FpgaIoInformationContainer newComp = new FpgaIoInformationContainer(compList.item(i));
         if (newComp.isKnownComponent()) {
           board.addComponent(newComp);
         }

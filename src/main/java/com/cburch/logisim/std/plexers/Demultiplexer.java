@@ -89,13 +89,13 @@ public class Demultiplexer extends InstanceFactory {
 
   @Override
   public boolean contains(Location loc, AttributeSet attrs) {
-    final var facing = attrs.getValue(StdAttr.FACING).reverse();
+    final com.cburch.logisim.data.Direction facing = attrs.getValue(StdAttr.FACING).reverse();
     return PlexersLibrary.contains(loc, getOffsetBounds(attrs), facing);
   }
 
   @Override
   public String getHDLName(AttributeSet attrs) {
-    final var completeName = new StringBuilder();
+    final java.lang.StringBuilder completeName = new StringBuilder();
     completeName.append(CorrectLabel.getCorrectLabel(this.getName()));
     if (attrs.getValue(StdAttr.WIDTH).getWidth() > 1) completeName.append("_bus");
     completeName.append("_").append(1 << attrs.getValue(PlexersLibrary.ATTR_SELECT).getWidth());
@@ -104,10 +104,10 @@ public class Demultiplexer extends InstanceFactory {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    final var facing = attrs.getValue(StdAttr.FACING);
-    final var select = attrs.getValue(PlexersLibrary.ATTR_SELECT);
-    final var outputs = 1 << select.getWidth();
-    final var bds =
+    final com.cburch.logisim.data.Direction facing = attrs.getValue(StdAttr.FACING);
+    final com.cburch.logisim.data.BitWidth select = attrs.getValue(PlexersLibrary.ATTR_SELECT);
+    final int outputs = 1 << select.getWidth();
+    final com.cburch.logisim.data.Bounds bds =
         (outputs == 2)
             ? Bounds.create(0, -25, 30, 50)
             : Bounds.create(0, -(outputs / 2) * 10 - 10, 40, outputs * 10 + 20);
@@ -136,9 +136,9 @@ public class Demultiplexer extends InstanceFactory {
 
   @Override
   public void paintGhost(InstancePainter painter) {
-    final var facing = painter.getAttributeValue(StdAttr.FACING);
-    final var select = painter.getAttributeValue(PlexersLibrary.ATTR_SELECT);
-    final var bds = painter.getBounds();
+    final com.cburch.logisim.data.Direction facing = painter.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.BitWidth select = painter.getAttributeValue(PlexersLibrary.ATTR_SELECT);
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
 
     if (select.getWidth() == 1) {
       if (facing == Direction.EAST || facing == Direction.WEST) {
@@ -161,29 +161,29 @@ public class Demultiplexer extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var g = painter.getGraphics();
-    final var bds = painter.getBounds();
-    final var facing = painter.getAttributeValue(StdAttr.FACING);
-    final var select = painter.getAttributeValue(PlexersLibrary.ATTR_SELECT);
-    final var enable = painter.getAttributeValue(PlexersLibrary.ATTR_ENABLE);
-    final var outputs = 1 << select.getWidth();
+    final java.awt.Graphics g = painter.getGraphics();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+    final com.cburch.logisim.data.Direction facing = painter.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.BitWidth select = painter.getAttributeValue(PlexersLibrary.ATTR_SELECT);
+    final java.lang.Boolean enable = painter.getAttributeValue(PlexersLibrary.ATTR_ENABLE);
+    final int outputs = 1 << select.getWidth();
 
     // draw select and enable inputs
     GraphicsUtil.switchToWidth(g, 3);
-    final var vertical = facing == Direction.NORTH || facing == Direction.SOUTH;
+    final boolean vertical = facing == Direction.NORTH || facing == Direction.SOUTH;
     Object selectLoc = painter.getAttributeValue(StdAttr.SELECT_LOC);
-    final var selMult = selectLoc == StdAttr.SELECT_BOTTOM_LEFT ? 1 : -1;
-    final var dx = vertical ? selMult : 0;
-    final var dy = vertical ? 0 : -selMult;
+    final int selMult = selectLoc == StdAttr.SELECT_BOTTOM_LEFT ? 1 : -1;
+    final int dx = vertical ? selMult : 0;
+    final int dy = vertical ? 0 : -selMult;
     if (outputs == 2) { // draw select wire
-      final var sel = painter.getInstance().getPortLocation(outputs);
+      final com.cburch.logisim.data.Location sel = painter.getInstance().getPortLocation(outputs);
       if (painter.getShowState()) {
         g.setColor(painter.getPortValue(outputs).getColor());
       }
       g.drawLine(sel.getX(), sel.getY(), sel.getX() + 2 * dx, sel.getY() + 2 * dy);
     }
     if (enable) {
-      final var en = painter.getInstance().getPortLocation(outputs + 1);
+      final com.cburch.logisim.data.Location en = painter.getInstance().getPortLocation(outputs + 1);
       if (painter.getShowState()) {
         g.setColor(painter.getPortValue(outputs + 1).getColor());
       }
@@ -270,7 +270,7 @@ public class Demultiplexer extends InstanceFactory {
     } else if (en == Value.ERROR && state.isPortConnected(outputs + 1)) {
       others = Value.createError(data);
     } else {
-      final var sel = state.getPortValue(outputs);
+      final com.cburch.logisim.data.Value sel = state.getPortValue(outputs);
       if (sel.isFullyDefined()) {
         outIndex = (int) sel.toLongValue();
         out = state.getPortValue(outputs + (enable ? 2 : 1));
@@ -288,13 +288,13 @@ public class Demultiplexer extends InstanceFactory {
   }
 
   private void updatePorts(Instance instance) {
-    final var facing = instance.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Direction facing = instance.getAttributeValue(StdAttr.FACING);
     Object selectLoc = instance.getAttributeValue(StdAttr.SELECT_LOC);
-    final var data = instance.getAttributeValue(StdAttr.WIDTH);
-    final var select = instance.getAttributeValue(PlexersLibrary.ATTR_SELECT);
-    final var enable = instance.getAttributeValue(PlexersLibrary.ATTR_ENABLE);
+    final com.cburch.logisim.data.BitWidth data = instance.getAttributeValue(StdAttr.WIDTH);
+    final com.cburch.logisim.data.BitWidth select = instance.getAttributeValue(PlexersLibrary.ATTR_SELECT);
+    final java.lang.Boolean enable = instance.getAttributeValue(PlexersLibrary.ATTR_ENABLE);
     int outputs = 1 << select.getWidth();
-    final var ps = new Port[outputs + (enable ? 3 : 2)];
+    final com.cburch.logisim.instance.Port[] ps = new Port[outputs + (enable ? 3 : 2)];
     Location sel;
     int selMult = selectLoc == StdAttr.SELECT_BOTTOM_LEFT ? 1 : -1;
     if (outputs == 2) {
@@ -347,7 +347,7 @@ public class Demultiplexer extends InstanceFactory {
         dy += ddy;
       }
     }
-    final var en = sel.translate(facing, -10);
+    final com.cburch.logisim.data.Location en = sel.translate(facing, -10);
     ps[outputs] = new Port(sel.getX(), sel.getY(), Port.INPUT, select.getWidth());
     if (enable) {
       ps[outputs + 1] = new Port(en.getX(), en.getY(), Port.INPUT, BitWidth.ONE);

@@ -41,19 +41,19 @@ public class SelectionPanel extends LogPanel {
     list = new SelectionList();
     list.setLogModel(getModel());
 
-    final var explorerPane =
+    final javax.swing.JScrollPane explorerPane =
         new JScrollPane(
             selector,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    final var listPane =
+    final javax.swing.JScrollPane listPane =
         new JScrollPane(
             list,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-    final var gridbag = new GridBagLayout();
-    final var gbc = new GridBagConstraints();
+    final java.awt.GridBagLayout gridbag = new GridBagLayout();
+    final java.awt.GridBagConstraints gbc = new GridBagConstraints();
     setLayout(gridbag);
 
     gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -89,8 +89,8 @@ public class SelectionPanel extends LogPanel {
     add(explorerPane);
     explorerPane.setPreferredSize(new Dimension(120, 200));
 
-    final var addArrow = new JButton(new FatArrowIcon(Direction.EAST));
-    final var delArrow = new JButton(new FatArrowIcon(Direction.WEST));
+    final javax.swing.JButton addArrow = new JButton(new FatArrowIcon(Direction.EAST));
+    final javax.swing.JButton delArrow = new JButton(new FatArrowIcon(Direction.WEST));
     addArrow.setBorder(BorderFactory.createEmptyBorder());
     delArrow.setBorder(BorderFactory.createEmptyBorder());
     addArrow.setContentAreaFilled(false);
@@ -107,7 +107,7 @@ public class SelectionPanel extends LogPanel {
     addArrow.addActionListener(e -> list.add(selector.getSelectedItems()));
     delArrow.addActionListener(e -> list.removeSelected());
 
-    final var arrowBox = new Box(BoxLayout.Y_AXIS);
+    final javax.swing.Box arrowBox = new Box(BoxLayout.Y_AXIS);
     arrowBox.add(addArrow);
     arrowBox.add(delArrow);
     gbc.fill = GridBagConstraints.NONE;

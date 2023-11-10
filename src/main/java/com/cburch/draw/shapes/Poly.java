@@ -35,9 +35,9 @@ public class Poly extends FillableCanvasObject {
   private Bounds bounds;
 
   public Poly(boolean closed, List<Location> locations) {
-    final var hs = new Handle[locations.size()];
+    final com.cburch.draw.model.Handle[] hs = new Handle[locations.size()];
     int i = -1;
-    for (final var loc : locations) {
+    for (final com.cburch.logisim.data.Location loc : locations) {
       i++;
       hs[i] = new Handle(this, loc.getX(), loc.getY());
     }
@@ -49,15 +49,15 @@ public class Poly extends FillableCanvasObject {
 
   @Override
   public Handle canDeleteHandle(Location loc) {
-    final var minHandles = closed ? 3 : 2;
-    final var hs = handles;
+    final int minHandles = closed ? 3 : 2;
+    final com.cburch.draw.model.Handle[] hs = handles;
     if (hs.length > minHandles) {
-      final var qx = loc.getX();
-      final var qy = loc.getY();
-      final var w = Math.max(Line.ON_LINE_THRESH, getStrokeWidth() / 2);
-      for (final var h : hs) {
-        final var hx = h.getX();
-        final var hy = h.getY();
+      final int qx = loc.getX();
+      final int qy = loc.getY();
+      final int w = Math.max(Line.ON_LINE_THRESH, getStrokeWidth() / 2);
+      for (final com.cburch.draw.model.Handle h : hs) {
+        final int hx = h.getX();
+        final int hy = h.getY();
         if (LineUtil.distance(qx, qy, hx, hy) < w * w) {
           return h;
         }
@@ -68,10 +68,10 @@ public class Poly extends FillableCanvasObject {
 
   @Override
   public Handle canInsertHandle(Location loc) {
-    final var result = PolyUtil.getClosestPoint(loc, closed, handles);
-    final var thresh = Math.max(Line.ON_LINE_THRESH, getStrokeWidth() / 2);
+    final com.cburch.draw.shapes.PolyUtil.ClosestResult result = PolyUtil.getClosestPoint(loc, closed, handles);
+    final int thresh = Math.max(Line.ON_LINE_THRESH, getStrokeWidth() / 2);
     if (result.getDistanceSq() < thresh * thresh) {
-      final var resLoc = result.getLocation();
+      final com.cburch.logisim.data.Location resLoc = result.getLocation();
       return (result.getPreviousHandle().isAt(resLoc) || result.getNextHandle().isAt(resLoc))
           ? null
           : new Handle(this, result.getLocation());
@@ -90,11 +90,11 @@ public class Poly extends FillableCanvasObject {
    */
   @Override
   public Poly clone() {
-    final var ret = (Poly) super.clone();
-    final var hs = this.handles.clone();
+    final com.cburch.draw.shapes.Poly ret = (Poly) super.clone();
+    final com.cburch.draw.model.Handle[] hs = this.handles.clone();
 
     for (int i = 0, n = hs.length; i < n; ++i) {
-      final var oldHandle = hs[i];
+      final com.cburch.draw.model.Handle oldHandle = hs[i];
       hs[i] = new Handle(ret, oldHandle.getX(), oldHandle.getY());
     }
     ret.handles = hs;
@@ -109,26 +109,26 @@ public class Poly extends FillableCanvasObject {
       type = DrawAttr.PAINT_STROKE_FILL;
     }
     if (type == DrawAttr.PAINT_STROKE) {
-      final var thresh = Math.max(Line.ON_LINE_THRESH, getStrokeWidth() / 2);
-      final var result = PolyUtil.getClosestPoint(loc, closed, handles);
+      final int thresh = Math.max(Line.ON_LINE_THRESH, getStrokeWidth() / 2);
+      final com.cburch.draw.shapes.PolyUtil.ClosestResult result = PolyUtil.getClosestPoint(loc, closed, handles);
       return result.getDistanceSq() < thresh * thresh;
     } else if (type == DrawAttr.PAINT_FILL) {
-      final var path = getPath();
+      final java.awt.geom.GeneralPath path = getPath();
       return path.contains(loc.getX(), loc.getY());
     } else { // fill and stroke
-      final var path = getPath();
+      final java.awt.geom.GeneralPath path = getPath();
       if (path.contains(loc.getX(), loc.getY())) return true;
-      final var width = getStrokeWidth();
-      final var result = PolyUtil.getClosestPoint(loc, closed, handles);
+      final int width = getStrokeWidth();
+      final com.cburch.draw.shapes.PolyUtil.ClosestResult result = PolyUtil.getClosestPoint(loc, closed, handles);
       return result.getDistanceSq() < (width * width) / 4;
     }
   }
 
   @Override
   public Handle deleteHandle(Handle handle) {
-    final var hs = handles;
-    final var n = hs.length;
-    final var is = new Handle[n - 1];
+    final com.cburch.draw.model.Handle[] hs = handles;
+    final int n = hs.length;
+    final com.cburch.draw.model.Handle[] is = new Handle[n - 1];
     Handle previous = null;
     boolean deleted = false;
     for (int i = 0; i < n; i++) {
@@ -165,18 +165,18 @@ public class Poly extends FillableCanvasObject {
 
   @Override
   public List<Handle> getHandles(HandleGesture gesture) {
-    final var hs = handles;
+    final com.cburch.draw.model.Handle[] hs = handles;
     if (gesture == null) {
       return UnmodifiableList.create(hs);
     }
 
-    final var g = gesture.getHandle();
-    final var ret = new Handle[hs.length];
+    final com.cburch.draw.model.Handle g = gesture.getHandle();
+    final com.cburch.draw.model.Handle[] ret = new Handle[hs.length];
     for (int i = 0, n = hs.length; i < n; i++) {
-      final var h = hs[i];
+      final com.cburch.draw.model.Handle h = hs[i];
       if (h.equals(g)) {
-        final var x = h.getX() + gesture.getDeltaX();
-        final var y = h.getY() + gesture.getDeltaY();
+        final int x = h.getX() + gesture.getDeltaX();
+        final int y = h.getY() + gesture.getDeltaY();
         Location r;
         if (gesture.isShiftDown()) {
           com.cburch.logisim.data.Location prev = hs[(i + n - 1) % n].getLocation();
@@ -190,11 +190,11 @@ public class Poly extends FillableCanvasObject {
           } else if (next == null) {
             r = LineUtil.snapTo8Cardinals(prev, x, y);
           } else {
-            final var to = Location.create(x, y, false);
-            final var a = LineUtil.snapTo8Cardinals(prev, x, y);
-            final var b = LineUtil.snapTo8Cardinals(next, x, y);
-            final var ad = a.manhattanDistanceTo(to);
-            final var bd = b.manhattanDistanceTo(to);
+            final com.cburch.logisim.data.Location to = Location.create(x, y, false);
+            final com.cburch.logisim.data.Location a = LineUtil.snapTo8Cardinals(prev, x, y);
+            final com.cburch.logisim.data.Location b = LineUtil.snapTo8Cardinals(next, x, y);
+            final int ad = a.manhattanDistanceTo(to);
+            final int bd = b.manhattanDistanceTo(to);
             r = ad < bd ? a : b;
           }
         } else {
@@ -213,10 +213,10 @@ public class Poly extends FillableCanvasObject {
     if (p != null) return p;
 
     p = new GeneralPath();
-    final var hs = handles;
+    final com.cburch.draw.model.Handle[] hs = handles;
     if (hs.length > 0) {
       boolean first = true;
-      for (final var h : hs) {
+      for (final com.cburch.draw.model.Handle h : hs) {
         if (first) {
           p.moveTo(h.getX(), h.getY());
           first = false;
@@ -230,26 +230,26 @@ public class Poly extends FillableCanvasObject {
   }
 
   private Location getRandomBoundaryPoint(Random rand) {
-    final var hs = handles;
+    final com.cburch.draw.model.Handle[] hs = handles;
     double[] ls = lens;
     if (ls == null) {
       ls = new double[hs.length + (closed ? 1 : 0)];
       double total = 0.0;
       for (int i = 0; i < ls.length; i++) {
-        final var j = (i + 1) % hs.length;
+        final int j = (i + 1) % hs.length;
         total += LineUtil.distance(hs[i].getX(), hs[i].getY(), hs[j].getX(), hs[j].getY());
         ls[i] = total;
       }
       lens = ls;
     }
-    final var pos = ls[ls.length - 1] * rand.nextDouble();
+    final double pos = ls[ls.length - 1] * rand.nextDouble();
     for (int i = 0; true; i++) {
       if (pos < ls[i]) {
-        final var p = hs[i];
-        final var q = hs[(i + 1) % hs.length];
-        final var u = Math.random();
-        final var x = (int) Math.round(p.getX() + u * (q.getX() - p.getX()));
-        final var y = (int) Math.round(p.getY() + u * (q.getY() - p.getY()));
+        final com.cburch.draw.model.Handle p = hs[i];
+        final com.cburch.draw.model.Handle q = hs[(i + 1) % hs.length];
+        final double u = Math.random();
+        final int x = (int) Math.round(p.getX() + u * (q.getX() - p.getX()));
+        final int y = (int) Math.round(p.getY() + u * (q.getY() - p.getY()));
         return Location.create(x, y, false);
       }
     }
@@ -261,10 +261,10 @@ public class Poly extends FillableCanvasObject {
       return super.getRandomPoint(bds, rand);
     }
     com.cburch.logisim.data.Location ret = getRandomBoundaryPoint(rand);
-    final var w = getStrokeWidth();
+    final int w = getStrokeWidth();
     if (w > 1) {
-      final var dx = rand.nextInt(w) - w / 2;
-      final var dy = rand.nextInt(w) - w / 2;
+      final int dx = rand.nextInt(w) - w / 2;
+      final int dy = rand.nextInt(w) - w / 2;
       ret = ret.translate(dx, dy);
     }
     return ret;
@@ -272,14 +272,14 @@ public class Poly extends FillableCanvasObject {
 
   @Override
   public void insertHandle(Handle desired, Handle previous) {
-    final var loc = desired.getLocation();
-    final var hs = handles;
+    final com.cburch.logisim.data.Location loc = desired.getLocation();
+    final com.cburch.draw.model.Handle[] hs = handles;
 
-    final var prev =
+    final com.cburch.draw.model.Handle prev =
         (previous == null)
             ? PolyUtil.getClosestPoint(loc, closed, hs).getPreviousHandle()
             : previous;
-    final var is = new Handle[hs.length + 1];
+    final com.cburch.draw.model.Handle[] is = new Handle[hs.length + 1];
     boolean inserted = false;
     for (int i = 0; i < hs.length; i++) {
       if (inserted) {
@@ -305,8 +305,8 @@ public class Poly extends FillableCanvasObject {
   @Override
   public boolean matches(CanvasObject other) {
     if (other instanceof Poly that) {
-      final var a = this.handles;
-      final var b = that.handles;
+      final com.cburch.draw.model.Handle[] a = this.handles;
+      final com.cburch.draw.model.Handle[] b = that.handles;
       if (this.closed != that.closed || a.length != b.length) {
         return false;
       } else {
@@ -324,8 +324,8 @@ public class Poly extends FillableCanvasObject {
   public int matchesHashCode() {
     int ret = super.matchesHashCode();
     ret = ret * 3 + (closed ? 1 : 0);
-    final var hs = handles;
-    for (final var h : hs) {
+    final com.cburch.draw.model.Handle[] hs = handles;
+    for (final com.cburch.draw.model.Handle h : hs) {
       ret = ret * 31 + h.hashCode();
     }
     return ret;
@@ -333,10 +333,10 @@ public class Poly extends FillableCanvasObject {
 
   @Override
   public Handle moveHandle(HandleGesture gesture) {
-    final var hs = getHandles(gesture);
-    final var is = new Handle[hs.size()];
+    final java.util.List<com.cburch.draw.model.Handle> hs = getHandles(gesture);
+    final com.cburch.draw.model.Handle[] is = new Handle[hs.size()];
     int i = 0;
-    for (final var h : hs) {
+    for (final com.cburch.draw.model.Handle h : hs) {
       is[i++] = h;
     }
     setHandles(is);
@@ -345,11 +345,11 @@ public class Poly extends FillableCanvasObject {
 
   @Override
   public void paint(Graphics g, HandleGesture gesture) {
-    final var hs = getHandles(gesture);
-    final var xs = new int[hs.size()];
-    final var ys = new int[hs.size()];
+    final java.util.List<com.cburch.draw.model.Handle> hs = getHandles(gesture);
+    final int[] xs = new int[hs.size()];
+    final int[] ys = new int[hs.size()];
     int i = 0;
-    for (final var h : hs) {
+    for (final com.cburch.draw.model.Handle h : hs) {
       xs[i] = h.getX();
       ys[i] = h.getY();
       i++;
@@ -365,7 +365,7 @@ public class Poly extends FillableCanvasObject {
   }
 
   private void recomputeBounds() {
-    final var hs = handles;
+    final com.cburch.draw.model.Handle[] hs = handles;
     int x0 = hs[0].getX();
     int y0 = hs[0].getY();
     int x1 = x0;
@@ -378,8 +378,8 @@ public class Poly extends FillableCanvasObject {
       if (y < y0) y0 = y;
       if (y > y1) y1 = y;
     }
-    final var bds = Bounds.create(x0, y0, x1 - x0 + 1, y1 - y0 + 1);
-    final var stroke = getStrokeWidth();
+    final com.cburch.logisim.data.Bounds bds = Bounds.create(x0, y0, x1 - x0 + 1, y1 - y0 + 1);
+    final int stroke = getStrokeWidth();
     bounds = stroke < 2 ? bds : bds.expand(stroke / 2);
   }
 
@@ -397,8 +397,8 @@ public class Poly extends FillableCanvasObject {
 
   @Override
   public void translate(int dx, int dy) {
-    final var hs = handles;
-    final var is = new Handle[hs.length];
+    final com.cburch.draw.model.Handle[] hs = handles;
+    final com.cburch.draw.model.Handle[] is = new Handle[hs.length];
     for (int i = 0; i < hs.length; i++) {
       is[i] = new Handle(this, hs[i].getX() + dx, hs[i].getY() + dy);
     }

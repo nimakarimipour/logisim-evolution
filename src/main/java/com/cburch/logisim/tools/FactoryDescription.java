@@ -77,7 +77,7 @@ public class FactoryDescription {
   }
 
   public ComponentFactory getFactory(Class<? extends Library> libraryClass) {
-    final var ret = factory;
+    final com.cburch.logisim.comp.ComponentFactory ret = factory;
     if (factory != null || factoryLoadAttempted) {
       return ret;
     }
@@ -85,7 +85,7 @@ public class FactoryDescription {
     java.lang.String errorMsg = "";
     try {
       errorMsg = "Getting class loader";
-      final var loader = this.factoryClass.getClassLoader();
+      final java.lang.ClassLoader loader = this.factoryClass.getClassLoader();
       errorMsg = "Loading class";
       Class<?> factoryCls = loader.loadClass(this.factoryClass.getCanonicalName());
       errorMsg = "Creating instance";
@@ -95,8 +95,8 @@ public class FactoryDescription {
       factoryLoadAttempted = true;
       return factory;
     } catch (Exception t) {
-      final var name = t.getClass().getName();
-      final var m = t.getMessage();
+      final java.lang.String name = t.getClass().getName();
+      final java.lang.String m = t.getMessage();
 
       errorMsg += ": " + name;
       if (m != null) errorMsg += ": " + m;

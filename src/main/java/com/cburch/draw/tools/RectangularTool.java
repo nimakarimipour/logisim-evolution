@@ -38,7 +38,7 @@ abstract class RectangularTool extends AbstractTool {
 
     if (!active) return Bounds.EMPTY_BOUNDS;
 
-    final var start = dragStart;
+    final com.cburch.logisim.data.Location start = dragStart;
     int x0 = start.getX();
     int y0 = start.getY();
     int x1 = mx;
@@ -47,7 +47,7 @@ abstract class RectangularTool extends AbstractTool {
       return Bounds.EMPTY_BOUNDS;
     }
 
-    final var ctrlDown = (mods & MouseEvent.CTRL_DOWN_MASK) != 0;
+    final boolean ctrlDown = (mods & MouseEvent.CTRL_DOWN_MASK) != 0;
     if (ctrlDown) {
       x0 = canvas.snapX(x0);
       y0 = canvas.snapY(y0);
@@ -55,11 +55,11 @@ abstract class RectangularTool extends AbstractTool {
       y1 = canvas.snapY(y1);
     }
 
-    final var altDown = (mods & MouseEvent.ALT_DOWN_MASK) != 0;
-    final var shiftDown = (mods & MouseEvent.SHIFT_DOWN_MASK) != 0;
+    final boolean altDown = (mods & MouseEvent.ALT_DOWN_MASK) != 0;
+    final boolean shiftDown = (mods & MouseEvent.SHIFT_DOWN_MASK) != 0;
     if (altDown) {
       if (shiftDown) {
-        final var r = Math.min(Math.abs(x0 - x1), Math.abs(y0 - y1));
+        final int r = Math.min(Math.abs(x0 - x1), Math.abs(y0 - y1));
         x1 = x0 + r;
         y1 = y0 + r;
         x0 -= r;
@@ -70,7 +70,7 @@ abstract class RectangularTool extends AbstractTool {
       }
     } else {
       if (shiftDown) {
-        final var r = Math.min(Math.abs(x0 - x1), Math.abs(y0 - y1));
+        final int r = Math.min(Math.abs(x0 - x1), Math.abs(y0 - y1));
         y1 = y1 < y0 ? y0 - r : y0 + r;
         x1 = x1 < x0 ? x0 - r : x0 + r;
       }
@@ -95,7 +95,7 @@ abstract class RectangularTool extends AbstractTool {
 
   @Override
   public void draw(Canvas canvas, Graphics gfx) {
-    final var bds = currentBounds;
+    final com.cburch.logisim.data.Bounds bds = currentBounds;
     if (active && bds != null && bds != Bounds.EMPTY_BOUNDS) {
       gfx.setColor(Color.GRAY);
       drawShape(gfx, bds.getX(), bds.getY(), bds.getWidth(), bds.getHeight());
@@ -113,7 +113,7 @@ abstract class RectangularTool extends AbstractTool {
 
   @Override
   public void keyPressed(Canvas canvas, KeyEvent e) {
-    final var code = e.getKeyCode();
+    final int code = e.getKeyCode();
     if (active
         && (code == KeyEvent.VK_SHIFT || code == KeyEvent.VK_ALT || code == KeyEvent.VK_CONTROL)) {
       updateMouse(canvas, lastMouseX, lastMouseY, e.getModifiersEx());
@@ -132,8 +132,8 @@ abstract class RectangularTool extends AbstractTool {
 
   @Override
   public void mousePressed(Canvas canvas, MouseEvent e) {
-    final var loc = Location.create(e.getX(), e.getY(), false);
-    final var bds = Bounds.create(loc);
+    final com.cburch.logisim.data.Location loc = Location.create(e.getX(), e.getY(), false);
+    final com.cburch.logisim.data.Bounds bds = Bounds.create(loc);
     dragStart = loc;
     lastMouseX = loc.getX();
     lastMouseY = loc.getY();
@@ -144,13 +144,13 @@ abstract class RectangularTool extends AbstractTool {
   @Override
   public void mouseReleased(Canvas canvas, MouseEvent e) {
     if (active) {
-      final var oldBounds = currentBounds;
-      final var bds = computeBounds(canvas, e.getX(), e.getY(), e.getModifiersEx());
+      final com.cburch.logisim.data.Bounds oldBounds = currentBounds;
+      final com.cburch.logisim.data.Bounds bds = computeBounds(canvas, e.getX(), e.getY(), e.getModifiersEx());
       currentBounds = Bounds.EMPTY_BOUNDS;
       active = false;
       CanvasObject add = null;
       if (bds.getWidth() != 0 && bds.getHeight() != 0) {
-        final var model = canvas.getModel();
+        final com.cburch.draw.model.CanvasModel model = canvas.getModel();
         add = createShape(bds.getX(), bds.getY(), bds.getWidth(), bds.getHeight());
         canvas.doAction(new ModelAddAction(model, add));
         repaintArea(canvas, oldBounds.add(bds));
@@ -171,14 +171,14 @@ abstract class RectangularTool extends AbstractTool {
 
   @Override
   public void toolDeselected(Canvas canvas) {
-    final var bds = currentBounds;
+    final com.cburch.logisim.data.Bounds bds = currentBounds;
     active = false;
     repaintArea(canvas, bds);
   }
 
   private void updateMouse(Canvas canvas, int mx, int my, int mods) {
-    final var oldBounds = currentBounds;
-    final var bds = computeBounds(canvas, mx, my, mods);
+    final com.cburch.logisim.data.Bounds oldBounds = currentBounds;
+    final com.cburch.logisim.data.Bounds bds = computeBounds(canvas, mx, my, mods);
     if (!bds.equals(oldBounds)) {
       currentBounds = bds;
       repaintArea(canvas, oldBounds.add(bds));

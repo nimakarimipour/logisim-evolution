@@ -48,13 +48,13 @@ public class PreferencesFrame extends LFrame.Dialog {
     tabbedPane = new JTabbedPane();
     int intlIndex = -1;
     for (int index = 0; index < panels.length; index++) {
-      final var panel = panels[index];
+      final com.cburch.logisim.gui.prefs.OptionsPanel panel = panels[index];
       tabbedPane.addTab(panel.getTitle(), null, panel, panel.getToolTipText());
       if (panel instanceof IntlOptions) intlIndex = index;
       if (panel instanceof FpgaOptions) fpgaTabIdx = index;
     }
 
-    final var contents = getContentPane();
+    final java.awt.Container contents = getContentPane();
     contents.add(new JScrollPane(tabbedPane), BorderLayout.CENTER);
 
     if (intlIndex >= 0) tabbedPane.setSelectedIndex(intlIndex);
@@ -69,12 +69,12 @@ public class PreferencesFrame extends LFrame.Dialog {
   }
 
   public static void showPreferences() {
-    final var frame = MENU_MANAGER.getJFrame(true, null);
+    final javax.swing.JFrame frame = MENU_MANAGER.getJFrame(true, null);
     frame.setVisible(true);
   }
 
   public static void showFPGAPreferences() {
-    final var frame = (PreferencesFrame) MENU_MANAGER.getJFrame(true, null);
+    final com.cburch.logisim.gui.prefs.PreferencesFrame frame = (PreferencesFrame) MENU_MANAGER.getJFrame(true, null);
     frame.setFpgaTab();
     frame.setVisible(true);
   }

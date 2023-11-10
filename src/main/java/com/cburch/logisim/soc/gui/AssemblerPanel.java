@@ -268,8 +268,8 @@ public class AssemblerPanel extends JPanel
   }
 
   private void nextError(boolean after) {
-    final var carretPos = asmWindow.getCaretPosition();
-    final var errorPositions = assembler.getErrorPositions();
+    final int carretPos = asmWindow.getCaretPosition();
+    final java.util.List<java.lang.Integer> errorPositions = assembler.getErrorPositions();
     if (errorPositions.isEmpty()) return;
     int findex = -1;
     int index = 0;
@@ -289,7 +289,7 @@ public class AssemblerPanel extends JPanel
 
   @Override
   public void mouseClicked(MouseEvent e) {
-    final var source = e.getSource();
+    final java.lang.Object source = e.getSource();
     if (source == openLabel) openFile();
     else if (source == saveLabel) saveFile(false);
     else if (source == saveAsLabel) saveFile(true);

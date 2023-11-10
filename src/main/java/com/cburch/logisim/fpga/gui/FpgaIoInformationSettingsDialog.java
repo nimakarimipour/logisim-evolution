@@ -61,16 +61,16 @@ public class FpgaIoInformationSettingsDialog {
     pinPanel.removeAll();
     if (LocInputs.size() == 0) {
       for (int i = 0; i < nr; i++) {
-        final var txt = new JTextField(6);
+        final javax.swing.JTextField txt = new JTextField(6);
         if (i < oldLocations.size())
           txt.setText(oldLocations.get(i));
         LocInputs.add(txt);
       }
     }
     while (LocInputs.size() < nr) {
-      final var txt = new JTextField(6);
+      final javax.swing.JTextField txt = new JTextField(6);
       LocInputs.add(txt);
-      final var idx = (LocInputs.indexOf(txt));
+      final int idx = (LocInputs.indexOf(txt));
       if (idx < oldLocations.size()) txt.setText(oldLocations.get(idx));
     }
     while (LocInputs.size() > nr) LocInputs.remove(LocInputs.size() - 1);
@@ -82,7 +82,7 @@ public class FpgaIoInformationSettingsDialog {
         offset = (i / 16) * 2;
         c.gridy = oldY;
       }
-      final var LocText = new JLabel(S.get("FpgaIoLocation", PinLabels.get(i)));
+      final javax.swing.JLabel LocText = new JLabel(S.get("FpgaIoLocation", PinLabels.get(i)));
       c.gridx = 0 + offset;
       c.gridy++;
       pinPanel.add(LocText, c);
@@ -115,7 +115,7 @@ public class FpgaIoInformationSettingsDialog {
         break;
       }
       case LedArrayDriving.LED_ROW_SCANNING -> {
-        final var nrBits = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(nrOfRows);
+        final int nrBits = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(nrOfRows);
         nrOfPins = nrBits + nrOfColumns;
         for (int i = 0; i < nrOfPins; i++) {
           if (i < nrBits) {
@@ -127,7 +127,7 @@ public class FpgaIoInformationSettingsDialog {
         break;
       }
       case LedArrayDriving.LED_COLUMN_SCANNING -> {
-        final var nrBits = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(nrOfColumns);
+        final int nrBits = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(nrOfColumns);
         nrOfPins = nrBits + nrOfRows;
         for (int i = 0; i < nrOfPins; i++) {
           if (i < nrBits) {
@@ -155,16 +155,16 @@ public class FpgaIoInformationSettingsDialog {
         break;
       }
       case LedArrayDriving.RGB_ROW_SCANNING -> {
-        final var nrBits = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(nrOfRows);
+        final int nrBits = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(nrOfRows);
         nrOfPins = nrBits + 3 * nrOfColumns;
         java.lang.String preamble = "";
         for (int i = 0; i < nrOfPins; i++) {
           if (i < nrBits) {
             pinLabels.add("RowAddress_" + i);
           } else {
-            final var id = i - nrBits;
-            final var rgb = id / nrOfColumns;
-            final var col = id % nrOfColumns;
+            final int id = i - nrBits;
+            final int rgb = id / nrOfColumns;
+            final int col = id % nrOfColumns;
             preamble = switch (rgb) {
               case 0 -> "Red_";
               case 1 -> "Green_";
@@ -176,16 +176,16 @@ public class FpgaIoInformationSettingsDialog {
         break;
       }
       case LedArrayDriving.RGB_COLUMN_SCANNING -> {
-        final var nrBits = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(nrOfColumns);
+        final int nrBits = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(nrOfColumns);
         nrOfPins = nrBits + 3 * nrOfRows;
         java.lang.String preamble = "";
         for (int i = 0; i < nrOfPins; i++) {
           if (i < nrBits) {
             pinLabels.add("ColumnAddress_" + i);
           } else {
-            final var id = i - nrBits;
-            final var rgb = id / nrOfRows;
-            final var col = id % nrOfRows;
+            final int id = i - nrBits;
+            final int rgb = id / nrOfRows;
+            final int col = id % nrOfRows;
             preamble = switch (rgb) {
               case 0 -> "Red_";
               case 1 -> "Green_";
@@ -210,7 +210,7 @@ public class FpgaIoInformationSettingsDialog {
   }
 
   private static JPanel getRectPanel(ArrayList<JTextField> rectLocations) {
-    final var rectPanel = new JPanel();
+    final javax.swing.JPanel rectPanel = new JPanel();
     rectPanel.setLayout(new GridBagLayout());
     rectPanel.setBorder(BorderFactory.createTitledBorder(
         BorderFactory.createLineBorder(Color.BLACK, 2, true), S.get("FpgaIoRecProp")));
@@ -232,35 +232,35 @@ public class FpgaIoInformationSettingsDialog {
   }
 
   public static void getSimpleInformationDialog(Boolean deleteButton, IoComponentsInformation IOcomps, FpgaIoInformationContainer info) {
-    final var nrOfPins = new HashMap<Integer, Integer>();
-    final var selWindow = new JDialog(IOcomps.getParentFrame(), info.getType() + " " + S.get("FpgaIoProperties"));
-    final var contents = new JPanel();
-    final var driveInput = new JComboBox<>(DriveStrength.BEHAVIOR_STRINGS);
-    final var pullInput = new JComboBox<>(PullBehaviors.BEHAVIOR_STRINGS);
-    final var activeInput = new JComboBox<>(PinActivity.BEHAVIOR_STRINGS);
-    final var inputSize = new JComboBox<Integer>();
-    final var outputSize = new JComboBox<Integer>();
-    final var ioSize = new JComboBox<Integer>();
-    final var rowSize = new JComboBox<Integer>();
-    final var colSize = new JComboBox<Integer>();
-    final var eEncoding = new JComboBox<String>();
-    final var mapRotation = new JComboBox<String>();
-    final var locInputs = new ArrayList<JTextField>();
-    final var locOutputs = new ArrayList<JTextField>();
-    final var locIos = new ArrayList<JTextField>();
-    final var pinLabels = new ArrayList<String>();
-    final var arrayPanel = new JPanel();
-    final var inputsPanel = new JPanel();
-    final var outputsPanel = new JPanel();
-    final var ioPanel = new JPanel();
+    final java.util.HashMap<java.lang.Integer,java.lang.Integer> nrOfPins = new HashMap<Integer, Integer>();
+    final javax.swing.JDialog selWindow = new JDialog(IOcomps.getParentFrame(), info.getType() + " " + S.get("FpgaIoProperties"));
+    final javax.swing.JPanel contents = new JPanel();
+    final javax.swing.JComboBox<java.lang.String> driveInput = new JComboBox<>(DriveStrength.BEHAVIOR_STRINGS);
+    final javax.swing.JComboBox<java.lang.String> pullInput = new JComboBox<>(PullBehaviors.BEHAVIOR_STRINGS);
+    final javax.swing.JComboBox<java.lang.String> activeInput = new JComboBox<>(PinActivity.BEHAVIOR_STRINGS);
+    final javax.swing.JComboBox<java.lang.Integer> inputSize = new JComboBox<Integer>();
+    final javax.swing.JComboBox<java.lang.Integer> outputSize = new JComboBox<Integer>();
+    final javax.swing.JComboBox<java.lang.Integer> ioSize = new JComboBox<Integer>();
+    final javax.swing.JComboBox<java.lang.Integer> rowSize = new JComboBox<Integer>();
+    final javax.swing.JComboBox<java.lang.Integer> colSize = new JComboBox<Integer>();
+    final javax.swing.JComboBox<java.lang.String> eEncoding = new JComboBox<String>();
+    final javax.swing.JComboBox<java.lang.String> mapRotation = new JComboBox<String>();
+    final java.util.ArrayList<javax.swing.JTextField> locInputs = new ArrayList<JTextField>();
+    final java.util.ArrayList<javax.swing.JTextField> locOutputs = new ArrayList<JTextField>();
+    final java.util.ArrayList<javax.swing.JTextField> locIos = new ArrayList<JTextField>();
+    final java.util.ArrayList<java.lang.String> pinLabels = new ArrayList<String>();
+    final javax.swing.JPanel arrayPanel = new JPanel();
+    final javax.swing.JPanel inputsPanel = new JPanel();
+    final javax.swing.JPanel outputsPanel = new JPanel();
+    final javax.swing.JPanel ioPanel = new JPanel();
     boolean abort = false;
-    final var rectLocations = new ArrayList<JTextField>();
-    final var oldInputLocations = new ArrayList<String>();
-    final var oldOutputLocations = new ArrayList<String>();
-    final var oldIoLocations = new ArrayList<String>();
-    final var myType = info.getType();
-    final var myRotation = info.getMapRotation();
-    final var MyRectangle = info.getRectangle();
+    final java.util.ArrayList<javax.swing.JTextField> rectLocations = new ArrayList<JTextField>();
+    final java.util.ArrayList<java.lang.String> oldInputLocations = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> oldOutputLocations = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> oldIoLocations = new ArrayList<String>();
+    final com.cburch.logisim.fpga.data.IoComponentTypes myType = info.getType();
+    final int myRotation = info.getMapRotation();
+    final com.cburch.logisim.fpga.data.BoardRectangle MyRectangle = info.getRectangle();
     if (info.getNrOfPins() == 0) {
       nrOfPins.put(INPUT_ID, IoComponentTypes.getFpgaInputRequirement(myType));
       nrOfPins.put(OUTPUT_ID, IoComponentTypes.getFpgaOutputRequirement(myType));
@@ -331,7 +331,7 @@ public class FpgaIoInformationSettingsDialog {
           selWindow.dispose();
         };
     contents.setLayout(new GridBagLayout());
-    final var c = new GridBagConstraints();
+    final java.awt.GridBagConstraints c = new GridBagConstraints();
     c.gridy = -1;
     if (MyRectangle != null) {
       javax.swing.JTextField tf = new JTextField(5);
@@ -354,7 +354,7 @@ public class FpgaIoInformationSettingsDialog {
     }
     c.fill = GridBagConstraints.HORIZONTAL;
     if (IoComponentTypes.hasRotationAttribute(myType)) {
-      final var panel = new JPanel();
+      final javax.swing.JPanel panel = new JPanel();
       panel.setLayout(new BorderLayout());
       panel.setBorder(BorderFactory.createTitledBorder(
           BorderFactory.createLineBorder(Color.BLACK, 2, true), S.get("FpgaRotationDefinition")));
@@ -382,7 +382,7 @@ public class FpgaIoInformationSettingsDialog {
       c.gridwidth = 1;
     }
     if (myType.equals(IoComponentTypes.LedArray)) {
-      final var panel = new JPanel();
+      final javax.swing.JPanel panel = new JPanel();
       panel.setLayout(new GridBagLayout());
       panel.setBorder(BorderFactory.createTitledBorder(
               BorderFactory.createLineBorder(Color.BLACK, 2, true), S.get("FpgaArrayDefinition")));
@@ -405,7 +405,7 @@ public class FpgaIoInformationSettingsDialog {
       colSize.addActionListener(actionListener);
       eEncoding.setActionCommand("LedArray");
       eEncoding.addActionListener(actionListener);
-      final var arr = new GridBagConstraints();
+      final java.awt.GridBagConstraints arr = new GridBagConstraints();
       arr.gridx = 0;
       arr.gridy = 0;
       arr.gridwidth = 2;
@@ -427,7 +427,7 @@ public class FpgaIoInformationSettingsDialog {
       c.gridwidth = 1;
     }
     if (nrOfPins.get(INPUT_ID) > 0) {
-      final var panel = new JPanel();
+      final javax.swing.JPanel panel = new JPanel();
       panel.setLayout(new BorderLayout());
       panel.setBorder(BorderFactory.createTitledBorder(
               BorderFactory.createLineBorder(Color.BLACK, 2, true), S.get("FpgaIoInpPins")));
@@ -451,7 +451,7 @@ public class FpgaIoInformationSettingsDialog {
       c.gridwidth = 1;
     }
     if (nrOfPins.get(OUTPUT_ID) > 0) {
-      final var panel = new JPanel();
+      final javax.swing.JPanel panel = new JPanel();
       panel.setLayout(new BorderLayout());
       panel.setBorder(BorderFactory.createTitledBorder(
               BorderFactory.createLineBorder(Color.BLACK, 2, true), S.get("FpgaIoOutpPins")));
@@ -466,7 +466,7 @@ public class FpgaIoInformationSettingsDialog {
       }
       if (myType != IoComponentTypes.LedArray) {
         pinLabels.clear();
-        final var nr = nrOfPins.get(OUTPUT_ID);
+        final java.lang.Integer nr = nrOfPins.get(OUTPUT_ID);
         for (int i = 0; i < nr; i++) pinLabels.add(IoComponentTypes.getOutputLabel(nr, 0, 0, i, myType));
         buildPinTable(nrOfPins.get(OUTPUT_ID), myType, outputsPanel, locOutputs, pinLabels, oldOutputLocations);
       } else {
@@ -486,7 +486,7 @@ public class FpgaIoInformationSettingsDialog {
       c.gridwidth = 1;
     }
     if (nrOfPins.get(IO_ID) > 0) {
-      final var panel = new JPanel();
+      final javax.swing.JPanel panel = new JPanel();
       panel.setLayout(new BorderLayout());
       panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK, 2, true), S.get("FpgaIoIOPins")));
       ioPanel.setLayout(new GridBagLayout());
@@ -499,7 +499,7 @@ public class FpgaIoInformationSettingsDialog {
         panel.add(ioSize, BorderLayout.NORTH);
       }
       pinLabels.clear();
-      final var nr = nrOfPins.get(IO_ID);
+      final java.lang.Integer nr = nrOfPins.get(IO_ID);
       for (int i = 0; i < nr; i++) pinLabels.add(IoComponentTypes.getIoLabel(nr, i, myType));
       buildPinTable(nrOfPins.get(IO_ID), myType, ioPanel, locIos, pinLabels, oldIoLocations);
       panel.add(ioPanel, BorderLayout.CENTER);
@@ -509,7 +509,7 @@ public class FpgaIoInformationSettingsDialog {
       c.gridwidth = 1;
     }
 
-    final var LabText = new JLabel(S.get("FpgaIoLabel"));
+    final javax.swing.JLabel LabText = new JLabel(S.get("FpgaIoLabel"));
     c.gridy++;
     c.gridx = 0;
     contents.add(LabText, c);
@@ -518,11 +518,11 @@ public class FpgaIoInformationSettingsDialog {
     c.gridx = 1;
     contents.add(LabelInput, c);
 
-    final var StandardText = new JLabel(S.get("FpgaIoStandard"));
+    final javax.swing.JLabel StandardText = new JLabel(S.get("FpgaIoStandard"));
     c.gridy++;
     c.gridx = 0;
     contents.add(StandardText, c);
-    final var StandardInput = new JComboBox<>(IoStandards.BEHAVIOR_STRINGS);
+    final javax.swing.JComboBox<java.lang.String> StandardInput = new JComboBox<>(IoStandards.BEHAVIOR_STRINGS);
     if (info.getIoStandard() != IoStandards.UNKNOWN)
       StandardInput.setSelectedIndex(info.getIoStandard());
     else StandardInput.setSelectedIndex(IOcomps.getDefaultStandard());
@@ -530,7 +530,7 @@ public class FpgaIoInformationSettingsDialog {
     contents.add(StandardInput, c);
 
     if (IoComponentTypes.OUTPUT_COMPONENT_SET.contains(myType)) {
-      final var DriveText = new JLabel(S.get("FpgaIoStrength"));
+      final javax.swing.JLabel DriveText = new JLabel(S.get("FpgaIoStrength"));
       c.gridy++;
       c.gridx = 0;
       contents.add(DriveText, c);
@@ -541,7 +541,7 @@ public class FpgaIoInformationSettingsDialog {
     }
 
     if (IoComponentTypes.INPUT_COMPONENT_SET.contains(myType)) {
-      final var PullText = new JLabel(S.get("FpgaIoPull"));
+      final javax.swing.JLabel PullText = new JLabel(S.get("FpgaIoPull"));
       c.gridy++;
       c.gridx = 0;
       contents.add(PullText, c);
@@ -553,7 +553,7 @@ public class FpgaIoInformationSettingsDialog {
     }
 
     if (!IoComponentTypes.IN_OUT_COMPONENT_SET.contains(myType)) {
-      final var ActiveText = new JLabel(S.get("FpgaIoActivity", myType));
+      final javax.swing.JLabel ActiveText = new JLabel(S.get("FpgaIoActivity", myType));
       c.gridy++;
       c.gridx = 0;
       contents.add(ActiveText, c);
@@ -564,7 +564,7 @@ public class FpgaIoInformationSettingsDialog {
       contents.add(activeInput, c);
     }
     if (deleteButton) {
-      final var delButton = new JButton();
+      final javax.swing.JButton delButton = new JButton();
       delButton.setActionCommand("delete");
       delButton.addActionListener(actionListener);
       delButton.setText(S.get("FpgaIoDelete"));
@@ -574,14 +574,14 @@ public class FpgaIoInformationSettingsDialog {
       contents.add(delButton, c);
       c.gridwidth = 1;
     }
-    final var OkayButton = new JButton(S.get("FpgaBoardDone"));
+    final javax.swing.JButton OkayButton = new JButton(S.get("FpgaBoardDone"));
     OkayButton.setActionCommand("done");
     OkayButton.addActionListener(actionListener);
     c.gridx = 1;
     c.gridy++;
     contents.add(OkayButton, c);
 
-    final var CancelButton = new JButton(S.get("FpgaBoardCancel"));
+    final javax.swing.JButton CancelButton = new JButton(S.get("FpgaBoardCancel"));
     CancelButton.setActionCommand("cancel");
     CancelButton.addActionListener(actionListener);
     c.gridx = 0;
@@ -597,7 +597,7 @@ public class FpgaIoInformationSettingsDialog {
       selWindow.setVisible(true);
       abort |= info.getType().equals(IoComponentTypes.Unknown);
       if (!abort) {
-        final var NrPins = nrOfPins.get(INPUT_ID) + nrOfPins.get(OUTPUT_ID) + nrOfPins.get(IO_ID);
+        final int NrPins = nrOfPins.get(INPUT_ID) + nrOfPins.get(OUTPUT_ID) + nrOfPins.get(IO_ID);
         boolean correct = true;
         for (int i = 0; i < nrOfPins.get(INPUT_ID); i++) {
           if (locInputs.get(i).getText().isEmpty()) {
@@ -641,7 +641,7 @@ public class FpgaIoInformationSettingsDialog {
                 values[i] = Integer.parseUnsignedInt(rectLocations.get(i).getText());
               } catch (NumberFormatException e) {
                 correct = false;
-                final var msgKey = switch (i) {
+                final java.lang.String msgKey = switch (i) {
                   case 0 -> "FpgaIoXpos";
                   case 1 -> "FpgaIoYpos";
                   case 2 -> "FpgaIoWidth";
@@ -657,7 +657,7 @@ public class FpgaIoInformationSettingsDialog {
                 || values[1] != MyRectangle.getYpos()
                 || values[2] != MyRectangle.getWidth()
                 || values[3] != MyRectangle.getHeight()) {
-              final var update = new Rectangle(values[0], values[1], values[2], values[3]);
+              final com.cburch.draw.shapes.Rectangle update = new Rectangle(values[0], values[1], values[2], values[3]);
               if (IOcomps.hasOverlap(MyRectangle, new BoardRectangle(update))) {
                 // FIXME: hardcoded string
                 DialogNotification.showDialogNotification(
@@ -713,7 +713,7 @@ public class FpgaIoInformationSettingsDialog {
             IOcomps.setDefaultActivity(activeInput.getSelectedIndex());
             info.setActivityLevel(PinActivity.getId(activeInput.getSelectedItem().toString()));
           }
-          final var rotation = switch (mapRotation.getSelectedIndex()) {
+          final int rotation = switch (mapRotation.getSelectedIndex()) {
             case 1 -> IoComponentTypes.ROTATION_CW_90;
             case 2 -> IoComponentTypes.ROTATION_CCW_90;
             default -> IoComponentTypes.ROTATION_ZERO;
@@ -727,7 +727,7 @@ public class FpgaIoInformationSettingsDialog {
   }
 
   public static void getFpgaInformation(Frame panel, BoardInformation TheBoard) {
-    final var selWindow = new JDialog(panel, S.get("FpgaBoardFpgaProp"));
+    final javax.swing.JDialog selWindow = new JDialog(panel, S.get("FpgaBoardFpgaProp"));
     /* here the action listener is defined */
     abort = false;
     ActionListener actionListener =
@@ -737,25 +737,25 @@ public class FpgaIoInformationSettingsDialog {
           }
           selWindow.setVisible(false);
         };
-    final var c = new GridBagConstraints();
+    final java.awt.GridBagConstraints c = new GridBagConstraints();
     /* Here the clock related settings are defined */
-    final var ClockPanel = new JPanel();
+    final javax.swing.JPanel ClockPanel = new JPanel();
     ClockPanel.setLayout(new GridBagLayout());
     ClockPanel.setBorder(
         BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(Color.BLACK, 2, true), S.get("FpgaBoardClkProp")));
 
-    final var FreqText = new JLabel(S.get("FpgaBoardClkFreq"));
+    final javax.swing.JLabel FreqText = new JLabel(S.get("FpgaBoardClkFreq"));
     c.gridx = 0;
     c.gridy = 0;
     c.fill = GridBagConstraints.HORIZONTAL;
     ClockPanel.add(FreqText, c);
 
-    final var FreqPanel = new JPanel();
-    final var FreqLayout = new GridBagLayout();
+    final javax.swing.JPanel FreqPanel = new JPanel();
+    final java.awt.GridBagLayout FreqLayout = new GridBagLayout();
     FreqPanel.setLayout(FreqLayout);
 
-    final var FreqInput = new JTextField(10);
+    final javax.swing.JTextField FreqInput = new JTextField(10);
     c.gridx = 0;
     c.gridy = 0;
     c.fill = GridBagConstraints.HORIZONTAL;
@@ -764,7 +764,7 @@ public class FpgaIoInformationSettingsDialog {
     FreqPanel.add(FreqInput, c);
 
     String[] freqStrs = {"Hz", "kHz", "MHz"};
-    final var StandardInput = new JComboBox<>(freqStrs);
+    final javax.swing.JComboBox<java.lang.String> StandardInput = new JComboBox<>(freqStrs);
     StandardInput.setSelectedIndex(2);
     c.gridx = 1;
     if (TheBoard.fpga.isFpgaInfoPresent())
@@ -773,34 +773,34 @@ public class FpgaIoInformationSettingsDialog {
 
     ClockPanel.add(FreqPanel, c);
 
-    final var LocText = new JLabel(S.get("FpgaBoardClkLoc"));
+    final javax.swing.JLabel LocText = new JLabel(S.get("FpgaBoardClkLoc"));
     c.gridy = 1;
     c.gridx = 0;
     ClockPanel.add(LocText, c);
 
-    final var LocInput = new JTextField();
+    final javax.swing.JTextField LocInput = new JTextField();
     if (TheBoard.fpga.isFpgaInfoPresent()) LocInput.setText(TheBoard.fpga.getClockPinLocation());
     c.gridx = 1;
     ClockPanel.add(LocInput, c);
 
-    final var PullText = new JLabel(S.get("FpgaBoardClkPul"));
+    final javax.swing.JLabel PullText = new JLabel(S.get("FpgaBoardClkPul"));
     c.gridy = 2;
     c.gridx = 0;
     ClockPanel.add(PullText, c);
 
-    final var PullInput = new JComboBox<>(PullBehaviors.BEHAVIOR_STRINGS);
+    final javax.swing.JComboBox<java.lang.String> PullInput = new JComboBox<>(PullBehaviors.BEHAVIOR_STRINGS);
     if (TheBoard.fpga.isFpgaInfoPresent()) {
       PullInput.setSelectedIndex(TheBoard.fpga.getClockPull());
     } else PullInput.setSelectedIndex(0);
     c.gridx = 1;
     ClockPanel.add(PullInput, c);
 
-    final var StandardText = new JLabel(S.get("FpgaBoardClkStd"));
+    final javax.swing.JLabel StandardText = new JLabel(S.get("FpgaBoardClkStd"));
     c.gridy = 3;
     c.gridx = 0;
     ClockPanel.add(StandardText, c);
 
-    final var StdInput = new JComboBox<>(IoStandards.BEHAVIOR_STRINGS);
+    final javax.swing.JComboBox<java.lang.String> StdInput = new JComboBox<>(IoStandards.BEHAVIOR_STRINGS);
     if (TheBoard.fpga.isFpgaInfoPresent()) {
       StdInput.setSelectedIndex(TheBoard.fpga.getClockStandard());
     } else StdInput.setSelectedIndex(0);
@@ -808,71 +808,71 @@ public class FpgaIoInformationSettingsDialog {
     ClockPanel.add(StdInput, c);
 
     /* Here the FPGA related settings are defined */
-    final var fpgaPanel = new JPanel();
+    final javax.swing.JPanel fpgaPanel = new JPanel();
     fpgaPanel.setLayout(new GridBagLayout());
     fpgaPanel.setBorder(
         BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(Color.BLACK, 2, true), S.get("FpgaBoardFpgaProp")));
 
-    final var VendorText = new JLabel(S.get("FpgaBoardFpgaVend"));
+    final javax.swing.JLabel VendorText = new JLabel(S.get("FpgaBoardFpgaVend"));
     c.gridx = 0;
     c.gridy = 0;
     c.fill = GridBagConstraints.HORIZONTAL;
     fpgaPanel.add(VendorText, c);
 
-    final var vendorInput = new JComboBox<>(VendorSoftware.VENDORS);
+    final javax.swing.JComboBox<java.lang.String> vendorInput = new JComboBox<>(VendorSoftware.VENDORS);
     if (TheBoard.fpga.isFpgaInfoPresent()) {
       vendorInput.setSelectedIndex(TheBoard.fpga.getVendor());
     } else vendorInput.setSelectedIndex(0);
     c.gridx = 1;
     fpgaPanel.add(vendorInput, c);
 
-    final var familyText = new JLabel(S.get("FpgaBoardFpgaFam"));
+    final javax.swing.JLabel familyText = new JLabel(S.get("FpgaBoardFpgaFam"));
     c.gridy = 1;
     c.gridx = 0;
     fpgaPanel.add(familyText, c);
 
-    final var familyInput = new JTextField();
+    final javax.swing.JTextField familyInput = new JTextField();
     if (TheBoard.fpga.isFpgaInfoPresent()) familyInput.setText(TheBoard.fpga.getTechnology());
     c.gridx = 1;
     fpgaPanel.add(familyInput, c);
 
-    final var PartText = new JLabel(S.get("FpgaBoardFpgaPart"));
+    final javax.swing.JLabel PartText = new JLabel(S.get("FpgaBoardFpgaPart"));
     c.gridy = 2;
     c.gridx = 0;
     fpgaPanel.add(PartText, c);
 
-    final var partInput = new JTextField();
+    final javax.swing.JTextField partInput = new JTextField();
     if (TheBoard.fpga.isFpgaInfoPresent()) partInput.setText(TheBoard.fpga.getPart());
     c.gridx = 1;
     fpgaPanel.add(partInput, c);
 
-    final var BoxText = new JLabel(S.get("FpgaBoardFpgaPack"));
+    final javax.swing.JLabel BoxText = new JLabel(S.get("FpgaBoardFpgaPack"));
     c.gridy = 3;
     c.gridx = 0;
     fpgaPanel.add(BoxText, c);
 
-    final var boxInput = new JTextField();
+    final javax.swing.JTextField boxInput = new JTextField();
     if (TheBoard.fpga.isFpgaInfoPresent()) boxInput.setText(TheBoard.fpga.getPackage());
     c.gridx = 1;
     fpgaPanel.add(boxInput, c);
 
-    final var speedText = new JLabel(S.get("FpgaBoardFpgaSG"));
+    final javax.swing.JLabel speedText = new JLabel(S.get("FpgaBoardFpgaSG"));
     c.gridy = 4;
     c.gridx = 0;
     fpgaPanel.add(speedText, c);
 
-    final var speedInput = new JTextField();
+    final javax.swing.JTextField speedInput = new JTextField();
     if (TheBoard.fpga.isFpgaInfoPresent()) speedInput.setText(TheBoard.fpga.getSpeedGrade());
     c.gridx = 1;
     fpgaPanel.add(speedInput, c);
 
-    final var unusedPinsText = new JLabel(S.get("FpgaBoardPinUnused"));
+    final javax.swing.JLabel unusedPinsText = new JLabel(S.get("FpgaBoardPinUnused"));
     c.gridy = 5;
     c.gridx = 0;
     fpgaPanel.add(unusedPinsText, c);
 
-    final var unusedPinsInput = new JComboBox<>(PullBehaviors.BEHAVIOR_STRINGS);
+    final javax.swing.JComboBox<java.lang.String> unusedPinsInput = new JComboBox<>(PullBehaviors.BEHAVIOR_STRINGS);
     if (TheBoard.fpga.isFpgaInfoPresent()) {
       unusedPinsInput.setSelectedIndex(TheBoard.fpga.getUnusedPinsBehavior());
     } else unusedPinsInput.setSelectedIndex(0);
@@ -880,31 +880,31 @@ public class FpgaIoInformationSettingsDialog {
     fpgaPanel.add(unusedPinsInput, c);
 
     /* JTAG related Settings */
-    final var jtagPanel = new JPanel();
+    final javax.swing.JPanel jtagPanel = new JPanel();
     jtagPanel.setLayout(new GridBagLayout());
     jtagPanel.setBorder(
         BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(Color.BLACK, 2, true), S.get("FpgaBoardJtagProp")));
 
-    final var posText = new JLabel(S.get("FpgaBoardJtagLoc"));
+    final javax.swing.JLabel posText = new JLabel(S.get("FpgaBoardJtagLoc"));
     c.gridy = 0;
     c.gridx = 0;
     c.fill = GridBagConstraints.HORIZONTAL;
     jtagPanel.add(posText, c);
 
-    final var PosInput = new JTextField(5);
+    final javax.swing.JTextField PosInput = new JTextField(5);
     PosInput.setText("1");
     if (TheBoard.fpga.isFpgaInfoPresent())
       PosInput.setText(Integer.toString(TheBoard.fpga.getFpgaJTAGChainPosition()));
     c.gridx = 1;
     jtagPanel.add(PosInput, c);
 
-    final var FlashPosText = new JLabel(S.get("FpgaBoardFlashLoc"));
+    final javax.swing.JLabel FlashPosText = new JLabel(S.get("FpgaBoardFlashLoc"));
     c.gridy = 1;
     c.gridx = 0;
     jtagPanel.add(FlashPosText, c);
 
-    final var flashPosInput = new JTextField(5);
+    final javax.swing.JTextField flashPosInput = new JTextField(5);
     flashPosInput.setText("2");
     if (TheBoard.fpga.isFpgaInfoPresent())
       flashPosInput.setText(Integer.toString(TheBoard.fpga.getFlashJTAGChainPosition()));
@@ -913,24 +913,24 @@ public class FpgaIoInformationSettingsDialog {
     jtagPanel.add(flashPosInput, c);
 
     /* misc settings */
-    final var miscPanel = new JPanel();
+    final javax.swing.JPanel miscPanel = new JPanel();
     miscPanel.setLayout(new GridBagLayout());
     miscPanel.setBorder(
         BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(Color.BLACK, 2, true), S.get("FpgaBoardMiscProp")));
 
-    final var flashName = new JLabel(S.get("FpgaBoardFlashType"));
+    final javax.swing.JLabel flashName = new JLabel(S.get("FpgaBoardFlashType"));
     c.gridx = 0;
     c.gridy = 0;
     c.fill = GridBagConstraints.HORIZONTAL;
     miscPanel.add(flashName, c);
 
-    final var flashNameInput = new JTextField("");
+    final javax.swing.JTextField flashNameInput = new JTextField("");
     if (TheBoard.fpga.isFpgaInfoPresent()) flashNameInput.setText(TheBoard.fpga.getFlashName());
     c.gridx = 1;
     miscPanel.add(flashNameInput, c);
 
-    final var usbTmc = new JCheckBox(S.get("FpgaBoardUSBTMC"));
+    final javax.swing.JCheckBox usbTmc = new JCheckBox(S.get("FpgaBoardUSBTMC"));
     usbTmc.setSelected(false);
     if (TheBoard.fpga.isFpgaInfoPresent()) usbTmc.setSelected(TheBoard.fpga.isUsbTmcDownloadRequired());
     c.gridx = 0;
@@ -938,7 +938,7 @@ public class FpgaIoInformationSettingsDialog {
     c.gridwidth = 2;
     miscPanel.add(usbTmc, c);
 
-    final var dialogLayout = new GridBagLayout();
+    final java.awt.GridBagLayout dialogLayout = new GridBagLayout();
     selWindow.setLayout(dialogLayout);
     abort = false;
     c.gridx = 0;
@@ -954,7 +954,7 @@ public class FpgaIoInformationSettingsDialog {
     c.gridx = 1;
     selWindow.add(miscPanel, c);
 
-    final var cancelButton = new JButton(S.get("FpgaBoardCancel"));
+    final javax.swing.JButton cancelButton = new JButton(S.get("FpgaBoardCancel"));
     cancelButton.addActionListener(actionListener);
     cancelButton.setActionCommand("cancel");
     c.gridx = 0;
@@ -962,7 +962,7 @@ public class FpgaIoInformationSettingsDialog {
     c.fill = GridBagConstraints.HORIZONTAL;
     selWindow.add(cancelButton, c);
 
-    final var saveButton = new JButton(S.get("FpgaBoardDone"));
+    final javax.swing.JButton saveButton = new JButton(S.get("FpgaBoardDone"));
     saveButton.addActionListener(actionListener);
     saveButton.setActionCommand("save");
     c.gridx = 1;

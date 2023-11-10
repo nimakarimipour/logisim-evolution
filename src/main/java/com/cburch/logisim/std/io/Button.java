@@ -70,7 +70,7 @@ public class Button extends InstanceFactory {
     @Override
     public Value getLogValue(InstanceState state, Object option) {
       InstanceDataSingleton data = (InstanceDataSingleton) state.getData();
-      final var defaultButtonState =
+      final com.cburch.logisim.data.Value defaultButtonState =
           state.getAttributeValue(ATTR_PRESS) == BUTTON_PRESS_ACTIVE ? Value.FALSE : Value.TRUE;
       return data == null ? defaultButtonState : (Value) data.getValue();
     }
@@ -97,7 +97,7 @@ public class Button extends InstanceFactory {
     }
 
     private void setValue(InstanceState state, Value val) {
-      final var data = (InstanceDataSingleton) state.getData();
+      final com.cburch.logisim.instance.InstanceDataSingleton data = (InstanceDataSingleton) state.getData();
       if (data == null) {
         state.setData(new InstanceDataSingleton(val));
       } else {
@@ -162,13 +162,13 @@ public class Button extends InstanceFactory {
     } else if (attr == StdAttr.LABEL_LOC) {
       instance.computeLabelTextField(Instance.AVOID_CENTER | Instance.AVOID_LEFT);
     } else if (attr == ATTR_PRESS) {
-      final var instanceImplementation = instance.getComponent().getInstanceStateImpl();
+      final com.cburch.logisim.instance.InstanceStateImpl instanceImplementation = instance.getComponent().getInstanceStateImpl();
       if (instanceImplementation == null) return;
-      final var circuitState = instanceImplementation.getCircuitState();
+      final com.cburch.logisim.circuit.CircuitState circuitState = instanceImplementation.getCircuitState();
       if (circuitState == null) return;
-      final var state = circuitState.getInstanceState(instance.getComponent());
+      final com.cburch.logisim.instance.InstanceState state = circuitState.getInstanceState(instance.getComponent());
       if (state == null) return;
-      final var data = (InstanceDataSingleton) state.getData();
+      final com.cburch.logisim.instance.InstanceDataSingleton data = (InstanceDataSingleton) state.getData();
       if (data == null) {
         state.setData(
             new InstanceDataSingleton(
@@ -184,17 +184,17 @@ public class Button extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var defaultButtonState =
+    final com.cburch.logisim.data.Value defaultButtonState =
         painter.getAttributeValue(ATTR_PRESS) == BUTTON_PRESS_ACTIVE ? Value.FALSE : Value.TRUE;
-    final var bds = painter.getBounds();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
     int x = bds.getX();
     int y = bds.getY();
-    final var w = bds.getWidth();
-    final var h = bds.getHeight();
+    final int w = bds.getWidth();
+    final int h = bds.getHeight();
 
     Value val;
     if (painter.getShowState()) {
-      final var data = (InstanceDataSingleton) painter.getData();
+      final com.cburch.logisim.instance.InstanceDataSingleton data = (InstanceDataSingleton) painter.getData();
       val = data == null ? defaultButtonState : (Value) data.getValue();
     } else {
       val = defaultButtonState;
@@ -206,7 +206,7 @@ public class Button extends InstanceFactory {
       color = new Color(hue, hue, hue);
     }
 
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     int depress;
     if (val != defaultButtonState) {
       x += DEPTH;
@@ -222,7 +222,7 @@ public class Button extends InstanceFactory {
 
       Object facing = painter.getAttributeValue(StdAttr.FACING);
       if (facing == Direction.NORTH || facing == Direction.WEST) {
-        final var p = painter.getLocation();
+        final com.cburch.logisim.data.Location p = painter.getLocation();
         int px = p.getX();
         int py = p.getY();
         GraphicsUtil.switchToWidth(g, Wire.WIDTH);
@@ -258,10 +258,10 @@ public class Button extends InstanceFactory {
 
   @Override
   public void propagate(InstanceState state) {
-    final var data = (InstanceDataSingleton) state.getData();
-    final var defaultButtonState =
+    final com.cburch.logisim.instance.InstanceDataSingleton data = (InstanceDataSingleton) state.getData();
+    final com.cburch.logisim.data.Value defaultButtonState =
         state.getAttributeValue(ATTR_PRESS) == BUTTON_PRESS_ACTIVE ? Value.FALSE : Value.TRUE;
-    final var val = data == null ? defaultButtonState : (Value) data.getValue();
+    final com.cburch.logisim.data.Value val = data == null ? defaultButtonState : (Value) data.getValue();
     state.setPort(0, val, 1);
   }
 }

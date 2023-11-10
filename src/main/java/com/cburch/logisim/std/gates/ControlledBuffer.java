@@ -108,11 +108,11 @@ class ControlledBuffer extends InstanceFactory {
   }
 
   private void configurePorts(Instance instance) {
-    final var facing = instance.getAttributeValue(StdAttr.FACING);
-    final var bds = getOffsetBounds(instance.getAttributeSet());
+    final com.cburch.logisim.data.Direction facing = instance.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Bounds bds = getOffsetBounds(instance.getAttributeSet());
     int d = Math.max(bds.getWidth(), bds.getHeight()) - 20;
-    final var loc0 = Location.create(0, 0, true);
-    final var loc1 = loc0.translate(facing.reverse(), 20 + d);
+    final com.cburch.logisim.data.Location loc0 = Location.create(0, 0, true);
+    final com.cburch.logisim.data.Location loc1 = loc0.translate(facing.reverse(), 20 + d);
     Location loc2;
     if (instance.getAttributeValue(ATTR_CONTROL) == LEFT_HANDED) {
       loc2 = loc0.translate(facing.reverse(), 10 + d, 10);
@@ -120,7 +120,7 @@ class ControlledBuffer extends InstanceFactory {
       loc2 = loc0.translate(facing.reverse(), 10 + d, -10);
     }
 
-    final var ports = new Port[3];
+    final com.cburch.logisim.instance.Port[] ports = new Port[3];
     ports[0] = new Port(0, 0, Port.OUTPUT, StdAttr.WIDTH);
     ports[1] = new Port(loc1.getX(), loc1.getY(), Port.INPUT, StdAttr.WIDTH);
     ports[2] = new Port(loc2.getX(), loc2.getY(), Port.INPUT, 1);
@@ -132,7 +132,7 @@ class ControlledBuffer extends InstanceFactory {
     if (key == WireRepair.class) {
       return (WireRepair)
           data -> {
-            final var port2 = instance.getPortLocation(2);
+            final com.cburch.logisim.data.Location port2 = instance.getPortLocation(2);
             return data.getPoint().equals(port2);
           };
     }
@@ -145,7 +145,7 @@ class ControlledBuffer extends InstanceFactory {
     if (isInverter && !NotGate.SIZE_NARROW.equals(attrs.getValue(NotGate.ATTR_SIZE))) {
       w = 30;
     }
-    final var facing = attrs.getValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Direction facing = attrs.getValue(StdAttr.FACING);
     if (facing == Direction.NORTH) return Bounds.create(-10, 0, 20, w);
     if (facing == Direction.SOUTH) return Bounds.create(-10, -w, 20, w);
     if (facing == Direction.WEST) return Bounds.create(0, -10, w, 20);
@@ -174,7 +174,7 @@ class ControlledBuffer extends InstanceFactory {
 
   @Override
   public void paintIcon(InstancePainter painter) {
-    final var g = (Graphics2D) painter.getGraphics();
+    final java.awt.Graphics2D g = (Graphics2D) painter.getGraphics();
     if (painter.getGateShape() == AppPreferences.SHAPE_RECTANGULAR)
       AbstractGate.paintIconIEC(g, "EN1", isInverter, false);
     else AbstractGate.paintIconBufferAnsi(g, isInverter, true);
@@ -182,13 +182,13 @@ class ControlledBuffer extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var face = painter.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Direction face = painter.getAttributeValue(StdAttr.FACING);
 
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
 
     // draw control wire
     GraphicsUtil.switchToWidth(g, 3);
-    final var pt0 = painter.getInstance().getPortLocation(2);
+    final com.cburch.logisim.data.Location pt0 = painter.getInstance().getPortLocation(2);
     Location pt1;
     if (painter.getAttributeValue(ATTR_CONTROL) == LEFT_HANDED) {
       pt1 = pt0.translate(face, 0, 6);
@@ -213,12 +213,12 @@ class ControlledBuffer extends InstanceFactory {
   }
 
   private void paintShape(InstancePainter painter) {
-    final var facing = painter.getAttributeValue(StdAttr.FACING);
-    final var loc = painter.getLocation();
-    final var x = loc.getX();
-    final var y = loc.getY();
+    final com.cburch.logisim.data.Direction facing = painter.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Location loc = painter.getLocation();
+    final int x = loc.getX();
+    final int y = loc.getY();
     double rotate = 0.0;
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     g.translate(x, y);
     if (facing != Direction.EAST && g instanceof Graphics2D) {
       rotate = -facing.toRadians();
@@ -229,9 +229,9 @@ class ControlledBuffer extends InstanceFactory {
       PainterShaped.paintNot(painter);
     } else {
       GraphicsUtil.switchToWidth(g, 2);
-      final var d = isInverter ? 10 : 0;
-      final var xp = new int[] {-d, -19 - d, -19 - d, -d};
-      final var yp = new int[] {0, -7, 7, 0};
+      final int d = isInverter ? 10 : 0;
+      final int[] xp = new int[] {-d, -19 - d, -19 - d, -d};
+      final int[] yp = new int[] {0, -7, 7, 0};
       g.drawPolyline(xp, yp, 4);
     }
 
@@ -243,10 +243,10 @@ class ControlledBuffer extends InstanceFactory {
 
   @Override
   public void propagate(InstanceState state) {
-    final var control = state.getPortValue(2);
-    final var width = state.getAttributeValue(StdAttr.WIDTH);
+    final com.cburch.logisim.data.Value control = state.getPortValue(2);
+    final com.cburch.logisim.data.BitWidth width = state.getAttributeValue(StdAttr.WIDTH);
     if (control == Value.TRUE) {
-      final var in = state.getPortValue(1);
+      final com.cburch.logisim.data.Value in = state.getPortValue(1);
       /* in cannot passed directly, as the simulator would pass an u at the input to an u at the output.
        * Doing double inversion is the correct way to resolve this problem.
        */
@@ -256,7 +256,7 @@ class ControlledBuffer extends InstanceFactory {
     } else {
       Value out;
       if (control == Value.UNKNOWN || control == Value.NIL) {
-        final var opts = state.getProject().getOptions().getAttributeSet();
+        final com.cburch.logisim.data.AttributeSet opts = state.getProject().getOptions().getAttributeSet();
         if (opts.getValue(Options.ATTR_GATE_UNDEFINED).equals(Options.GATE_UNDEFINED_ERROR)) {
           out = Value.createError(width);
         } else {

@@ -69,13 +69,13 @@ public class Slider extends InstanceFactory {
 
     @Override
     public void mousePressed(InstanceState state, MouseEvent e) {
-      final var data = (SliderValue) state.getData();
-      final var sliderPosition =
+      final com.cburch.logisim.std.io.extra.Slider.SliderValue data = (SliderValue) state.getData();
+      final int sliderPosition =
           (data != null)
               ? data.getSliderPosition()
               : state.getAttributeValue(ATTR_DIR) == RIGHT_TO_LEFT ? MAXIMUM_SLIDER_POSITION : 0;
-      final var bounds = state.getInstance().getBounds();
-      final var slider =
+      final com.cburch.logisim.data.Bounds bounds = state.getInstance().getBounds();
+      final java.awt.Rectangle slider =
           new Rectangle(
               bounds.getX() + sliderPosition + 5, bounds.getY() + bounds.getHeight() - 16, 12, 12);
       // check if clicking slider rectangle
@@ -103,7 +103,7 @@ public class Slider extends InstanceFactory {
     }
 
     public int getCurrentValue() {
-      final var completeValue =
+      final int completeValue =
           rightToLeft ? (MAXIMUM_SLIDER_POSITION - sliderPosition) : sliderPosition;
       return completeValue >> (MAXIMUM_NUMBER_OF_BITS - nrOfBits);
     }
@@ -171,8 +171,8 @@ public class Slider extends InstanceFactory {
   }
 
   private void computeTextField(Instance instance) {
-    final var isWestOrientated = instance.getAttributeValue(StdAttr.FACING) == Direction.WEST;
-    final var bounds = instance.getBounds();
+    final boolean isWestOrientated = instance.getAttributeValue(StdAttr.FACING) == Direction.WEST;
+    final com.cburch.logisim.data.Bounds bounds = instance.getBounds();
     instance.setTextField(
         StdAttr.LABEL,
         StdAttr.LABEL_FONT,
@@ -191,9 +191,9 @@ public class Slider extends InstanceFactory {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    final var facing = attrs.getValue(StdAttr.FACING);
-    final var width = MAXIMUM_SLIDER_POSITION + 20;
-    final var height = 30;
+    final com.cburch.logisim.data.Direction facing = attrs.getValue(StdAttr.FACING);
+    final int width = MAXIMUM_SLIDER_POSITION + 20;
+    final int height = 30;
     if (facing == Direction.EAST) return Bounds.create(-width, -height / 2, width, height);
     else if (facing == Direction.WEST) return Bounds.create(0, -height / 2, width, height);
     else if (facing == Direction.NORTH) return Bounds.create(-width / 2, 0, width, height);
@@ -216,12 +216,12 @@ public class Slider extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var gfx = (Graphics2D) painter.getGraphics();
-    final var bounds = painter.getBounds();
-    final var data = (SliderValue) painter.getData();
-    final var posX = bounds.getX();
-    final var posY = bounds.getY();
-    final var sliderPosition =
+    final java.awt.Graphics2D gfx = (Graphics2D) painter.getGraphics();
+    final com.cburch.logisim.data.Bounds bounds = painter.getBounds();
+    final com.cburch.logisim.std.io.extra.Slider.SliderValue data = (SliderValue) painter.getData();
+    final int posX = bounds.getX();
+    final int posY = bounds.getY();
+    final int sliderPosition =
         (data != null)
             ? data.getSliderPosition()
             : (painter.getAttributeValue(ATTR_DIR) == RIGHT_TO_LEFT) ? MAXIMUM_SLIDER_POSITION : 0;
@@ -252,8 +252,8 @@ public class Slider extends InstanceFactory {
 
   @Override
   public void propagate(InstanceState state) {
-    final var data = (SliderValue) state.getData();
-    final var bitWidth = state.getAttributeValue(WIDTH);
+    final com.cburch.logisim.std.io.extra.Slider.SliderValue data = (SliderValue) state.getData();
+    final com.cburch.logisim.data.BitWidth bitWidth = state.getAttributeValue(WIDTH);
     int sliderValue = 0;
     if (data != null) {
       data.setDirection(state.getAttributeValue(ATTR_DIR) == RIGHT_TO_LEFT);

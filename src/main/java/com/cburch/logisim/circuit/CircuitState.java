@@ -42,7 +42,7 @@ public class CircuitState implements InstanceData {
 
       if (action == CircuitEvent.ACTION_ADD) {
         /* Component was added */
-        final var comp = (Component) event.getData();
+        final com.cburch.logisim.comp.Component comp = (Component) event.getData();
         if (comp instanceof Wire wire) {
           markPointAsDirty(wire.getEnd0());
           markPointAsDirty(wire.getEnd1());
@@ -51,7 +51,7 @@ public class CircuitState implements InstanceData {
         }
       } else if (action == CircuitEvent.ACTION_REMOVE) {
         /* Component was removed */
-        final var comp = (Component) event.getData();
+        final com.cburch.logisim.comp.Component comp = (Component) event.getData();
         if (comp == temporaryClock) temporaryClock = null;
         if (comp.getFactory() instanceof Clock) {
           knownClocks = false; // just in case, will be recomputed by simulator
@@ -59,7 +59,7 @@ public class CircuitState implements InstanceData {
         if (comp.getFactory() instanceof SubcircuitFactory) {
           knownClocks = false; // just in case, will be recomputed by simulator
           // disconnect from tree
-          final var subState = (CircuitState) getData(comp);
+          final com.cburch.logisim.circuit.CircuitState subState = (CircuitState) getData(comp);
           if (subState != null && subState.parentComp == comp) {
             subStates.remove(subState);
             subState.parentState = null;
@@ -82,7 +82,7 @@ public class CircuitState implements InstanceData {
         knownClocks = false;
         subStates.clear();
         wireData = null;
-        for (final var comp : componentData.keySet()) {
+        for (final com.cburch.logisim.comp.Component comp : componentData.keySet()) {
           if (componentData.get(comp) instanceof ComponentDataGuiProvider dataGuiProvider)
             dataGuiProvider.destroy();
           else if (componentData.get(comp) instanceof CircuitState circuitState) {
@@ -95,7 +95,7 @@ public class CircuitState implements InstanceData {
         dirtyPoints.clear();
         causes.clear();
       } else if (action == CircuitEvent.ACTION_INVALIDATE) {
-        final var comp = (Component) event.getData();
+        final com.cburch.logisim.comp.Component comp = (Component) event.getData();
         markComponentAsDirty(comp);
         // If simulator is in single step mode, we want to hilight the
         // invalidated components (which are likely Pins, Buttons, or other
@@ -103,14 +103,14 @@ public class CircuitState implements InstanceData {
         proj.getSimulator().addPendingInput(CircuitState.this, comp);
         // TODO detemine if this should really be missing if (base != null) base.checkComponentEnds(CircuitState.this, comp);
       } else if (action == CircuitEvent.TRANSACTION_DONE) {
-        final var map = event.getResult().getReplacementMap(circuit);
+        final com.cburch.logisim.circuit.ReplacementMap map = event.getResult().getReplacementMap(circuit);
         if (map == null) return;
-        for (final var comp : map.getRemovals()) {
-          final var compState = componentData.remove(comp);
+        for (final com.cburch.logisim.comp.Component comp : map.getRemovals()) {
+          final java.lang.Object compState = componentData.remove(comp);
           if (compState != null) continue;
           Class<?> compFactory = comp.getFactory().getClass();
           boolean found = false;
-          for (final var repl : map.getReplacementsFor(comp)) {
+          for (final com.cburch.logisim.comp.Component repl : map.getReplacementsFor(comp)) {
             if (repl.getFactory().getClass() == compFactory) {
               found = true;
               setData(repl, compState);
@@ -159,7 +159,7 @@ public class CircuitState implements InstanceData {
   }
 
   public CircuitState cloneState() {
-    final var ret = new CircuitState(proj, circuit);
+    final com.cburch.logisim.circuit.CircuitState ret = new CircuitState(proj, circuit);
     ret.copyFrom(this, new Propagator(ret));
     ret.parentComp = null;
     ret.parentState = null;
@@ -174,29 +174,29 @@ public class CircuitState implements InstanceData {
     this.base = base;
     this.parentComp = src.parentComp;
     this.parentState = src.parentState;
-    final var substateData = new HashMap<CircuitState, CircuitState>();
+    final java.util.HashMap<com.cburch.logisim.circuit.CircuitState,com.cburch.logisim.circuit.CircuitState> substateData = new HashMap<CircuitState, CircuitState>();
     this.subStates = new HashSet<>();
-    for (final var oldSub : src.subStates) {
-      final var newSub = new CircuitState(src.proj, oldSub.circuit);
+    for (final com.cburch.logisim.circuit.CircuitState oldSub : src.subStates) {
+      final com.cburch.logisim.circuit.CircuitState newSub = new CircuitState(src.proj, oldSub.circuit);
       newSub.copyFrom(oldSub, base);
       newSub.parentState = this;
       this.subStates.add(newSub);
       substateData.put(oldSub, newSub);
     }
-    for (final var key : src.componentData.keySet()) {
-      final var oldValue = src.componentData.get(key);
+    for (final com.cburch.logisim.comp.Component key : src.componentData.keySet()) {
+      final java.lang.Object oldValue = src.componentData.get(key);
       if (oldValue instanceof CircuitState) {
-        final var newValue = substateData.get(oldValue);
+        final com.cburch.logisim.circuit.CircuitState newValue = substateData.get(oldValue);
         if (newValue != null) this.componentData.put(key, newValue);
         else this.componentData.remove(key);
       } else {
-        final var newValue = (oldValue instanceof ComponentState state) ? state.clone() : oldValue;
+        final java.lang.Object newValue = (oldValue instanceof ComponentState state) ? state.clone() : oldValue;
         this.componentData.put(key, newValue);
       }
     }
-    for (final var key : src.causes.keySet()) {
-      final var oldValue = src.causes.get(key);
-      final var newValue = oldValue.cloneFor(this);
+    for (final com.cburch.logisim.data.Location key : src.causes.keySet()) {
+      final com.cburch.logisim.circuit.Propagator.SetData oldValue = src.causes.get(key);
+      final com.cburch.logisim.circuit.Propagator.SetData newValue = oldValue.cloneFor(this);
       this.causes.put(key, newValue);
     }
     if (src.wireData != null) {
@@ -220,7 +220,7 @@ public class CircuitState implements InstanceData {
 
   Value getComponentOutputAt(Location p) {
     // for CircuitWires - to get values, ignoring wires' contributions
-    final var causeList = causes.get(p);
+    final com.cburch.logisim.circuit.Propagator.SetData causeList = causes.get(p);
     return Propagator.computeValue(causeList);
   }
 
@@ -229,7 +229,7 @@ public class CircuitState implements InstanceData {
   }
 
   public InstanceState getInstanceState(Component comp) {
-    final var factory = comp.getFactory();
+    final com.cburch.logisim.comp.ComponentFactory factory = comp.getFactory();
     if (factory instanceof InstanceFactory instanceFactory) {
       return instanceFactory.createInstanceState(this, comp);
     }
@@ -237,7 +237,7 @@ public class CircuitState implements InstanceData {
   }
 
   public InstanceState getInstanceState(Instance instance) {
-    final var factory = instance.getFactory();
+    final com.cburch.logisim.instance.InstanceFactory factory = instance.getFactory();
     if (factory instanceof InstanceFactory) {
       return factory.createInstanceState(this, instance);
     }
@@ -269,10 +269,10 @@ public class CircuitState implements InstanceData {
   }
 
   public Value getValue(Location pt) {
-    final var ret = values.get(pt);
+    final com.cburch.logisim.data.Value ret = values.get(pt);
     if (ret != null) return ret;
 
-    final var wid = circuit.getWidth(pt);
+    final com.cburch.logisim.data.BitWidth wid = circuit.getWidth(pt);
     return Value.createUnknown(wid);
   }
 
@@ -302,7 +302,7 @@ public class CircuitState implements InstanceData {
     try {
       dirtyComponents.add(comp);
     } catch (RuntimeException e) {
-      final var set = new CopyOnWriteArraySet<Component>();
+      final java.util.concurrent.CopyOnWriteArraySet<com.cburch.logisim.comp.Component> set = new CopyOnWriteArraySet<Component>();
       set.add(comp);
       dirtyComponents = set;
     }
@@ -336,7 +336,7 @@ public class CircuitState implements InstanceData {
         }
       }
       dirtyComponents.clear();
-      for (final var compObj : toProcess) {
+      for (final java.lang.Object compObj : toProcess) {
         if (compObj instanceof Component comp) {
           comp.propagate(this);
           if (comp.getFactory() instanceof Pin && parentState != null) {
@@ -347,14 +347,14 @@ public class CircuitState implements InstanceData {
       }
     }
 
-    final var subs = new CircuitState[subStates.size()];
-    for (final var substate : subStates.toArray(subs)) {
+    final com.cburch.logisim.circuit.CircuitState[] subs = new CircuitState[subStates.size()];
+    for (final com.cburch.logisim.circuit.CircuitState substate : subStates.toArray(subs)) {
       substate.processDirtyComponents();
     }
   }
 
   void processDirtyPoints() {
-    final var dirty = new HashSet<>(dirtyPoints);
+    final java.util.HashSet<com.cburch.logisim.data.Location> dirty = new HashSet<>(dirtyPoints);
     dirtyPoints.clear();
     if (circuit.wires.isMapVoided()) {
       for (int i = 3; i >= 0; i--) {
@@ -375,8 +375,8 @@ public class CircuitState implements InstanceData {
       circuit.wires.propagate(this, dirty);
     }
 
-    final var subs = new CircuitState[subStates.size()];
-    for (final var substate : subStates.toArray(subs)) {
+    final com.cburch.logisim.circuit.CircuitState[] subs = new CircuitState[subStates.size()];
+    for (final com.cburch.logisim.circuit.CircuitState substate : subStates.toArray(subs)) {
       /* TODO: Analyze why this bug happens, e.g. a substate that is null! */
       if (substate != null) substate.processDirtyPoints();
     }
@@ -385,9 +385,9 @@ public class CircuitState implements InstanceData {
   void reset() {
     temporaryClock = null;
     wireData = null;
-    for (final var comp : componentData.keySet()) {
+    for (final com.cburch.logisim.comp.Component comp : componentData.keySet()) {
       if (comp.getFactory() instanceof Ram ram) {
-        final var remove = ram.reset(this, Instance.getInstanceFor(comp));
+        final boolean remove = ram.reset(this, Instance.getInstanceFor(comp));
         if (remove) componentData.put(comp, null);
       } else if (comp.getFactory() instanceof Buzzer) {
         Buzzer.stopBuzzerSound(comp, this);
@@ -412,7 +412,7 @@ public class CircuitState implements InstanceData {
 
   public void setData(Component comp, Object data) {
     if (data instanceof CircuitState newState) {
-      final var oldState = (CircuitState) componentData.get(comp);
+      final com.cburch.logisim.circuit.CircuitState oldState = (CircuitState) componentData.get(comp);
       if (oldState != newState) {
         // There's something new going on with this subcircuit.
         // Maybe the subcircuit is new, or perhaps it's being
@@ -449,15 +449,15 @@ public class CircuitState implements InstanceData {
     // for CircuitWires - to set value at point
     boolean changed;
     if (v == Value.NIL) {
-      final var old = values.remove(p);
+      final com.cburch.logisim.data.Value old = values.remove(p);
       changed = (old != null && old != Value.NIL);
     } else {
-      final var old = values.put(p, v);
+      final com.cburch.logisim.data.Value old = values.put(p, v);
       changed = !v.equals(old);
     }
     if (changed) {
       boolean found = false;
-      for (final var comp : circuit.getComponents(p)) {
+      for (final com.cburch.logisim.comp.Component comp : circuit.getComponents(p)) {
         if (!(comp instanceof Wire) && !(comp instanceof Splitter)) {
           found = true;
           markComponentAsDirty(comp);
@@ -479,11 +479,11 @@ public class CircuitState implements InstanceData {
     if (temporaryClock != null)
       ret |= temporaryClockValidateOrTick(ticks);
 
-    for (final var clock : circuit.getClocks())
+    for (final com.cburch.logisim.comp.Component clock : circuit.getClocks())
       ret |= Clock.tick(this, ticks, clock);
 
-    final var subs = new CircuitState[subStates.size()];
-    for (final var substate : subStates.toArray(subs))
+    final com.cburch.logisim.circuit.CircuitState[] subs = new CircuitState[subStates.size()];
+    for (final com.cburch.logisim.circuit.CircuitState substate : subStates.toArray(subs))
       ret |= substate.toggleClocks(ticks);
     return ret;
   }
@@ -491,14 +491,14 @@ public class CircuitState implements InstanceData {
   private boolean temporaryClockValidateOrTick(int ticks) {
     // temporaryClock.getFactory() will be Pin, normally a 1 bit input
     try {
-      final var pin = (Pin) temporaryClock.getFactory();
-      final var instance = Instance.getInstanceFor(temporaryClock);
+      final com.cburch.logisim.std.wiring.Pin pin = (Pin) temporaryClock.getFactory();
+      final com.cburch.logisim.instance.Instance instance = Instance.getInstanceFor(temporaryClock);
       if (instance == null || !pin.isInputPin(instance) || pin.getWidth(instance).getWidth() != 1) {
         temporaryClock = null;
         return false;
       }
       if (ticks >= 0) {
-        final var state = getInstanceState(instance);
+        final com.cburch.logisim.instance.InstanceState state = getInstanceState(instance);
         pin.setValue(state, ticks % 2 == 0 ? Value.FALSE : Value.TRUE);
         state.fireInvalidated();
       }

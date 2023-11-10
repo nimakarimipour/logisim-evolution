@@ -32,14 +32,14 @@ public class BinToBcdHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public void getGenerationTimeWiresPorts(Netlist theNetlist, AttributeSet attrs) {
-    final var nrOfBits = attrs.getValue(BinToBcd.ATTR_BinBits);
-    final var nrOfPorts = (int) (Math.log10(1 << nrOfBits.getWidth()) + 1.0);
-    final var nrOfSignalBits = switch (nrOfPorts) {
+    final com.cburch.logisim.data.BitWidth nrOfBits = attrs.getValue(BinToBcd.ATTR_BinBits);
+    final int nrOfPorts = (int) (Math.log10(1 << nrOfBits.getWidth()) + 1.0);
+    final int nrOfSignalBits = switch (nrOfPorts) {
       case 2 -> 7;
       case 3 -> 11;
       default -> 16;
     };
-    final var nrOfSignals = switch (nrOfPorts) {
+    final int nrOfSignals = switch (nrOfPorts) {
       case 2 -> 4;
       case 3 -> 7;
       default -> 11;
@@ -58,10 +58,10 @@ public class BinToBcdHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist netlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getBuffer()
             .pair("nrOfBits", NR_OF_BITS_STR);
-    final var nrOfBits = attrs.getValue(BinToBcd.ATTR_BinBits);
-    final var nrOfPorts = (int) (Math.log10(1 << nrOfBits.getWidth()) + 1.0);
+    final com.cburch.logisim.data.BitWidth nrOfBits = attrs.getValue(BinToBcd.ATTR_BinBits);
+    final int nrOfPorts = (int) (Math.log10(1 << nrOfBits.getWidth()) + 1.0);
     if (Hdl.isVhdl()) {
       contents.empty().addVhdlKeywords();
       switch (nrOfPorts) {

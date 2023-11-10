@@ -32,15 +32,15 @@ public class ShowStateIcon extends BaseIcon {
     }
     gfx.setColor(Color.BLACK);
     gfx.drawRect(0, 0, getIconWidth(), getIconHeight() / 2);
-    final var font = gfx.getFont().deriveFont((float) getIconWidth() / (float) 2);
-    final var textLayout = new TextLayout("101", font, gfx.getFontRenderContext());
+    final java.awt.Font font = gfx.getFont().deriveFont((float) getIconWidth() / (float) 2);
+    final java.awt.font.TextLayout textLayout = new TextLayout("101", font, gfx.getFontRenderContext());
     textLayout.draw(
         gfx,
         (float) ((double) getIconWidth() / 2.0 - textLayout.getBounds().getCenterX()),
         (float) ((double) getIconHeight() / 4.0 - textLayout.getBounds().getCenterY()));
-    final var iconBorder = AppPreferences.ICON_BORDER;
-    final var wh = AppPreferences.getScaled(AppPreferences.IconSize / 2 - iconBorder);
-    final var offset = AppPreferences.getScaled(iconBorder);
+    final int iconBorder = AppPreferences.ICON_BORDER;
+    final int wh = AppPreferences.getScaled(AppPreferences.IconSize / 2 - iconBorder);
+    final int offset = AppPreferences.getScaled(iconBorder);
     gfx.setColor(Color.RED);
     gfx.fillOval(offset, offset + getIconHeight() / 2, wh, wh);
     gfx.setColor(Color.GREEN);

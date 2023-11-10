@@ -87,7 +87,7 @@ public class ProjectCircuitActions {
   }
 
   public static void doAddCircuit(Project proj) {
-    final var name = promptForCircuitName(proj.getFrame(), proj.getLogisimFile(), "");
+    final java.lang.String name = promptForCircuitName(proj.getFrame(), proj.getLogisimFile(), "");
     if (name != null) {
       JLabel error = null;
       /* Checking for valid names */
@@ -104,7 +104,7 @@ public class ProjectCircuitActions {
         OptionPane.showMessageDialog(
             proj.getFrame(), error, S.get("circuitCreateTitle"), OptionPane.ERROR_MESSAGE);
       } else {
-        final var circuit = new Circuit(name, proj.getLogisimFile(), proj);
+        final com.cburch.logisim.circuit.Circuit circuit = new Circuit(name, proj.getLogisimFile(), proj);
         proj.doAction(LogisimFileActions.addCircuit(circuit));
         proj.setCurrentCircuit(circuit);
       }
@@ -122,19 +122,19 @@ public class ProjectCircuitActions {
   }
 
   private static boolean nameIsInLibraries(Library lib, String name) {
-    for (final var myLib : lib.getLibraries()) {
+    for (final com.cburch.logisim.tools.Library myLib : lib.getLibraries()) {
       if (nameIsInLibraries(myLib, name)) return true;
     }
-    for (final var myTool : lib.getTools()) {
+    for (final com.cburch.logisim.tools.Tool myTool : lib.getTools()) {
       if (name.equalsIgnoreCase(myTool.getName())) return true;
     }
     return false;
   }
 
   public static void doAddVhdl(Project proj) {
-    final var name = promptForVhdlName(proj.getFrame(), proj.getLogisimFile(), "");
+    final java.lang.String name = promptForVhdlName(proj.getFrame(), proj.getLogisimFile(), "");
     if (name != null) {
-      final var content = VhdlContent.create(name, proj.getLogisimFile());
+      final com.cburch.logisim.vhdl.base.VhdlContent content = VhdlContent.create(name, proj.getLogisimFile());
       if (content != null) {
         proj.doAction(LogisimFileActions.addVhdl(content));
         proj.setCurrentHdlModel(content);
@@ -143,10 +143,10 @@ public class ProjectCircuitActions {
   }
 
   public static void doImportVhdl(Project proj) {
-    final var vhdl = proj.getLogisimFile().getLoader().vhdlImportChooser(proj.getFrame());
+    final java.lang.String vhdl = proj.getLogisimFile().getLoader().vhdlImportChooser(proj.getFrame());
     if (vhdl == null) return;
 
-    final var content = VhdlContent.parse(null, vhdl, proj.getLogisimFile());
+    final com.cburch.logisim.vhdl.base.VhdlContent content = VhdlContent.parse(null, vhdl, proj.getLogisimFile());
     if (content != null) return;
     if (VhdlContent.labelVHDLInvalidNotify(content.getName(), proj.getLogisimFile())) return;
 
@@ -155,16 +155,16 @@ public class ProjectCircuitActions {
   }
 
   public static void doAnalyze(Project proj, Circuit circuit) {
-    final var pinNames = Analyze.getPinLabels(circuit);
-    final var inputVars = new ArrayList<Var>();
-    final var outputVars = new ArrayList<Var>();
+    final java.util.SortedMap<com.cburch.logisim.instance.Instance,java.lang.String> pinNames = Analyze.getPinLabels(circuit);
+    final java.util.ArrayList<com.cburch.logisim.analyze.model.Var> inputVars = new ArrayList<Var>();
+    final java.util.ArrayList<com.cburch.logisim.analyze.model.Var> outputVars = new ArrayList<Var>();
     int numInputs = 0;
     int numOutputs = 0;
-    for (final var entry : pinNames.entrySet()) {
-      final var pin = entry.getKey();
-      final var isInput = Pin.FACTORY.isInputPin(pin);
-      final var width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
-      final var v = new Var(entry.getValue(), width);
+    for (final java.util.Map.Entry<com.cburch.logisim.instance.Instance,java.lang.String> entry : pinNames.entrySet()) {
+      final com.cburch.logisim.instance.Instance pin = entry.getKey();
+      final boolean isInput = Pin.FACTORY.isInputPin(pin);
+      final int width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
+      final com.cburch.logisim.analyze.model.Var v = new Var(entry.getValue(), width);
       if (isInput) {
         inputVars.add(v);
         numInputs += width;
@@ -182,7 +182,7 @@ public class ProjectCircuitActions {
       return;
     }
 
-    final var analyzer = AnalyzerManager.getAnalyzer(proj.getFrame());
+    final com.cburch.logisim.analyze.gui.Analyzer analyzer = AnalyzerManager.getAnalyzer(proj.getFrame());
     analyzer.getModel().setCurrentCircuit(proj, circuit);
     configureAnalyzer(proj, circuit, analyzer, pinNames, inputVars, outputVars);
     if (!analyzer.isVisible()) {
@@ -192,11 +192,11 @@ public class ProjectCircuitActions {
   }
 
   public static void doMoveCircuit(Project proj, Circuit cur, int delta) {
-    final var tool = proj.getLogisimFile().getAddTool(cur);
+    final com.cburch.logisim.tools.AddTool tool = proj.getLogisimFile().getAddTool(cur);
     if (tool != null) {
-      final var oldPos = proj.getLogisimFile().indexOfCircuit(cur);
-      final var newPos = oldPos + delta;
-      final var toolsCount = proj.getLogisimFile().getTools().size();
+      final int oldPos = proj.getLogisimFile().indexOfCircuit(cur);
+      final int newPos = oldPos + delta;
+      final int toolsCount = proj.getLogisimFile().getTools().size();
       if (newPos >= 0 && newPos < toolsCount) {
         proj.doAction(LogisimFileActions.moveCircuit(tool, newPos));
       }
@@ -250,7 +250,7 @@ public class ProjectCircuitActions {
   }
 
   private static String promptForVhdlName(JFrame frame, LogisimFile file, String initialValue) {
-    final var name = promptForNewName(frame, file, initialValue, true);
+    final java.lang.String name = promptForNewName(frame, file, initialValue, true);
     if (name == null) return null;
     if (VhdlContent.labelVHDLInvalidNotify(name, file)) return null;
     return name;
@@ -267,32 +267,32 @@ public class ProjectCircuitActions {
       title = S.get("circuitNameDialogTitle");
       prompt = S.get("circuitNamePrompt");
     }
-    final var field = new JTextField(15);
+    final javax.swing.JTextField field = new JTextField(15);
     field.setText(initialValue);
-    final var gb = new GridBagLayout();
-    final var gc = new GridBagConstraints();
-    final var strut = new JPanel(null);
+    final java.awt.GridBagLayout gb = new GridBagLayout();
+    final java.awt.GridBagConstraints gc = new GridBagConstraints();
+    final javax.swing.JPanel strut = new JPanel(null);
     strut.setPreferredSize(new Dimension(3 * field.getPreferredSize().width / 2, 0));
     gc.gridx = 0;
     gc.gridy = GridBagConstraints.RELATIVE;
     gc.weightx = 1.0;
     gc.fill = GridBagConstraints.NONE;
     gc.anchor = GridBagConstraints.LINE_START;
-    final var label = new JLabel(prompt);
+    final javax.swing.JLabel label = new JLabel(prompt);
     gb.setConstraints(label, gc);
-    final var panel = new JPanel(gb);
+    final javax.swing.JPanel panel = new JPanel(gb);
     panel.add(label);
     gb.setConstraints(field, gc);
     panel.add(field);
-    final var error = new JLabel(" ");
+    final javax.swing.JLabel error = new JLabel(" ");
     gb.setConstraints(error, gc);
     panel.add(error);
     gb.setConstraints(strut, gc);
     panel.add(strut);
-    final var pane =
+    final javax.swing.JOptionPane pane =
         new JOptionPane(panel, OptionPane.QUESTION_MESSAGE, OptionPane.OK_CANCEL_OPTION);
     pane.setInitialValue(field);
-    final var dlog = pane.createDialog(frame, title);
+    final javax.swing.JDialog dlog = pane.createDialog(frame, title);
     dlog.addWindowFocusListener(
         new BaseWindowFocusListenerContract() {
           @Override
@@ -306,7 +306,7 @@ public class ProjectCircuitActions {
     dlog.setVisible(true);
     field.requestFocusInWindow();
 
-    final var action = pane.getValue();
+    final java.lang.Object action = pane.getValue();
     if (!(action instanceof Integer) || (Integer) action != OptionPane.OK_OPTION) {
       return null;
     }

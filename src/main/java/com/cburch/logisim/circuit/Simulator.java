@@ -330,8 +330,8 @@ public class Simulator {
         try {
           sim.firePropagationStarted(ticked); // FIXME: ack, wrong thread!
           propagated = doProp;
-          final var p = sim.getPropagationListener();
-          final var evt = p == null ? null : new Event(sim, false, false, false);
+          final com.cburch.logisim.circuit.Simulator.Listener p = sim.getPropagationListener();
+          final com.cburch.logisim.circuit.Simulator.Event evt = p == null ? null : new Event(sim, false, false, false);
           stepPoints.clear();
           if (prop != null) propagated |= prop.propagate(p, evt);
         } catch (Exception err) {
@@ -465,20 +465,20 @@ public class Simulator {
 
   // called from simThread, but probably should not be
   private void fireSimulatorReset() {
-    final var event = new Event(this, false, false, false);
-    for (final var listener : copyListeners()) listener.simulatorReset(event);
+    final com.cburch.logisim.circuit.Simulator.Event event = new Event(this, false, false, false);
+    for (final com.cburch.logisim.circuit.Simulator.Listener listener : copyListeners()) listener.simulatorReset(event);
   }
 
   // called from simThread, but probably should not be
   private void firePropagationStarted(boolean t) {
-    final var e = new Event(this, t, false, false);
-    for (final var l : copyListeners()) l.propagationStarted(e);
+    final com.cburch.logisim.circuit.Simulator.Event e = new Event(this, t, false, false);
+    for (final com.cburch.logisim.circuit.Simulator.Listener l : copyListeners()) l.propagationStarted(e);
   }
 
   // called from simThread, but probably should not be
   private void firePropagationCompleted(boolean t, boolean s, boolean p) {
-    final var event = new Event(this, t, s, p);
-    for (final var listener : copyListeners()) {
+    final com.cburch.logisim.circuit.Simulator.Event event = new Event(this, t, s, p);
+    for (final com.cburch.logisim.circuit.Simulator.Listener listener : copyListeners()) {
       listener.propagationCompleted(event);
     }
   }
@@ -486,7 +486,7 @@ public class Simulator {
   // called from simThread, but probably should not be
   private Listener getPropagationListener() {
     Listener propagationListener = null;
-    for (final var listener : copyListeners()) {
+    for (final com.cburch.logisim.circuit.Simulator.Listener listener : copyListeners()) {
       if (listener.wantProgressEvents()) {
         if (propagationListener != null)
           throw new IllegalStateException("Only one chronogram listener supported");
@@ -499,8 +499,8 @@ public class Simulator {
   // called only from gui thread, but need copy here anyway because listeners
   // can add/remove from listeners list?
   private void fireSimulatorStateChanged() {
-    final var e = new Event(this, false, false, false);
-    for (final var l : copyListeners()) l.simulatorStateChanged(e);
+    final com.cburch.logisim.circuit.Simulator.Event e = new Event(this, false, false, false);
+    for (final com.cburch.logisim.circuit.Simulator.Listener l : copyListeners()) l.simulatorStateChanged(e);
   }
 
   public double getTickFrequency() {
@@ -512,12 +512,12 @@ public class Simulator {
   }
 
   public boolean isOscillating() {
-    final var prop = simThread.getPropagator();
+    final com.cburch.logisim.circuit.Propagator prop = simThread.getPropagator();
     return prop != null && prop.isOscillating();
   }
 
   public CircuitState getCircuitState() {
-    final var prop = simThread.getPropagator();
+    final com.cburch.logisim.circuit.Propagator prop = simThread.getPropagator();
     return prop == null ? null : prop.getRootState();
   }
 
@@ -544,7 +544,7 @@ public class Simulator {
   }
 
   public void setTickFrequency(double freq) {
-    final var circuitState = getCircuitState();
+    final com.cburch.logisim.circuit.CircuitState circuitState = getCircuitState();
     if (circuitState != null) circuitState.getCircuit().setTickFrequency(freq);
     if (simThread.setTickFrequency(freq)) fireSimulatorStateChanged();
   }
@@ -573,16 +573,16 @@ public class Simulator {
   }
 
   private boolean ensureClocks() {
-    final var cs = getCircuitState();
+    final com.cburch.logisim.circuit.CircuitState cs = getCircuitState();
     if (cs == null || cs.hasKnownClocks()) return true;
-    final var circ = cs.getCircuit();
-    final var clocks = ComponentSelector.findClocks(circ);
+    final com.cburch.logisim.circuit.Circuit circ = cs.getCircuit();
+    final java.util.ArrayList<com.cburch.logisim.gui.log.SignalInfo> clocks = ComponentSelector.findClocks(circ);
     if (CollectionUtil.isNotEmpty(clocks)) {
       cs.markKnownClocks();
       return true;
     }
 
-    final var clk = ClockSource.doClockDriverDialog(circ);
+    final com.cburch.logisim.comp.Component clk = ClockSource.doClockDriverDialog(circ);
     if (clk == null || !cs.setTemporaryClock(clk)) return false;
 
     fireSimulatorStateChanged();

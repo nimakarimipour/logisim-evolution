@@ -66,7 +66,7 @@ public class Ttl7442HdlGenerator extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist nets, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
     if (IsExes3) {
       contents.add("""
           {{assign}} O0 {{=}} {{not}}( {{not}}(D) {{and}} {{not}}(C) {{and}} B {{and}} A );

@@ -84,7 +84,7 @@ class GrayIncrementer extends InstanceFactory {
    * BitWidth objects.
    */
   static Value nextGray(Value prev) {
-    final var bits = prev.getBitWidth();
+    final com.cburch.logisim.data.BitWidth bits = prev.getBitWidth();
     if (!prev.isFullyDefined()) return Value.createError(bits);
     long x = prev.toLongValue();
     long ct = (x >> 32) ^ x; // compute parity of x
@@ -124,11 +124,11 @@ class GrayIncrementer extends InstanceFactory {
     // First we retrieve the value being fed into the input. Note that in
     // the setPorts invocation above, the component's input was included at
     // index 0 in the parameter array, so we use 0 as the parameter below.
-    final var in = state.getPortValue(0);
+    final com.cburch.logisim.data.Value in = state.getPortValue(0);
 
     // Now compute the output. We've farmed this out to a helper method,
     // since the same logic is needed for the library's other components.
-    final var out = nextGray(in);
+    final com.cburch.logisim.data.Value out = nextGray(in);
 
     // Finally we propagate the output into the circuit. The first parameter
     // is 1 because in our list of ports (configured by invocation of

@@ -29,7 +29,7 @@ public class DrawPolylineIcon extends BaseIcon {
   protected void paintIcon(Graphics2D gfx) {
     gfx.setStroke(new BasicStroke(AppPreferences.getScaled(2)));
     gfx.setColor(Color.BLUE.darker());
-    final var p = new GeneralPath();
+    final java.awt.geom.GeneralPath p = new GeneralPath();
     int i = 0;
     p.moveTo(AppPreferences.getScaled(points[i++]), AppPreferences.getScaled(points[i++]));
     for (; i < points.length - 1; i += 2) {
@@ -39,7 +39,7 @@ public class DrawPolylineIcon extends BaseIcon {
     gfx.draw(p);
     gfx.setStroke(new BasicStroke(AppPreferences.getScaled(1)));
     gfx.setColor(Color.GRAY);
-    final var wh = AppPreferences.getScaled(3);
+    final int wh = AppPreferences.getScaled(3);
     for (i = 0; i <= points.length - 1; i += 2)
       gfx.drawRect(
           AppPreferences.getScaled(points[i] - 1),

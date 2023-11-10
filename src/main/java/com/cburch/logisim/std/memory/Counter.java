@@ -101,10 +101,10 @@ public class Counter extends InstanceFactory implements DynamicElementProvider {
   }
 
   private void configurePorts(Instance instance) {
-    final var bds = instance.getBounds();
-    final var widthVal = instance.getAttributeValue(StdAttr.WIDTH);
-    final var width = widthVal == null ? 8 : widthVal.getWidth();
-    final var ps = new Port[8];
+    final com.cburch.logisim.data.Bounds bds = instance.getBounds();
+    final com.cburch.logisim.data.BitWidth widthVal = instance.getAttributeValue(StdAttr.WIDTH);
+    final int width = widthVal == null ? 8 : widthVal.getWidth();
+    final com.cburch.logisim.instance.Port[] ps = new Port[8];
     if (instance.getAttributeValue(StdAttr.APPEARANCE) == StdAttr.APPEAR_CLASSIC) {
       ps[OUT] = new Port(0, 0, Port.OUTPUT, StdAttr.WIDTH);
       ps[IN] = new Port(-30, 0, Port.INPUT, StdAttr.WIDTH);
@@ -153,19 +153,19 @@ public class Counter extends InstanceFactory implements DynamicElementProvider {
   }
 
   private void drawControl(InstancePainter painter, int xpos, int ypos) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     GraphicsUtil.switchToWidth(g, 2);
-    final var widthVal = painter.getAttributeValue(StdAttr.WIDTH);
-    final var width = widthVal == null ? 8 : widthVal.getWidth();
-    final var symbolWidth = getSymbolWidth(width);
+    final com.cburch.logisim.data.BitWidth widthVal = painter.getAttributeValue(StdAttr.WIDTH);
+    final int width = widthVal == null ? 8 : widthVal.getWidth();
+    final int symbolWidth = getSymbolWidth(width);
     // Draw top
-    final var controlTopx = new int[8];
+    final int[] controlTopx = new int[8];
     controlTopx[0] = controlTopx[1] = xpos + 30;
     controlTopx[2] = controlTopx[3] = xpos + 20;
     controlTopx[4] = controlTopx[5] = xpos + 20 + symbolWidth;
     controlTopx[6] = controlTopx[7] = xpos + 10 + symbolWidth;
 
-    final var controlTopy = new int[8];
+    final int[] controlTopy = new int[8];
     controlTopy[0] = controlTopy[7] = ypos + 110;
     controlTopy[1] = controlTopy[2] = controlTopy[5] = controlTopy[6] = ypos + 100;
     controlTopy[3] = controlTopy[4] = ypos;
@@ -179,7 +179,7 @@ public class Counter extends InstanceFactory implements DynamicElementProvider {
     boolean isCTRm = (max == painter.getAttributeValue(StdAttr.WIDTH).getMask());
     Object onGoal = painter.getAttributeValue(ATTR_ON_GOAL);
     isCTRm |= onGoal == ON_GOAL_CONT;
-    final var label =
+    final java.lang.String label =
         (isCTRm)
             ? "CTR" + painter.getAttributeValue(StdAttr.WIDTH).getWidth()
             : "CTR DIV0x" + Long.toHexString(max);
@@ -217,9 +217,9 @@ public class Counter extends InstanceFactory implements DynamicElementProvider {
         g, "G5", xpos + 30, ypos + 70, GraphicsUtil.H_LEFT, GraphicsUtil.V_CENTER);
     painter.drawPort(EN);
     /* Draw Clock */
-    final var inverted =
+    final boolean inverted =
         painter.getAttributeValue(StdAttr.EDGE_TRIGGER).equals(StdAttr.TRIG_FALLING);
-    final var xend = (inverted) ? xpos + 12 : xpos + 20;
+    final int xend = (inverted) ? xpos + 12 : xpos + 20;
     g.drawLine(xpos, ypos + 80, xend, ypos + 80);
     g.drawLine(xpos + 5, ypos + 90, xend, ypos + 90);
     g.drawLine(xpos + 5, ypos + 80, xpos + 5, ypos + 90);
@@ -260,9 +260,9 @@ public class Counter extends InstanceFactory implements DynamicElementProvider {
     /* Draw counter Value */
     RegisterData state = (RegisterData) painter.getData();
     if (painter.getShowState() && (state != null)) {
-      final var len = (width + 3) / 4;
-      final var xcenter = getSymbolWidth(width) - 25;
-      final var val = state.value;
+      final int len = (width + 3) / 4;
+      final int xcenter = getSymbolWidth(width) - 25;
+      final com.cburch.logisim.data.Value val = state.value;
       if (val.isFullyDefined()) g.setColor(Color.LIGHT_GRAY);
       else if (val.isErrorValue()) g.setColor(Color.RED);
       else g.setColor(Color.BLUE);
@@ -288,11 +288,11 @@ public class Counter extends InstanceFactory implements DynamicElementProvider {
   }
 
   private void drawDataBlock(InstancePainter painter, int xpos, int ypos, int bitNr, int nrOfBits) {
-    final var realYpos = ypos + bitNr * 20;
-    final var first = bitNr == 0;
-    final var last = bitNr == (nrOfBits - 1);
-    final var g = painter.getGraphics();
-    final var font = g.getFont();
+    final int realYpos = ypos + bitNr * 20;
+    final boolean first = bitNr == 0;
+    final boolean last = bitNr == (nrOfBits - 1);
+    final java.awt.Graphics g = painter.getGraphics();
+    final java.awt.Font font = g.getFont();
     g.setFont(font.deriveFont(7.0f));
     GraphicsUtil.switchToWidth(g, 2);
     g.drawRect(xpos + 20, realYpos, getSymbolWidth(nrOfBits), 20);
@@ -342,7 +342,7 @@ public class Counter extends InstanceFactory implements DynamicElementProvider {
     g.setFont(font);
     GraphicsUtil.drawText(
         g, "1,6D", xpos + 21, realYpos + 10, GraphicsUtil.H_LEFT, GraphicsUtil.V_CENTER);
-    final var LineWidth =
+    final int LineWidth =
         (nrOfBits == 1) ? GraphicsUtil.DATA_SINGLE_WIDTH : GraphicsUtil.DATA_MULTI_WIDTH;
     GraphicsUtil.switchToWidth(g, LineWidth);
     if (first) {
@@ -382,8 +382,8 @@ public class Counter extends InstanceFactory implements DynamicElementProvider {
     RegisterData state = (RegisterData) painter.getData();
     if (painter.getShowState() && (state != null)) {
       /* Here we draw the bit value */
-      final var val = state.value;
-      final var widthVal = painter.getAttributeValue(StdAttr.WIDTH);
+      final com.cburch.logisim.data.Value val = state.value;
+      final com.cburch.logisim.data.BitWidth widthVal = painter.getAttributeValue(StdAttr.WIDTH);
       int width = widthVal == null ? 8 : widthVal.getWidth();
       int xcenter = (getSymbolWidth(width) / 2) + 10;
       java.lang.String value = "";
@@ -418,8 +418,8 @@ public class Counter extends InstanceFactory implements DynamicElementProvider {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    final var widthVal = attrs.getValue(StdAttr.WIDTH);
-    final var width = widthVal == null ? 8 : widthVal.getWidth();
+    final com.cburch.logisim.data.BitWidth widthVal = attrs.getValue(StdAttr.WIDTH);
+    final int width = widthVal == null ? 8 : widthVal.getWidth();
     return (attrs.getValue(StdAttr.APPEARANCE) == StdAttr.APPEAR_CLASSIC)
         ? Bounds.create(-30, -20, 30, 40)
         : Bounds.create(0, 0, getSymbolWidth(width) + 40, 110 + 20 * width);
@@ -437,18 +437,18 @@ public class Counter extends InstanceFactory implements DynamicElementProvider {
   }
 
   public void drawCounterClassic(InstancePainter painter) {
-    final var g = painter.getGraphics();
-    final var bds = painter.getBounds();
-    final var state = (RegisterData) painter.getData();
-    final var widthVal = painter.getAttributeValue(StdAttr.WIDTH);
-    final var width = widthVal == null ? 8 : widthVal.getWidth();
+    final java.awt.Graphics g = painter.getGraphics();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+    final com.cburch.logisim.std.memory.RegisterData state = (RegisterData) painter.getData();
+    final com.cburch.logisim.data.BitWidth widthVal = painter.getAttributeValue(StdAttr.WIDTH);
+    final int width = widthVal == null ? 8 : widthVal.getWidth();
 
     // determine text to draw in label
     String a;
     String b = null;
     if (painter.getShowState()) {
-      final var val = state == null ? 0 : state.value.toLongValue();
-      final var str = StringUtil.toHexString(width, val);
+      final long val = state == null ? 0 : state.value.toLongValue();
+      final java.lang.String str = StringUtil.toHexString(width, val);
       if (str.length() <= 4) {
         a = str;
       } else {
@@ -500,13 +500,13 @@ public class Counter extends InstanceFactory implements DynamicElementProvider {
       drawCounterClassic(painter);
       return;
     }
-    final var Xpos = painter.getLocation().getX();
-    final var Ypos = painter.getLocation().getY();
+    final int Xpos = painter.getLocation().getX();
+    final int Ypos = painter.getLocation().getY();
     painter.drawLabel();
 
     drawControl(painter, Xpos, Ypos);
-    final var widthVal = painter.getAttributeValue(StdAttr.WIDTH);
-    final var width = widthVal == null ? 8 : widthVal.getWidth();
+    final com.cburch.logisim.data.BitWidth widthVal = painter.getAttributeValue(StdAttr.WIDTH);
+    final int width = widthVal == null ? 8 : widthVal.getWidth();
     for (int bit = 0; bit < width; bit++) {
       drawDataBlock(painter, Xpos, Ypos + 110, bit, width);
     }
@@ -520,11 +520,11 @@ public class Counter extends InstanceFactory implements DynamicElementProvider {
       state.setData(data);
     }
 
-    final var dataWidth = state.getAttributeValue(StdAttr.WIDTH);
+    final com.cburch.logisim.data.BitWidth dataWidth = state.getAttributeValue(StdAttr.WIDTH);
     Object triggerType = state.getAttributeValue(StdAttr.EDGE_TRIGGER);
-    final var max = new BigInteger(Long.toUnsignedString(state.getAttributeValue(ATTR_MAX)));
-    final var clock = state.getPortValue(CK);
-    final var triggered = data.updateClock(clock, triggerType);
+    final java.math.BigInteger max = new BigInteger(Long.toUnsignedString(state.getAttributeValue(ATTR_MAX)));
+    final com.cburch.logisim.data.Value clock = state.getPortValue(CK);
+    final boolean triggered = data.updateClock(clock, triggerType);
 
     Value newValue;
     boolean carry;
@@ -532,12 +532,12 @@ public class Counter extends InstanceFactory implements DynamicElementProvider {
       newValue = Value.createKnown(dataWidth, 0);
       carry = false;
     } else {
-      final var ld = state.getPortValue(LD) == Value.TRUE;
-      final var en = state.getPortValue(EN) != Value.FALSE;
-      final var UpCount = state.getPortValue(UD) != Value.FALSE;
-      final var oldVal = data.value;
-      final var oldValue = new BigInteger(Long.toUnsignedString(oldVal.toLongValue()));
-      final var loadValue =
+      final boolean ld = state.getPortValue(LD) == Value.TRUE;
+      final boolean en = state.getPortValue(EN) != Value.FALSE;
+      final boolean UpCount = state.getPortValue(UD) != Value.FALSE;
+      final com.cburch.logisim.data.Value oldVal = data.value;
+      final java.math.BigInteger oldValue = new BigInteger(Long.toUnsignedString(oldVal.toLongValue()));
+      final java.math.BigInteger loadValue =
           new BigInteger(Long.toUnsignedString(state.getPortValue(IN).toLongValue()));
       BigInteger newVal;
       if (!triggered) {
@@ -574,7 +574,7 @@ public class Counter extends InstanceFactory implements DynamicElementProvider {
           newVal == null
               ? Value.createError(dataWidth)
               : Value.createKnown(dataWidth, newVal.longValue());
-      final var compVal = (UpCount) ? max : BigInteger.ZERO;
+      final java.math.BigInteger compVal = (UpCount) ? max : BigInteger.ZERO;
       carry = newVal.compareTo(compVal) == 0;
       /*
        * I would want this if I were worried about the carry signal

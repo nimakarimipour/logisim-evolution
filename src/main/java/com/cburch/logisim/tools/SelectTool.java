@@ -141,7 +141,7 @@ public class SelectTool extends Tool {
 
 
   private void computeDxDy(Project proj, MouseEvent e, Graphics g) {
-    final var bds = proj.getSelection().getBounds(g);
+    final com.cburch.logisim.data.Bounds bds = proj.getSelection().getBounds(g);
     int dx;
     int dy;
     if (bds == Bounds.EMPTY_BOUNDS) {
@@ -152,7 +152,7 @@ public class SelectTool extends Tool {
       dy = Math.max(e.getY() - start.getY(), -bds.getY());
     }
 
-    final var sel = proj.getSelection();
+    final com.cburch.logisim.gui.main.Selection sel = proj.getSelection();
     if (sel.shouldSnap()) {
       dx = Canvas.snapXToGrid(dx);
       dy = Canvas.snapYToGrid(dy);
@@ -168,30 +168,30 @@ public class SelectTool extends Tool {
 
   @Override
   public void draw(Canvas canvas, ComponentDrawContext context) {
-    final var proj = canvas.getProject();
+    final com.cburch.logisim.proj.Project proj = canvas.getProject();
     int dx = curDx;
     int dy = curDy;
     if (state == MOVING) {
       proj.getSelection().drawGhostsShifted(context, dx, dy);
 
-      final var gesture = moveGesture;
+      final com.cburch.logisim.tools.move.MoveGesture gesture = moveGesture;
       if (gesture != null && drawConnections && (dx != 0 || dy != 0)) {
-        final var result = gesture.findResult(dx, dy);
+        final com.cburch.logisim.tools.move.MoveResult result = gesture.findResult(dx, dy);
         if (result != null) {
-          final var wiresToAdd = result.getWiresToAdd();
-          final var g = context.getGraphics();
+          final java.util.Collection<com.cburch.logisim.circuit.Wire> wiresToAdd = result.getWiresToAdd();
+          final java.awt.Graphics g = context.getGraphics();
           GraphicsUtil.switchToWidth(g, 3);
           g.setColor(Color.GRAY);
-          for (final var w : wiresToAdd) {
-            final var loc0 = w.getEnd0();
-            final var loc1 = w.getEnd1();
+          for (final com.cburch.logisim.circuit.Wire w : wiresToAdd) {
+            final com.cburch.logisim.data.Location loc0 = w.getEnd0();
+            final com.cburch.logisim.data.Location loc1 = w.getEnd1();
             g.drawLine(loc0.getX(), loc0.getY(), loc1.getX(), loc1.getY());
           }
           GraphicsUtil.switchToWidth(g, 1);
           g.setColor(COLOR_UNMATCHED);
-          for (final var conn : result.getUnconnectedLocations()) {
-            final var connX = conn.getX();
-            final var connY = conn.getY();
+          for (final com.cburch.logisim.data.Location conn : result.getUnconnectedLocations()) {
+            final int connX = conn.getX();
+            final int connY = conn.getY();
             g.fillOval(connX - 3, connY - 3, 6, 6);
             g.fillOval(connX + dx - 3, connY + dy - 3, 6, 6);
           }
@@ -213,7 +213,7 @@ public class SelectTool extends Tool {
         bot = i;
       }
 
-      final var gBase = context.getGraphics();
+      final java.awt.Graphics gBase = context.getGraphics();
       int w = right - left - 1;
       int h = bot - top - 1;
       if (w > 2 && h > 2) {
@@ -221,11 +221,11 @@ public class SelectTool extends Tool {
         gBase.fillRect(left + 1, top + 1, w - 1, h - 1);
       }
 
-      final var circ = canvas.getCircuit();
-      final var bds = Bounds.create(left, top, right - left, bot - top);
-      for (final var c : circ.getAllWithin(bds)) {
-        final var cloc = c.getLocation();
-        final var gDup = gBase.create();
+      final com.cburch.logisim.circuit.Circuit circ = canvas.getCircuit();
+      final com.cburch.logisim.data.Bounds bds = Bounds.create(left, top, right - left, bot - top);
+      for (final com.cburch.logisim.comp.Component c : circ.getAllWithin(bds)) {
+        final com.cburch.logisim.data.Location cloc = c.getLocation();
+        final java.awt.Graphics gDup = gBase.create();
         context.setGraphics(gDup);
         c.getFactory()
             .drawGhost(context, COLOR_RECT_SELECT, cloc.getX(), cloc.getY(), c.getAttributeSet());
@@ -278,12 +278,12 @@ public class SelectTool extends Tool {
         return null;
       }
 
-      final var sel = canvas.getSelection().getComponents();
-      final var gesture = moveGesture;
+      final java.util.Set<com.cburch.logisim.comp.Component> sel = canvas.getSelection().getComponents();
+      final com.cburch.logisim.tools.move.MoveGesture gesture = moveGesture;
       if (gesture != null && drawConnections) {
-        final var result = gesture.findResult(dx, dy);
+        final com.cburch.logisim.tools.move.MoveResult result = gesture.findResult(dx, dy);
         if (result != null) {
-          final var ret = new HashSet<>(sel);
+          final java.util.HashSet<com.cburch.logisim.comp.Component> ret = new HashSet<>(sel);
           ret.addAll(result.getReplacementMap().getRemovals());
           return ret;
         }
@@ -338,17 +338,17 @@ public class SelectTool extends Tool {
     if (state == MOVING && e.getKeyCode() == KeyEvent.VK_SHIFT) {
       handleMoveDrag(canvas, curDx, curDy, e.getModifiersEx());
     } else {
-      final var comps = AutoLabel.sort(canvas.getProject().getSelection().getComponents());
-      final var keybEvent = e.getKeyCode();
+      final java.util.SortedSet<com.cburch.logisim.comp.Component> comps = AutoLabel.sort(canvas.getProject().getSelection().getComponents());
+      final int keybEvent = e.getKeyCode();
       boolean keyTaken = false;
-      for (final var comp : comps) {
-        final var act = new SetAttributeAction(canvas.getCircuit(), S.getter("changeComponentAttributesAction"));
+      for (final com.cburch.logisim.comp.Component comp : comps) {
+        final com.cburch.logisim.tools.SetAttributeAction act = new SetAttributeAction(canvas.getCircuit(), S.getter("changeComponentAttributesAction"));
         keyTaken |= GateKeyboardModifier.tookKeyboardStrokes(keybEvent, comp, comp.getAttributeSet(), canvas, act, true);
         if (!act.isEmpty()) canvas.getProject().doAction(act);
       }
       if (!keyTaken) {
         for (Component comp : comps) {
-          final var act = new SetAttributeAction(canvas.getCircuit(), S.getter("changeComponentAttributesAction"));
+          final com.cburch.logisim.tools.SetAttributeAction act = new SetAttributeAction(canvas.getCircuit(), S.getter("changeComponentAttributesAction"));
           keyTaken |=
               autoLabeler.labelKeyboardHandler(
                   keybEvent,
@@ -367,7 +367,7 @@ public class SelectTool extends Tool {
           case KeyEvent.VK_BACK_SPACE:
           case KeyEvent.VK_DELETE:
             if (!canvas.getSelection().isEmpty()) {
-              final var act = SelectionActions.clear(canvas.getSelection());
+              final com.cburch.logisim.proj.Action act = SelectionActions.clear(canvas.getSelection());
               canvas.getProject().doAction(act);
               e.consume();
             }
@@ -398,11 +398,11 @@ public class SelectTool extends Tool {
   @Override
   public void mouseDragged(Canvas canvas, Graphics g, MouseEvent e) {
     if (state == MOVING) {
-      final var proj = canvas.getProject();
+      final com.cburch.logisim.proj.Project proj = canvas.getProject();
       computeDxDy(proj, e, g);
       handleMoveDrag(canvas, curDx, curDy, e.getModifiersEx());
     } else if (state == RECT_SELECT) {
-      final var proj = canvas.getProject();
+      final com.cburch.logisim.proj.Project proj = canvas.getProject();
       curDx = e.getX() - start.getX();
       curDy = e.getY() - start.getY();
       proj.repaintCanvas();
@@ -412,8 +412,8 @@ public class SelectTool extends Tool {
   @Override
   public void mousePressed(Canvas canvas, Graphics g, MouseEvent e) {
     canvas.requestFocusInWindow();
-    final var proj = canvas.getProject();
-    final var sel = proj.getSelection();
+    final com.cburch.logisim.proj.Project proj = canvas.getProject();
+    final com.cburch.logisim.gui.main.Selection sel = proj.getSelection();
     start = Location.create(e.getX(), e.getY(), false);
     curDx = 0;
     curDy = 0;
@@ -421,14 +421,14 @@ public class SelectTool extends Tool {
 
     // if the user clicks into the selection,
     // selection is being modified
-    final var inSel = sel.getComponentsContaining(start, g);
+    final java.util.Collection<com.cburch.logisim.comp.Component> inSel = sel.getComponentsContaining(start, g);
     if (!inSel.isEmpty()) {
       if ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) == 0) {
         setState(proj, MOVING);
         proj.repaintCanvas();
         return;
       } else {
-        final var act = SelectionActions.drop(sel, inSel);
+        final com.cburch.logisim.proj.Action act = SelectionActions.drop(sel, inSel);
         if (act != null) {
           proj.doAction(act);
         }
@@ -436,18 +436,18 @@ public class SelectTool extends Tool {
     }
 
     // if the user clicks into a component outside selection, user wants to add/reset selection
-    final var circuit = canvas.getCircuit();
-    final var clicked = circuit.getAllContaining(start, g);
+    final com.cburch.logisim.circuit.Circuit circuit = canvas.getCircuit();
+    final java.util.Collection<com.cburch.logisim.comp.Component> clicked = circuit.getAllContaining(start, g);
     if (!clicked.isEmpty()) {
       if ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) == 0) {
         if (sel.getComponentsContaining(start).isEmpty()) {
-          final var act = SelectionActions.dropAll(sel);
+          final com.cburch.logisim.proj.Action act = SelectionActions.dropAll(sel);
           if (act != null) {
             proj.doAction(act);
           }
         }
       }
-      for (final var comp : clicked) {
+      for (final com.cburch.logisim.comp.Component comp : clicked) {
         if (!inSel.contains(comp)) {
           sel.add(comp);
         }
@@ -460,7 +460,7 @@ public class SelectTool extends Tool {
     // The user clicked on the background. This is a rectangular
     // selection (maybe with the shift key down).
     if ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) == 0) {
-      final var act = SelectionActions.dropAll(sel);
+      final com.cburch.logisim.proj.Action act = SelectionActions.dropAll(sel);
       if (act != null) {
         proj.doAction(act);
       }
@@ -471,7 +471,7 @@ public class SelectTool extends Tool {
 
   @Override
   public void mouseReleased(Canvas canvas, Graphics g, MouseEvent e) {
-    final var proj = canvas.getProject();
+    final com.cburch.logisim.proj.Project proj = canvas.getProject();
     if (state == MOVING) {
       setState(proj, IDLE);
       computeDxDy(proj, e, g);
@@ -483,7 +483,7 @@ public class SelectTool extends Tool {
         } else if (proj.getSelection().hasConflictWhenMoved(dx, dy)) {
           canvas.setErrorMessage(S.getter("exclusiveError"));
         } else {
-          final var connect = shouldConnect(e.getModifiersEx());
+          final boolean connect = shouldConnect(e.getModifiersEx());
           drawConnections = false;
           ReplacementMap repl;
           if (connect) {
@@ -496,27 +496,27 @@ public class SelectTool extends Tool {
                       canvas.getSelection().getAnchoredComponents());
             }
             canvas.setErrorMessage(new ComputingMessage(dx, dy), COLOR_COMPUTING);
-            final var result = gesture.forceRequest(dx, dy);
+            final com.cburch.logisim.tools.move.MoveResult result = gesture.forceRequest(dx, dy);
             clearCanvasMessage(canvas, dx, dy);
             repl = result.getReplacementMap();
           } else {
             repl = null;
           }
-          final var sel = proj.getSelection();
+          final com.cburch.logisim.gui.main.Selection sel = proj.getSelection();
           proj.doAction(SelectionActions.translate(sel, dx, dy, repl));
         }
       }
       moveGesture = null;
       proj.repaintCanvas();
     } else if (state == RECT_SELECT) {
-      final var bds = Bounds.create(start).add(start.getX() + curDx, start.getY() + curDy);
-      final var circuit = canvas.getCircuit();
-      final var sel = proj.getSelection();
-      final var inSel = sel.getComponentsWithin(bds, g);
-      for (final var comp : circuit.getAllWithin(bds, g)) {
+      final com.cburch.logisim.data.Bounds bds = Bounds.create(start).add(start.getX() + curDx, start.getY() + curDy);
+      final com.cburch.logisim.circuit.Circuit circuit = canvas.getCircuit();
+      final com.cburch.logisim.gui.main.Selection sel = proj.getSelection();
+      final java.util.Collection<com.cburch.logisim.comp.Component> inSel = sel.getComponentsWithin(bds, g);
+      for (final com.cburch.logisim.comp.Component comp : circuit.getAllWithin(bds, g)) {
         if (!inSel.contains(comp)) sel.add(comp);
       }
-      final var act = SelectionActions.drop(sel, inSel);
+      final com.cburch.logisim.proj.Action act = SelectionActions.drop(sel, inSel);
       if (act != null) {
         proj.doAction(act);
       }
@@ -524,12 +524,12 @@ public class SelectTool extends Tool {
       proj.repaintCanvas();
     }
     if (e.getClickCount() >= 2) {
-      final var comps = canvas.getProject().getSelection().getComponents();
+      final java.util.Set<com.cburch.logisim.comp.Component> comps = canvas.getProject().getSelection().getComponents();
       if (comps.size() == 1) {
-        for (final var comp : comps) {
+        for (final com.cburch.logisim.comp.Component comp : comps) {
           if (comp.getAttributeSet().containsAttribute(StdAttr.LABEL)) {
-            final var OldLabel = comp.getAttributeSet().getValue(StdAttr.LABEL);
-            final var act =
+            final java.lang.String OldLabel = comp.getAttributeSet().getValue(StdAttr.LABEL);
+            final com.cburch.logisim.tools.SetAttributeAction act =
                 new SetAttributeAction(
                     canvas.getCircuit(), S.getter("changeComponentAttributesAction"));
             autoLabeler.askAndSetLabel(
@@ -557,13 +557,13 @@ public class SelectTool extends Tool {
     java.util.HashMap<com.cburch.logisim.comp.Component,com.cburch.logisim.tools.key.KeyConfigurator> handlers = keyHandlers;
     if (handlers == null) {
       handlers = new HashMap<>();
-      final var sel = canvas.getSelection();
-      for (final var comp : sel.getComponents()) {
-        final var factory = comp.getFactory();
-        final var attrs = comp.getAttributeSet();
+      final com.cburch.logisim.gui.main.Selection sel = canvas.getSelection();
+      for (final com.cburch.logisim.comp.Component comp : sel.getComponents()) {
+        final com.cburch.logisim.comp.ComponentFactory factory = comp.getFactory();
+        final com.cburch.logisim.data.AttributeSet attrs = comp.getAttributeSet();
         Object handler = factory.getFeature(KeyConfigurator.class, attrs);
         if (handler != null) {
-          final var base = (KeyConfigurator) handler;
+          final com.cburch.logisim.tools.key.KeyConfigurator base = (KeyConfigurator) handler;
           handlers.put(comp, base.clone());
         }
       }
@@ -574,11 +574,11 @@ public class SelectTool extends Tool {
       boolean consume = false;
       ArrayList<KeyConfigurationResult> results;
       results = new ArrayList<>();
-      for (final var entry : handlers.entrySet()) {
-        final var comp = entry.getKey();
-        final var handler = entry.getValue();
-        final var event = new KeyConfigurationEvent(type, comp.getAttributeSet(), e, comp);
-        final var result = handler.keyEventReceived(event);
+      for (final java.util.Map.Entry<com.cburch.logisim.comp.Component,com.cburch.logisim.tools.key.KeyConfigurator> entry : handlers.entrySet()) {
+        final com.cburch.logisim.comp.Component comp = entry.getKey();
+        final com.cburch.logisim.tools.key.KeyConfigurator handler = entry.getValue();
+        final com.cburch.logisim.tools.key.KeyConfigurationEvent event = new KeyConfigurationEvent(type, comp.getAttributeSet(), e, comp);
+        final com.cburch.logisim.tools.key.KeyConfigurationResult result = handler.keyEventReceived(event);
         consume |= event.isConsumed();
         if (result != null) {
           results.add(result);
@@ -588,11 +588,11 @@ public class SelectTool extends Tool {
         e.consume();
       }
       if (!results.isEmpty()) {
-        final var act = new SetAttributeAction(canvas.getCircuit(), S.getter("changeComponentAttributesAction"));
-        for (final var result : results) {
-          final var comp = (Component) result.getEvent().getData();
-          final var newValues = result.getAttributeValues();
-          for (final var entry : newValues.entrySet()) {
+        final com.cburch.logisim.tools.SetAttributeAction act = new SetAttributeAction(canvas.getCircuit(), S.getter("changeComponentAttributesAction"));
+        for (final com.cburch.logisim.tools.key.KeyConfigurationResult result : results) {
+          final com.cburch.logisim.comp.Component comp = (Component) result.getEvent().getData();
+          final java.util.Map<com.cburch.logisim.data.Attribute<?>,java.lang.Object> newValues = result.getAttributeValues();
+          for (final java.util.Map.Entry<com.cburch.logisim.data.Attribute<?>,java.lang.Object> entry : newValues.entrySet()) {
             act.set(comp, entry.getKey(), entry.getValue());
           }
         }
@@ -605,7 +605,7 @@ public class SelectTool extends Tool {
 
   @Override
   public void select(Canvas canvas) {
-    final var sel = canvas.getSelection();
+    final com.cburch.logisim.gui.main.Selection sel = canvas.getSelection();
     if (!selectionsAdded.contains(sel)) {
       sel.addListener(selListener);
     }
@@ -619,8 +619,8 @@ public class SelectTool extends Tool {
   }
 
   private boolean shouldConnect(int modsEx) {
-    final var shiftReleased = (modsEx & MouseEvent.SHIFT_DOWN_MASK) == 0;
-    final var defaultValue = AppPreferences.MOVE_KEEP_CONNECT.getBoolean();
+    final boolean shiftReleased = (modsEx & MouseEvent.SHIFT_DOWN_MASK) == 0;
+    final boolean defaultValue = AppPreferences.MOVE_KEEP_CONNECT.getBoolean();
     return shiftReleased ? defaultValue : !defaultValue;
   }
 }

@@ -48,7 +48,7 @@ public class TextTool extends Tool {
         event.getCircuit().removeCircuitListener(this);
         return;
       }
-      final var action = event.getAction();
+      final int action = event.getAction();
       if (action == CircuitEvent.ACTION_REMOVE) {
         if (event.getData() == caretComponent) {
           caret.cancelEditing();
@@ -84,13 +84,13 @@ public class TextTool extends Tool {
       caret.removeCaretListener(this);
       caretCircuit.removeCircuitListener(this);
 
-      final var val = caret.getText();
+      final java.lang.String val = caret.getText();
       boolean isEmpty = StringUtil.isNullOrEmpty(val);
       Action a;
-      final var proj = caretCanvas.getProject();
+      final com.cburch.logisim.proj.Project proj = caretCanvas.getProject();
       if (caretCreatingText) {
         if (!isEmpty) {
-          final var xn = new CircuitMutation(caretCircuit);
+          final com.cburch.logisim.circuit.CircuitMutation xn = new CircuitMutation(caretCircuit);
           xn.add(caretComponent);
           a = xn.toAction(S.getter("addComponentAction", Text.FACTORY.getDisplayGetter()));
         } else {
@@ -99,7 +99,7 @@ public class TextTool extends Tool {
         }
       } else {
         if (isEmpty && caretComponent.getFactory() instanceof Text) {
-          final var xn = new CircuitMutation(caretCircuit);
+          final com.cburch.logisim.circuit.CircuitMutation xn = new CircuitMutation(caretCircuit);
           xn.add(caretComponent);
           a = xn.toAction(S.getter("removeComponentAction", Text.FACTORY.getDisplayGetter()));
         } else {
@@ -108,7 +108,7 @@ public class TextTool extends Tool {
             // should never happen
             a = null;
           } else {
-            final var editable = (TextEditable) obj;
+            final com.cburch.logisim.tools.TextEditable editable = (TextEditable) obj;
             a = editable.getCommitAction(caretCircuit, e.getOldText(), e.getText());
           }
         }
@@ -211,8 +211,8 @@ public class TextTool extends Tool {
 
   @Override
   public void mouseDragged(Canvas canvas, Graphics g, MouseEvent e) {
-    final var proj = canvas.getProject();
-    final var circ = canvas.getCircuit();
+    final com.cburch.logisim.proj.Project proj = canvas.getProject();
+    final com.cburch.logisim.circuit.Circuit circ = canvas.getCircuit();
 
     if (!proj.getLogisimFile().contains(circ)) {
       if (caret != null) caret.cancelEditing();
@@ -229,13 +229,13 @@ public class TextTool extends Tool {
 
   @Override
   public void mousePressed(Canvas canvas, Graphics g, MouseEvent e) {
-    final var proj = canvas.getProject();
-    final var circ = canvas.getCircuit();
+    final com.cburch.logisim.proj.Project proj = canvas.getProject();
+    final com.cburch.logisim.circuit.Circuit circ = canvas.getCircuit();
 
     /*
      * This is made to remove an annoying bug that do not unselect current selection
      */
-    final var act = SelectionActions.dropAll(canvas.getSelection());
+    final com.cburch.logisim.proj.Action act = SelectionActions.dropAll(canvas.getSelection());
     canvas.getProject().doAction(act);
 
     if (!proj.getLogisimFile().contains(circ)) {
@@ -260,12 +260,12 @@ public class TextTool extends Tool {
     // Otherwise search for a new caret.
     int x = e.getX();
     int y = e.getY();
-    final var loc = Location.create(x, y, false);
-    final var event = new ComponentUserEvent(canvas, x, y);
+    final com.cburch.logisim.data.Location loc = Location.create(x, y, false);
+    final com.cburch.logisim.comp.ComponentUserEvent event = new ComponentUserEvent(canvas, x, y);
 
     // First search in selection.
-    for (final var comp : proj.getSelection().getComponentsContaining(loc, g)) {
-      final var editable = (TextEditable) comp.getFeature(TextEditable.class);
+    for (final com.cburch.logisim.comp.Component comp : proj.getSelection().getComponentsContaining(loc, g)) {
+      final com.cburch.logisim.tools.TextEditable editable = (TextEditable) comp.getFeature(TextEditable.class);
       if (editable != null) {
         caret = editable.getTextCaret(event);
         if (caret != null) {
@@ -279,8 +279,8 @@ public class TextTool extends Tool {
 
     // Then search in circuit
     if (caret == null) {
-      for (final var comp : circ.getAllContaining(loc, g)) {
-        final var editable = (TextEditable) comp.getFeature(TextEditable.class);
+      for (final com.cburch.logisim.comp.Component comp : circ.getAllContaining(loc, g)) {
+        final com.cburch.logisim.tools.TextEditable editable = (TextEditable) comp.getFeature(TextEditable.class);
         if (editable != null) {
           caret = editable.getTextCaret(event);
           if (caret != null) {
@@ -296,10 +296,10 @@ public class TextTool extends Tool {
     // if nothing found, create a new label
     if (caret == null) {
       if (loc.getX() < 0 || loc.getY() < 0) return;
-      final var copy = (AttributeSet) attrs.clone();
+      final com.cburch.logisim.data.AttributeSet copy = (AttributeSet) attrs.clone();
       caretComponent = Text.FACTORY.createComponent(loc, copy);
       caretCreatingText = true;
-      final var editable = (TextEditable) caretComponent.getFeature(TextEditable.class);
+      final com.cburch.logisim.tools.TextEditable editable = (TextEditable) caretComponent.getFeature(TextEditable.class);
       if (editable != null) {
         caret = editable.getTextCaret(event);
         proj.getFrame().viewComponentAttributes(circ, caretComponent);
@@ -317,8 +317,8 @@ public class TextTool extends Tool {
 
   @Override
   public void mouseReleased(Canvas canvas, Graphics g, MouseEvent e) {
-    final var proj = canvas.getProject();
-    final var circ = canvas.getCircuit();
+    final com.cburch.logisim.proj.Project proj = canvas.getProject();
+    final com.cburch.logisim.circuit.Circuit circ = canvas.getCircuit();
 
     if (!proj.getLogisimFile().contains(circ)) {
       if (caret != null) caret.cancelEditing();

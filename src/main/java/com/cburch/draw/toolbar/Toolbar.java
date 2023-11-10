@@ -41,7 +41,7 @@ public class Toolbar extends JPanel {
 
   private void computeContents() {
     subpanel.removeAll();
-    final var m = model;
+    final com.cburch.draw.toolbar.ToolbarModel m = model;
     if (m != null) {
       for (ToolbarItem item : m.getItems()) {
         subpanel.add(new ToolbarButton(this, item));
@@ -78,7 +78,7 @@ public class Toolbar extends JPanel {
   }
 
   void setPressed(ToolbarButton value) {
-    final var oldValue = curPressed;
+    final com.cburch.draw.toolbar.ToolbarButton oldValue = curPressed;
     if (oldValue != value) {
       curPressed = value;
       if (oldValue != null) oldValue.repaint();
@@ -91,7 +91,7 @@ public class Toolbar extends JPanel {
   }
 
   public void setToolbarModel(ToolbarModel value) {
-    final var oldValue = model;
+    final com.cburch.draw.toolbar.ToolbarModel oldValue = model;
     if (value != oldValue) {
       if (oldValue != null) oldValue.removeToolbarModelListener(myListener);
       if (value != null) value.addToolbarModelListener(myListener);

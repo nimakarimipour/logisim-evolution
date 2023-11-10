@@ -48,7 +48,7 @@ public class AlphanumComparator implements Comparator<String> {
 
   /** Length of string is passed in for improved efficiency (only need to calculate it once). */
   private String getChunk(String s, int slength, int marker) {
-    final var chunk = new StringBuilder();
+    final java.lang.StringBuilder chunk = new StringBuilder();
     char c = s.charAt(marker);
     chunk.append(c);
     marker++;
@@ -81,10 +81,10 @@ public class AlphanumComparator implements Comparator<String> {
     int s2Length = s2.length();
 
     while (thisMarker < s1Length && thatMarker < s2Length) {
-      final var thisChunk = getChunk(s1, s1Length, thisMarker);
+      final java.lang.String thisChunk = getChunk(s1, s1Length, thisMarker);
       thisMarker += thisChunk.length();
 
-      final var thatChunk = getChunk(s2, s2Length, thatMarker);
+      final java.lang.String thatChunk = getChunk(s2, s2Length, thatMarker);
       thatMarker += thatChunk.length();
 
       // If both chunks contain numeric characters, sort them numerically
@@ -114,7 +114,7 @@ public class AlphanumComparator implements Comparator<String> {
 
   /** Shows an example of how the comparator works. Feel free to delete this in your own code! */
   public static void main(String[] args) {
-    final var values =
+    final java.util.List<java.lang.String> values =
         Arrays.asList(
             "dazzle2",
             "dazzle10",

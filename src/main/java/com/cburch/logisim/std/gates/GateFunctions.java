@@ -21,12 +21,12 @@ class GateFunctions {
   }
 
   static Value computeExactlyOne(Value[] inputs, int numInputs) {
-    final var width = inputs[0].getWidth();
-    final var ret = new Value[width];
+    final int width = inputs[0].getWidth();
+    final com.cburch.logisim.data.Value[] ret = new Value[width];
     for (int i = 0; i < width; i++) {
       int count = 0;
       for (int j = 0; j < numInputs; j++) {
-        final var v = inputs[j].get(i);
+        final com.cburch.logisim.data.Value v = inputs[j].get(i);
         if (v == Value.TRUE) {
           count++;
         } else if (v == Value.FALSE) {

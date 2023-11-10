@@ -35,17 +35,17 @@ public class PrefMonitorBooleanConvert extends PrefMonitorBoolean {
 
   @Override
   public void preferenceChange(PreferenceChangeEvent event) {
-    final var prefs = event.getNode();
-    final var prop = event.getKey();
-    final var name = getIdentifier();
+    final java.util.prefs.Preferences prefs = event.getNode();
+    final java.lang.String prop = event.getKey();
+    final java.lang.String name = getIdentifier();
     if (prop.equals(name)) {
-      final var oldValue = value;
-      final var newValue = prefs.getBoolean(name, dflt);
+      final boolean oldValue = value;
+      final boolean newValue = prefs.getBoolean(name, dflt);
       if (newValue != oldValue) {
         value = newValue;
         AppPreferences.firePropertyChange(name, oldValue, newValue);
         if (!myListeners.isEmpty()) {
-          final var e =
+          final com.cburch.logisim.prefs.ConvertEvent e =
               new ConvertEvent(
                   newValue ? ProbeAttributes.APPEAR_EVOLUTION_NEW : StdAttr.APPEAR_CLASSIC);
           Object[] options = {S.get("OptionYes"), S.get("OptionNo")};

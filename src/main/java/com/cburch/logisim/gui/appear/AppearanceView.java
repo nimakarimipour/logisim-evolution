@@ -51,10 +51,10 @@ public class AppearanceView {
 
   public AppearanceView() {
     attrs = new DrawingAttributeSet();
-    final var selectTool = new SelectTool();
+    final com.cburch.draw.tools.SelectTool selectTool = new SelectTool();
     canvas = new AppearanceCanvas(selectTool);
     canvasPane = new CanvasPane(canvas);
-    final var ssTool = new ShowStateTool(this, canvas, attrs);
+    final com.cburch.logisim.gui.appear.ShowStateTool ssTool = new ShowStateTool(this, canvas, attrs);
     toolbarModel = new AppearanceToolbarModel(selectTool, ssTool, canvas, attrs);
     zoomModel =
         new BasicZoomModel(

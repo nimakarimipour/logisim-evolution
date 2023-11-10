@@ -31,7 +31,7 @@ public class RevertAppearanceAction extends Action {
 
   @Override
   public void doIt(Project proj) {
-    final var xn = new ActionTransaction(true);
+    final com.cburch.logisim.gui.appear.RevertAppearanceAction.ActionTransaction xn = new ActionTransaction(true);
     xn.execute();
   }
 
@@ -42,7 +42,7 @@ public class RevertAppearanceAction extends Action {
 
   @Override
   public void undo(Project proj) {
-    final var xn = new ActionTransaction(false);
+    final com.cburch.logisim.gui.appear.RevertAppearanceAction.ActionTransaction xn = new ActionTransaction(false);
     xn.execute();
   }
 
@@ -55,8 +55,8 @@ public class RevertAppearanceAction extends Action {
 
     @Override
     protected Map<Circuit, Integer> getAccessedCircuits() {
-      final var accessMap = new HashMap<Circuit, Integer>();
-      for (final var superCircuit : circuit.getCircuitsUsingThis()) {
+      final java.util.HashMap<com.cburch.logisim.circuit.Circuit,java.lang.Integer> accessMap = new HashMap<Circuit, Integer>();
+      for (final com.cburch.logisim.circuit.Circuit superCircuit : circuit.getCircuitsUsingThis()) {
         accessMap.put(superCircuit, READ_WRITE);
       }
       return accessMap;
@@ -64,7 +64,7 @@ public class RevertAppearanceAction extends Action {
 
     @Override
     protected void run(CircuitMutator mutator) {
-      final var appear = circuit.getAppearance();
+      final com.cburch.logisim.circuit.appear.CircuitAppearance appear = circuit.getAppearance();
       if (forward) {
         old = new ArrayList<>(appear.getObjectsFromBottom());
       } else {

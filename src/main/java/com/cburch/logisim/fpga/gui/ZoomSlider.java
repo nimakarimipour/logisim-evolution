@@ -38,19 +38,19 @@ public class ZoomSlider extends JSlider {
   private void setup(int orientation, int min, int max, int value) {
     zoomMin = min;
     zoomMax = max;
-    final var midValue = min + ((max - min) >> 1);
+    final int midValue = min + ((max - min) >> 1);
     super.setOrientation(orientation);
     super.setMinimum(min);
     super.setMaximum(max);
     super.setValue(value);
-    final var orig = super.getSize();
+    final java.awt.Dimension orig = super.getSize();
     orig.height = AppPreferences.getScaled(orig.height);
     orig.width = AppPreferences.getScaled(orig.width);
     super.setSize(orig);
     setMajorTickSpacing(50);
     setMinorTickSpacing(10);
     setPaintTicks(true);
-    final var labelTable = new Hashtable<Integer, JLabel>();
+    final java.util.Hashtable<java.lang.Integer,javax.swing.JLabel> labelTable = new Hashtable<Integer, JLabel>();
     javax.swing.JLabel label = new JLabel(getId(min));
     label.setFont(AppPreferences.getScaledFont(label.getFont()));
     labelTable.put(min, label);
@@ -65,8 +65,8 @@ public class ZoomSlider extends JSlider {
   }
 
   private String getId(int value) {
-    final var hun = value / 100;
-    final var tens = (value % 100) / 10;
+    final int hun = value / 100;
+    final int tens = (value % 100) / 10;
     return String.format("%d.%dx", hun, tens);
   }
 }

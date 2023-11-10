@@ -250,7 +250,7 @@ public class Hdl {
   }
 
   public static String getZeroVector(int nrOfBits, boolean floatingPinTiedToGround) {
-    final var contents = new StringBuilder();
+    final java.lang.StringBuilder contents = new StringBuilder();
     if (isVhdl()) {
       java.lang.String fillValue = (floatingPinTiedToGround) ? "0" : "1";
       java.lang.String hexFillValue = (floatingPinTiedToGround) ? "0" : "F";
@@ -279,17 +279,17 @@ public class Hdl {
   }
 
   public static String getConstantVector(long value, int nrOfBits) {
-    final var nrHexDigits = nrOfBits / 4;
-    final var nrSingleBits = nrOfBits % 4;
-    final var hexDigits = new String[nrHexDigits];
-    final var singleBits = new StringBuilder();
+    final int nrHexDigits = nrOfBits / 4;
+    final int nrSingleBits = nrOfBits % 4;
+    final java.lang.String[] hexDigits = new String[nrHexDigits];
+    final java.lang.StringBuilder singleBits = new StringBuilder();
     long shiftValue = value;
     for (int hexIndex = nrHexDigits - 1; hexIndex >= 0; hexIndex--) {
       long hexValue = shiftValue & 0xFL;
       shiftValue >>= 4L;
       hexDigits[hexIndex] = String.format("%1X", hexValue);
     }
-    final var hexValue = new StringBuilder();
+    final java.lang.StringBuilder hexValue = new StringBuilder();
     for (int hexIndex = 0; hexIndex < nrHexDigits; hexIndex++) {
       hexValue.append(hexDigits[hexIndex]);
     }
@@ -313,7 +313,7 @@ public class Hdl {
     }
     // final case, we have only single bits
     if (Hdl.isVhdl()) {
-      final var vhdlTicks = (nrOfBits == 1) ? "'" : "\"";
+      final java.lang.String vhdlTicks = (nrOfBits == 1) ? "'" : "\"";
       return LineBuffer.format("{{1}}{{2}}{{1}}", vhdlTicks, singleBits.toString());
     }
     return LineBuffer.format("{{1}}'b{{2}}", nrSingleBits, singleBits.toString());
@@ -322,12 +322,12 @@ public class Hdl {
   public static String getNetName(netlistComponent comp, int endIndex, boolean floatingNetTiedToGround, Netlist myNetlist) {
     java.lang.String netName = "";
     if ((endIndex >= 0) && (endIndex < comp.nrOfEnds())) {
-      final var floatingValue = floatingNetTiedToGround ? zeroBit() : oneBit();
-      final var thisEnd = comp.getEnd(endIndex);
-      final var isOutput = thisEnd.isOutputEnd();
+      final java.lang.String floatingValue = floatingNetTiedToGround ? zeroBit() : oneBit();
+      final com.cburch.logisim.fpga.designrulecheck.ConnectionEnd thisEnd = comp.getEnd(endIndex);
+      final boolean isOutput = thisEnd.isOutputEnd();
 
       if (thisEnd.getNrOfBits() == 1) {
-        final var solderPoint = thisEnd.get((byte) 0);
+        final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint solderPoint = thisEnd.get((byte) 0);
         if (solderPoint.getParentNet() == null) {
           // The net is not connected
           netName = LineBuffer.formatHdl(isOutput ? unconnected(true) : floatingValue);
@@ -347,16 +347,16 @@ public class Hdl {
   public static String getBusEntryName(netlistComponent comp, int endIndex, boolean floatingNetTiedToGround, int bitindex, Netlist theNets) {
     java.lang.String busName = "";
     if ((endIndex >= 0) && (endIndex < comp.nrOfEnds())) {
-      final var thisEnd = comp.getEnd(endIndex);
-      final var isOutput = thisEnd.isOutputEnd();
-      final var nrOfBits = thisEnd.getNrOfBits();
+      final com.cburch.logisim.fpga.designrulecheck.ConnectionEnd thisEnd = comp.getEnd(endIndex);
+      final boolean isOutput = thisEnd.isOutputEnd();
+      final int nrOfBits = thisEnd.getNrOfBits();
       if ((nrOfBits > 1) && (bitindex >= 0) && (bitindex < nrOfBits)) {
         if (thisEnd.get((byte) bitindex).getParentNet() == null) {
           // The net is not connected
           busName = LineBuffer.formatHdl(isOutput ? unconnected(false) : getZeroVector(1, floatingNetTiedToGround));
         } else {
-          final var connectedNet = thisEnd.get((byte) bitindex).getParentNet();
-          final var connectedNetBitIndex = thisEnd.get((byte) bitindex).getParentNetBitIndex();
+          final com.cburch.logisim.fpga.designrulecheck.Net connectedNet = thisEnd.get((byte) bitindex).getParentNet();
+          final java.lang.Byte connectedNetBitIndex = thisEnd.get((byte) bitindex).getParentNetBitIndex();
           // The net is connected, we have to find out if the connection
           // is to a bus or to a normal net.
           busName =
@@ -371,11 +371,11 @@ public class Hdl {
 
   public static String getBusNameContinues(netlistComponent comp, int endIndex, Netlist theNets) {
     if ((endIndex < 0) || (endIndex >= comp.nrOfEnds())) return null;
-    final var connectionInformation = comp.getEnd(endIndex);
-    final var nrOfBits = connectionInformation.getNrOfBits();
+    final com.cburch.logisim.fpga.designrulecheck.ConnectionEnd connectionInformation = comp.getEnd(endIndex);
+    final int nrOfBits = connectionInformation.getNrOfBits();
     if (nrOfBits == 1) return getNetName(comp, endIndex, true, theNets);
     if (!theNets.isContinuesBus(comp, endIndex)) return null;
-    final var connectedNet = connectionInformation.get((byte) 0).getParentNet();
+    final com.cburch.logisim.fpga.designrulecheck.Net connectedNet = connectionInformation.get((byte) 0).getParentNet();
     return LineBuffer.formatHdl("{{1}}{{2}}{{3}}",
         BUS_NAME,
         theNets.getNetId(connectedNet),
@@ -385,11 +385,11 @@ public class Hdl {
 
   public static String getBusName(netlistComponent comp, int endIndex, Netlist theNets) {
     if ((endIndex < 0) || (endIndex >= comp.nrOfEnds())) return null;
-    final var connectionInformation = comp.getEnd(endIndex);
-    final var nrOfBits = connectionInformation.getNrOfBits();
+    final com.cburch.logisim.fpga.designrulecheck.ConnectionEnd connectionInformation = comp.getEnd(endIndex);
+    final int nrOfBits = connectionInformation.getNrOfBits();
     if (nrOfBits == 1)  return getNetName(comp, endIndex, true, theNets);
     if (!theNets.isContinuesBus(comp, endIndex)) return null;
-    final var connectedNet = connectionInformation.get((byte) 0).getParentNet();
+    final com.cburch.logisim.fpga.designrulecheck.Net connectedNet = connectionInformation.get((byte) 0).getParentNet();
     if (connectedNet.getBitWidth() != nrOfBits) return getBusNameContinues(comp, endIndex, theNets);
     return LineBuffer.format("{{1}}{{2}}", BUS_NAME, theNets.getNetId(connectedNet));
   }
@@ -397,12 +397,12 @@ public class Hdl {
   public static String getClockNetName(netlistComponent comp, int endIndex, Netlist theNets) {
     java.lang.StringBuilder contents = new StringBuilder();
     if ((theNets.getCurrentHierarchyLevel() != null) && (endIndex >= 0) && (endIndex < comp.nrOfEnds())) {
-      final var endData = comp.getEnd(endIndex);
+      final com.cburch.logisim.fpga.designrulecheck.ConnectionEnd endData = comp.getEnd(endIndex);
       if (endData.getNrOfBits() == 1) {
-        final var connectedNet = endData.get((byte) 0).getParentNet();
-        final var ConnectedNetBitIndex = endData.get((byte) 0).getParentNetBitIndex();
+        final com.cburch.logisim.fpga.designrulecheck.Net connectedNet = endData.get((byte) 0).getParentNet();
+        final java.lang.Byte ConnectedNetBitIndex = endData.get((byte) 0).getParentNetBitIndex();
         /* Here we search for a clock net Match */
-        final var clocksourceid = theNets.getClockSourceId(
+        final int clocksourceid = theNets.getClockSourceId(
             theNets.getCurrentHierarchyLevel(), connectedNet, ConnectedNetBitIndex);
         if (clocksourceid >= 0) {
           contents.append(HdlGeneratorFactory.CLOCK_TREE_NAME).append(clocksourceid);
@@ -419,7 +419,7 @@ public class Hdl {
       Reporter.report.addFatalError("INTERNAL ERROR: Empty entity description received!");
       return false;
     }
-    final var outFile = FileWriter.getFilePointer(targetDirectory, componentName, true);
+    final java.io.File outFile = FileWriter.getFilePointer(targetDirectory, componentName, true);
     if (outFile == null) return false;
     return FileWriter.writeContents(outFile, contents);
   }
@@ -430,21 +430,21 @@ public class Hdl {
       Reporter.report.addFatalErrorFmt("INTERNAL ERROR: Empty behavior description for Component '%s' received!", componentName);
       return false;
     }
-    final var outFile = FileWriter.getFilePointer(targetDirectory, componentName, false);
+    final java.io.File outFile = FileWriter.getFilePointer(targetDirectory, componentName, false);
     if (outFile == null)  return false;
     return FileWriter.writeContents(outFile, contents);
   }
 
   public static Map<String, String> getNetMap(String sourceName, boolean floatingPinTiedToGround,
       netlistComponent comp, int endIndex, Netlist theNets) {
-    final var netMap = new HashMap<String, String>();
+    final java.util.HashMap<java.lang.String,java.lang.String> netMap = new HashMap<String, String>();
     if ((endIndex < 0) || (endIndex >= comp.nrOfEnds())) {
       Reporter.report.addFatalError("INTERNAL ERROR: Component tried to index non-existing SolderPoint");
       return netMap;
     }
-    final var connectionInformation = comp.getEnd(endIndex);
-    final var isOutput = connectionInformation.isOutputEnd();
-    final var nrOfBits = connectionInformation.getNrOfBits();
+    final com.cburch.logisim.fpga.designrulecheck.ConnectionEnd connectionInformation = comp.getEnd(endIndex);
+    final boolean isOutput = connectionInformation.isOutputEnd();
+    final int nrOfBits = connectionInformation.getNrOfBits();
     if (nrOfBits == 1) {
       /* Here we have the easy case, just a single bit net */
       netMap.put(sourceName, getNetName(comp, endIndex, floatingPinTiedToGround, theNets));
@@ -473,12 +473,12 @@ public class Hdl {
         } else {
           /* The last case, we have to enumerate through each bit */
           if (isVhdl()) {
-            final var sourceNetName = new StringBuilder();
+            final java.lang.StringBuilder sourceNetName = new StringBuilder();
             for (int bit = 0; bit < nrOfBits; bit++) {
               /* First we build the Line information */
               sourceNetName.setLength(0);
               sourceNetName.append(String.format("%s(%d) ", sourceName, bit));
-              final var solderPoint = connectionInformation.get((byte) bit);
+              final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint solderPoint = connectionInformation.get((byte) bit);
               if (solderPoint.getParentNet() == null) {
                 /* The net is not connected */
                 netMap.put(sourceNetName.toString(), isOutput ? unconnected(false) : getZeroVector(1, floatingPinTiedToGround));
@@ -499,13 +499,13 @@ public class Hdl {
               }
             }
           } else {
-            final var seperateSignals = new ArrayList<String>();
+            final java.util.ArrayList<java.lang.String> seperateSignals = new ArrayList<String>();
             /*
              * First we build an array with all the signals that
              * need to be concatenated
              */
             for (int bit = 0; bit < nrOfBits; bit++) {
-              final var solderPoint = connectionInformation.get((byte) bit);
+              final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint solderPoint = connectionInformation.get((byte) bit);
               if (solderPoint.getParentNet() == null) {
                 /* this entry is not connected */
                 seperateSignals.add(isOutput ? "1'bZ" : getZeroVector(1, floatingPinTiedToGround));
@@ -526,7 +526,7 @@ public class Hdl {
               }
             }
             /* Finally we can put all together */
-            final var vector = new StringBuilder();
+            final java.lang.StringBuilder vector = new StringBuilder();
             vector.append("{");
             for (int bit = nrOfBits; bit > 0; bit--) {
               vector.append(seperateSignals.get(bit - 1));
@@ -547,14 +547,14 @@ public class Hdl {
     int maxNameLength = 0;
     for (java.lang.String wire : wires.keySet())
       maxNameLength = Math.max(maxNameLength, wire.length());
-    final var sortedWires = new TreeSet<>(wires.keySet());
+    final java.util.TreeSet<java.lang.String> sortedWires = new TreeSet<>(wires.keySet());
     for (java.lang.String wire : sortedWires)
       contents.add("{{assign}}{{1}}{{2}}{{=}}{{3}};", wire, " ".repeat(maxNameLength - wire.length()), wires.get(wire));
     wires.clear();
   }
 
   public static List<String> getExtendedLibrary() {
-    final var lines = LineBuffer.getBuffer();
+    final com.cburch.logisim.util.LineBuffer lines = LineBuffer.getBuffer();
     lines.addVhdlKeywords().add("""
 
                {{library}} ieee;
@@ -566,7 +566,7 @@ public class Hdl {
   }
 
   public static List<String> getStandardLibrary() {
-    final var lines = LineBuffer.getBuffer();
+    final com.cburch.logisim.util.LineBuffer lines = LineBuffer.getBuffer();
     lines.addVhdlKeywords().add("""
 
               {{library}} ieee;

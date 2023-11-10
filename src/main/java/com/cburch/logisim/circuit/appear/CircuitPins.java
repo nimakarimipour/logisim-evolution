@@ -27,7 +27,7 @@ public class CircuitPins {
   private class MyComponentListener implements ComponentListener, AttributeListener {
     @Override
     public void attributeValueChanged(AttributeEvent e) {
-      final var attr = e.getAttribute();
+      final com.cburch.logisim.data.Attribute<?> attr = e.getAttribute();
       if (attr == StdAttr.FACING || attr == StdAttr.LABEL || attr == Pin.ATTR_TYPE) {
         appearanceManager.updatePorts();
       }
@@ -55,12 +55,12 @@ public class CircuitPins {
 
   public void transactionCompleted(ReplacementMap repl) {
     // determine the changes
-    final var adds = new HashSet<Instance>();
-    final var removes = new HashSet<Instance>();
-    final var replaces = new HashMap<Instance, Instance>();
-    for (final var comp : repl.getAdditions()) {
+    final java.util.HashSet<com.cburch.logisim.instance.Instance> adds = new HashSet<Instance>();
+    final java.util.HashSet<com.cburch.logisim.instance.Instance> removes = new HashSet<Instance>();
+    final java.util.HashMap<com.cburch.logisim.instance.Instance,com.cburch.logisim.instance.Instance> replaces = new HashMap<Instance, Instance>();
+    for (final com.cburch.logisim.comp.Component comp : repl.getAdditions()) {
       if (comp.getFactory() instanceof Pin) {
-        final var in = Instance.getInstanceFor(comp);
+        final com.cburch.logisim.instance.Instance in = Instance.getInstanceFor(comp);
         boolean added = pins.add(in);
         if (added) {
           comp.addComponentListener(myComponentListener);
@@ -69,19 +69,19 @@ public class CircuitPins {
         }
       }
     }
-    for (final var comp : repl.getRemovals()) {
+    for (final com.cburch.logisim.comp.Component comp : repl.getRemovals()) {
       if (comp.getFactory() instanceof Pin) {
-        final var in = Instance.getInstanceFor(comp);
-        final var removed = pins.remove(in);
+        final com.cburch.logisim.instance.Instance in = Instance.getInstanceFor(comp);
+        final boolean removed = pins.remove(in);
         if (removed) {
           comp.removeComponentListener(myComponentListener);
           in.getAttributeSet().removeAttributeListener(myComponentListener);
-          final var rs = repl.getReplacementsFor(comp);
+          final java.util.Collection<com.cburch.logisim.comp.Component> rs = repl.getReplacementsFor(comp);
           if (rs.isEmpty()) {
             removes.add(in);
           } else {
-            final var r = rs.iterator().next();
-            final var rIn = Instance.getInstanceFor(r);
+            final com.cburch.logisim.comp.Component r = rs.iterator().next();
+            final com.cburch.logisim.instance.Instance rIn = Instance.getInstanceFor(r);
             adds.remove(rIn);
             replaces.put(in, rIn);
           }

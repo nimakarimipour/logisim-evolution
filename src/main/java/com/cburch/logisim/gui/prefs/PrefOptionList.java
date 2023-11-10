@@ -32,7 +32,7 @@ public class PrefOptionList implements ActionListener, PropertyChangeListener {
 
     label = new JLabel(labelStr.toString() + " ");
     combo = new JComboBox<>();
-    for (final var opt : options) {
+    for (final com.cburch.logisim.gui.prefs.PrefOption opt : options) {
       combo.addItem(opt);
     }
 
@@ -43,12 +43,12 @@ public class PrefOptionList implements ActionListener, PropertyChangeListener {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    final var x = (PrefOption) combo.getSelectedItem();
+    final com.cburch.logisim.gui.prefs.PrefOption x = (PrefOption) combo.getSelectedItem();
     pref.set((String) x.getValue());
   }
 
   JPanel createJPanel() {
-    final var ret = new JPanel();
+    final javax.swing.JPanel ret = new JPanel();
     ret.add(label);
     ret.add(combo);
     return ret;
@@ -75,7 +75,7 @@ public class PrefOptionList implements ActionListener, PropertyChangeListener {
 
   private void selectOption(Object value) {
     for (int i = combo.getItemCount() - 1; i >= 0; i--) {
-      final var opt = combo.getItemAt(i);
+      final com.cburch.logisim.gui.prefs.PrefOption opt = combo.getItemAt(i);
       if (opt.getValue().equals(value)) {
         combo.setSelectedItem(opt);
         return;

@@ -55,12 +55,12 @@ public class ClockTreeContainer {
   }
 
   public List<Byte> getClockEntries(Net netInfo) {
-    final var result = new ArrayList<Byte>();
-    for (final var solderPoint : clockSources) {
+    final java.util.ArrayList<java.lang.Byte> result = new ArrayList<Byte>();
+    for (final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint solderPoint : clockSources) {
       if (solderPoint.getParentNet().equals(netInfo))
         result.add(solderPoint.getParentNetBitIndex());
     }
-    for (final var solderPoint : clockNets) {
+    for (final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint solderPoint : clockNets) {
       if (solderPoint.getParentNet().equals(netInfo))
         result.add(solderPoint.getParentNetBitIndex());
     }
@@ -68,17 +68,17 @@ public class ClockTreeContainer {
   }
 
   public boolean netContainsClockConnection(Net netInfo) {
-    for (final var solderPoint : clockSources) {
+    for (final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint solderPoint : clockSources) {
       if (solderPoint.getParentNet().equals(netInfo)) return true;
     }
-    for (final var solderPoint : clockNets) {
+    for (final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint solderPoint : clockNets) {
       if (solderPoint.getParentNet().equals(netInfo)) return true;
     }
     return false;
   }
 
   public boolean netContainsClockSource(Net netInfo) {
-    for (final var solderPoint : clockSources) {
+    for (final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint solderPoint : clockSources) {
       if (solderPoint.getParentNet().equals(netInfo)) return true;
     }
     return false;

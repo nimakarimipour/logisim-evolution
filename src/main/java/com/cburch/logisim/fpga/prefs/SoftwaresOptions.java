@@ -36,7 +36,7 @@ public class SoftwaresOptions extends OptionsPanel {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-      final var source = ae.getSource();
+      final java.lang.Object source = ae.getSource();
 
       if (source == questaPathButton) {
         Softwares.setQuestaPath(getPreferencesFrame());
@@ -97,9 +97,9 @@ public class SoftwaresOptions extends OptionsPanel {
     vivadoPathButton.addActionListener(myListener);
     AppPreferences.getPrefs().addPreferenceChangeListener(myListener);
 
-    final var sep = new JSeparator(JSeparator.HORIZONTAL);
-    final var layout = new GridBagLayout();
-    final var c = new GridBagConstraints();
+    final javax.swing.JSeparator sep = new JSeparator(JSeparator.HORIZONTAL);
+    final java.awt.GridBagLayout layout = new GridBagLayout();
+    final java.awt.GridBagConstraints c = new GridBagConstraints();
     setLayout(layout);
 
     c.insets = new Insets(2, 4, 4, 2);

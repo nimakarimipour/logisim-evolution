@@ -49,7 +49,7 @@ public class FactoryAttributes implements AttributeSet, AttributeListener, Clone
   @Override
   public void attributeListChanged(AttributeEvent baseEvent) {
     AttributeEvent e = null;
-    for (final var l : listeners) {
+    for (final com.cburch.logisim.data.AttributeListener l : listeners) {
       if (e == null) {
         e =
             new AttributeEvent(
@@ -62,7 +62,7 @@ public class FactoryAttributes implements AttributeSet, AttributeListener, Clone
   @Override
   public void attributeValueChanged(AttributeEvent baseEvent) {
     AttributeEvent e = null;
-    for (final var l : listeners) {
+    for (final com.cburch.logisim.data.AttributeListener l : listeners) {
       if (e == null) {
         e =
             new AttributeEvent(

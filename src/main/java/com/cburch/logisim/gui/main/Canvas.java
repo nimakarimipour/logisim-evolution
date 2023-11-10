@@ -163,7 +163,7 @@ public class Canvas extends JPanel implements LocaleListener, CanvasPaneContents
   }
 
   public static void paintAutoZoomButton(Graphics g, Dimension sz, Color zoomButtonColor) {
-    final var oldColor = g.getColor();
+    final java.awt.Color oldColor = g.getColor();
     g.setColor(TICK_RATE_COLOR);
     g.fillOval(
             sz.width - ZOOM_BUTTON_SIZE - 33,
@@ -442,7 +442,7 @@ public class Canvas extends JPanel implements LocaleListener, CanvasPaneContents
     boolean showTips = AppPreferences.COMPONENT_TIPS.getBoolean();
     if (showTips) {
       Canvas.snapToGrid(event);
-      final var loc = Location.create(event.getX(), event.getY(), false);
+      final com.cburch.logisim.data.Location loc = Location.create(event.getX(), event.getY(), false);
       ComponentUserEvent e = null;
       for (Component comp : getCircuit().getAllContaining(loc)) {
         Object makerObj = comp.getFeature(ToolTipMaker.class);
@@ -891,7 +891,7 @@ public class Canvas extends JPanel implements LocaleListener, CanvasPaneContents
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent mwe) {
-      final var tool = proj.getTool();
+      final com.cburch.logisim.tools.Tool tool = proj.getTool();
       if (mwe.isControlDown()) {
         com.cburch.logisim.gui.generic.ZoomControl zoomControl = proj.getFrame().getZoomControl();
     
@@ -907,8 +907,8 @@ public class Canvas extends JPanel implements LocaleListener, CanvasPaneContents
         setVerticalScrollBar((int) ((mwe.getY() - rect.height / 2) * zoom));
 
       } else if (tool instanceof PokeTool && ((PokeTool) tool).isScrollable()) {
-        final var id = (mwe.getWheelRotation() < 0) ? KeyEvent.VK_UP : KeyEvent.VK_DOWN;
-        final var e = new KeyEvent(mwe.getComponent(), KeyEvent.KEY_PRESSED, mwe.getWhen(), 0, id, '\0');
+        final int id = (mwe.getWheelRotation() < 0) ? KeyEvent.VK_UP : KeyEvent.VK_DOWN;
+        final java.awt.event.KeyEvent e = new KeyEvent(mwe.getComponent(), KeyEvent.KEY_PRESSED, mwe.getWhen(), 0, id, '\0');
         tool.keyPressed(Canvas.this, e);
       } else {
         if (mwe.isShiftDown()) {
@@ -1262,9 +1262,9 @@ public class Canvas extends JPanel implements LocaleListener, CanvasPaneContents
           GraphicsUtil.drawArrow2(g, 30, sz.height - 5, 5, sz.height - 5, 5, sz.height - 30);
       } else zoomButtonVisible = false;
       if (AppPreferences.SHOW_TICK_RATE.getBoolean()) {
-        final var hz = tickCounter.getTickRate();
+        final java.lang.String hz = tickCounter.getTickRate();
         if (hz != null && !hz.equals("")) {
-          final var fm = g.getFontMetrics();
+          final java.awt.FontMetrics fm = g.getFontMetrics();
           int x = 10;
           int y = fm.getAscent() + 10;
 
@@ -1286,7 +1286,7 @@ public class Canvas extends JPanel implements LocaleListener, CanvasPaneContents
     }
 
     private int paintString(Graphics g, int y, String msg) {
-      final var old = g.getFont();
+      final java.awt.Font old = g.getFont();
       g.setFont(ERR_MSG_FONT);
       java.awt.FontMetrics fm = g.getFontMetrics();
       int x = (getWidth() - fm.stringWidth(msg)) / 2;

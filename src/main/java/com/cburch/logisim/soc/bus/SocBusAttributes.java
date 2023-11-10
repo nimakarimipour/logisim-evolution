@@ -47,7 +47,7 @@ public class SocBusAttributes extends AbstractAttributeSet {
 
   @Override
   protected void copyInto(AbstractAttributeSet dest) {
-    final var d = (SocBusAttributes) dest;
+    final com.cburch.logisim.soc.bus.SocBusAttributes d = (SocBusAttributes) dest;
     d.labelfont = labelfont;
     d.labelVisible = labelVisible;
     d.traceSize = traceSize;
@@ -70,8 +70,8 @@ public class SocBusAttributes extends AbstractAttributeSet {
     if (attr == StdAttr.LABEL_VISIBILITY) return (V) labelVisible;
     if (attr == SOC_BUS_ID) {
       if (StringUtil.isNullOrEmpty(id.getBusId())) {
-        final var date = new Date();
-        final var names = this.toString().split("@");
+        final java.util.Date date = new Date();
+        final java.lang.String[] names = this.toString().split("@");
         id.setBusId(String.format("0x%016X%s", date.getTime(), names[names.length - 1]));
       }
       return (V) id;
@@ -89,7 +89,7 @@ public class SocBusAttributes extends AbstractAttributeSet {
   public <V> void setValue(Attribute<V> attr, V value) {
     final V oldValue = getValue(attr);
     if (attr == NrOfTracesAttr) {
-      final var v = (BitWidth) value;
+      final com.cburch.logisim.data.BitWidth v = (BitWidth) value;
       if (!traceSize.equals(v)) {
         traceSize = v;
         fireAttributeValueChanged(attr, value, oldValue);
@@ -97,7 +97,7 @@ public class SocBusAttributes extends AbstractAttributeSet {
       return;
     }
     if (attr == StdAttr.LABEL) {
-      final var v = (String) value;
+      final java.lang.String v = (String) value;
       if (!label.equals(v)) {
         label = v;
         fireAttributeValueChanged(attr, value, oldValue);
@@ -105,7 +105,7 @@ public class SocBusAttributes extends AbstractAttributeSet {
       return;
     }
     if (attr == StdAttr.LABEL_FONT) {
-      final var f = (Font) value;
+      final java.awt.Font f = (Font) value;
       if (!labelfont.equals(f)) {
         labelfont = f;
         fireAttributeValueChanged(attr, value, oldValue);
@@ -113,7 +113,7 @@ public class SocBusAttributes extends AbstractAttributeSet {
       return;
     }
     if (attr == StdAttr.LABEL_VISIBILITY) {
-      final var v = (Boolean) value;
+      final java.lang.Boolean v = (Boolean) value;
       if (labelVisible != v) {
         labelVisible = v;
         fireAttributeValueChanged(attr, value, oldValue);
@@ -125,7 +125,7 @@ public class SocBusAttributes extends AbstractAttributeSet {
       return;
     }
     if (attr == SOC_TRACE_VISIBLE) {
-      final var v = (Boolean) value;
+      final java.lang.Boolean v = (Boolean) value;
       if (traceVisible != v) {
         traceVisible = v;
         fireAttributeValueChanged(attr, value, oldValue);

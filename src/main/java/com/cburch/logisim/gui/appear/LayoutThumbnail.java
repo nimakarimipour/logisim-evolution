@@ -49,38 +49,38 @@ public class LayoutThumbnail extends JComponent {
   @Override
   protected void paintComponent(Graphics g) {
     if (AppPreferences.AntiAliassing.getBoolean()) {
-      final var g2 = (Graphics2D) g;
+      final java.awt.Graphics2D g2 = (Graphics2D) g;
       g2.setRenderingHint(
           RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
     if (circuitState != null) {
-      final var circuit = circuitState.getCircuit();
-      final var bounds = circuit.getBounds(g);
-      final var size = getSize();
-      final var scaleX = (double) (size.width - 2 * BORDER) / bounds.getWidth();
-      final var scaleY = (double) (size.height - 2 * BORDER) / bounds.getHeight();
-      final var scale = Math.min(1.0, Math.min(scaleX, scaleY));
+      final com.cburch.logisim.circuit.Circuit circuit = circuitState.getCircuit();
+      final com.cburch.logisim.data.Bounds bounds = circuit.getBounds(g);
+      final java.awt.Dimension size = getSize();
+      final double scaleX = (double) (size.width - 2 * BORDER) / bounds.getWidth();
+      final double scaleY = (double) (size.height - 2 * BORDER) / bounds.getHeight();
+      final double scale = Math.min(1.0, Math.min(scaleX, scaleY));
 
-      final var gfxCopy = g.create();
-      final var borderX = (int) ((size.width - bounds.getWidth() * scale) / 2);
-      final var borderY = (int) ((size.height - bounds.getHeight() * scale) / 2);
+      final java.awt.Graphics gfxCopy = g.create();
+      final int borderX = (int) ((size.width - bounds.getWidth() * scale) / 2);
+      final int borderY = (int) ((size.height - bounds.getHeight() * scale) / 2);
       gfxCopy.translate(borderX, borderY);
       if (scale != 1.0 && g instanceof Graphics2D) {
         ((Graphics2D) gfxCopy).scale(scale, scale);
       }
       gfxCopy.translate(-bounds.getX(), -bounds.getY());
 
-      final var context = new ComponentDrawContext(this, circuit, circuitState, g, gfxCopy);
+      final com.cburch.logisim.comp.ComponentDrawContext context = new ComponentDrawContext(this, circuit, circuitState, g, gfxCopy);
       context.setShowState(false);
       context.setShowColor(false);
       circuit.draw(context, Collections.emptySet());
       if (CollectionUtil.isNotEmpty(ports)) {
         gfxCopy.setColor(AppearancePort.COLOR);
-        final var width = Math.max(4, (int) ((2 / scale) + 0.5));
+        final int width = Math.max(4, (int) ((2 / scale) + 0.5));
         GraphicsUtil.switchToWidth(gfxCopy, width);
-        for (final var port : ports) {
-          final var b = port.getBounds();
+        for (final com.cburch.logisim.instance.Instance port : ports) {
+          final com.cburch.logisim.data.Bounds b = port.getBounds();
           int x = b.getX();
           int y = b.getY();
           int w = b.getWidth();
@@ -99,14 +99,14 @@ public class LayoutThumbnail extends JComponent {
 
       if (CollectionUtil.isNotEmpty(elts)) {
         gfxCopy.setColor(DynamicElement.COLOR);
-        final var width = Math.max(4, (int) ((2 / scale) + 0.5));
+        final int width = Math.max(4, (int) ((2 / scale) + 0.5));
         GraphicsUtil.switchToWidth(gfxCopy, width);
-        for (final var elt : elts) {
-          final var b = elt.getBounds();
-          final var x = b.getX();
-          final var y = b.getY();
-          final var w = b.getWidth();
-          final var h = b.getHeight();
+        for (final com.cburch.logisim.instance.Instance elt : elts) {
+          final com.cburch.logisim.data.Bounds b = elt.getBounds();
+          final int x = b.getX();
+          final int y = b.getY();
+          final int w = b.getWidth();
+          final int h = b.getHeight();
           if (elt.getFactory() instanceof Led || elt.getFactory() instanceof RgbLed) {
             gfxCopy.drawOval(x, y, w, h);
           } else {

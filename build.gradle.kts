@@ -69,7 +69,7 @@ dependencies {
   compileOnly("edu.ucr.cs.riple.taint:ucrtainting-checker-qual:0.1")
 
   // Annotator Scanner Checker
-  annotationProcessor("edu.ucr.cs.riple.annotator:annotator-scanner:1.3.8-SNAPSHOT")
+  annotationProcessor("edu.ucr.cs.riple.annotator:annotator-scanner:1.3.9-SNAPSHOT")
 }
 
 /**

@@ -33,7 +33,7 @@ public abstract class LogPanel extends JPanel {
   public abstract String getHelpText();
 
   void updateTab() {
-    final var h = getEditHandler();
+    final com.cburch.logisim.gui.menu.EditHandler h = getEditHandler();
     if (h != null) h.computeEnabled();
   }
 

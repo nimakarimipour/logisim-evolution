@@ -37,13 +37,13 @@ public class RegisterPoker extends InstancePoker {
 
   @Override
   public void keyTyped(InstanceState state, KeyEvent e) {
-    final var val = Character.digit(e.getKeyChar(), 16);
+    final int val = Character.digit(e.getKeyChar(), 16);
     if (val < 0) return;
 
     com.cburch.logisim.data.BitWidth dataWidth = state.getAttributeValue(StdAttr.WIDTH);
     if (dataWidth == null) dataWidth = BitWidth.create(8);
     curValue = (curValue * 16 + val) & dataWidth.getMask();
-    final var data = (RegisterData) state.getData();
+    final com.cburch.logisim.std.memory.RegisterData data = (RegisterData) state.getData();
     data.value = Value.createKnown(dataWidth, curValue);
     state.fireInvalidated();
   }
@@ -53,17 +53,17 @@ public class RegisterPoker extends InstancePoker {
     com.cburch.logisim.data.BitWidth dataWidth = state.getAttributeValue(StdAttr.WIDTH);
     if (dataWidth == null) dataWidth = BitWidth.create(8);
     if (e.getKeyCode() == KeyEvent.VK_UP) {
-      final var maxVal = dataWidth.getMask();
+      final long maxVal = dataWidth.getMask();
       if (curValue != maxVal) {
         curValue = curValue + 1;
-        final var data = (RegisterData) state.getData();
+        final com.cburch.logisim.std.memory.RegisterData data = (RegisterData) state.getData();
         data.value = Value.createKnown(dataWidth, curValue);
         state.fireInvalidated();
       }
     } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
       if (curValue != 0) {
         curValue = curValue - 1;
-        final var data = (RegisterData) state.getData();
+        final com.cburch.logisim.std.memory.RegisterData data = (RegisterData) state.getData();
         data.value = Value.createKnown(dataWidth, curValue);
         state.fireInvalidated();
       }
@@ -72,14 +72,14 @@ public class RegisterPoker extends InstancePoker {
 
   @Override
   public void paint(InstancePainter painter) {
-    final var bds = painter.getBounds();
-    final var dataWidth = painter.getAttributeValue(StdAttr.WIDTH);
-    final var width = dataWidth == null ? 8 : dataWidth.getWidth();
-    final var len = (width + 3) / 4;
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+    final com.cburch.logisim.data.BitWidth dataWidth = painter.getAttributeValue(StdAttr.WIDTH);
+    final int width = dataWidth == null ? 8 : dataWidth.getWidth();
+    final int len = (width + 3) / 4;
 
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     g.setColor(Color.RED);
-    final var wid = 8 * len + 2;
+    final int wid = 8 * len + 2;
     g.drawRect(bds.getX() + (bds.getWidth() - wid) / 2, bds.getY(), wid, 16);
     g.setColor(Color.BLACK);
   }

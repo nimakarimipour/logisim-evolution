@@ -108,8 +108,8 @@ class WireBundle {
   }
 
   void unite(WireBundle other) {
-    final var group = this.find();
-    final var group2 = other.find();
+    final com.cburch.logisim.circuit.WireBundle group = this.find();
+    final com.cburch.logisim.circuit.WireBundle group2 = other.find();
     if (group != group2) group.parent = group2;
   }
 }

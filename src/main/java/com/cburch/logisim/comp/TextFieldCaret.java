@@ -62,11 +62,11 @@ class TextFieldCaret implements Caret, TextFieldListener {
 
   @Override
   public void cancelEditing() {
-    final var e = new CaretEvent(this, oldText, oldText);
+    final com.cburch.logisim.tools.CaretEvent e = new CaretEvent(this, oldText, oldText);
     curText = oldText;
     pos = curText.length();
     end = pos;
-    for (final var l : new ArrayList<>(listeners)) {
+    for (final com.cburch.logisim.tools.CaretListener l : new ArrayList<>(listeners)) {
       l.editingCanceled(e);
     }
     field.removeTextFieldListener(this);
@@ -82,14 +82,14 @@ class TextFieldCaret implements Caret, TextFieldListener {
 
   @Override
   public void draw(Graphics g) {
-    final var x = field.getX();
-    final var y = field.getY();
-    final var halign = field.getHAlign();
-    final var valign = field.getVAlign();
+    final int x = field.getX();
+    final int y = field.getY();
+    final int halign = field.getHAlign();
+    final int valign = field.getVAlign();
     if (field.getFont() != null) g.setFont(field.getFont());
 
     // draw boundary
-    final var box = getBounds(g);
+    final com.cburch.logisim.data.Bounds box = getBounds(g);
     g.setColor(EDIT_BACKGROUND);
     g.fillRect(box.getX(), box.getY(), box.getWidth(), box.getHeight());
     g.setColor(EDIT_BORDER);
@@ -98,8 +98,8 @@ class TextFieldCaret implements Caret, TextFieldListener {
     // draw selection
     if (pos != end) {
       g.setColor(SELECTION_BACKGROUND);
-      final var p = GraphicsUtil.getTextCursor(g, curText, x, y, Math.min(pos, end), halign, valign);
-      final var e = GraphicsUtil.getTextCursor(g, curText, x, y, Math.max(pos, end), halign, valign);
+      final java.awt.Rectangle p = GraphicsUtil.getTextCursor(g, curText, x, y, Math.min(pos, end), halign, valign);
+      final java.awt.Rectangle e = GraphicsUtil.getTextCursor(g, curText, x, y, Math.max(pos, end), halign, valign);
       g.fillRect(p.x, p.y - 1, e.x - p.x + 1, e.height + 2);
     }
 
@@ -109,7 +109,7 @@ class TextFieldCaret implements Caret, TextFieldListener {
 
     // draw cursor
     if (pos == end) {
-      final var p = GraphicsUtil.getTextCursor(g, curText, x, y, pos, halign, valign);
+      final java.awt.Rectangle p = GraphicsUtil.getTextCursor(g, curText, x, y, pos, halign, valign);
       g.drawLine(p.x, p.y, p.x, p.y + p.height);
     }
   }
@@ -121,21 +121,21 @@ class TextFieldCaret implements Caret, TextFieldListener {
 
   @Override
   public Bounds getBounds(Graphics g) {
-    final var x = field.getX();
-    final var y = field.getY();
-    final var halign = field.getHAlign();
-    final var valign = field.getVAlign();
-    final var font = field.getFont();
-    final var bds = Bounds.create(GraphicsUtil.getTextBounds(g, font, curText, x, y, halign, valign));
+    final int x = field.getX();
+    final int y = field.getY();
+    final int halign = field.getHAlign();
+    final int valign = field.getVAlign();
+    final java.awt.Font font = field.getFont();
+    final com.cburch.logisim.data.Bounds bds = Bounds.create(GraphicsUtil.getTextBounds(g, font, curText, x, y, halign, valign));
     return bds.add(field.getBounds(g)).expand(3);
   }
 
   @Override
   public void keyPressed(KeyEvent e) {
-    final var ign = InputEvent.ALT_DOWN_MASK | InputEvent.META_DOWN_MASK;
+    final int ign = InputEvent.ALT_DOWN_MASK | InputEvent.META_DOWN_MASK;
     if ((e.getModifiersEx() & ign) != 0) return;
-    final var shift = ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) != 0);
-    final var ctrl = ((e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != 0);
+    final boolean shift = ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) != 0);
+    final boolean ctrl = ((e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != 0);
     arrowKeyMaybePressed(e, shift, ctrl);
     if (e.isConsumed()) return;
     if (ctrl)
@@ -191,10 +191,10 @@ class TextFieldCaret implements Caret, TextFieldListener {
       case KeyEvent.VK_COPY:
       case KeyEvent.VK_C:
         if (end != pos) {
-          final var pp = (Math.min(pos, end));
-          final var ee = (Math.max(pos, end));
-          final var s = curText.substring(pp, ee);
-          final var sel = new StringSelection(s);
+          final int pp = (Math.min(pos, end));
+          final int ee = (Math.max(pos, end));
+          final java.lang.String s = curText.substring(pp, ee);
+          final java.awt.datatransfer.StringSelection sel = new StringSelection(s);
           Toolkit.getDefaultToolkit().getSystemClipboard().setContents(sel, null);
           if (cut) {
             normalizeSelection();
@@ -307,10 +307,10 @@ class TextFieldCaret implements Caret, TextFieldListener {
 
   @Override
   public void keyTyped(KeyEvent e) {
-    final var ign = InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK | InputEvent.META_DOWN_MASK;
+    final int ign = InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK | InputEvent.META_DOWN_MASK;
     if ((e.getModifiersEx() & ign) != 0) return;
 
-    final var c = e.getKeyChar();
+    final char c = e.getKeyChar();
     if (allowedCharacter(c)) {
       normalizeSelection();
       if (end < curText.length()) {
@@ -351,8 +351,8 @@ class TextFieldCaret implements Caret, TextFieldListener {
   protected int findCaret(int x, int y) {
     x -= field.getX();
     y -= field.getY();
-    final var halign = field.getHAlign();
-    final var valign = field.getVAlign();
+    final int halign = field.getHAlign();
+    final int valign = field.getVAlign();
     return GraphicsUtil.getTextPosition(g, curText, x, y, halign, valign);
   }
 
@@ -363,9 +363,9 @@ class TextFieldCaret implements Caret, TextFieldListener {
 
   @Override
   public void stopEditing() {
-    final var e = new CaretEvent(this, oldText, curText);
+    final com.cburch.logisim.tools.CaretEvent e = new CaretEvent(this, oldText, curText);
     field.setText(curText);
-    for (final var l : new ArrayList<>(listeners)) {
+    for (final com.cburch.logisim.tools.CaretListener l : new ArrayList<>(listeners)) {
       l.editingStopped(e);
     }
     field.removeTextFieldListener(this);

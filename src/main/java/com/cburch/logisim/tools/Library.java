@@ -22,7 +22,7 @@ public abstract class Library {
   }
 
   public boolean containsFromSource(Tool query) {
-    for (final var tool : getTools()) {
+    for (final com.cburch.logisim.tools.Tool tool : getTools()) {
       if (tool.sharesSource(query)) {
         return true;
       }
@@ -46,7 +46,7 @@ public abstract class Library {
   }
 
   public Library getLibrary(String name) {
-    for (final var lib : getLibraries()) {
+    for (final com.cburch.logisim.tools.Library lib : getLibraries()) {
       if (lib.getName().equals(name)) {
         return lib;
       }
@@ -59,7 +59,7 @@ public abstract class Library {
   }
 
   public Tool getTool(String name) {
-    for (final var tool : getTools()) {
+    for (final com.cburch.logisim.tools.Tool tool : getTools()) {
       if (tool.getName().equals(name)) {
         return tool;
       }
@@ -71,7 +71,7 @@ public abstract class Library {
 
   public int indexOf(ComponentFactory query) {
     int index = -1;
-    for (final var obj : getTools()) {
+    for (final com.cburch.logisim.tools.Tool obj : getTools()) {
       index++;
       if (obj instanceof AddTool tool) {
         if (tool.getFactory() == query) return index;

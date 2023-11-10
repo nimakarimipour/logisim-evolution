@@ -19,17 +19,17 @@ public class CompileIcon extends BaseIcon {
 
   @Override
   protected void paintIcon(Graphics2D g2) {
-    final var page = new int[] {0, 0, 0, 15, 15, 15, 15, 5, 10, 5, 10, 0, 15, 5, 10, 0, 0, 0};
+    final int[] page = new int[] {0, 0, 0, 15, 15, 15, 15, 5, 10, 5, 10, 0, 15, 5, 10, 0, 0, 0};
     g2.setColor(Color.BLACK);
     g2.setStroke(new BasicStroke(AppPreferences.getScaled(1F)));
-    final var xpos = new int[9];
-    final var ypos = new int[9];
+    final int[] xpos = new int[9];
+    final int[] ypos = new int[9];
     for (int i = 0; i < 9; i++) {
       xpos[i] = AppPreferences.getScaled(page[i * 2]);
       ypos[i] = AppPreferences.getScaled(page[i * 2 + 1]);
     }
     g2.drawPolygon(xpos, ypos, 9);
-    final var f = g2.getFont();
+    final java.awt.Font f = g2.getFont();
     g2.setFont(f.deriveFont(AppPreferences.getScaled(4F)));
     g2.setColor(Color.BLUE);
     GraphicsUtil.drawCenteredText(

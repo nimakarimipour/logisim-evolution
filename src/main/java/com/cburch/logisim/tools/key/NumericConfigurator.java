@@ -64,14 +64,14 @@ public abstract class NumericConfigurator<V> implements KeyConfigurator, Cloneab
   @Override
   public KeyConfigurationResult keyEventReceived(KeyConfigurationEvent event) {
     if (event.getType() == KeyConfigurationEvent.KEY_TYPED) {
-      final var e = event.getKeyEvent();
-      final var digit = Character.digit(e.getKeyChar(), radix);
+      final java.awt.event.KeyEvent e = event.getKeyEvent();
+      final int digit = Character.digit(e.getKeyChar(), radix);
       if (digit >= 0 && e.getModifiersEx() == modsEx) {
-        final var now = System.currentTimeMillis();
-        final var sinceLast = now - whenTyped;
-        final var attrs = event.getAttributeSet();
-        final var min = getMinimumValue(attrs);
-        final var max = getMaximumValue(attrs);
+        final long now = System.currentTimeMillis();
+        final long sinceLast = now - whenTyped;
+        final com.cburch.logisim.data.AttributeSet attrs = event.getAttributeSet();
+        final long min = getMinimumValue(attrs);
+        final long max = getMaximumValue(attrs);
         long val = 0L;
         if (sinceLast < maxTimeKeyLasts) {
           val = radix * curValue;

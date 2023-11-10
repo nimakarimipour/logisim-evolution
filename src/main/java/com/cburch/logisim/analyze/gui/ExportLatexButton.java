@@ -42,7 +42,7 @@ public class ExportLatexButton extends JButton {
   private void doSave() {
     /* code taken from Kevin Walsh'e ExportTableButton and slightly modified*/
     if (lastFile == null) {
-      final var c = model.getCurrentCircuit();
+      final com.cburch.logisim.circuit.Circuit c = model.getCurrentCircuit();
       if (c != null) {
         lastFile = new File(c.getName() + ".tex");
       } else {
@@ -56,7 +56,7 @@ public class ExportLatexButton extends JButton {
     chooser.setFileFilter(AnalyzerTexWriter.FILE_FILTER);
     int choice = chooser.showSaveDialog(parent);
     if (choice == JFileChooser.APPROVE_OPTION) {
-      final var file = chooser.getSelectedFile();
+      final java.io.File file = chooser.getSelectedFile();
       if (file.isDirectory()) {
         OptionPane.showMessageDialog(
             parent,
@@ -74,7 +74,7 @@ public class ExportLatexButton extends JButton {
         return;
       }
       if (file.exists()) {
-        final var confirm =
+        final int confirm =
             OptionPane.showConfirmDialog(
                 parent,
                 S.get("confirmOverwriteMessage", file.getName()),

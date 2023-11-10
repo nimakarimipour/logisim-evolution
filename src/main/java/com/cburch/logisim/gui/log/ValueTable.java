@@ -78,10 +78,10 @@ public class ValueTable extends JPanel {
   }
 
   private void computePreferredSize() {
-    final var oldCellHeight = cellHeight;
-    final var oldTableWidth = tableWidth;
-    final var oldTableHeight = tableHeight;
-    final var columns = model == null ? 0 : model.getColumnCount();
+    final int oldCellHeight = cellHeight;
+    final int oldTableWidth = tableWidth;
+    final int oldTableHeight = tableHeight;
+    final int columns = model == null ? 0 : model.getColumnCount();
 
     if (columnWidth == null || columnWidth.length < columns) columnWidth = new int[columns];
 
@@ -89,29 +89,29 @@ public class ValueTable extends JPanel {
       cellHeight = 16;
       tableWidth = tableHeight = 0;
     } else {
-      final var g = getGraphics();
+      final java.awt.Graphics g = getGraphics();
       int cellsWidth = 0;
 
       if (g == null) {
         cellHeight = 16;
         cellsWidth = 24 * columns;
       } else {
-        final var headerMetric = g.getFontMetrics(HEAD_FONT);
-        final var bodyMetric = g.getFontMetrics(BODY_FONT);
+        final java.awt.FontMetrics headerMetric = g.getFontMetrics(HEAD_FONT);
+        final java.awt.FontMetrics bodyMetric = g.getFontMetrics(BODY_FONT);
         cellHeight = Math.max(headerMetric.getHeight(), bodyMetric.getHeight());
         for (int i = 0; i < columns; i++) {
-          final var radix = model.getColumnValueRadix(i);
+          final int radix = model.getColumnValueRadix(i);
           // column should be at least as wide as 24, as header, and
           // as formatted value
-          final var header = model.getColumnName(i);
+          final java.lang.String header = model.getColumnName(i);
           int cellWidth = Math.max(24, headerMetric.stringWidth(header));
-          final var w = model.getColumnValueWidth(i);
+          final com.cburch.logisim.data.BitWidth w = model.getColumnValueWidth(i);
 
           if (w != null) {
-            final var val =
+            final com.cburch.logisim.data.Value val =
                 Value.createKnown(
                     w, (radix == 2 ? 0 : (radix == 10 ? (1 << (w.getWidth() - 1)) : w.getMask())));
-            final var label = val.toDisplayString(radix);
+            final java.lang.String label = val.toDisplayString(radix);
             cellWidth = Math.max(cellWidth, bodyMetric.stringWidth(label));
           }
 
@@ -127,8 +127,8 @@ public class ValueTable extends JPanel {
     if (cellHeight != oldCellHeight
         || tableWidth != oldTableWidth
         || tableHeight != oldTableHeight) {
-      final var headSize = new Dimension(tableWidth, cellHeight + HEADER_SEP);
-      final var bodySize = new Dimension(tableWidth, tableHeight);
+      final java.awt.Dimension headSize = new Dimension(tableWidth, cellHeight + HEADER_SEP);
+      final java.awt.Dimension bodySize = new Dimension(tableWidth, tableHeight);
       body.setPreferredSize(bodySize);
       header.setPreferredSize(headSize);
       body.revalidate();
@@ -145,10 +145,10 @@ public class ValueTable extends JPanel {
     int left = Math.max(0, (width - tableWidth) / 2);
     if (x < left + COLUMN_SEP || x >= left + tableWidth) return -1;
     left += COLUMN_SEP;
-    final var columns = model.getColumnCount();
+    final int columns = model.getColumnCount();
 
     for (int i = 0; i < columns; i++) {
-      final var cellWidth = columnWidth[i];
+      final int cellWidth = columnWidth[i];
       if (x >= left && x < left + cellWidth) return i;
       left += cellWidth + COLUMN_SEP;
     }
@@ -157,7 +157,7 @@ public class ValueTable extends JPanel {
 
   int findRow(int y, int height) {
     if (y < 0) return -1;
-    final var row = y / cellHeight;
+    final int row = y / cellHeight;
     if (row >= rowCount) return -1;
 
     return row;
@@ -169,13 +169,13 @@ public class ValueTable extends JPanel {
   }
 
   void refreshData(int top, int bottom) {
-    final var columns = model == null ? 0 : model.getColumnCount();
+    final int columns = model == null ? 0 : model.getColumnCount();
 
     if (columns == 0) {
       rowCount = 0;
       return;
     }
-    final var rows = model.getRowCount();
+    final int rows = model.getRowCount();
     if (rows == 0) {
       rowCount = 0;
       return;
@@ -191,7 +191,7 @@ public class ValueTable extends JPanel {
         && bottomRow < rowStart + rowCount) return;
 
     // we pre-fetch a bit more than strictly visible
-    final var rect = scrollPane.getViewport().getViewRect();
+    final java.awt.Rectangle rect = scrollPane.getViewport().getViewRect();
     top = rect.y - rect.height / 2;
     bottom = rect.y + rect.height * 2;
     topRow = Math.min(rows - 1, Math.max(0, top / cellHeight - 10));
@@ -270,44 +270,44 @@ public class ValueTable extends JPanel {
     public void paintComponent(Graphics g) {
       super.paintComponent(g);
 
-      final var sz = getSize();
+      final java.awt.Dimension sz = getSize();
 
       g.setColor(Color.BLACK);
       g.setFont(BODY_FONT);
 
-      final var columns = model == null ? 0 : model.getColumnCount();
+      final int columns = model == null ? 0 : model.getColumnCount();
       if (columns == 0) {
         rowCount = 0;
         GraphicsUtil.drawCenteredText(g, S.get("tableEmptyMessage"), sz.width / 2, sz.height / 2);
         return;
       }
 
-      final var bodyMetric = g.getFontMetrics();
-      final var clip = g.getClipBounds();
+      final java.awt.FontMetrics bodyMetric = g.getFontMetrics();
+      final java.awt.Rectangle clip = g.getClipBounds();
       refreshData(clip.y, clip.y + clip.height);
 
       if (rowCount == 0) return;
 
-      final var firstRow = Math.max(0, clip.y / cellHeight);
-      final var lastRow = Math.min(model.getRowCount() - 1, (clip.y + clip.height) / cellHeight);
+      final int firstRow = Math.max(0, clip.y / cellHeight);
+      final int lastRow = Math.min(model.getRowCount() - 1, (clip.y + clip.height) / cellHeight);
 
       int top = 0;
-      final var left = Math.max(0, (sz.width - tableWidth) / 2);
+      final int left = Math.max(0, (sz.width - tableWidth) / 2);
       int x = left + COLUMN_SEP;
 
-      final var bg = getBackground();
+      final java.awt.Color bg = getBackground();
 
       for (int col = 0; col < columns; col++) {
         int y = top + firstRow * cellHeight;
         g.setColor(Color.GRAY);
         g.drawLine(x - COLUMN_SEP / 2, clip.y, x - COLUMN_SEP / 2, clip.y + clip.height);
         g.setColor(Color.BLACK);
-        final var cellWidth = columnWidth[col];
-        final var radix = model.getColumnValueRadix(col);
+        final int cellWidth = columnWidth[col];
+        final int radix = model.getColumnValueRadix(col);
 
         for (int row = firstRow; row <= lastRow; row++) {
           if (!(rowStart <= row && row < rowStart + rowCount)) continue;
-          final var cell = rowData[row - rowStart][col];
+          final com.cburch.logisim.gui.log.ValueTable.Cell cell = rowData[row - rowStart][col];
 
           if (cell == null) continue;
 
@@ -316,11 +316,11 @@ public class ValueTable extends JPanel {
           g.setColor(Color.BLACK);
 
           if (cell.value != null) {
-            final var label =
+            final java.lang.String label =
                 (cell.value instanceof Value
                     ? ((Value) cell.value).toDisplayString(radix)
                     : (String) cell.value);
-            final var width = bodyMetric.stringWidth(label);
+            final int width = bodyMetric.stringWidth(label);
 
             if (cell.fg != null) g.setColor(cell.fg);
 
@@ -361,32 +361,32 @@ public class ValueTable extends JPanel {
     public void paintComponent(Graphics g) {
       super.paintComponent(g);
 
-      final var sz = getSize();
+      final java.awt.Dimension sz = getSize();
       g.setColor(Color.GRAY);
 
-      final var columns = model == null ? 0 : model.getColumnCount();
+      final int columns = model == null ? 0 : model.getColumnCount();
       if (columns == 0) {
         g.drawLine(0, cellHeight + HEADER_SEP / 2, sz.width, cellHeight + HEADER_SEP / 2);
         return;
       }
 
       g.setFont(HEAD_FONT);
-      final var headerMetric = g.getFontMetrics();
-      final var top = 0;
-      final var left = Math.max(0, (sz.width - tableWidth) / 2);
+      final java.awt.FontMetrics headerMetric = g.getFontMetrics();
+      final int top = 0;
+      final int left = Math.max(0, (sz.width - tableWidth) / 2);
 
       g.drawLine(left, cellHeight + HEADER_SEP / 2, left + tableWidth, cellHeight + HEADER_SEP / 2);
 
       int x = left + COLUMN_SEP;
-      final var y = top + headerMetric.getAscent() + 1;
+      final int y = top + headerMetric.getAscent() + 1;
 
       for (int i = 0; i < columns; i++) {
         g.setColor(Color.GRAY);
         g.drawLine(x - COLUMN_SEP / 2, 0, x - COLUMN_SEP / 2, cellHeight);
         g.setColor(Color.BLACK);
-        final var label = model.getColumnName(i);
-        final var cellWidth = columnWidth[i];
-        final var width = headerMetric.stringWidth(label);
+        final java.lang.String label = model.getColumnName(i);
+        final int cellWidth = columnWidth[i];
+        final int width = headerMetric.stringWidth(label);
         g.drawString(label, x + (cellWidth - width) / 2, y);
         x += cellWidth + COLUMN_SEP;
       }
@@ -398,7 +398,7 @@ public class ValueTable extends JPanel {
     class MyListener extends java.awt.event.MouseAdapter {
       @Override
       public void mouseClicked(MouseEvent e) {
-        final var col = model == null ? -1 : findColumn(e.getX(), getSize().width);
+        final int col = model == null ? -1 : findColumn(e.getX(), getSize().width);
         if (col >= 0) model.changeColumnValueRadix(col);
       }
     }
@@ -416,7 +416,7 @@ public class ValueTable extends JPanel {
 
     @Override
     public int getBlockIncrement(int direction) {
-      final var curHeight = getVisibleAmount();
+      final int curHeight = getVisibleAmount();
       int numCells = curHeight / cellHeight - 1;
       if (numCells <= 0) numCells = 1;
       return numCells * cellHeight;
@@ -429,8 +429,8 @@ public class ValueTable extends JPanel {
 
     @Override
     public void stateChanged(ChangeEvent event) {
-      final var newMaximum = getMaximum();
-      final var newExtent = getVisibleAmount();
+      final int newMaximum = getMaximum();
+      final int newExtent = getVisibleAmount();
       if (oldMaximum != newMaximum || oldExtent != newExtent) {
         if (getValue() + oldExtent >= oldMaximum) {
           setValue(newMaximum - newExtent);

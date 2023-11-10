@@ -78,7 +78,7 @@ public class MenuSimulate extends Menu {
     menubar.registerItem(LogisimMenuBar.TICK_HALF, tickHalf);
     menubar.registerItem(LogisimMenuBar.TICK_FULL, tickFull);
 
-    final var menuMask = getToolkit().getMenuShortcutKeyMaskEx();
+    final int menuMask = getToolkit().getMenuShortcutKeyMaskEx();
     runToggle.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, menuMask));
     reset.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, menuMask));
     step.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, menuMask));
@@ -86,7 +86,7 @@ public class MenuSimulate extends Menu {
     tickFull.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0));
     ticksEnabled.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, menuMask));
 
-    final var bgroup = new ButtonGroup();
+    final javax.swing.ButtonGroup bgroup = new ButtonGroup();
     for (int i = 0; i < SUPPORTED_TICK_FREQUENCIES.length; i++) {
       tickFreqs[i] = new TickFrequencyChoice(SUPPORTED_TICK_FREQUENCIES[i]);
       bgroup.add(tickFreqs[i]);
@@ -147,17 +147,17 @@ public class MenuSimulate extends Menu {
   }
 
   public static List<String> getTickFrequencyStrings() {
-    final var result = new ArrayList<String>();
-    for (final var supportedTickFrequency : SUPPORTED_TICK_FREQUENCIES) {
+    final java.util.ArrayList<java.lang.String> result = new ArrayList<String>();
+    for (final java.lang.Double supportedTickFrequency : SUPPORTED_TICK_FREQUENCIES) {
       if (supportedTickFrequency < 1000) {
-        final var small =
+        final boolean small =
             (Math.abs(supportedTickFrequency - Math.round(supportedTickFrequency)) < 0.0001);
-        final var freqHz =
+        final java.lang.String freqHz =
             "" + ((small) ? (int) Math.round(supportedTickFrequency) : supportedTickFrequency);
         result.add(S.get("simulateTickFreqItem", freqHz));
       } else {
-        final var kf = Math.round(supportedTickFrequency / 100) / 10.0;
-        final var freqKhz = "" + ((kf == Math.round(kf)) ? (int) kf : kf);
+        final double kf = Math.round(supportedTickFrequency / 100) / 10.0;
+        final java.lang.String freqKhz = "" + ((kf == Math.round(kf)) ? (int) kf : kf);
         result.add(S.get("simulateTickKFreqItem", freqKhz));
       }
     }
@@ -165,7 +165,7 @@ public class MenuSimulate extends Menu {
   }
 
   private void clearItems(ArrayList<CircuitStateMenuItem> items) {
-    for (final var item : items) {
+    for (final com.cburch.logisim.gui.menu.MenuSimulate.CircuitStateMenuItem item : items) {
       item.unregister();
     }
     items.clear();
@@ -173,7 +173,7 @@ public class MenuSimulate extends Menu {
 
   @Override
   void computeEnabled() {
-    final var present = currentState != null;
+    final boolean present = currentState != null;
     setEnabled(present);
     runToggle.setEnabled(present);
     reset.setEnabled(present);
@@ -201,7 +201,7 @@ public class MenuSimulate extends Menu {
     ticksEnabled.setText(S.get("simulateTickItem"));
     tickFreq.setText(S.get("simulateTickFreqMenu"));
 
-    for (final var freq : tickFreqs) {
+    for (final com.cburch.logisim.gui.menu.MenuSimulate.TickFrequencyChoice freq : tickFreqs) {
       freq.localeChanged();
     }
 
@@ -216,9 +216,9 @@ public class MenuSimulate extends Menu {
     menu.removeAll();
     menu.setEnabled(items.size() > 0);
     boolean first = true;
-    final var mask = getToolkit().getMenuShortcutKeyMaskEx();
+    final int mask = getToolkit().getMenuShortcutKeyMaskEx();
     for (int i = items.size() - 1; i >= 0; i--) {
-      final var item = items.get(i);
+      final com.cburch.logisim.gui.menu.MenuSimulate.CircuitStateMenuItem item = items.get(i);
       menu.add(item);
       if (first) {
         item.setAccelerator(KeyStroke.getKeyStroke(code, mask));
@@ -238,8 +238,8 @@ public class MenuSimulate extends Menu {
     if (currentState == value) {
       return;
     }
-    final var oldSim = currentSim;
-    final var oldState = currentState;
+    final com.cburch.logisim.circuit.Simulator oldSim = currentSim;
+    final com.cburch.logisim.circuit.CircuitState oldState = currentState;
     currentSim = sim;
     currentState = value;
     if (bottomState == null) {
@@ -256,15 +256,15 @@ public class MenuSimulate extends Menu {
       }
     }
 
-    final var oldPresent = oldState != null;
-    final var present = currentState != null;
+    final boolean oldPresent = oldState != null;
+    final boolean present = currentState != null;
     if (oldPresent != present) {
       computeEnabled();
     }
 
     if (currentSim != oldSim) {
-      final var freq = currentSim == null ? 1.0 : currentSim.getTickFrequency();
-      for (final var tickFrequencyChoice : tickFreqs) {
+      final double freq = currentSim == null ? 1.0 : currentSim.getTickFrequency();
+      for (final com.cburch.logisim.gui.menu.MenuSimulate.TickFrequencyChoice tickFrequencyChoice : tickFreqs) {
         tickFrequencyChoice.setSelected(Math.abs(tickFrequencyChoice.freq - freq) < 0.001);
       }
 
@@ -301,7 +301,7 @@ public class MenuSimulate extends Menu {
     public CircuitStateMenuItem(CircuitState circuitState) {
       this.circuitState = circuitState;
 
-      final var circuit = circuitState.getCircuit();
+      final com.cburch.logisim.circuit.Circuit circuit = circuitState.getCircuit();
       circuit.addCircuitListener(this);
       this.setText(circuit.getName());
       addActionListener(this);
@@ -328,11 +328,11 @@ public class MenuSimulate extends Menu {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      final var src = e.getSource();
+      final java.lang.Object src = e.getSource();
 
-      final var proj = menubar.getSimulationProject();
+      final com.cburch.logisim.proj.Project proj = menubar.getSimulationProject();
       if (proj == null) return;
-      final var vhdl = proj.getVhdlSimulator();
+      final com.cburch.logisim.vhdl.sim.VhdlSimulatorTop vhdl = proj.getVhdlSimulator();
       if (vhdl != null
           && (src == simulateVhdlEnable || src == LogisimMenuBar.SIMULATE_VHDL_ENABLE)) {
         vhdl.setEnabled(!vhdl.isEnabled());
@@ -345,7 +345,7 @@ public class MenuSimulate extends Menu {
         proj.getTestFrame().setVisible(true);
       }
 
-      final var sim = proj.getSimulator();
+      final com.cburch.logisim.circuit.Simulator sim = proj.getSimulator();
       if (sim == null) {
         return;
       } else if (src == LogisimMenuBar.SIMULATE_STOP) {
@@ -403,15 +403,15 @@ public class MenuSimulate extends Menu {
     }
 
     void updateSimulator(Simulator.Event e) {
-      final var sim = e.getSource();
+      final com.cburch.logisim.circuit.Simulator sim = e.getSource();
       if (sim != currentSim) {
         return;
       }
       computeEnabled();
       runToggle.setSelected(sim.isAutoPropagating());
       ticksEnabled.setSelected(sim.isAutoTicking());
-      final var freq = sim.getTickFrequency();
-      for (final var item : tickFreqs) {
+      final double freq = sim.getTickFrequency();
+      for (final com.cburch.logisim.gui.menu.MenuSimulate.TickFrequencyChoice item : tickFreqs) {
         item.setSelected(freq == item.freq);
       }
     }
@@ -441,12 +441,12 @@ public class MenuSimulate extends Menu {
     public void localeChanged() {
       double f = freq;
       if (f < 1000) {
-        final var small = Math.abs(f - Math.round(f)) < 0.0001;
-        final var freqHz = "" + (small ? (int) Math.round(f) : f);
+        final boolean small = Math.abs(f - Math.round(f)) < 0.0001;
+        final java.lang.String freqHz = "" + (small ? (int) Math.round(f) : f);
         setText(S.get("simulateTickFreqItem", freqHz));
       } else {
-        final var kf = Math.round(f / 100) / 10.0;
-        final var freqKhz = "" + ((kf == Math.round(kf)) ? (int) kf : kf);
+        final double kf = Math.round(f / 100) / 10.0;
+        final java.lang.String freqKhz = "" + ((kf == Math.round(kf)) ? (int) kf : kf);
         setText(S.get("simulateTickKFreqItem", freqKhz));
       }
     }

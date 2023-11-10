@@ -42,7 +42,7 @@ public class netlistComponent {
       myMapInformation = ref.getAttributeSet().getValue(StdAttr.MAPINFO).clone();
     } else {
       if (ref.getFactory() instanceof Pin) {
-        final var nrOfBits = ref.getEnd(0).getWidth().getWidth();
+        final int nrOfBits = ref.getEnd(0).getWidth().getWidth();
         if (ref.getEnd(0).isInput() && ref.getEnd(0).isOutput()) {
           myMapInformation = new ComponentMapInformationContainer(0, 0, nrOfBits);
         } else if (ref.getEnd(0).isInput()) {
@@ -72,7 +72,7 @@ public class netlistComponent {
     if (globalIds == null) {
       globalIds = new HashMap<>();
     }
-    final var thisInfo = new BubbleInformationContainer();
+    final com.cburch.logisim.fpga.designrulecheck.BubbleInformationContainer thisInfo = new BubbleInformationContainer();
     if (nrOfInputBubbles > 0) {
       thisInfo.setInputBubblesInformation(
           inputBubblesStartId, inputBubblesStartId + nrOfInputBubbles - 1);
@@ -93,7 +93,7 @@ public class netlistComponent {
       return false;
     }
     boolean isConnected = false;
-    final var ThisEnd = endEnds.get(index);
+    final com.cburch.logisim.fpga.designrulecheck.ConnectionEnd ThisEnd = endEnds.get(index);
     for (int i = 0; i < ThisEnd.getNrOfBits(); i++) {
       isConnected |= (ThisEnd.get((byte) i).getParentNet() != null);
     }
@@ -112,9 +112,9 @@ public class netlistComponent {
   }
 
   public byte getConnectionBitIndex(Net rootNet, byte bitIndex) {
-    for (final var search : endEnds) {
+    for (final com.cburch.logisim.fpga.designrulecheck.ConnectionEnd search : endEnds) {
       for (byte bit = 0; bit < search.getNrOfBits(); bit++) {
-        final var connection = search.get(bit);
+        final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint connection = search.get(bit);
         if (connection.getParentNet() == rootNet && connection.getParentNetBitIndex() == bitIndex) {
           return bit;
         }
@@ -124,10 +124,10 @@ public class netlistComponent {
   }
 
   public List<ConnectionPoint> getConnections(Net rootNet, byte bitIndex, boolean isOutput) {
-    final var connections = new ArrayList<ConnectionPoint>();
-    for (final var search : endEnds) {
+    final java.util.ArrayList<com.cburch.logisim.fpga.designrulecheck.ConnectionPoint> connections = new ArrayList<ConnectionPoint>();
+    for (final com.cburch.logisim.fpga.designrulecheck.ConnectionEnd search : endEnds) {
       for (byte bit = 0; bit < search.getNrOfBits(); bit++) {
-        final var connection = search.get(bit);
+        final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint connection = search.get(bit);
         if (connection.getParentNet() == rootNet
             && connection.getParentNetBitIndex() == bitIndex
             && search.isOutputEnd() == isOutput) {
@@ -178,9 +178,9 @@ public class netlistComponent {
   }
 
   public boolean hasConnection(Net rootNet, byte bitIndex) {
-    for (final var search : endEnds) {
+    for (final com.cburch.logisim.fpga.designrulecheck.ConnectionEnd search : endEnds) {
       for (byte bit = 0; bit < search.getNrOfBits(); bit++) {
-        final var connection = search.get(bit);
+        final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint connection = search.get(bit);
         if (connection.getParentNet() == rootNet && connection.getParentNetBitIndex() == bitIndex) {
           return true;
         }

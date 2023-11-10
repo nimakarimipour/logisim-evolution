@@ -35,7 +35,7 @@ public class Cache {
   public Object get(Object value) {
     if (value == null) return null;
     int code = value.hashCode() & mask;
-    final var ret = data[code];
+    final java.lang.Object ret = data[code];
     if (ret != null && ret.equals(value)) {
       return ret;
     } else {

@@ -75,9 +75,9 @@ public class WiringTool extends Tool {
       cand = Location.create(end.getX() + delta, end.getY(), true);
     }
 
-    for (final var comp : canvas.getCircuit().getNonWires(cand)) {
+    for (final com.cburch.logisim.comp.Component comp : canvas.getCircuit().getNonWires(cand)) {
       if (comp.getBounds().contains(end, 2)) {
-        final var repair = (WireRepair) comp.getFeature(WireRepair.class);
+        final com.cburch.logisim.tools.WireRepair repair = (WireRepair) comp.getFeature(WireRepair.class);
         if (repair != null && repair.shouldRepairWire(new WireRepairData(w, cand))) {
           w = Wire.create(w.getOtherEnd(end), cand);
           canvas.repaint(end.getX() - 13, end.getY() - 13, 26, 26);
@@ -90,7 +90,7 @@ public class WiringTool extends Tool {
 
   private boolean computeMove(int newX, int newY) {
     if (cur.getX() == newX && cur.getY() == newY) return false;
-    final var start = this.start;
+    final com.cburch.logisim.data.Location start = this.start;
     if (direction == 0) {
       if (newX != start.getX()) direction = HORIZONTAL;
       else if (newY != start.getY()) direction = VERTICAL;
@@ -106,13 +106,13 @@ public class WiringTool extends Tool {
 
   @Override
   public void draw(Canvas canvas, ComponentDrawContext context) {
-    final var g = context.getGraphics();
+    final java.awt.Graphics g = context.getGraphics();
     if (exists) {
       com.cburch.logisim.data.Location e0 = start;
       com.cburch.logisim.data.Location e1 = cur;
-      final var shortenBefore = willShorten(start, cur);
+      final com.cburch.logisim.circuit.Wire shortenBefore = willShorten(start, cur);
       if (shortenBefore != null) {
-        final var shorten = getShortenResult(shortenBefore, start, cur);
+        final com.cburch.logisim.circuit.Wire shorten = getShortenResult(shortenBefore, start, cur);
         if (shorten == null) {
           return;
         } else {
@@ -120,10 +120,10 @@ public class WiringTool extends Tool {
           e1 = shorten.getEnd1();
         }
       }
-      final var x0 = e0.getX();
-      final var y0 = e0.getY();
-      final var x1 = e1.getX();
-      final var y1 = e1.getY();
+      final int x0 = e0.getX();
+      final int y0 = e0.getY();
+      final int x1 = e1.getX();
+      final int y1 = e1.getY();
 
       g.setColor(Color.BLACK);
       GraphicsUtil.switchToWidth(g, 3);
@@ -162,7 +162,7 @@ public class WiringTool extends Tool {
 
   @Override
   public Set<Component> getHiddenComponents(Canvas canvas) {
-    final var shorten = willShorten(start, cur);
+    final com.cburch.logisim.circuit.Wire shorten = willShorten(start, cur);
     return (shorten != null) ? Collections.singleton(shorten) : null;
   }
 
@@ -207,7 +207,7 @@ public class WiringTool extends Tool {
       if (!computeMove(curX, curY)) return;
       hasDragged = true;
 
-      final var rect = new Rectangle();
+      final java.awt.Rectangle rect = new Rectangle();
       rect.add(start.getX(), start.getY());
       rect.add(cur.getX(), cur.getY());
       rect.add(curX, curY);
@@ -218,7 +218,7 @@ public class WiringTool extends Tool {
 
       Wire shorten = null;
       if (startShortening) {
-        for (final var w : canvas.getCircuit().getWires(start)) {
+        for (final com.cburch.logisim.circuit.Wire w : canvas.getCircuit().getWires(start)) {
           if (w.contains(cur)) {
             shorten = w;
             break;
@@ -226,7 +226,7 @@ public class WiringTool extends Tool {
         }
       }
       if (shorten == null) {
-        for (final var w : canvas.getCircuit().getWires(cur)) {
+        for (final com.cburch.logisim.circuit.Wire w : canvas.getCircuit().getWires(cur)) {
           if (w.contains(start)) {
             shorten = w;
             break;
@@ -258,8 +258,8 @@ public class WiringTool extends Tool {
     } else {
       Canvas.snapToGrid(e);
       inCanvas = true;
-      final var curX = e.getX();
-      final var curY = e.getY();
+      final int curX = e.getX();
+      final int curY = e.getY();
       if (cur.getX() != curX || cur.getY() != curY) {
         cur = Location.create(curX, curY, true);
       }
@@ -292,8 +292,8 @@ public class WiringTool extends Tool {
     if (!exists) return;
 
     Canvas.snapToGrid(e);
-    final var curX = e.getX();
-    final var curY = e.getY();
+    final int curX = e.getX();
+    final int curY = e.getY();
     if (computeMove(curX, curY)) {
       cur = Location.create(curX, curY, true);
     }
@@ -301,7 +301,7 @@ public class WiringTool extends Tool {
       exists = false;
       super.mouseReleased(canvas, g, e);
 
-      final var wires = new ArrayList<Wire>(2);
+      final java.util.ArrayList<com.cburch.logisim.circuit.Wire> wires = new ArrayList<Wire>(2);
       if (cur.getY() == start.getY() || cur.getX() == start.getX()) {
         com.cburch.logisim.circuit.Wire wire = Wire.create(cur, start);
         wire = checkForRepairs(canvas, wire, wire.getEnd0());
@@ -323,11 +323,11 @@ public class WiringTool extends Tool {
         if (wire1.getLength() > 0) wires.add(wire1);
       }
       if (!wires.isEmpty()) {
-        final var mutation = new CircuitMutation(canvas.getCircuit());
+        final com.cburch.logisim.circuit.CircuitMutation mutation = new CircuitMutation(canvas.getCircuit());
         mutation.addAll(wires);
-        final var desc =
+        final com.cburch.logisim.util.StringGetter desc =
             (wires.size() == 1) ? S.getter("addWireAction") : S.getter("addWiresAction");
-        final var act = mutation.toAction(desc);
+        final com.cburch.logisim.proj.Action act = mutation.toAction(desc);
         canvas.getProject().doAction(act);
         lastAction = act;
       }
@@ -336,7 +336,7 @@ public class WiringTool extends Tool {
 
   @Override
   public void paintIcon(ComponentDrawContext c, int x, int y) {
-    final var g2 = (Graphics2D) c.getGraphics().create();
+    final java.awt.Graphics2D g2 = (Graphics2D) c.getGraphics().create();
     g2.translate(x, y);
     final int[] points = {3, 13, 8, 13, 8, 3, 13, 3};
     g2.setStroke(new BasicStroke(AppPreferences.getScaled(2)));
@@ -348,7 +348,7 @@ public class WiringTool extends Tool {
           AppPreferences.getScaled(points[i + 2]),
           AppPreferences.getScaled(points[i + 3]));
     g2.setColor(Value.trueColor);
-    final var wh = AppPreferences.getScaled(5);
+    final int wh = AppPreferences.getScaled(5);
     g2.fillOval(AppPreferences.getScaled(1), AppPreferences.getScaled(11), wh, wh);
     g2.setColor(Value.unknownColor);
     g2.fillOval(AppPreferences.getScaled(11), AppPreferences.getScaled(1), wh, wh);
@@ -356,11 +356,11 @@ public class WiringTool extends Tool {
   }
 
   private boolean performShortening(Canvas canvas, Location drag0, Location drag1) {
-    final var shorten = willShorten(drag0, drag1);
+    final com.cburch.logisim.circuit.Wire shorten = willShorten(drag0, drag1);
     if (shorten == null) return false;
-    final var xn = new CircuitMutation(canvas.getCircuit());
+    final com.cburch.logisim.circuit.CircuitMutation xn = new CircuitMutation(canvas.getCircuit());
     StringGetter actName;
-    final var result = getShortenResult(shorten, drag0, drag1);
+    final com.cburch.logisim.circuit.Wire result = getShortenResult(shorten, drag0, drag1);
     if (result == null) {
       xn.remove(shorten);
       actName = S.getter("removeComponentAction", shorten.getFactory().getDisplayGetter());
@@ -394,7 +394,7 @@ public class WiringTool extends Tool {
   }
 
   private Wire willShorten(Location drag0, Location drag1) {
-    final var shorten = shortening;
+    final com.cburch.logisim.circuit.Wire shorten = shortening;
     if (shorten == null) {
       return null;
     } else if (shorten.endsAt(drag0) || shorten.endsAt(drag1)) {

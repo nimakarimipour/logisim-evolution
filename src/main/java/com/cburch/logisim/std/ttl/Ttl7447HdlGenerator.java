@@ -44,7 +44,7 @@ public class Ttl7447HdlGenerator extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist TheNetlist, AttributeSet attrs) {
-    final var decoder = new WithSelectHdlGenerator("decoder1", "bcd", 4, "segments", 7)
+    final com.cburch.logisim.fpga.hdlgenerator.WithSelectHdlGenerator decoder = new WithSelectHdlGenerator("decoder1", "bcd", 4, "segments", 7)
         .setDefault("0000000") // selectValue = 15L
         .add(0L, "0111111")
         .add(1L, "0000110")
@@ -61,7 +61,7 @@ public class Ttl7447HdlGenerator extends AbstractHdlGeneratorFactory {
         .add(12L, "1100010")
         .add(13L, "1101001")
         .add(14L, "1111000");
-    final var contents = LineBuffer.getHdlBuffer();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
     contents.add(decoder.getHdlCode()).empty();
     if (Hdl.isVhdl()) {
       contents.addVhdlKeywords().add("""

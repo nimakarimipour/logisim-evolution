@@ -29,32 +29,32 @@ public final class SvgReader {
   }
 
   private static AbstractCanvasObject createLine(Element elt) {
-    final var x0 = Integer.parseInt(elt.getAttribute("x1"));
-    final var y0 = Integer.parseInt(elt.getAttribute("y1"));
-    final var x1 = Integer.parseInt(elt.getAttribute("x2"));
-    final var y1 = Integer.parseInt(elt.getAttribute("y2"));
+    final int x0 = Integer.parseInt(elt.getAttribute("x1"));
+    final int y0 = Integer.parseInt(elt.getAttribute("y1"));
+    final int x1 = Integer.parseInt(elt.getAttribute("x2"));
+    final int y1 = Integer.parseInt(elt.getAttribute("y2"));
     return new Line(x0, y0, x1, y1);
   }
 
   private static AbstractCanvasObject createOval(Element elt) {
-    final var cx = Double.parseDouble(elt.getAttribute("cx"));
-    final var cy = Double.parseDouble(elt.getAttribute("cy"));
-    final var rx = Double.parseDouble(elt.getAttribute("rx"));
-    final var ry = Double.parseDouble(elt.getAttribute("ry"));
-    final var x = (int) Math.round(cx - rx);
-    final var y = (int) Math.round(cy - ry);
-    final var w = (int) Math.round(rx * 2);
-    final var h = (int) Math.round(ry * 2);
+    final double cx = Double.parseDouble(elt.getAttribute("cx"));
+    final double cy = Double.parseDouble(elt.getAttribute("cy"));
+    final double rx = Double.parseDouble(elt.getAttribute("rx"));
+    final double ry = Double.parseDouble(elt.getAttribute("ry"));
+    final int x = (int) Math.round(cx - rx);
+    final int y = (int) Math.round(cy - ry);
+    final int w = (int) Math.round(rx * 2);
+    final int h = (int) Math.round(ry * 2);
     return new Oval(x, y, w, h);
   }
 
   private static AbstractCanvasObject createPath(Element elt) {
-    final var typeError = -1;
-    final var patt = PATH_REGEX.matcher(elt.getAttribute("d"));
-    final var tokens = new ArrayList<String>();
+    final int typeError = -1;
+    final java.util.regex.Matcher patt = PATH_REGEX.matcher(elt.getAttribute("d"));
+    final java.util.ArrayList<java.lang.String> tokens = new ArrayList<String>();
     int type = -1; // -1 error, 0 start, 1 curve, 2 polyline
     while (patt.find()) {
-      final var token = patt.group();
+      final java.lang.String token = patt.group();
       tokens.add(token);
       if (Character.isLetter(token.charAt(0))) {
         type = switch (token.charAt(0)) {
@@ -68,8 +68,8 @@ public final class SvgReader {
           default -> typeError;
         };
         if (type == typeError) {
-          final var tokenStr = String.valueOf(token.charAt(0));
-          final var msg = String.format("Unrecognized path command '%s'", tokenStr);
+          final java.lang.String tokenStr = String.valueOf(token.charAt(0));
+          final java.lang.String msg = String.format("Unrecognized path command '%s'", tokenStr);
           throw new NumberFormatException(msg);
         }
       }
@@ -79,8 +79,8 @@ public final class SvgReader {
       if (tokens.size() == 8
           && "M".equals(tokens.get(0))
           && "Q".equalsIgnoreCase(tokens.get(3))) {
-        final var x0 = Integer.parseInt(tokens.get(1));
-        final var y0 = Integer.parseInt(tokens.get(2));
+        final int x0 = Integer.parseInt(tokens.get(1));
+        final int y0 = Integer.parseInt(tokens.get(2));
         int x1 = Integer.parseInt(tokens.get(4));
         int y1 = Integer.parseInt(tokens.get(5));
         int x2 = Integer.parseInt(tokens.get(6));
@@ -91,9 +91,9 @@ public final class SvgReader {
           x2 += x0;
           y2 += y0;
         }
-        final var e0 = Location.create(x0, y0, false);
-        final var e1 = Location.create(x2, y2, false);
-        final var ct = Location.create(x1, y1, false);
+        final com.cburch.logisim.data.Location e0 = Location.create(x0, y0, false);
+        final com.cburch.logisim.data.Location e1 = Location.create(x2, y2, false);
+        final com.cburch.logisim.data.Location ct = Location.create(x1, y1, false);
         return new Curve(e0, e1, ct);
       } else {
         throw new NumberFormatException("Unexpected format for curve");
@@ -112,13 +112,13 @@ public final class SvgReader {
   }
 
   private static AbstractCanvasObject createRectangle(Element elt) {
-    final var x = Integer.parseInt(elt.getAttribute("x"));
-    final var y = Integer.parseInt(elt.getAttribute("y"));
-    final var w = Integer.parseInt(elt.getAttribute("width"));
-    final var h = Integer.parseInt(elt.getAttribute("height"));
+    final int x = Integer.parseInt(elt.getAttribute("x"));
+    final int y = Integer.parseInt(elt.getAttribute("y"));
+    final int w = Integer.parseInt(elt.getAttribute("width"));
+    final int h = Integer.parseInt(elt.getAttribute("height"));
     if (elt.hasAttribute("rx")) {
-      final var ret = new RoundRectangle(x, y, w, h);
-      final var rx = Integer.parseInt(elt.getAttribute("rx"));
+      final com.cburch.draw.shapes.RoundRectangle ret = new RoundRectangle(x, y, w, h);
+      final int rx = Integer.parseInt(elt.getAttribute("rx"));
       ret.setValue(DrawAttr.CORNER_RADIUS, rx);
       return ret;
     } else {
@@ -127,15 +127,15 @@ public final class SvgReader {
   }
 
   public static AbstractCanvasObject createShape(Element elt) {
-    final var name = elt.getTagName();
-    final var ret = createShapeObject(elt, name);
+    final java.lang.String name = elt.getTagName();
+    final com.cburch.draw.model.AbstractCanvasObject ret = createShapeObject(elt, name);
     if (ret == null) {
       return null;
     }
     java.util.List<com.cburch.logisim.data.Attribute<?>> attrs = ret.getAttributes();
     if (attrs.contains(DrawAttr.PAINT_TYPE)) {
-      final var stroke = elt.getAttribute("stroke");
-      final var fill = elt.getAttribute("fill");
+      final java.lang.String stroke = elt.getAttribute("stroke");
+      final java.lang.String fill = elt.getAttribute("fill");
       if ("".equals(stroke) || "none".equals(stroke)) {
         ret.setValue(DrawAttr.PAINT_TYPE, DrawAttr.PAINT_FILL);
       } else if ("none".equals(fill)) {
@@ -146,12 +146,12 @@ public final class SvgReader {
     }
     attrs = ret.getAttributes(); // since changing paintType could change it
     if (attrs.contains(DrawAttr.STROKE_WIDTH) && elt.hasAttribute("stroke-width")) {
-      final var width = Integer.valueOf(elt.getAttribute("stroke-width"));
+      final java.lang.Integer width = Integer.valueOf(elt.getAttribute("stroke-width"));
       ret.setValue(DrawAttr.STROKE_WIDTH, width);
     }
     if (attrs.contains(DrawAttr.STROKE_COLOR)) {
-      final var color = elt.getAttribute("stroke");
-      final var opacity = elt.getAttribute("stroke-opacity");
+      final java.lang.String color = elt.getAttribute("stroke");
+      final java.lang.String opacity = elt.getAttribute("stroke-opacity");
       if (!"none".equals(color)) {
         ret.setValue(DrawAttr.STROKE_COLOR, getColor(color, opacity));
       }
@@ -160,7 +160,7 @@ public final class SvgReader {
       java.lang.String color = elt.getAttribute("fill");
       // FIXME: hardcoded color value
       if ("".equals(color)) color = "#000000";
-      final var opacity = elt.getAttribute("fill-opacity");
+      final java.lang.String opacity = elt.getAttribute("fill-opacity");
       if (!"none".equals(color)) {
         ret.setValue(DrawAttr.FILL_COLOR, getColor(color, opacity));
       }
@@ -182,22 +182,22 @@ public final class SvgReader {
   }
 
   private static AbstractCanvasObject createText(Element elt) {
-    final var x = Integer.parseInt(elt.getAttribute("x"));
-    final var y = Integer.parseInt(elt.getAttribute("y"));
-    final var text = elt.getTextContent();
-    final var ret = new Text(x, y, text);
+    final int x = Integer.parseInt(elt.getAttribute("x"));
+    final int y = Integer.parseInt(elt.getAttribute("y"));
+    final java.lang.String text = elt.getTextContent();
+    final com.cburch.draw.shapes.Text ret = new Text(x, y, text);
 
-    final var fontFamily = elt.getAttribute("font-family");
-    final var fontStyle = elt.getAttribute("font-style");
-    final var fontWeight = elt.getAttribute("font-weight");
-    final var fontSize = elt.getAttribute("font-size");
+    final java.lang.String fontFamily = elt.getAttribute("font-family");
+    final java.lang.String fontStyle = elt.getAttribute("font-style");
+    final java.lang.String fontWeight = elt.getAttribute("font-weight");
+    final java.lang.String fontSize = elt.getAttribute("font-size");
     int styleFlags = Font.PLAIN;
     if (isItalic(fontStyle)) styleFlags |= Font.ITALIC;
     if (isBold(fontWeight)) styleFlags |= Font.BOLD;
-    final var size = Integer.parseInt(fontSize);
+    final int size = Integer.parseInt(fontSize);
     ret.setValue(DrawAttr.FONT, new Font(fontFamily, styleFlags, size));
 
-    final var hAlignStr = elt.getAttribute("text-anchor");
+    final java.lang.String hAlignStr = elt.getAttribute("text-anchor");
     AttributeOption hAlign;
     if ("start".equals(hAlignStr)) {
       hAlign = DrawAttr.HALIGN_LEFT;
@@ -208,8 +208,8 @@ public final class SvgReader {
     }
     ret.setValue(DrawAttr.HALIGNMENT, hAlign);
 
-    final var vAlignStr = elt.getAttribute("dominant-baseline");
-    final var vAlign = getAlignment(vAlignStr);
+    final java.lang.String vAlignStr = elt.getAttribute("dominant-baseline");
+    final com.cburch.logisim.data.AttributeOption vAlign = getAlignment(vAlignStr);
     ret.setValue(DrawAttr.VALIGNMENT, vAlign);
 
     // fill color is handled after we return
@@ -229,7 +229,7 @@ public final class SvgReader {
     java.lang.String fontFamily = elt.getAttribute(prefix + "font-family");
     java.lang.String fontStyle = elt.getAttribute(prefix + "font-style");
     java.lang.String fontWeight = elt.getAttribute(prefix + "font-weight");
-    final var fontSize = elt.getAttribute(prefix + "font-size");
+    final java.lang.String fontSize = elt.getAttribute(prefix + "font-size");
 
     if (StringUtil.isNullOrEmpty(fontFamily)) fontFamily = defaultFamily;
     if (StringUtil.isNullOrEmpty(fontStyle)) fontStyle = "plain";
@@ -259,7 +259,7 @@ public final class SvgReader {
     int r = 0;
     int g = 0;
     int b = 0;
-    final var colorStrLen = 7;
+    final int colorStrLen = 7;
     if (StringUtil.isNotEmpty(hue) && hue.length() == colorStrLen) {
       try {
         r = Integer.parseInt(hue.substring(1, 3), 16);
@@ -276,12 +276,12 @@ public final class SvgReader {
         tmpOpacity = Double.parseDouble(opacity);
       } catch (NumberFormatException exception) {
         // Some localizations use commas for decimal points, so let's try to deal with it.
-        final var commaIdx = opacity.lastIndexOf(',');
+        final int commaIdx = opacity.lastIndexOf(',');
         // No comma. Got no idea why it failed then, so rethrow
         // FIXME: shall we really throw here? What about falling back to defaults?
         if (commaIdx < 0) throw exception;
         try {
-          final var repl = opacity.substring(0, commaIdx) + "." + opacity.substring(commaIdx + 1);
+          final java.lang.String repl = opacity.substring(0, commaIdx) + "." + opacity.substring(commaIdx + 1);
           tmpOpacity = Double.parseDouble(repl);
         } catch (Throwable t) {
           // FIXME: shall we really throw here? What about falling back to defaults?
@@ -294,12 +294,12 @@ public final class SvgReader {
   }
 
   private static List<Location> parsePoints(String points) {
-    final var patt = Pattern.compile("[ ,\n\r\t]+");
-    final var toks = patt.split(points);
-    final var ret = new Location[toks.length / 2];
+    final java.util.regex.Pattern patt = Pattern.compile("[ ,\n\r\t]+");
+    final java.lang.String[] toks = patt.split(points);
+    final com.cburch.logisim.data.Location[] ret = new Location[toks.length / 2];
     for (int i = 0; i < ret.length; i++) {
-      final var x = Integer.parseInt(toks[2 * i]);
-      final var y = Integer.parseInt(toks[2 * i + 1]);
+      final int x = Integer.parseInt(toks[2 * i]);
+      final int y = Integer.parseInt(toks[2 * i + 1]);
       ret[i] = Location.create(x, y, false);
     }
     return UnmodifiableList.create(ret);

@@ -41,9 +41,9 @@ class OutputSelector {
 
       @Override
       public Dimension getPreferredSize() {
-        final var dim = super.getPreferredSize();
-        final var f = getFont();
-        final var i = getInsets();
+        final java.awt.Dimension dim = super.getPreferredSize();
+        final java.awt.Font f = getFont();
+        final java.awt.Insets i = getInsets();
         dim.height = i.top + i.bottom + f.getSize() + f.getSize() / 2;
         return dim;
       }
@@ -58,26 +58,26 @@ class OutputSelector {
 
       @Override
       public void paint(Graphics g) {
-        final var txt = getText();
+        final java.lang.String txt = getText();
         if (txt == null) {
           super.paint(g);
           return;
         }
-        final var g2 = (Graphics2D) g.create();
-        final var i = getInsets();
-        final var font = getFont();
+        final java.awt.Graphics2D g2 = (Graphics2D) g.create();
+        final java.awt.Insets i = getInsets();
+        final java.awt.Font font = getFont();
         g2.setPaint(getBackground());
         g2.fillRect(0, 0, getWidth(), getHeight());
-        final var frc = g2.getFontRenderContext();
+        final java.awt.font.FontRenderContext frc = g2.getFontRenderContext();
         AttributedString as;
         if (txt.contains(":")) {
-          final var idx = txt.indexOf(':');
+          final int idx = txt.indexOf(':');
           as = new AttributedString(txt.substring(0, idx) + txt.substring(idx + 1));
           as.addAttribute(
               TextAttribute.SUPERSCRIPT, TextAttribute.SUPERSCRIPT_SUB, idx, txt.length() - 1);
         } else if (txt.contains("[")) {
-          final var start = txt.indexOf('[');
-          final var stop = txt.lastIndexOf(']');
+          final int start = txt.indexOf('[');
+          final int stop = txt.lastIndexOf(']');
           as = new AttributedString(txt.substring(0, start) + txt.substring(start + 1, stop));
           as.addAttribute(
               TextAttribute.SUPERSCRIPT,
@@ -90,7 +90,7 @@ class OutputSelector {
         as.addAttribute(TextAttribute.FAMILY, font.getFamily());
         as.addAttribute(TextAttribute.SIZE, font.getSize());
 
-        final var tl = new TextLayout(as.getIterator(), frc);
+        final java.awt.font.TextLayout tl = new TextLayout(as.getIterator(), frc);
         g2.setColor(getForeground());
         tl.draw(g2, i.left, i.top + tl.getAscent());
       }
@@ -121,8 +121,8 @@ class OutputSelector {
 
     @Override
     public void listChanged(VariableListEvent event) {
-      final var oldSize = select.getItemCount();
-      final var newSize = source.bits.size();
+      final int oldSize = select.getItemCount();
+      final int newSize = source.bits.size();
       fireContentsChanged(this, 0, Math.max(oldSize, newSize));
       if (!source.bits.contains(selected)) {
         selected = (newSize == 0 ? null : source.bits.get(0));
@@ -143,7 +143,7 @@ class OutputSelector {
   public OutputSelector(AnalyzerModel model) {
     this.source = model.getOutputs();
 
-    final var listModel = new Model();
+    final com.cburch.logisim.analyze.gui.OutputSelector.Model listModel = new Model();
     select.setModel(listModel);
     select.setRenderer(listModel.getMyRenderer());
     source.addVariableListListener(listModel);
@@ -154,7 +154,7 @@ class OutputSelector {
   }
 
   public JPanel createPanel() {
-    final var ret = new JPanel();
+    final javax.swing.JPanel ret = new JPanel();
     ret.add(label);
     ret.add(select);
     return ret;

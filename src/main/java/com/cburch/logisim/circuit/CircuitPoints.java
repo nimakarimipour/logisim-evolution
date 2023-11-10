@@ -43,7 +43,7 @@ class CircuitPoints {
       addSub(w.getEnd0(), w, null);
       addSub(w.getEnd1(), w, null);
     } else {
-      for (final var endData : comp.getEnds()) {
+      for (final com.cburch.logisim.comp.EndData endData : comp.getEnds()) {
         if (endData != null) {
           addSub(endData.getLocation(), comp, endData);
         }
@@ -70,9 +70,9 @@ class CircuitPoints {
     WidthIncompatibilityData error = null;
     if (locData != null) {
       com.cburch.logisim.data.BitWidth width = BitWidth.UNKNOWN;
-      for (final var endData : locData.ends) {
+      for (final com.cburch.logisim.comp.EndData endData : locData.ends) {
         if (endData != null) {
-          final var endWidth = endData.getWidth();
+          final com.cburch.logisim.data.BitWidth endWidth = endData.getWidth();
           if (width == BitWidth.UNKNOWN) {
             width = endWidth;
           } else if (width != endWidth && endWidth != BitWidth.UNKNOWN) {
@@ -95,15 +95,15 @@ class CircuitPoints {
   }
 
   private Collection<? extends Component> find(Location loc, boolean isWire) {
-    final var locData = map.get(loc);
+    final com.cburch.logisim.circuit.CircuitPoints.LocationData locData = map.get(loc);
     if (locData == null) return Collections.emptySet();
 
     // first see how many elements we have; we can handle some simple
     // cases without creating any new lists
-    final var components = locData.components;
+    final java.util.ArrayList<com.cburch.logisim.comp.Component> components = locData.components;
     int retSize = 0;
     Component retValue = null;
-    for (final var comp : components) {
+    for (final com.cburch.logisim.comp.Component comp : components) {
       if ((comp instanceof Wire) == isWire) {
         retValue = comp;
         retSize++;
@@ -114,9 +114,9 @@ class CircuitPoints {
     if (retSize == 1) return Collections.singleton(retValue);
 
     // otherwise we have to create our own list
-    final var ret = new Component[retSize];
+    final com.cburch.logisim.comp.Component[] ret = new Component[retSize];
     int retPos = 0;
-    for (final var comp : components) {
+    for (final com.cburch.logisim.comp.Component comp : components) {
       if ((comp instanceof Wire) == isWire) {
         ret[retPos] = comp;
         retPos++;
@@ -126,21 +126,21 @@ class CircuitPoints {
   }
 
   int getComponentCount(Location loc) {
-    final var locData = map.get(loc);
+    final com.cburch.logisim.circuit.CircuitPoints.LocationData locData = map.get(loc);
     return locData == null ? 0 : locData.components.size();
   }
 
   Collection<? extends Component> getComponents(Location loc) {
-    final var locData = map.get(loc);
+    final com.cburch.logisim.circuit.CircuitPoints.LocationData locData = map.get(loc);
     if (locData == null) return Collections.emptySet();
     else return locData.components;
   }
 
   Component getExclusive(Location loc) {
-    final var locData = map.get(loc);
+    final com.cburch.logisim.circuit.CircuitPoints.LocationData locData = map.get(loc);
     if (locData == null) return null;
     int i = -1;
-    for (final var endData : locData.ends) {
+    for (final com.cburch.logisim.comp.EndData endData : locData.ends) {
       i++;
       if (endData != null && endData.isExclusive()) {
         return locData.components.get(i);
@@ -165,7 +165,7 @@ class CircuitPoints {
   }
 
   BitWidth getWidth(Location loc) {
-    final var locData = map.get(loc);
+    final com.cburch.logisim.circuit.CircuitPoints.LocationData locData = map.get(loc);
     return locData == null ? BitWidth.UNKNOWN : locData.width;
   }
 
@@ -181,7 +181,7 @@ class CircuitPoints {
 
   boolean hasConflict(Component comp) {
     if (!(comp instanceof Wire)) {
-      for (final var endData : comp.getEnds()) {
+      for (final com.cburch.logisim.comp.EndData endData : comp.getEnds()) {
         if (endData != null
             && endData.isExclusive()
             && getExclusive(endData.getLocation()) != null) {
@@ -210,7 +210,7 @@ class CircuitPoints {
   }
 
   private void removeSub(Location loc, Component comp) {
-    final var locData = map.get(loc);
+    final com.cburch.logisim.circuit.CircuitPoints.LocationData locData = map.get(loc);
     if (locData == null) return;
 
     int index = locData.components.indexOf(comp);

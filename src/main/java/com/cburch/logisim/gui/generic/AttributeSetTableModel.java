@@ -38,11 +38,11 @@ public abstract class AttributeSetTableModel implements AttrTableModel, Attribut
     this.rows = new ArrayList<>();
     if (attrs != null) {
       /* put the vhdl/verilog row */
-      final var rowd = new HDLrow(null);
+      final com.cburch.logisim.gui.generic.AttributeSetTableModel.HDLrow rowd = new HDLrow(null);
       rows.add(rowd);
-      for (final var attr : attrs.getAttributes()) {
+      for (final com.cburch.logisim.data.Attribute<?> attr : attrs.getAttributes()) {
         if (!attr.isHidden()) {
-          final var row = new AttrRow(attr);
+          final com.cburch.logisim.gui.generic.AttributeSetTableModel.AttrRow row = new AttrRow(attr);
           rowMap.put(attr, row);
           rows.add(row);
         }
@@ -56,9 +56,9 @@ public abstract class AttributeSetTableModel implements AttrTableModel, Attribut
 
   public void setIsTool() {
     /* We remove the label attribute for a tool */
-    for (final var attr : attrs.getAttributes()) {
+    for (final com.cburch.logisim.data.Attribute<?> attr : attrs.getAttributes()) {
       if ("label".equals(attr.getName())) {
-        final var row = rowMap.get(attr);
+        final com.cburch.logisim.gui.generic.AttributeSetTableModel.AttrRow row = rowMap.get(attr);
         rowMap.remove(attr);
         rows.remove(row);
       }
@@ -82,7 +82,7 @@ public abstract class AttributeSetTableModel implements AttrTableModel, Attribut
     int index = 0;
     boolean match = true;
     int rowsSize = rows.size();
-    for (final var attr : attrs.getAttributes()) {
+    for (final com.cburch.logisim.data.Attribute<?> attr : attrs.getAttributes()) {
       if (!attr.isHidden()) {
         if (index >= rowsSize || rows.get(index).attr != attr) {
           match = false;
@@ -94,12 +94,12 @@ public abstract class AttributeSetTableModel implements AttrTableModel, Attribut
     if (match && index == rows.size()) return;
 
     // compute the new list of rows, possible adding into hash map
-    final var newRows = new ArrayList<AttrRow>();
-    final var missing = new HashSet<>(rowMap.keySet());
+    final java.util.ArrayList<com.cburch.logisim.gui.generic.AttributeSetTableModel.AttrRow> newRows = new ArrayList<AttrRow>();
+    final java.util.HashSet<com.cburch.logisim.data.Attribute<?>> missing = new HashSet<>(rowMap.keySet());
     /* put the vhdl/verilog row */
-    final var rowd = new HDLrow(null);
+    final com.cburch.logisim.gui.generic.AttributeSetTableModel.HDLrow rowd = new HDLrow(null);
     newRows.add(rowd);
-    for (final var attr : attrs.getAttributes()) {
+    for (final com.cburch.logisim.data.Attribute<?> attr : attrs.getAttributes()) {
       if (!attr.isHidden()) {
         com.cburch.logisim.gui.generic.AttributeSetTableModel.AttrRow row = rowMap.get(attr);
         if (row == null) {
@@ -112,7 +112,7 @@ public abstract class AttributeSetTableModel implements AttrTableModel, Attribut
       }
     }
     rows = newRows;
-    for (final var attr : missing) {
+    for (final com.cburch.logisim.data.Attribute<?> attr : missing) {
       rowMap.remove(attr);
     }
     fireStructureChanged();
@@ -120,10 +120,10 @@ public abstract class AttributeSetTableModel implements AttrTableModel, Attribut
 
   @Override
   public void attributeValueChanged(AttributeEvent e) {
-    final var attr = e.getAttribute();
-    final var row = rowMap.get(attr);
+    final com.cburch.logisim.data.Attribute<?> attr = e.getAttribute();
+    final com.cburch.logisim.gui.generic.AttributeSetTableModel.AttrRow row = rowMap.get(attr);
     if (row != null) {
-      final var index = rows.indexOf(row);
+      final int index = rows.indexOf(row);
       if (index >= 0) {
         fireValueChanged(index);
       }
@@ -131,22 +131,22 @@ public abstract class AttributeSetTableModel implements AttrTableModel, Attribut
   }
 
   protected void fireStructureChanged() {
-    final var event = new AttrTableModelEvent(this);
-    for (final var l : listeners) {
+    final com.cburch.logisim.gui.generic.AttrTableModelEvent event = new AttrTableModelEvent(this);
+    for (final com.cburch.logisim.gui.generic.AttrTableModelListener l : listeners) {
       l.attrStructureChanged(event);
     }
   }
 
   protected void fireTitleChanged() {
-    final var event = new AttrTableModelEvent(this);
-    for (final var l : listeners) {
+    final com.cburch.logisim.gui.generic.AttrTableModelEvent event = new AttrTableModelEvent(this);
+    for (final com.cburch.logisim.gui.generic.AttrTableModelListener l : listeners) {
       l.attrTitleChanged(event);
     }
   }
 
   protected void fireValueChanged(int index) {
-    final var event = new AttrTableModelEvent(this, index);
-    for (final var l : listeners) {
+    final com.cburch.logisim.gui.generic.AttrTableModelEvent event = new AttrTableModelEvent(this, index);
+    for (final com.cburch.logisim.gui.generic.AttrTableModelListener l : listeners) {
       l.attrValueChanged(event);
     }
   }
@@ -199,7 +199,7 @@ public abstract class AttributeSetTableModel implements AttrTableModel, Attribut
 
     @Override
     public Component getEditor(Window parent) {
-      final var value = attrs.getValue(attr);
+      final java.lang.Object value = attrs.getValue(attr);
       return attr.getCellEditor(parent, value);
     }
 
@@ -210,7 +210,7 @@ public abstract class AttributeSetTableModel implements AttrTableModel, Attribut
 
     @Override
     public String getValue() {
-      final var value = attrs.getValue(attr);
+      final java.lang.Object value = attrs.getValue(attr);
       if (value == null) {
         try {
           return attr.toDisplayString(value);
@@ -219,7 +219,7 @@ public abstract class AttributeSetTableModel implements AttrTableModel, Attribut
         }
       } else {
         try {
-          final var str = attr.toDisplayString(value);
+          final java.lang.String str = attr.toDisplayString(value);
           if (str.isEmpty()
               && "label".equals(attr.getName())
               && compInst != null
@@ -241,14 +241,14 @@ public abstract class AttributeSetTableModel implements AttrTableModel, Attribut
       if (!(other instanceof AttrRow o)) return false;
       if (!(((Object) attr) instanceof SplitterAttributes.BitOutAttribute)) return false;
       if (!(((Object) o.attr) instanceof SplitterAttributes.BitOutAttribute)) return false;
-      final var a = (SplitterAttributes.BitOutAttribute) (Object) attr;
-      final var b = (SplitterAttributes.BitOutAttribute) (Object) o.attr;
+      final com.cburch.logisim.circuit.SplitterAttributes.BitOutAttribute a = (SplitterAttributes.BitOutAttribute) (Object) attr;
+      final com.cburch.logisim.circuit.SplitterAttributes.BitOutAttribute b = (SplitterAttributes.BitOutAttribute) (Object) o.attr;
       return a.sameOptions(b);
     }
 
     @Override
     public void setValue(Window parent, Object value) throws AttrTableSetException {
-      final var attr = this.attr;
+      final com.cburch.logisim.data.Attribute<java.lang.Object> attr = this.attr;
       if (attr == null || value == null) return;
 
       try {
@@ -257,11 +257,11 @@ public abstract class AttributeSetTableModel implements AttrTableModel, Attribut
         }
         setValueRequested(attr, value);
       } catch (ClassCastException e) {
-        final var msg = S.get("attributeChangeInvalidError") + ": " + e;
+        final java.lang.String msg = S.get("attributeChangeInvalidError") + ": " + e;
         throw new AttrTableSetException(msg);
       } catch (NumberFormatException e) {
         java.lang.String msg = S.get("attributeChangeInvalidError");
-        final var eMsg = e.getMessage();
+        final java.lang.String eMsg = e.getMessage();
         if (eMsg != null && eMsg.length() > 0) msg += ": " + eMsg;
         msg += ".";
         throw new AttrTableSetException(msg);

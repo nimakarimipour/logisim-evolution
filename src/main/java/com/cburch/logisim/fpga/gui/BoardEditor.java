@@ -53,13 +53,13 @@ public class BoardEditor implements ActionListener, BaseComponentListenerContrac
   private static final String fpgaStr = "fpgainfo";
 
   public BoardEditor() {
-    final var gbc = new GridBagConstraints();
+    final java.awt.GridBagConstraints gbc = new GridBagConstraints();
 
     panel = new JFrame();
     panel.setResizable(false);
     panel.addComponentListener(this);
     panel.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-    final var thisLayout = new GridBagLayout();
+    final java.awt.GridBagLayout thisLayout = new GridBagLayout();
     panel.setLayout(thisLayout);
 
     // Set an empty board picture
@@ -67,8 +67,8 @@ public class BoardEditor implements ActionListener, BaseComponentListenerContrac
     picturepanel.addComponentListener(this);
     picturepanel.addBoardManipulatorListener(this);
 
-    final var buttonPanel = new JPanel();
-    final var buttonLayout = new GridBagLayout();
+    final javax.swing.JPanel buttonPanel = new JPanel();
+    final java.awt.GridBagLayout buttonLayout = new GridBagLayout();
     buttonPanel.setLayout(buttonLayout);
 
     gbc.gridx = 1;
@@ -136,14 +136,14 @@ public class BoardEditor implements ActionListener, BaseComponentListenerContrac
     panel.setVisible(true);
     int screenWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
     int screenHeight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-    final var imageWidth = picturepanel.getWidth();
-    final var imageHeight = picturepanel.getHeight();
-    final var imageBorderX = panel.getWidth() - imageWidth;
-    final var imageBorderY = panel.getHeight() - imageHeight;
+    final int imageWidth = picturepanel.getWidth();
+    final int imageHeight = picturepanel.getHeight();
+    final int imageBorderX = panel.getWidth() - imageWidth;
+    final int imageBorderY = panel.getHeight() - imageHeight;
     screenWidth -= imageBorderX;
     screenHeight -= (imageBorderY + (imageBorderY >> 1));
-    final var zoomX = (screenWidth * 100) / imageWidth;
-    final var zoomY = (screenHeight * 100) / imageHeight;
+    final int zoomX = (screenWidth * 100) / imageWidth;
+    final int zoomY = (screenHeight * 100) / imageHeight;
     picturepanel.setMaxZoom(Math.min(zoomX, zoomY));
     localeChanged();
   }

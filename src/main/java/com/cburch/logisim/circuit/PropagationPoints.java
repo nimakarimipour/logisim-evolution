@@ -58,7 +58,7 @@ class PropagationPoints {
 
   private void addSubstates(HashMap<CircuitState, CircuitState> map, CircuitState source, CircuitState value) {
     map.put(source, value);
-    for (final var s : source.getSubStates()) {
+    for (final com.cburch.logisim.circuit.CircuitState s : source.getSubStates()) {
       addSubstates(map, s, value);
     }
   }
@@ -71,20 +71,20 @@ class PropagationPoints {
   void draw(ComponentDrawContext context) {
     if (data.isEmpty()) return;
 
-    final var circState = context.getCircuitState();
-    final var stateMap = new HashMap<CircuitState, CircuitState>();
-    for (final var state : circState.getSubStates()) addSubstates(stateMap, state, state);
+    final com.cburch.logisim.circuit.CircuitState circState = context.getCircuitState();
+    final java.util.HashMap<com.cburch.logisim.circuit.CircuitState,com.cburch.logisim.circuit.CircuitState> stateMap = new HashMap<CircuitState, CircuitState>();
+    for (final com.cburch.logisim.circuit.CircuitState state : circState.getSubStates()) addSubstates(stateMap, state, state);
 
-    final var g = context.getGraphics();
+    final java.awt.Graphics g = context.getGraphics();
     GraphicsUtil.switchToWidth(g, 2);
-    for (final var entry : data) {
+    for (final com.cburch.logisim.circuit.PropagationPoints.Entry<com.cburch.logisim.data.Location> entry : data) {
       if (entry.state == circState) {
-        final var p = entry.item;
+        final com.cburch.logisim.data.Location p = entry.item;
         g.drawOval(p.getX() - 4, p.getY() - 4, 8, 8);
       } else if (stateMap.containsKey(entry.state)) {
-        final var subState = stateMap.get(entry.state);
-        final var subCircuit = subState.getSubcircuit();
-        final var bound = subCircuit.getBounds();
+        final com.cburch.logisim.circuit.CircuitState subState = stateMap.get(entry.state);
+        final com.cburch.logisim.comp.Component subCircuit = subState.getSubcircuit();
+        final com.cburch.logisim.data.Bounds bound = subCircuit.getBounds();
         g.drawRect(bound.getX(), bound.getY(), bound.getWidth(), bound.getHeight());
       }
     }
@@ -95,11 +95,11 @@ class PropagationPoints {
     if (pendingInputs.isEmpty())
       return;
 
-    final var state = context.getCircuitState();
-    final var stateMap = new HashMap<CircuitState, CircuitState>();
-    for (final var s : state.getSubStates()) addSubstates(stateMap, s, s);
+    final com.cburch.logisim.circuit.CircuitState state = context.getCircuitState();
+    final java.util.HashMap<com.cburch.logisim.circuit.CircuitState,com.cburch.logisim.circuit.CircuitState> stateMap = new HashMap<CircuitState, CircuitState>();
+    for (final com.cburch.logisim.circuit.CircuitState s : state.getSubStates()) addSubstates(stateMap, s, s);
 
-    final var g = context.getGraphics();
+    final java.awt.Graphics g = context.getGraphics();
     GraphicsUtil.switchToWidth(g, 2);
     for (Entry<Component> e : pendingInputs) {
       Component comp;
@@ -109,7 +109,7 @@ class PropagationPoints {
         comp = stateMap.get(e.state).getSubcircuit();
       else
         continue;
-      final var b = comp.getBounds();
+      final com.cburch.logisim.data.Bounds b = comp.getBounds();
       g.drawRect(b.getX(), b.getY(), b.getWidth(), b.getHeight());
     }
 
@@ -117,8 +117,8 @@ class PropagationPoints {
   }
 
   String getSingleStepMessage() {
-    final var signalsChanged = data.isEmpty() ? "no" : String.valueOf(data.size());
-    final var inputSignals = pendingInputs.isEmpty() ? "no" : String.valueOf(pendingInputs.size());
+    final java.lang.String signalsChanged = data.isEmpty() ? "no" : String.valueOf(data.size());
+    final java.lang.String inputSignals = pendingInputs.isEmpty() ? "no" : String.valueOf(pendingInputs.size());
     return S.get("singleStepMessage", signalsChanged, inputSignals);
   }
 }

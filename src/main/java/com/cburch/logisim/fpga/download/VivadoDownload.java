@@ -102,13 +102,13 @@ public class VivadoDownload implements VendorDownload {
 
   @Override
   public ProcessBuilder downloadToBoard() {
-    final var command = LineBuffer.getBuffer();
+    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
     command.add(vivadoVendor.getBinaryPath(0))
         .add("-mode")
         .add("batch")
         .add("-source")
         .add(scriptPath + File.separator + LOAD_BITSTEAM_FILE);
-    final var stage0 = new ProcessBuilder(command.get());
+    final java.lang.ProcessBuilder stage0 = new ProcessBuilder(command.get());
     stage0.directory(new File(sandboxPath));
     return stage0;
   }
@@ -150,10 +150,10 @@ public class VivadoDownload implements VendorDownload {
             + " [current_project]");
     contents.add("set_property target_language VHDL [current_project]");
     // add all entities and architectures
-    for (final var entity : entities) {
+    for (final java.lang.String entity : entities) {
       contents.add("add_files \"" + entity + "\"");
     }
-    for (final var architecture : architectures) {
+    for (final java.lang.String architecture : architectures) {
       contents.add("add_files \"" + architecture + "\"");
     }
     // add xdc constraints
@@ -164,18 +164,18 @@ public class VivadoDownload implements VendorDownload {
 
     // fill the xdc file
     if (rootNetList.numberOfClockTrees() > 0 || rootNetList.requiresGlobalClockConnection()) {
-      final var clockPin = boardInfo.fpga.getClockPinLocation();
-      final var clockSignal = TickComponentHdlGeneratorFactory.FPGA_CLOCK;
-      final var getPortsString = " [get_ports {" + clockSignal + "}]";
+      final java.lang.String clockPin = boardInfo.fpga.getClockPinLocation();
+      final java.lang.String clockSignal = TickComponentHdlGeneratorFactory.FPGA_CLOCK;
+      final java.lang.String getPortsString = " [get_ports {" + clockSignal + "}]";
       contents.add("set_property PACKAGE_PIN " + clockPin + getPortsString);
 
       if (boardInfo.fpga.getClockStandard() != IoStandards.DEFAULT_STANDARD
           && boardInfo.fpga.getClockStandard() != IoStandards.UNKNOWN) {
-        final var clockIoStandard = IoStandards.BEHAVIOR_STRINGS[boardInfo.fpga.getClockStandard()];
+        final java.lang.String clockIoStandard = IoStandards.BEHAVIOR_STRINGS[boardInfo.fpga.getClockStandard()];
         contents.add("    set_property IOSTANDARD " + clockIoStandard + getPortsString);
       }
 
-      final var clockFrequency = boardInfo.fpga.getClockFrequency();
+      final long clockFrequency = boardInfo.fpga.getClockFrequency();
       double clockPeriod = 1000000000.0 / (double) clockFrequency;
       contents.add(
           "    create_clock -add -name sys_clk_pin -period "
@@ -205,8 +205,8 @@ public class VivadoDownload implements VendorDownload {
     contents.clear();
 
     // load bitstream
-    final var jtagPos = String.valueOf(boardInfo.fpga.getFpgaJTAGChainPosition());
-    final var lindex = "[lindex [get_hw_devices] " + jtagPos + "]";
+    final java.lang.String jtagPos = String.valueOf(boardInfo.fpga.getFpgaJTAGChainPosition());
+    final java.lang.String lindex = "[lindex [get_hw_devices] " + jtagPos + "]";
     contents.add("open_hw");
     contents.add("connect_hw_server");
     contents.add("open_hw_target");
@@ -220,25 +220,25 @@ public class VivadoDownload implements VendorDownload {
   }
 
   private List<String> getPinLocStrings() {
-    final var contents = LineBuffer.getBuffer();
-    for (final var key : mapInfo.getMappableResources().keySet()) {
-      final var map = mapInfo.getMappableResources().get(key);
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getBuffer();
+    for (final java.util.ArrayList<java.lang.String> key : mapInfo.getMappableResources().keySet()) {
+      final com.cburch.logisim.fpga.data.MapComponent map = mapInfo.getMappableResources().get(key);
       for (int i = 0; i < map.getNrOfPins(); i++) {
         if (map.isMapped(i) && !map.isOpenMapped(i) && !map.isConstantMapped(i) && !map.isInternalMapped(i)) {
-          final var netName = (map.isExternalInverted(i) ? "n_" : "") + map.getHdlString(i);
+          final java.lang.String netName = (map.isExternalInverted(i) ? "n_" : "") + map.getHdlString(i);
           // Note {{2}} is wrapped in additional {}!
           contents.add("set_property PACKAGE_PIN {{1}} [get_ports {{{2}}}]", map.getPinLocation(i), netName);
-          final var info = map.getFpgaInfo(i);
+          final com.cburch.logisim.fpga.data.FpgaIoInformationContainer info = map.getFpgaInfo(i);
           if (info != null) {
-            final var ioStandard = info.getIoStandard();
+            final char ioStandard = info.getIoStandard();
             if (ioStandard != IoStandards.UNKNOWN && ioStandard != IoStandards.DEFAULT_STANDARD)
               contents.add("    set_property IOSTANDARD {{1}} [get_ports {{{2}}}]", IoStandards.getConstraintedIoStandard(info.getIoStandard()), netName);
           }
         }
       }
     }
-    final var LedArrayMap = DownloadBase.getLedArrayMaps(mapInfo, rootNetList, boardInfo);
-    for (final var key : LedArrayMap.keySet()) {
+    final java.util.Map<java.lang.String,java.lang.String> LedArrayMap = DownloadBase.getLedArrayMaps(mapInfo, rootNetList, boardInfo);
+    for (final java.lang.String key : LedArrayMap.keySet()) {
       contents.add("set_property PACKAGE_PIN {{1}} [get_ports {{{2}}}]", key, LedArrayMap.get(key));
     }
     return contents.get();
@@ -250,7 +250,7 @@ public class VivadoDownload implements VendorDownload {
   }
 
   private ProcessBuilder stage0Project() {
-    final var command = LineBuffer.getBuffer();
+    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
     command
         .add(vivadoVendor.getBinaryPath(0))
         .add("-mode")
@@ -258,20 +258,20 @@ public class VivadoDownload implements VendorDownload {
         .add("-source")
         .add(scriptPath + File.separator + CREATE_PROJECT_TCL);
 
-    final var stage0 = new ProcessBuilder(command.get());
+    final java.lang.ProcessBuilder stage0 = new ProcessBuilder(command.get());
     stage0.directory(new File(sandboxPath));
     return stage0;
   }
 
   private ProcessBuilder stage1Bit() {
-    final var command = LineBuffer.getBuffer();
+    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
     command
         .add(vivadoVendor.getBinaryPath(0))
         .add("-mode")
         .add("batch")
         .add("-source")
         .add(scriptPath + File.separator + GENERATE_BITSTREAM_FILE);
-    final var stage1 = new ProcessBuilder(command.get());
+    final java.lang.ProcessBuilder stage1 = new ProcessBuilder(command.get());
     stage1.directory(new File(sandboxPath));
     return stage1;
   }

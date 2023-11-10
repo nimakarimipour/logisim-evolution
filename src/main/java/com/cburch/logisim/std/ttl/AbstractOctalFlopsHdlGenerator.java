@@ -55,7 +55,7 @@ public class AbstractOctalFlopsHdlGenerator extends AbstractHdlGeneratorFactory 
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist theNetlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer()
         .pair("CLK", HdlPorts.CLOCK)
         .pair("tick", HdlPorts.TICK);
     if (Hdl.isVhdl()) {

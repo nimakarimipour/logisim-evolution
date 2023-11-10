@@ -53,9 +53,9 @@ public class TestVector {
       java.lang.String line = in.readLine();
 
       while (line != null) {
-        final var i = line.indexOf('#');
+        final int i = line.indexOf('#');
         if (i >= 0) line = line.substring(0, i);
-        final var ret = new StringTokenizer(line);
+        final java.util.StringTokenizer ret = new StringTokenizer(line);
         if (ret.hasMoreTokens()) return ret;
         line = in.readLine();
       }
@@ -77,9 +77,9 @@ public class TestVector {
     }
 
     private void parseData() throws IOException {
-      final var vals = new Value[columnName.length];
+      final com.cburch.logisim.data.Value[] vals = new Value[columnName.length];
       for (int i = 0; i < columnName.length; i++) {
-        final var t = curLine.nextToken();
+        final java.lang.String t = curLine.nextToken();
 
         try {
           vals[i] = Value.fromLogString(columnWidth[i], t);
@@ -94,21 +94,21 @@ public class TestVector {
     }
 
     private void parseHeader() throws IOException {
-      final var n = curLine.countTokens();
+      final int n = curLine.countTokens();
       columnName = new String[n];
       columnWidth = new BitWidth[n];
       columnRadix = new int[n];
 
       for (int i = 0; i < n; i++) {
         columnRadix[i] = 2;
-        final var t = (String) curLine.nextElement();
+        final java.lang.String t = (String) curLine.nextElement();
         int s = t.indexOf('[');
 
         if (s < 0) {
           columnName[i] = t;
           columnWidth[i] = BitWidth.ONE;
         } else {
-          final var e = t.indexOf(']');
+          final int e = t.indexOf(']');
 
           if (e != t.length() - 1 || s == 0 || e == s + 1)
             throw new IOException("Test Vector header format error: bad spec: " + t);
@@ -136,8 +136,8 @@ public class TestVector {
   public List<Value[]> data;
 
   public TestVector(File src) throws IOException {
-    try (final var in = new BufferedReader(new FileReader(src))) {
-      final var r = new TestVectorReader(in);
+    try (final java.io.BufferedReader in = new BufferedReader(new FileReader(src))) {
+      final com.cburch.logisim.data.TestVector.TestVectorReader r = new TestVectorReader(in);
       r.parse();
     }
   }

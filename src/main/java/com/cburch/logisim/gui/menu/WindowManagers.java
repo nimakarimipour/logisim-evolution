@@ -34,20 +34,20 @@ public class WindowManagers {
   private WindowManagers() {}
 
   private static void computeListeners() {
-    final var nowOpen = Projects.getOpenProjects();
+    final java.util.List<com.cburch.logisim.proj.Project> nowOpen = Projects.getOpenProjects();
 
-    final var closed = new HashSet<>(projectMap.keySet());
+    final java.util.HashSet<com.cburch.logisim.proj.Project> closed = new HashSet<>(projectMap.keySet());
     nowOpen.forEach(closed::remove);
-    for (final var proj : closed) {
-      final var manager = projectMap.get(proj);
+    for (final com.cburch.logisim.proj.Project proj : closed) {
+      final com.cburch.logisim.gui.menu.WindowManagers.ProjectManager manager = projectMap.get(proj);
       manager.frameClosed(manager.getJFrame(false, null));
       projectMap.remove(proj);
     }
 
-    final var opened = new LinkedHashSet<>(nowOpen);
+    final java.util.LinkedHashSet<com.cburch.logisim.proj.Project> opened = new LinkedHashSet<>(nowOpen);
     opened.removeAll(projectMap.keySet());
-    for (final var proj : opened) {
-      final var manager = new ProjectManager(proj);
+    for (final com.cburch.logisim.proj.Project proj : opened) {
+      final com.cburch.logisim.gui.menu.WindowManagers.ProjectManager manager = new ProjectManager(proj);
       projectMap.put(proj, manager);
     }
   }

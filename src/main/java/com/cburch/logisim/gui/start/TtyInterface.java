@@ -79,24 +79,24 @@ public class TtyInterface {
   }
 
   private static void displayStatistics(LogisimFile file, Circuit circuit) {
-    final var stats = FileStatistics.compute(file, circuit);
-    final var total = stats.getTotalWithSubcircuits();
+    final com.cburch.logisim.file.FileStatistics stats = FileStatistics.compute(file, circuit);
+    final com.cburch.logisim.file.FileStatistics.Count total = stats.getTotalWithSubcircuits();
     int maxName = 0;
-    for (final var count : stats.getCounts()) {
-      final var nameLength = count.getFactory().getDisplayName().length();
+    for (final com.cburch.logisim.file.FileStatistics.Count count : stats.getCounts()) {
+      final int nameLength = count.getFactory().getDisplayName().length();
       if (nameLength > maxName) maxName = nameLength;
     }
-    final var fmt =
+    final java.lang.String fmt =
         "%"
             + countDigits(total.getUniqueCount())
             + "d\t"
             + "%"
             + countDigits(total.getRecursiveCount())
             + "d\t";
-    final var fmtNormal = fmt + "%-" + maxName + "s\t%s\n";
-    for (final var count : stats.getCounts()) {
-      final var lib = count.getLibrary();
-      final var libName = lib == null ? "-" : lib.getDisplayName();
+    final java.lang.String fmtNormal = fmt + "%-" + maxName + "s\t%s\n";
+    for (final com.cburch.logisim.file.FileStatistics.Count count : stats.getCounts()) {
+      final com.cburch.logisim.tools.Library lib = count.getLibrary();
+      final java.lang.String libName = lib == null ? "-" : lib.getDisplayName();
       System.out.printf(
           fmtNormal,
           count.getUniqueCount(),
@@ -104,7 +104,7 @@ public class TtyInterface {
           count.getFactory().getDisplayName(),
           libName);
     }
-    final var totalWithout = stats.getTotalWithoutSubcircuits();
+    final com.cburch.logisim.file.FileStatistics.Count totalWithout = stats.getTotalWithoutSubcircuits();
     System.out.printf(
         fmt + "%s\n",
         totalWithout.getUniqueCount(),
@@ -123,8 +123,8 @@ public class TtyInterface {
       shouldPrint = true;
     } else {
       for (int i = 0; i < curOutputs.size(); i++) {
-        final var a = prevOutputs.get(i);
-        final var b = curOutputs.get(i);
+        final com.cburch.logisim.data.Value a = prevOutputs.get(i);
+        final com.cburch.logisim.data.Value b = curOutputs.get(i);
         if (!a.equals(b)) {
           shouldPrint = true;
           break;
@@ -147,8 +147,8 @@ public class TtyInterface {
       shouldPrint = true;
     } else {
       for (int i = 0; i < curOutputs.size(); i++) {
-        final var a = prevOutputs.get(i);
-        final var b = curOutputs.get(i);
+        final com.cburch.logisim.data.Value a = prevOutputs.get(i);
+        final com.cburch.logisim.data.Value b = curOutputs.get(i);
         if (!a.equals(b)) {
           shouldPrint = true;
           break;
@@ -212,16 +212,16 @@ public class TtyInterface {
     if (loadFile == null) return false;
 
     boolean found = false;
-    for (final var comp : circState.getCircuit().getNonWires()) {
+    for (final com.cburch.logisim.comp.Component comp : circState.getCircuit().getNonWires()) {
       if (comp.getFactory() instanceof Ram ramFactory) {
-        final var ramState = circState.getInstanceState(comp);
-        final var m = ramFactory.getContents(ramState);
+        final com.cburch.logisim.instance.InstanceState ramState = circState.getInstanceState(comp);
+        final com.cburch.logisim.std.memory.MemContents m = ramFactory.getContents(ramState);
         HexFile.open(m, loadFile);
         found = true;
       }
     }
 
-    for (final var sub : circState.getSubStates()) {
+    for (final com.cburch.logisim.circuit.CircuitState sub : circState.getSubStates()) {
       found |= loadRam(sub, loadFile);
     }
     return found;
@@ -231,16 +231,16 @@ public class TtyInterface {
     if (saveFile == null) return false;
 
     boolean found = false;
-    for (final var comp : circState.getCircuit().getNonWires()) {
+    for (final com.cburch.logisim.comp.Component comp : circState.getCircuit().getNonWires()) {
       if (comp.getFactory() instanceof Ram ramFactory) {
-        final var ramState = circState.getInstanceState(comp);
-        final var m = ramFactory.getContents(ramState);
+        final com.cburch.logisim.instance.InstanceState ramState = circState.getInstanceState(comp);
+        final com.cburch.logisim.std.memory.MemContents m = ramFactory.getContents(ramState);
         HexFile.save(saveFile, m, "v3.0 hex words plain");
         found = true;
       }
     }
 
-    for (final var sub : circState.getSubStates()) {
+    for (final com.cburch.logisim.circuit.CircuitState sub : circState.getSubStates()) {
       found |= saveRam(sub, saveFile);
     }
     return found;
@@ -248,10 +248,10 @@ public class TtyInterface {
 
   private static boolean prepareForTty(CircuitState circState, ArrayList<InstanceState> keybStates) {
     boolean found = false;
-    for (final var comp : circState.getCircuit().getNonWires()) {
+    for (final com.cburch.logisim.comp.Component comp : circState.getCircuit().getNonWires()) {
       final Object factory = comp.getFactory();
       if (factory instanceof Tty ttyFactory) {
-        final var ttyState = circState.getInstanceState(comp);
+        final com.cburch.logisim.instance.InstanceState ttyState = circState.getInstanceState(comp);
         ttyFactory.sendToStdout(ttyState);
         found = true;
       } else if (factory instanceof Keyboard) {
@@ -267,8 +267,8 @@ public class TtyInterface {
   }
 
   public static void run(Startup args) {
-    final var fileToOpen = args.getFilesToOpen().get(0);
-    final var loader = new Loader(null);
+    final java.io.File fileToOpen = args.getFilesToOpen().get(0);
+    final com.cburch.logisim.file.Loader loader = new Loader(null);
     LogisimFile file;
     try {
       file = loader.openLogisimFile(fileToOpen, args.getSubstitutions());
@@ -277,13 +277,13 @@ public class TtyInterface {
       System.exit(-1);
       return;
     }
-    final var proj = new Project(file);
+    final com.cburch.logisim.proj.Project proj = new Project(file);
     if (args.isFpgaDownload()) {
       if (!args.fpgaDownload(proj)) System.exit(-1);
     }
 
-    final var circuitToTest = args.getCircuitToTest();
-    final var circuit = (circuitToTest == null || circuitToTest.length() == 0)
+    final java.lang.String circuitToTest = args.getCircuitToTest();
+    final com.cburch.logisim.circuit.Circuit circuit = (circuitToTest == null || circuitToTest.length() == 0)
         ? file.getMainCircuit()
         : file.getCircuit(circuitToTest);
 
@@ -296,13 +296,13 @@ public class TtyInterface {
       System.exit(0);
     }
 
-    final var pinNames = Analyze.getPinLabels(circuit);
-    final var outputPins = new ArrayList<Instance>();
-    final var inputPins = new ArrayList<Instance>();
+    final java.util.SortedMap<com.cburch.logisim.instance.Instance,java.lang.String> pinNames = Analyze.getPinLabels(circuit);
+    final java.util.ArrayList<com.cburch.logisim.instance.Instance> outputPins = new ArrayList<Instance>();
+    final java.util.ArrayList<com.cburch.logisim.instance.Instance> inputPins = new ArrayList<Instance>();
     Instance haltPin = null;
-    for (final var entry : pinNames.entrySet()) {
-      final var pin = entry.getKey();
-      final var pinName = entry.getValue();
+    for (final java.util.Map.Entry<com.cburch.logisim.instance.Instance,java.lang.String> entry : pinNames.entrySet()) {
+      final com.cburch.logisim.instance.Instance pin = entry.getKey();
+      final java.lang.String pinName = entry.getValue();
       if (Pin.FACTORY.isInputPin(pin)) {
         inputPins.add(pin);
       } else {
@@ -323,7 +323,7 @@ public class TtyInterface {
     circState.getPropagator().propagate();
     if (args.getLoadFile() != null) {
       try {
-        final var loaded = loadRam(circState, args.getLoadFile());
+        final boolean loaded = loadRam(circState, args.getLoadFile());
         if (!loaded) {
           logger.error("{}", S.get("loadNoRamError"));
           System.exit(-1);
@@ -333,12 +333,12 @@ public class TtyInterface {
         System.exit(-1);
       }
     }
-    final var ttyFormat = args.getTtyFormat();
-    final var simCode = runSimulation(circState, outputPins, haltPin, ttyFormat);
+    final int ttyFormat = args.getTtyFormat();
+    final int simCode = runSimulation(circState, outputPins, haltPin, ttyFormat);
 
     if (args.getSaveFile() != null) {
       try {
-        final var saved = saveRam(circState, args.getSaveFile());
+        final boolean saved = saveRam(circState, args.getSaveFile());
         if (!saved) {
           logger.error("{}", S.get("saveNoRamError"));
           System.exit(-1);
@@ -354,71 +354,71 @@ public class TtyInterface {
 
   private static int doTableAnalysis(Project proj, Circuit circuit, Map<Instance, String> pinLabels, int format) {
 
-    final var inputPins = new ArrayList<Instance>();
-    final var inputVars = new ArrayList<Var>();
-    final var inputNames = new ArrayList<String>();
-    final var outputPins = new ArrayList<Instance>();
-    final var outputVars = new ArrayList<Var>();
-    final var outputNames = new ArrayList<String>();
-    final var formats = new ArrayList<String>();
-    for (final var entry : pinLabels.entrySet()) {
-      final var pin = entry.getKey();
-      final var width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
-      final var var = new Var(entry.getValue(), width);
+    final java.util.ArrayList<com.cburch.logisim.instance.Instance> inputPins = new ArrayList<Instance>();
+    final java.util.ArrayList<com.cburch.logisim.analyze.model.Var> inputVars = new ArrayList<Var>();
+    final java.util.ArrayList<java.lang.String> inputNames = new ArrayList<String>();
+    final java.util.ArrayList<com.cburch.logisim.instance.Instance> outputPins = new ArrayList<Instance>();
+    final java.util.ArrayList<com.cburch.logisim.analyze.model.Var> outputVars = new ArrayList<Var>();
+    final java.util.ArrayList<java.lang.String> outputNames = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> formats = new ArrayList<String>();
+    for (final java.util.Map.Entry<com.cburch.logisim.instance.Instance,java.lang.String> entry : pinLabels.entrySet()) {
+      final com.cburch.logisim.instance.Instance pin = entry.getKey();
+      final int width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
+      final com.cburch.logisim.analyze.model.Var var = new Var(entry.getValue(), width);
       if (Pin.FACTORY.isInputPin(pin)) {
         inputPins.add(pin);
-        for (final var name : var) inputNames.add(name);
+        for (final java.lang.String name : var) inputNames.add(name);
         inputVars.add(var);
       } else {
         outputPins.add(pin);
-        for (final var name : var) outputNames.add(name);
+        for (final java.lang.String name : var) outputNames.add(name);
         outputVars.add(var);
       }
     }
 
-    final var headers = new ArrayList<String>();
-    final var pinList = new ArrayList<Instance>();
+    final java.util.ArrayList<java.lang.String> headers = new ArrayList<String>();
+    final java.util.ArrayList<com.cburch.logisim.instance.Instance> pinList = new ArrayList<Instance>();
     /* input pins first */
-    for (final var entry : pinLabels.entrySet()) {
-      final var pin = entry.getKey();
-      final var pinName = entry.getValue();
+    for (final java.util.Map.Entry<com.cburch.logisim.instance.Instance,java.lang.String> entry : pinLabels.entrySet()) {
+      final com.cburch.logisim.instance.Instance pin = entry.getKey();
+      final java.lang.String pinName = entry.getValue();
       if (Pin.FACTORY.isInputPin(pin)) {
         headers.add(pinName);
         pinList.add(pin);
       }
     }
     /* output pins last */
-    for (final var entry : pinLabels.entrySet()) {
-      final var pin = entry.getKey();
-      final var pinName = entry.getValue();
+    for (final java.util.Map.Entry<com.cburch.logisim.instance.Instance,java.lang.String> entry : pinLabels.entrySet()) {
+      final com.cburch.logisim.instance.Instance pin = entry.getKey();
+      final java.lang.String pinName = entry.getValue();
       if (!Pin.FACTORY.isInputPin(pin)) {
         headers.add(pinName);
         pinList.add(pin);
       }
     }
 
-    final var inputCount = inputNames.size();
-    final var rowCount = 1 << inputCount;
+    final int inputCount = inputNames.size();
+    final int rowCount = 1 << inputCount;
 
     boolean needTableHeader = true;
-    final var valueMap = new HashMap<Instance, Value>();
+    final java.util.HashMap<com.cburch.logisim.instance.Instance,com.cburch.logisim.data.Value> valueMap = new HashMap<Instance, Value>();
     for (int i = 0; i < rowCount; i++) {
       valueMap.clear();
-      final var circuitState = new CircuitState(proj, circuit);
+      final com.cburch.logisim.circuit.CircuitState circuitState = new CircuitState(proj, circuit);
       int incol = 0;
-      for (final var pin : inputPins) {
-        final var width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
-        final var v = new Value[width];
+      for (final com.cburch.logisim.instance.Instance pin : inputPins) {
+        final int width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
+        final com.cburch.logisim.data.Value[] v = new Value[width];
         for (int b = width - 1; b >= 0; b--) {
-          final var value = TruthTable.isInputSet(i, incol++, inputCount);
+          final boolean value = TruthTable.isInputSet(i, incol++, inputCount);
           v[b] = value ? Value.TRUE : Value.FALSE;
         }
-        final var pinState = circuitState.getInstanceState(pin);
+        final com.cburch.logisim.instance.InstanceState pinState = circuitState.getInstanceState(pin);
         Pin.FACTORY.setValue(pinState, Value.create(v));
         valueMap.put(pin, Value.create(v));
       }
 
-      final var prop = circuitState.getPropagator();
+      final com.cburch.logisim.circuit.Propagator prop = circuitState.getPropagator();
       prop.propagate();
       /*
        * TODO for the SimulatorPrototype class do { prop.step(); } while
@@ -426,18 +426,18 @@ public class TtyInterface {
        */
       // TODO: Search for circuit state
 
-      for (final var pin : outputPins) {
+      for (final com.cburch.logisim.instance.Instance pin : outputPins) {
         if (prop.isOscillating()) {
-          final var width = pin.getAttributeValue(StdAttr.WIDTH);
+          final com.cburch.logisim.data.BitWidth width = pin.getAttributeValue(StdAttr.WIDTH);
           valueMap.put(pin, Value.createError(width));
         } else {
-          final var pinState = circuitState.getInstanceState(pin);
-          final var outValue = Pin.FACTORY.getValue(pinState);
+          final com.cburch.logisim.instance.InstanceState pinState = circuitState.getInstanceState(pin);
+          final com.cburch.logisim.data.Value outValue = Pin.FACTORY.getValue(pinState);
           valueMap.put(pin, outValue);
         }
       }
-      final var currValues = new ArrayList<Value>();
-      for (final var pin : pinList) {
+      final java.util.ArrayList<com.cburch.logisim.data.Value> currValues = new ArrayList<Value>();
+      for (final com.cburch.logisim.instance.Instance pin : pinList) {
         currValues.add(valueMap.get(pin));
       }
       displayTableRow(needTableHeader, null, currValues, headers, formats, format);
@@ -448,16 +448,16 @@ public class TtyInterface {
   }
 
   private static int runSimulation(CircuitState circState, ArrayList<Instance> outputPins, Instance haltPin, int format) {
-    final var showTable = (format & FORMAT_TABLE) != 0;
-    final var showSpeed = (format & FORMAT_SPEED) != 0;
-    final var showTty = (format & FORMAT_TTY) != 0;
-    final var showHalt = (format & FORMAT_HALT) != 0;
+    final boolean showTable = (format & FORMAT_TABLE) != 0;
+    final boolean showSpeed = (format & FORMAT_SPEED) != 0;
+    final boolean showTty = (format & FORMAT_TTY) != 0;
+    final boolean showHalt = (format & FORMAT_HALT) != 0;
 
     ArrayList<InstanceState> keyboardStates = null;
     StdinThread stdinThread = null;
     if (showTty) {
       keyboardStates = new ArrayList<>();
-      final var ttyFound = prepareForTty(circState, keyboardStates);
+      final boolean ttyFound = prepareForTty(circState, keyboardStates);
       if (!ttyFound) {
         logger.error("{}", S.get("ttyNoTtyError"));
         System.exit(-1);
@@ -472,15 +472,15 @@ public class TtyInterface {
 
     int retCode = 0;
     long tickCount = 0;
-    final var start = System.currentTimeMillis();
+    final long start = System.currentTimeMillis();
     boolean halted = false;
     ArrayList<Value> prevOutputs = null;
-    final var prop = circState.getPropagator();
+    final com.cburch.logisim.circuit.Propagator prop = circState.getPropagator();
     while (true) {
-      final var curOutputs = new ArrayList<Value>();
-      for (final var pin : outputPins) {
-        final var pinState = circState.getInstanceState(pin);
-        final var val = Pin.FACTORY.getValue(pinState);
+      final java.util.ArrayList<com.cburch.logisim.data.Value> curOutputs = new ArrayList<Value>();
+      for (final com.cburch.logisim.instance.Instance pin : outputPins) {
+        final com.cburch.logisim.instance.InstanceState pinState = circState.getInstanceState(pin);
+        final com.cburch.logisim.data.Value val = Pin.FACTORY.getValue(pinState);
         if (pin == haltPin) {
           halted |= val.equals(Value.TRUE);
         } else if (showTable) {
@@ -500,9 +500,9 @@ public class TtyInterface {
         break;
       }
       if (keyboardStates != null) {
-        final var buffer = stdinThread.getBuffer();
+        final char[] buffer = stdinThread.getBuffer();
         if (buffer != null) {
-          for (final var keyState : keyboardStates) {
+          for (final com.cburch.logisim.instance.InstanceState keyState : keyboardStates) {
             Keyboard.addToBuffer(keyState, buffer);
           }
         }
@@ -512,7 +512,7 @@ public class TtyInterface {
       prop.toggleClocks();
       prop.propagate();
     }
-    final var elapse = System.currentTimeMillis() - start;
+    final long elapse = System.currentTimeMillis() - start;
     if (showTty) ensureLineTerminated();
     if (showHalt || retCode != 0) {
       if (retCode == 0) {
@@ -552,13 +552,13 @@ public class TtyInterface {
 
     @Override
     public void run() {
-      final var stdin = new InputStreamReader(System.in);
-      final var buffer = new char[32];
+      final java.io.InputStreamReader stdin = new InputStreamReader(System.in);
+      final char[] buffer = new char[32];
       while (true) {
         try {
           int nbytes = stdin.read(buffer);
           if (nbytes > 0) {
-            final var add = new char[nbytes];
+            final char[] add = new char[nbytes];
             System.arraycopy(buffer, 0, add, 0, nbytes);
             synchronized (queue) {
               queue.addLast(add);

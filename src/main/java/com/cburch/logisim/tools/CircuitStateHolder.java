@@ -33,7 +33,7 @@ public interface CircuitStateHolder {
 
     public void registerCircuitListener(CircuitListener l) {
       if (mainCircuit != null) mainCircuit.addCircuitListener(l);
-      for (final var c : components) {
+      for (final com.cburch.logisim.comp.Component c : components) {
         if (c.getFactory() instanceof final SubcircuitFactory f) {
           f.getSubcircuit().addCircuitListener(l);
         }
@@ -42,7 +42,7 @@ public interface CircuitStateHolder {
 
     public void deregisterCircuitListener(CircuitListener l) {
       if (mainCircuit != null) mainCircuit.addCircuitListener(l);
-      for (final var c : components) {
+      for (final com.cburch.logisim.comp.Component c : components) {
         if (c.getFactory() instanceof final SubcircuitFactory f) {
           f.getSubcircuit().removeCircuitListener(l);
         }
@@ -58,9 +58,9 @@ public interface CircuitStateHolder {
     }
 
     public String getName() {
-      final var s = new StringBuilder();
+      final java.lang.StringBuilder s = new StringBuilder();
       if (mainCircuit != null) s.append(mainCircuit.getName());
-      for (final var c : components) {
+      for (final com.cburch.logisim.comp.Component c : components) {
         if (s.length() != 0) s.append(":");
         s.append(SocSupport.getComponentName(c));
       }
@@ -68,8 +68,8 @@ public interface CircuitStateHolder {
     }
 
     public HierarchyInfo getCopy() {
-      final var copy = new HierarchyInfo(mainCircuit);
-      for (final var c : components) copy.addComponent(c);
+      final com.cburch.logisim.tools.CircuitStateHolder.HierarchyInfo copy = new HierarchyInfo(mainCircuit);
+      for (final com.cburch.logisim.comp.Component c : components) copy.addComponent(c);
       return copy;
     }
   }

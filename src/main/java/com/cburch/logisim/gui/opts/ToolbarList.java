@@ -92,7 +92,7 @@ class ToolbarList extends JList {
 
     @Override
     public void paintIcon(Component comp, Graphics g, int x, int y) {
-      final var gfxNew = g.create();
+      final java.awt.Graphics gfxNew = g.create();
       tool.paintIcon(new ComponentDrawContext(comp, null, null, g, gfxNew), x + 2, y + 2);
       gfxNew.dispose();
     }

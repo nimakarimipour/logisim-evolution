@@ -167,9 +167,9 @@ class SearchNode implements Comparable<SearchNode> {
 
   public SearchNode next(Direction moveDir, boolean crossing) {
     int newDist = dist;
-    final var connDir = conn.getDirection();
-    final var nextLoc = loc.translate(moveDir, 10);
-    final var exWire = extendsWire && moveDir == connDir;
+    final com.cburch.logisim.data.Direction connDir = conn.getDirection();
+    final com.cburch.logisim.data.Location nextLoc = loc.translate(moveDir, 10);
+    final boolean exWire = extendsWire && moveDir == connDir;
     newDist += (exWire) ? 9 : 10;
     if (crossing) newDist += CROSSING_PENALTY;
     if (moveDir != dir) newDist += TURN_PENALTY;

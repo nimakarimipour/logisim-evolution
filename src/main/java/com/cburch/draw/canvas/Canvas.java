@@ -85,7 +85,7 @@ public class Canvas extends JComponent {
 
   protected void paintBackground(Graphics g) {
     if (AppPreferences.AntiAliassing.getBoolean()) {
-      final var g2 = (Graphics2D) g;
+      final java.awt.Graphics2D g2 = (Graphics2D) g;
       g2.setRenderingHint(
           RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -108,11 +108,11 @@ public class Canvas extends JComponent {
   private void paintTooltip(Graphics g) {
     if (tooltipLocation == null || tooltipName == null) return;
     g.setColor(Color.YELLOW);
-    final var x = (int) (tooltipLocation.getX() * getZoomFactor());
-    final var y = (int) (tooltipLocation.getY() * getZoomFactor());
-    final var width =
+    final int x = (int) (tooltipLocation.getX() * getZoomFactor());
+    final int y = (int) (tooltipLocation.getY() * getZoomFactor());
+    final int width =
         (int) ((tooltipName.length() * DrawAttr.FIXED_FONT_CHAR_WIDTH) * getZoomFactor());
-    final var height =
+    final int height =
         (int) ((DrawAttr.FIXED_FONT_HEIGHT + DrawAttr.FIXED_FONT_HEIGHT >> 1) * getZoomFactor());
     g.fillRect(x, y, width, height);
     g.setColor(Color.BLUE);
@@ -123,10 +123,10 @@ public class Canvas extends JComponent {
   }
 
   protected void paintForeground(Graphics g) {
-    final var canvasModel = this.model;
-    final var tool = listener.getTool();
+    final com.cburch.draw.model.CanvasModel canvasModel = this.model;
+    final com.cburch.draw.canvas.CanvasTool tool = listener.getTool();
     if (canvasModel != null) {
-      final var dup = g.create();
+      final java.awt.Graphics dup = g.create();
       canvasModel.paint(g, selection);
       dup.dispose();
     }
@@ -142,7 +142,7 @@ public class Canvas extends JComponent {
   }
 
   public void setModel(CanvasModel value, ActionDispatcher dispatcher) {
-    final var oldValue = model;
+    final com.cburch.draw.model.CanvasModel oldValue = model;
     if (oldValue != null) {
       if (!oldValue.equals(value)) {
         oldValue.removeCanvasModelListener(listener);

@@ -71,24 +71,24 @@ public class MenuTool extends Tool {
     public void actionPerformed(ActionEvent e) {
       Object src = e.getSource();
       if (src == del) {
-        final var circ = proj.getCurrentCircuit();
-        final var xn = new CircuitMutation(circ);
+        final com.cburch.logisim.circuit.Circuit circ = proj.getCurrentCircuit();
+        final com.cburch.logisim.circuit.CircuitMutation xn = new CircuitMutation(circ);
         xn.remove(comp);
         proj.doAction(
             xn.toAction(S.getter("removeComponentAction", comp.getFactory().getDisplayGetter())));
       } else if (src == attrs) {
         proj.getFrame().viewComponentAttributes(circ, comp);
       } else if (src == rotateRight) {
-        final var circ = proj.getCurrentCircuit();
-        final var xn = new CircuitMutation(circ);
-        final var d = comp.getAttributeSet().getValue(StdAttr.FACING);
+        final com.cburch.logisim.circuit.Circuit circ = proj.getCurrentCircuit();
+        final com.cburch.logisim.circuit.CircuitMutation xn = new CircuitMutation(circ);
+        final com.cburch.logisim.data.Direction d = comp.getAttributeSet().getValue(StdAttr.FACING);
         xn.set(comp, StdAttr.FACING, d.getRight());
         proj.doAction(
             xn.toAction(S.getter("rotateComponentAction", comp.getFactory().getDisplayGetter())));
       } else if (src == rotateLeft) {
-        final var circ = proj.getCurrentCircuit();
-        final var xn = new CircuitMutation(circ);
-        final var d = comp.getAttributeSet().getValue(StdAttr.FACING);
+        final com.cburch.logisim.circuit.Circuit circ = proj.getCurrentCircuit();
+        final com.cburch.logisim.circuit.CircuitMutation xn = new CircuitMutation(circ);
+        final com.cburch.logisim.data.Direction d = comp.getAttributeSet().getValue(StdAttr.FACING);
         xn.set(comp, StdAttr.FACING, d.getLeft());
         proj.doAction(
             xn.toAction(S.getter("rotateComponentAction", comp.getFactory().getDisplayGetter())));
@@ -119,7 +119,7 @@ public class MenuTool extends Tool {
     @Override
     public void actionPerformed(ActionEvent e) {
       Object src = e.getSource();
-      final var sel = proj.getSelection();
+      final com.cburch.logisim.gui.main.Selection sel = proj.getSelection();
       if (src == del) {
         proj.doAction(SelectionActions.clear(sel));
       } else if (src == cut) {
@@ -161,27 +161,27 @@ public class MenuTool extends Tool {
   public void mousePressed(Canvas canvas, Graphics g, MouseEvent e) {
     int x = e.getX();
     int y = e.getY();
-    final var pt = Location.create(x, y, false);
+    final com.cburch.logisim.data.Location pt = Location.create(x, y, false);
 
     JPopupMenu menu;
-    final var proj = canvas.getProject();
-    final var sel = proj.getSelection();
-    final var inSel = sel.getComponentsContaining(pt, g);
+    final com.cburch.logisim.proj.Project proj = canvas.getProject();
+    final com.cburch.logisim.gui.main.Selection sel = proj.getSelection();
+    final java.util.Collection<com.cburch.logisim.comp.Component> inSel = sel.getComponentsContaining(pt, g);
     if (!inSel.isEmpty()) {
-      final var comp = inSel.iterator().next();
+      final com.cburch.logisim.comp.Component comp = inSel.iterator().next();
       if (sel.getComponents().size() > 1) {
         menu = new MenuSelection(proj);
       } else {
         menu = new MenuComponent(proj, canvas.getCircuit(), comp);
-        final var extender = (MenuExtender) comp.getFeature(MenuExtender.class);
+        final com.cburch.logisim.tools.MenuExtender extender = (MenuExtender) comp.getFeature(MenuExtender.class);
         if (extender != null) extender.configureMenu(menu, proj);
       }
     } else {
-      final var cl = canvas.getCircuit().getAllContaining(pt, g);
+      final java.util.Collection<com.cburch.logisim.comp.Component> cl = canvas.getCircuit().getAllContaining(pt, g);
       if (!cl.isEmpty()) {
-        final var comp = cl.iterator().next();
+        final com.cburch.logisim.comp.Component comp = cl.iterator().next();
         menu = new MenuComponent(proj, canvas.getCircuit(), comp);
-        final var extender = (MenuExtender) comp.getFeature(MenuExtender.class);
+        final com.cburch.logisim.tools.MenuExtender extender = (MenuExtender) comp.getFeature(MenuExtender.class);
         if (extender != null) extender.configureMenu(menu, proj);
       } else {
         menu = null;
@@ -195,7 +195,7 @@ public class MenuTool extends Tool {
 
   @Override
   public void paintIcon(ComponentDrawContext c, int x, int y) {
-    final var g = c.getGraphics();
+    final java.awt.Graphics g = c.getGraphics();
     g.fillRect(x + 2, y + 1, 9, 2);
     g.drawRect(x + 2, y + 3, 15, 12);
     g.setColor(Color.lightGray);

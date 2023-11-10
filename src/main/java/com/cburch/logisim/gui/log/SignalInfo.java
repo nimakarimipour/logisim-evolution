@@ -120,7 +120,7 @@ public class SignalInfo implements AttributeListener, CircuitListener, Location.
     if (obsoleted) {
       return; // this SelectionItem doesn't appear to be alive any more
     }
-    final var action = event.getAction();
+    final int action = event.getAction();
     if (action == CircuitEvent.ACTION_CLEAR) {
       // This happens only when analyzer is replacing an entire circuit. Can we
       // match up pin names perhaps? todo later
@@ -132,18 +132,18 @@ public class SignalInfo implements AttributeListener, CircuitListener, Location.
       // Walk through each level of circuit to see if we got removed or
       boolean changed = false;
       for (int i = 0; i < n; i++) {
-        final var t = circ[i];
-        final var c = path[i];
+        final com.cburch.logisim.circuit.Circuit t = circ[i];
+        final com.cburch.logisim.comp.Component c = path[i];
 
-        final var repl = event.getResult().getReplacementMap(t);
+        final com.cburch.logisim.circuit.ReplacementMap repl = event.getResult().getReplacementMap(t);
         if (repl.isEmpty()) continue; // no changes at all to circuit at this level
 
         if (!repl.getRemovals().contains(c))
           continue; // changes at this level don't affect our path
 
         Component componentNew = null;
-        final var newComps = repl.getReplacementsFor(c);
-        for (final var c2 : newComps) {
+        final java.util.Collection<com.cburch.logisim.comp.Component> newComps = repl.getReplacementsFor(c);
+        for (final com.cburch.logisim.comp.Component c2 : newComps) {
           if (c2 == c || c2.getFactory() == c.getFactory()) {
             componentNew = c2;
             break;
@@ -160,7 +160,7 @@ public class SignalInfo implements AttributeListener, CircuitListener, Location.
           path[i].getAttributeSet().addAttributeListener(this);
           if (i < n - 1) {
             // sanity check, path[i] should still lead to circ[i+1]
-            final var factory = (SubcircuitFactory) path[i].getFactory();
+            final com.cburch.logisim.circuit.SubcircuitFactory factory = (SubcircuitFactory) path[i].getFactory();
             if (circ[i + 1] != factory.getSubcircuit()) {
               System.out.println("**** failure: subcircuit changed!");
               remove();
@@ -191,7 +191,7 @@ public class SignalInfo implements AttributeListener, CircuitListener, Location.
 
   private static String logName(Component c, Object option) {
     String s = null;
-    final var log = (LoggableContract) c.getFeature(LoggableContract.class);
+    final com.cburch.logisim.gui.log.LoggableContract log = (LoggableContract) c.getFeature(LoggableContract.class);
     if (log != null) s = normalize(log.getLogName(option), null);
     if (s == null) s = normalize(c.getAttributeSet().getValue(StdAttr.LABEL), option);
     if (s == null) s = normalize(c.getFactory().getDisplayName() + c.getLocation(), option);
@@ -210,11 +210,11 @@ public class SignalInfo implements AttributeListener, CircuitListener, Location.
   private boolean computeName() {
     boolean changed = false;
 
-    final var log = (LoggableContract) path[n - 1].getFeature(LoggableContract.class);
+    final com.cburch.logisim.gui.log.LoggableContract log = (LoggableContract) path[n - 1].getFeature(LoggableContract.class);
     BitWidth bw = null;
     if (log != null) bw = log.getBitWidth(option);
     if (bw == null) bw = path[n - 1].getAttributeSet().getValue(StdAttr.WIDTH);
-    final var w = bw.getWidth();
+    final int w = bw.getWidth();
     if (w != width) {
       changed = true;
       width = w;
@@ -225,11 +225,11 @@ public class SignalInfo implements AttributeListener, CircuitListener, Location.
       nickname = s;
     }
 
-    final var buf = new StringBuilder();
+    final java.lang.StringBuilder buf = new StringBuilder();
     for (int i = 0; i < n - 1; i++) buf.append(logName(path[i], null)).append("/");
     buf.append(nickname);
     if (width > 1) buf.append("[").append(width - 1).append("..0]");
-    final var f = buf.toString();
+    final java.lang.String f = buf.toString();
     if (!f.equals(fullname)) {
       changed = true;
       fullname = f;
@@ -239,7 +239,7 @@ public class SignalInfo implements AttributeListener, CircuitListener, Location.
   }
 
   public Value fetchValue(CircuitState root) {
-    final var log = (LoggableContract) path[n - 1].getFeature(LoggableContract.class);
+    final com.cburch.logisim.gui.log.LoggableContract log = (LoggableContract) path[n - 1].getFeature(LoggableContract.class);
     if (log == null) return Value.NIL;
     com.cburch.logisim.circuit.CircuitState cur = root;
     for (int i = 0; i < n - 1; i++) cur = circ[i].getSubcircuitFactory().getSubstate(cur, path[i]);
@@ -350,8 +350,8 @@ public class SignalInfo implements AttributeListener, CircuitListener, Location.
   private void remove() {
     if (obsoleted) return;
     obsoleted = true;
-    for (final var t : circ) t.removeCircuitListener(this);
-    for (final var c : path) c.getAttributeSet().removeAttributeListener(this);
+    for (final com.cburch.logisim.circuit.Circuit t : circ) t.removeCircuitListener(this);
+    for (final com.cburch.logisim.comp.Component c : path) c.getAttributeSet().removeAttributeListener(this);
     if (listener != null) listener.signalInfoObsoleted(this);
   }
 

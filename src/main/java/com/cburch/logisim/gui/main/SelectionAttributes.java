@@ -183,7 +183,7 @@ class SelectionAttributes extends AbstractAttributeSet {
 
   @Override
   public List<Attribute<?>> getAttributes() {
-    final var circ = canvas.getCircuit();
+    final com.cburch.logisim.circuit.Circuit circ = canvas.getCircuit();
     return (circ != null && selected.isEmpty())
         ? circ.getStaticAttributes().getAttributes()
         : attrsView;
@@ -195,13 +195,13 @@ class SelectionAttributes extends AbstractAttributeSet {
 
   @Override
   public <V> V getValue(Attribute<V> attr) {
-    final var circ = canvas.getCircuit();
+    final com.cburch.logisim.circuit.Circuit circ = canvas.getCircuit();
     if (circ != null && selected.isEmpty()) {
       return circ.getStaticAttributes().getValue(attr);
     }
 
-    final var i = findIndex(attr);
-    final var vs = values;
+    final int i = findIndex(attr);
+    final java.lang.Object[] vs = values;
     @SuppressWarnings("unchecked")
     V ret = (V) (i >= 0 && i < vs.length ? vs[i] : null);
     return ret;
@@ -209,15 +209,15 @@ class SelectionAttributes extends AbstractAttributeSet {
 
   @Override
   public boolean isReadOnly(Attribute<?> attr) {
-    final var proj = canvas.getProject();
-    final var circ = canvas.getCircuit();
+    final com.cburch.logisim.proj.Project proj = canvas.getProject();
+    final com.cburch.logisim.circuit.Circuit circ = canvas.getCircuit();
     if (!proj.getLogisimFile().contains(circ)) {
       return true;
     } else if (circ != null && selected.isEmpty()) {
       return circ.getStaticAttributes().isReadOnly(attr);
     } else {
       int i = findIndex(attr);
-      final var ro = readOnly;
+      final boolean[] ro = readOnly;
       return i < 0 || i >= ro.length || ro[i];
     }
   }

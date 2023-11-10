@@ -53,7 +53,7 @@ public class AnalyzerTexWriter {
 
   private static int nrOfOutCols(AnalyzerModel model) {
     int count = 0;
-    final var outputs = model.getOutputs();
+    final com.cburch.logisim.analyze.model.VariableList outputs = model.getOutputs();
     for (int i = 0; i < outputs.vars.size(); i++) {
       count += outputs.vars.get(i).width;
     }
@@ -61,30 +61,30 @@ public class AnalyzerTexWriter {
   }
 
   private static String truthTableHeader(AnalyzerModel model) {
-    final var out = new StringBuilder();
+    final java.lang.StringBuilder out = new StringBuilder();
     out.append("\\begin{center}\n");
     out.append("\\begin{tabular}{");
-    final var nrInCols = nrOfInCols(model);
-    final var nrOutCols = nrOfOutCols(model);
+    final int nrInCols = nrOfInCols(model);
+    final int nrOutCols = nrOfOutCols(model);
     out.append("c".repeat(nrInCols));
     out.append("|");
     out.append("c".repeat(nrOutCols));
     out.append("}\n");
     /* Make the header text */
-    final var inputVars = model.getInputs().vars;
-    final var outputVars = model.getOutputs().vars;
+    final java.util.List<com.cburch.logisim.analyze.model.Var> inputVars = model.getInputs().vars;
+    final java.util.List<com.cburch.logisim.analyze.model.Var> outputVars = model.getOutputs().vars;
     for (int i = 0; i < inputVars.size(); i++) {
-      final var inp = inputVars.get(i);
+      final com.cburch.logisim.analyze.model.Var inp = inputVars.get(i);
       if (inp.width == 1) {
         out.append("$").append(inp.name).append("$&");
       } else {
-        final var format = i == inputVars.size() - 1 ? "c|" : "c";
+        final java.lang.String format = i == inputVars.size() - 1 ? "c|" : "c";
         out.append("\\multicolumn{").append(inp.width).append("}{").append(format).append("}{$")
             .append(inp.name).append("[").append(inp.width - 1).append("..0]$}&");
       }
     }
     for (int i = 0; i < outputVars.size(); i++) {
-      final var outp = outputVars.get(i);
+      final com.cburch.logisim.analyze.model.Var outp = outputVars.get(i);
       if (outp.width == 1) {
         out.append("$").append(outp.name).append("$");
       } else {
@@ -98,14 +98,14 @@ public class AnalyzerTexWriter {
   }
 
   private static String getCompactTruthTable(TruthTable tt, AnalyzerModel model) {
-    final var content = new StringBuilder();
+    final java.lang.StringBuilder content = new StringBuilder();
     for (int row = 0; row < tt.getVisibleRowCount(); row++) {
       for (int col = 0; col < nrOfInCols(model); col++) {
-        final var val = tt.getVisibleInputEntry(row, col);
+        final com.cburch.logisim.analyze.model.Entry val = tt.getVisibleInputEntry(row, col);
         content.append("$").append(val.getDescription()).append("$&");
       }
       for (int col = 0; col < nrOfOutCols(model); col++) {
-        final var val = tt.getVisibleOutputEntry(row, col);
+        final com.cburch.logisim.analyze.model.Entry val = tt.getVisibleOutputEntry(row, col);
         content.append("$").append(val.getDescription()).append("$");
         content.append(col == nrOfOutCols(model) - 1 ? "\\\\\n" : "&");
       }
@@ -114,14 +114,14 @@ public class AnalyzerTexWriter {
   }
 
   private static String getCompleteTruthTable(TruthTable tt, AnalyzerModel model) {
-    final var content = new StringBuilder();
+    final java.lang.StringBuilder content = new StringBuilder();
     for (int row = 0; row < tt.getRowCount(); row++) {
       for (int col = 0; col < nrOfInCols(model); col++) {
-        final var val = tt.getInputEntry(row, col);
+        final com.cburch.logisim.analyze.model.Entry val = tt.getInputEntry(row, col);
         content.append("$").append(val.getDescription()).append("$&");
       }
       for (int col = 0; col < nrOfOutCols(model); col++) {
-        final var val = tt.getOutputEntry(row, col);
+        final com.cburch.logisim.analyze.model.Entry val = tt.getOutputEntry(row, col);
         content.append("$").append(val.getDescription()).append("$");
         content.append(col == nrOfOutCols(model) - 1 ? "\\\\\n" : "&");
       }
@@ -161,8 +161,8 @@ public class AnalyzerTexWriter {
 
   private static int reorderedIndex(int nrOfInputs, int row) {
     int result = 0;
-    final var reorder = reordered(nrOfInputs);
-    final var values = new int[nrOfInputs];
+    final int[] reorder = reordered(nrOfInputs);
+    final int[] values = new int[nrOfInputs];
     for (int i = 0; i < nrOfInputs; i++) values[i] = 1 << (nrOfInputs - reorder[i] - 1);
     int mask = 1 << (nrOfInputs - 1);
     for (int i = 0; i < nrOfInputs; i++) {
@@ -173,11 +173,11 @@ public class AnalyzerTexWriter {
   }
 
   private static String getKarnaughInputs(AnalyzerModel model) {
-    final var content = new StringBuilder();
-    final var reorder = reordered(model.getInputs().bits.size());
+    final java.lang.StringBuilder content = new StringBuilder();
+    final int[] reorder = reordered(model.getInputs().bits.size());
     for (int i = 0; i < model.getInputs().bits.size(); i++) {
       try {
-        final var inp = Bit.parse(model.getInputs().bits.get(reorder[i]));
+        final com.cburch.logisim.analyze.model.Var.Bit inp = Bit.parse(model.getInputs().bits.get(reorder[i]));
         content.append("{$").append(inp.name);
         if (inp.bitIndex >= 0) content.append("_").append(inp.bitIndex);
         content.append("$}");
@@ -197,16 +197,16 @@ public class AnalyzerTexWriter {
   }
 
   private static String getNumberedHeader(String name, AnalyzerModel model) {
-    final var content = new StringBuilder();
-    final var table = model.getTruthTable();
-    final var df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.ENGLISH);
-    final var kmapRows = 1 << KarnaughMapPanel.ROW_VARS[table.getInputColumnCount()];
+    final java.lang.StringBuilder content = new StringBuilder();
+    final com.cburch.logisim.analyze.model.TruthTable table = model.getTruthTable();
+    final java.text.DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.ENGLISH);
+    final int kmapRows = 1 << KarnaughMapPanel.ROW_VARS[table.getInputColumnCount()];
     content.append("\n");
-    final var leftVars = new StringBuilder();
-    final var topVars = new StringBuilder();
-    final var nrLeftVars = KarnaughMapPanel.ROW_VARS[table.getInputColumnCount()];
+    final java.lang.StringBuilder leftVars = new StringBuilder();
+    final java.lang.StringBuilder topVars = new StringBuilder();
+    final int nrLeftVars = KarnaughMapPanel.ROW_VARS[table.getInputColumnCount()];
     int count = 0;
-    for (final var variable : table.getInputVariables()) {
+    for (final com.cburch.logisim.analyze.model.Var variable : table.getInputVariables()) {
       if (variable.width == 1) {
         if (count++ < nrLeftVars) {
           if (leftVars.length() != 0) leftVars.append(", ");
@@ -245,7 +245,7 @@ public class AnalyzerTexWriter {
   }
 
   private static String getKarnaughEmpty(String name, boolean lined, AnalyzerModel model) {
-    final var content = new StringBuilder();
+    final java.lang.StringBuilder content = new StringBuilder();
     content.append("\\begin{center}\n");
     content.append(K_INTRO).append(lined ? "" : K_NUMBERED).append(K_SETUP).append("\n");
     content.append("\\karnaughmap{").append(nrOfInCols(model)).append("}{").append(name)
@@ -258,16 +258,16 @@ public class AnalyzerTexWriter {
   }
 
   private static String getKValues(int outcol, AnalyzerModel model) {
-    final var content = new StringBuilder();
+    final java.lang.StringBuilder content = new StringBuilder();
     for (int i = 0; i < model.getTruthTable().getRowCount(); i++) {
-      final var idx = reorderedIndex(model.getInputs().bits.size(), i);
+      final int idx = reorderedIndex(model.getInputs().bits.size(), i);
       content.append(model.getTruthTable().getOutputEntry(idx, outcol).getDescription());
     }
     return content.toString();
   }
 
   private static String getKarnaugh(String name, boolean lined, int outcol, AnalyzerModel model) {
-    final var content = new StringBuilder();
+    final java.lang.StringBuilder content = new StringBuilder();
     content.append("\\begin{center}\n");
     content.append(K_INTRO).append(lined ? "" : K_NUMBERED).append(K_SETUP).append("\n");
     content.append("\\karnaughmap{").append(nrOfInCols(model)).append("}{").append(name)
@@ -283,16 +283,16 @@ public class AnalyzerTexWriter {
   private static final double OFFSET = 0.2;
 
   private static String getCovers(String name, AnalyzerModel model) {
-    final var content = new StringBuilder();
-    final var table = model.getTruthTable();
+    final java.lang.StringBuilder content = new StringBuilder();
+    final com.cburch.logisim.analyze.model.TruthTable table = model.getTruthTable();
     if (table.getInputColumnCount() > KarnaughMapPanel.MAX_VARS) return content.toString();
-    final var groups = new KarnaughMapGroups(model);
+    final com.cburch.logisim.analyze.data.KarnaughMapGroups groups = new KarnaughMapGroups(model);
     groups.setOutput(name);
-    final var df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.ENGLISH);
+    final java.text.DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.ENGLISH);
     int idx = 0;
-    final var kmapRows = 1 << KarnaughMapPanel.ROW_VARS[table.getInputColumnCount()];
-    for (final var group : groups.getCovers()) {
-      for (final var thiscover : group.getAreas()) {
+    final int kmapRows = 1 << KarnaughMapPanel.ROW_VARS[table.getInputColumnCount()];
+    for (final com.cburch.logisim.analyze.data.KarnaughMapGroups.KMapGroupInfo group : groups.getCovers()) {
+      for (final com.cburch.logisim.analyze.data.KarnaughMapGroups.CoverInfo thiscover : group.getAreas()) {
         content.append("   \\node[grp={").append(CoverColor.COVER_COLOR.getColorName(group.getColor())).append("}");
         double width = thiscover.getWidth() - OFFSET;
         double height = thiscover.getHeight() - OFFSET;
@@ -307,7 +307,7 @@ public class AnalyzerTexWriter {
   }
 
   private static String getKarnaughGroups(String output, String name, boolean lined, int outcol, AnalyzerModel model) {
-    final var content = new StringBuilder();
+    final java.lang.StringBuilder content = new StringBuilder();
     content.append("\\begin{center}\n");
     content.append(K_INTRO).append(lined ? "" : K_NUMBERED).append(K_SETUP).append("\n");
     content.append("\\karnaughmap{").append(nrOfInCols(model)).append("}{").append(name)
@@ -326,9 +326,9 @@ public class AnalyzerTexWriter {
   }
 
   public static void doSave(File file, AnalyzerModel model) throws IOException {
-    final var linedStyle = AppPreferences.KMAP_LINED_STYLE.getBoolean();
+    final boolean linedStyle = AppPreferences.KMAP_LINED_STYLE.getBoolean();
     /* make sure the model is up to date */
-    final var modelIsUpdating = model.getOutputExpressions().updatesEnabled();
+    final boolean modelIsUpdating = model.getOutputExpressions().updatesEnabled();
     model.getOutputExpressions().enableUpdates();
     try (PrintStream out = new PrintStream(file)) {
       /*
@@ -402,7 +402,7 @@ public class AnalyzerTexWriter {
         out.println(SECTION_SEP);
         out.println("\\section{" + S.get("latexTruthTable") + "}");
         out.println(S.get("latexTruthTableText"));
-        final var tt = model.getTruthTable();
+        final com.cburch.logisim.analyze.model.TruthTable tt = model.getTruthTable();
         if (tt.getRowCount() > MAX_TRUTH_TABLE_ROWS) {
           out.println(S.get("latexTruthTableToBig", MAX_TRUTH_TABLE_ROWS));
         } else {
@@ -433,7 +433,7 @@ public class AnalyzerTexWriter {
           out.println(SUB_SECTION_SEP);
           out.println("\\subsection{" + S.get("latexKarnaughEmpty") + "}");
           for (int i = 0; i < model.getOutputs().vars.size(); i++) {
-            final var outp = model.getOutputs().vars.get(i);
+            final com.cburch.logisim.analyze.model.Var outp = model.getOutputs().vars.get(i);
             if (outp.width == 1) {
               String func = "$" + outp.name + "$";
               out.println(getKarnaughEmpty(func, linedStyle, model));
@@ -450,11 +450,11 @@ public class AnalyzerTexWriter {
           for (int i = 0; i < model.getOutputs().vars.size(); i++) {
             Var outp = model.getOutputs().vars.get(i);
             if (outp.width == 1) {
-              final var func = "$" + outp.name + "$";
+              final java.lang.String func = "$" + outp.name + "$";
               out.println(getKarnaugh(func, linedStyle, outcol++, model));
             } else {
               for (int idx = outp.width - 1; idx >= 0; idx--) {
-                final var func = "$" + outp.name + "_{" + idx + "}$";
+                final java.lang.String func = "$" + outp.name + "_{" + idx + "}$";
                 out.println(getKarnaugh(func, linedStyle, outcol++, model));
               }
             }
@@ -463,13 +463,13 @@ public class AnalyzerTexWriter {
           out.println("\\subsection{" + S.get("latexKarnaughFilledInGroups") + "}");
           outcol = 0;
           for (int i = 0; i < model.getOutputs().vars.size(); i++) {
-            final var outp = model.getOutputs().vars.get(i);
+            final com.cburch.logisim.analyze.model.Var outp = model.getOutputs().vars.get(i);
             if (outp.width == 1) {
-              final var func = "$" + outp.name + "$";
+              final java.lang.String func = "$" + outp.name + "$";
               out.println(getKarnaughGroups(outp.name, func, linedStyle, outcol++, model));
             } else {
               for (int idx = outp.width - 1; idx >= 0; idx--) {
-                final var func = "$" + outp.name + "_{" + idx + "}$";
+                final java.lang.String func = "$" + outp.name + "_{" + idx + "}$";
                 out.println(getKarnaughGroups(outp.name + "[" + idx + "]", func, linedStyle, outcol++, model));
               }
             }
@@ -480,15 +480,15 @@ public class AnalyzerTexWriter {
           out.println(SECTION_SEP);
           out.println("\\section{" + S.get("latexMinimal") + "}");
           for (int o = 0; o < model.getTruthTable().getOutputVariables().size(); o++) {
-            final var outp = model.getTruthTable().getOutputVariable(o);
+            final com.cburch.logisim.analyze.model.Var outp = model.getTruthTable().getOutputVariable(o);
             if (outp.width == 1) {
-              final var exp = Expressions.eq(Expressions.variable(outp.name),
+              final com.cburch.logisim.analyze.model.Expression exp = Expressions.eq(Expressions.variable(outp.name),
                   model.getOutputExpressions().getMinimalExpression(outp.name));
               out.println(exp.toString(Notation.LATEX) + "~\\\\");
             } else {
               for (int idx = outp.width - 1; idx >= 0; idx--) {
-                final var name = outp.bitName(idx);
-                final var exp = Expressions.eq(Expressions.variable(name),
+                final java.lang.String name = outp.bitName(idx);
+                final com.cburch.logisim.analyze.model.Expression exp = Expressions.eq(Expressions.variable(name),
                     model.getOutputExpressions().getMinimalExpression(name));
                 out.println(exp.toString(Notation.LATEX) + "~\\\\");
               }

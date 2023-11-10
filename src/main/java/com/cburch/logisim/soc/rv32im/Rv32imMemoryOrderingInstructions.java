@@ -55,7 +55,7 @@ public class Rv32imMemoryOrderingInstructions implements AssemblerExecutionInter
   @Override
   public String getAsmInstruction() {
     if (!valid) return null;
-    final var s = new StringBuilder();
+    final java.lang.StringBuilder s = new StringBuilder();
     s.append(AsmOpcodes[operation].toLowerCase());
     if (operation != INSTR_FENCE_TSO) {
       while (s.length() < RV32imSupport.ASM_FIELD_SIZE) s.append(" ");

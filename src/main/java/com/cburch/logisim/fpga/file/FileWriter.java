@@ -26,9 +26,9 @@ public class FileWriter {
 
   public static File getFilePointer(
       String targetDirectory, String componentName, boolean isEntity) {
-    final var fileName = new StringBuilder();
+    final java.lang.StringBuilder fileName = new StringBuilder();
     try {
-      final var outDir = new File(targetDirectory);
+      final java.io.File outDir = new File(targetDirectory);
       if (!outDir.exists()) {
         if (!outDir.mkdirs()) {
           return null;
@@ -40,7 +40,7 @@ public class FileWriter {
       if (isEntity && Hdl.isVhdl()) fileName.append(ENTITY_EXTENSION);
       if (!isEntity && Hdl.isVhdl()) fileName.append(ARCHITECTURE_EXTENSION);
       fileName.append(Hdl.isVhdl() ? ".vhd" : ".v");
-      final var outFile = new File(fileName.toString());
+      final java.io.File outFile = new File(fileName.toString());
       Reporter.report.addInfo(S.fmt("fileCreateHDLFile", fileName.toString()));
       if (outFile.exists()) {
         Reporter.report.addWarning(S.fmt("fileHDLFileExists", fileName.toString()));
@@ -54,9 +54,9 @@ public class FileWriter {
   }
 
   public static File getFilePointer(String targetDirectory, String name) {
-    final var fileName = new StringBuilder();
+    final java.lang.StringBuilder fileName = new StringBuilder();
     try {
-      final var outDir = new File(targetDirectory);
+      final java.io.File outDir = new File(targetDirectory);
       if (!outDir.exists()) {
         if (!outDir.mkdirs()) {
           return null;
@@ -65,7 +65,7 @@ public class FileWriter {
       fileName.append(targetDirectory);
       if (!targetDirectory.endsWith(File.separator)) fileName.append(File.separator);
       fileName.append(name);
-      final var outFile = new File(fileName.toString());
+      final java.io.File outFile = new File(fileName.toString());
       Reporter.report.addInfo(S.fmt("fileCreateScriptFile", fileName.toString()));
       if (outFile.exists()) {
         Reporter.report.addWarning(S.fmt("fileScriptFileExists", fileName.toString()));
@@ -84,15 +84,15 @@ public class FileWriter {
     final String headOpen;
     final String headClose;
 
-    final var headText =
+    final java.lang.String headText =
         " "
             + BuildInfo.name
             + " goes FPGA automatic generated "
             + (Hdl.isVhdl() ? "VHDL" : "Verilog")
             + " code";
-    final var headUrl = " " + BuildInfo.url;
-    final var headProj = " Project   : " + projName;
-    final var headComp = " Component : " + compName;
+    final java.lang.String headUrl = " " + BuildInfo.url;
+    final java.lang.String headProj = " Project   : " + projName;
+    final java.lang.String headComp = " Component : " + compName;
 
     if (Hdl.isVhdl()) {
       headWidth = 74;
@@ -135,7 +135,7 @@ public class FileWriter {
 
   public static boolean writeContents(File outfile, List<String> contents) {
     try {
-      final var output = new FileOutputStream(outfile);
+      final java.io.FileOutputStream output = new FileOutputStream(outfile);
       for (java.lang.String thisLine : contents) {
         if (!thisLine.isEmpty()) {
           output.write(thisLine.getBytes());

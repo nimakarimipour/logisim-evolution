@@ -71,9 +71,9 @@ class ToolboxManip implements ProjectExplorer.Listener {
     if (request instanceof ProjectExplorerLibraryNode libNode) {
       ProjectLibraryActions.doUnloadLibrary(proj, libNode.getValue());
     } else if (request instanceof ProjectExplorerToolNode toolNode) {
-      final var tool = toolNode.getValue();
+      final com.cburch.logisim.tools.Tool tool = toolNode.getValue();
       if (tool instanceof AddTool) {
-        final var factory = ((AddTool) tool).getFactory();
+        final com.cburch.logisim.comp.ComponentFactory factory = ((AddTool) tool).getFactory();
         if (factory instanceof SubcircuitFactory circFact) {
           ProjectCircuitActions.doRemoveCircuit(proj, circFact.getSubcircuit());
         }
@@ -88,7 +88,7 @@ class ToolboxManip implements ProjectExplorer.Listener {
       ((ProjectExplorerToolNode) clicked).fireNodeChanged();
       Tool baseTool = ((ProjectExplorerToolNode) clicked).getValue();
       if (baseTool instanceof AddTool tool) {
-        final var source = tool.getFactory();
+        final com.cburch.logisim.comp.ComponentFactory source = tool.getFactory();
         if (source instanceof SubcircuitFactory circFact) {
           proj.setCurrentCircuit(circFact.getSubcircuit());
           proj.getFrame().setEditorView(Frame.EDIT_LAYOUT);
@@ -104,9 +104,9 @@ class ToolboxManip implements ProjectExplorer.Listener {
   public JPopupMenu menuRequested(ProjectExplorer.Event event) {
     Object clicked = event.getTarget();
     if (clicked instanceof ProjectExplorerToolNode toolNode) {
-      final var baseTool = toolNode.getValue();
+      final com.cburch.logisim.tools.Tool baseTool = toolNode.getValue();
       if (baseTool instanceof AddTool tool) {
-        final var source = tool.getFactory();
+        final com.cburch.logisim.comp.ComponentFactory source = tool.getFactory();
         if (source instanceof SubcircuitFactory sub) {
           return Popups.forCircuit(proj, tool, sub.getSubcircuit());
         } else if (source instanceof VhdlEntity vhdlEntity) {
@@ -118,11 +118,11 @@ class ToolboxManip implements ProjectExplorer.Listener {
         return null;
       }
     } else if (clicked instanceof ProjectExplorerLibraryNode libNode) {
-      final var lib = libNode.getValue();
+      final com.cburch.logisim.tools.Library lib = libNode.getValue();
       if (lib == proj.getLogisimFile()) {
         return Popups.forProject(proj);
       } else {
-        final var isTop = event.getTreePath().getPathCount() <= 2;
+        final boolean isTop = event.getTreePath().getPathCount() <= 2;
         return Popups.forLibrary(proj, lib, isTop);
       }
     } else {
@@ -147,11 +147,11 @@ class ToolboxManip implements ProjectExplorer.Listener {
     Object selected = event.getTarget();
     if (selected instanceof ProjectExplorerToolNode toolNode) {
       toolNode.fireNodeChanged();
-      final var tool = toolNode.getValue();
+      final com.cburch.logisim.tools.Tool tool = toolNode.getValue();
       if (tool instanceof AddTool addTool) {
-        final var source = addTool.getFactory();
+        final com.cburch.logisim.comp.ComponentFactory source = addTool.getFactory();
         if (source instanceof SubcircuitFactory circFact) {
-          final var circ = circFact.getSubcircuit();
+          final com.cburch.logisim.circuit.Circuit circ = circFact.getSubcircuit();
           if (proj.getCurrentCircuit() == circ) {
             proj.getFrame().setAttrTableModel(new AttrTableCircuitModel(proj, circ));
             setDefaultTool(lastSelected, proj);
@@ -171,8 +171,8 @@ class ToolboxManip implements ProjectExplorer.Listener {
       if (lib instanceof LibraryEventSource src) {
         src.addLibraryListener(this);
       }
-      for (final var tool : lib.getTools()) {
-        final var attrs = tool.getAttributeSet();
+      for (final com.cburch.logisim.tools.Tool tool : lib.getTools()) {
+        final com.cburch.logisim.data.AttributeSet attrs = tool.getAttributeSet();
         if (attrs != null) attrs.addAttributeListener(this);
       }
     }
@@ -218,8 +218,8 @@ class ToolboxManip implements ProjectExplorer.Listener {
       if (lib instanceof LibraryEventSource src) {
         src.removeLibraryListener(this);
       }
-      for (final var tool : lib.getTools()) {
-        final var attrs = tool.getAttributeSet();
+      for (final com.cburch.logisim.tools.Tool tool : lib.getTools()) {
+        final com.cburch.logisim.data.AttributeSet attrs = tool.getAttributeSet();
         if (attrs != null) attrs.removeAttributeListener(this);
       }
     }

@@ -42,8 +42,8 @@ public class LineTool extends AbstractTool {
   }
 
   static Location snapTo4Cardinals(Location from, int mx, int my) {
-    final var px = from.getX();
-    final var py = from.getY();
+    final int px = from.getX();
+    final int py = from.getY();
     if (mx != px && my != py) {
       return (Math.abs(my - py) < Math.abs(mx - px))
           ? Location.create(mx, py, false)
@@ -55,8 +55,8 @@ public class LineTool extends AbstractTool {
   @Override
   public void draw(Canvas canvas, Graphics gfx) {
     if (active) {
-      final var start = mouseStart;
-      final var end = mouseEnd;
+      final com.cburch.logisim.data.Location start = mouseStart;
+      final com.cburch.logisim.data.Location end = mouseEnd;
       gfx.setColor(Color.GRAY);
       gfx.drawLine(start.getX(), start.getY(), end.getX(), end.getY());
     }
@@ -79,7 +79,7 @@ public class LineTool extends AbstractTool {
 
   @Override
   public void keyPressed(Canvas canvas, KeyEvent e) {
-    final var code = e.getKeyCode();
+    final int code = e.getKeyCode();
     if (active && (code == KeyEvent.VK_SHIFT || code == KeyEvent.VK_CONTROL)) {
       updateMouse(canvas, lastMouseX, lastMouseY, e.getModifiersEx());
     }
@@ -99,12 +99,12 @@ public class LineTool extends AbstractTool {
   public void mousePressed(Canvas canvas, MouseEvent e) {
     int x = e.getX();
     int y = e.getY();
-    final var mods = e.getModifiersEx();
+    final int mods = e.getModifiersEx();
     if ((mods & InputEvent.CTRL_DOWN_MASK) != 0) {
       x = canvas.snapX(x);
       y = canvas.snapY(y);
     }
-    final var loc = Location.create(x, y, false);
+    final com.cburch.logisim.data.Location loc = Location.create(x, y, false);
     mouseStart = loc;
     mouseEnd = loc;
     lastMouseX = loc.getX();
@@ -117,14 +117,14 @@ public class LineTool extends AbstractTool {
   public void mouseReleased(Canvas canvas, MouseEvent e) {
     if (active) {
       updateMouse(canvas, e.getX(), e.getY(), e.getModifiersEx());
-      final var start = mouseStart;
-      final var end = mouseEnd;
+      final com.cburch.logisim.data.Location start = mouseStart;
+      final com.cburch.logisim.data.Location end = mouseEnd;
       CanvasObject add = null;
       if (!start.equals(end)) {
         active = false;
-        final var model = canvas.getModel();
+        final com.cburch.draw.model.CanvasModel model = canvas.getModel();
         Location[] ends = {start, end};
-        final var locs = UnmodifiableList.create(ends);
+        final java.util.List<com.cburch.logisim.data.Location> locs = UnmodifiableList.create(ends);
         add = attrs.applyTo(new Poly(false, locs));
         add.setValue(DrawAttr.PAINT_TYPE, DrawAttr.PAINT_STROKE);
         canvas.doAction(new ModelAddAction(model, add));
@@ -146,7 +146,7 @@ public class LineTool extends AbstractTool {
 
   private void updateMouse(Canvas canvas, int mx, int my, int mods) {
     if (active) {
-      final var shift = (mods & MouseEvent.SHIFT_DOWN_MASK) != 0;
+      final boolean shift = (mods & MouseEvent.SHIFT_DOWN_MASK) != 0;
       com.cburch.logisim.data.Location newEnd =
           (shift) ? LineUtil.snapTo8Cardinals(mouseStart, mx, my) : Location.create(mx, my, false);
 

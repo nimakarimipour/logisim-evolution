@@ -42,7 +42,7 @@ public class Ttl7413HdlGenerator extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist theNetlist, AttributeSet attrs) {
-    final var Inv = inverted ? Hdl.notOperator() : "";
+    final java.lang.String Inv = inverted ? Hdl.notOperator() : "";
     return LineBuffer.getHdlBuffer()
         .add("{{assign}}Y0{{=}}{{1}}(A0{{and}}B0{{and}}C0{{and}}D0);", Inv)
         .add("{{assign}}Y1{{=}}{{1}}(A1{{and}}B1{{and}}C1{{and}}D1);", Inv);

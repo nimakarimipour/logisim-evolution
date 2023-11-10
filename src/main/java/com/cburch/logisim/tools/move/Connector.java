@@ -36,35 +36,35 @@ class Connector {
   private Connector() {}
 
   static MoveResult computeWires(MoveRequest req) {
-    final var gesture = req.getMoveGesture();
-    final var dx = req.getDeltaX();
-    final var dy = req.getDeltaY();
-    final var baseConnects = new ArrayList<>(gesture.getConnections());
-    final var impossible = pruneImpossible(baseConnects, gesture.getFixedAvoidanceMap(), dx, dy);
+    final com.cburch.logisim.tools.move.MoveGesture gesture = req.getMoveGesture();
+    final int dx = req.getDeltaX();
+    final int dy = req.getDeltaY();
+    final java.util.ArrayList<com.cburch.logisim.tools.move.ConnectionData> baseConnects = new ArrayList<>(gesture.getConnections());
+    final java.util.List<com.cburch.logisim.tools.move.ConnectionData> impossible = pruneImpossible(baseConnects, gesture.getFixedAvoidanceMap(), dx, dy);
 
-    final var selAvoid = AvoidanceMap.create(gesture.getSelected(), dx, dy);
-    final var pathLocs = new HashMap<ConnectionData, Set<Location>>();
-    final var initNodes = new HashMap<ConnectionData, List<SearchNode>>();
-    for (final var conn : baseConnects) {
-      final var connLocs = new HashSet<Location>();
-      final var connNodes = new ArrayList<SearchNode>();
+    final com.cburch.logisim.tools.move.AvoidanceMap selAvoid = AvoidanceMap.create(gesture.getSelected(), dx, dy);
+    final java.util.HashMap<com.cburch.logisim.tools.move.ConnectionData,java.util.Set<com.cburch.logisim.data.Location>> pathLocs = new HashMap<ConnectionData, Set<Location>>();
+    final java.util.HashMap<com.cburch.logisim.tools.move.ConnectionData,java.util.List<com.cburch.logisim.tools.move.SearchNode>> initNodes = new HashMap<ConnectionData, List<SearchNode>>();
+    for (final com.cburch.logisim.tools.move.ConnectionData conn : baseConnects) {
+      final java.util.HashSet<com.cburch.logisim.data.Location> connLocs = new HashSet<Location>();
+      final java.util.ArrayList<com.cburch.logisim.tools.move.SearchNode> connNodes = new ArrayList<SearchNode>();
       processConnection(conn, dx, dy, connLocs, connNodes, selAvoid);
       pathLocs.put(conn, connLocs);
       initNodes.put(conn, connNodes);
     }
 
     MoveResult bestResult = null;
-    final var tries = switch (baseConnects.size()) {
+    final int tries = switch (baseConnects.size()) {
       case 0 -> 0;
       case 1 -> 1;
       case 2 -> 2;
       case 3 -> 8;
       default -> MAX_ORDERING_TRIES;
     };
-    final var stopTime = System.currentTimeMillis() + MAX_SECONDS * 1000;
+    final long stopTime = System.currentTimeMillis() + MAX_SECONDS * 1000;
     for (int tryNum = 0; tryNum < tries && stopTime - System.currentTimeMillis() > 0; tryNum++) {
       if (ConnectorThread.isOverrideRequested()) return null;
-      final var connects = new ArrayList<>(baseConnects);
+      final java.util.ArrayList<com.cburch.logisim.tools.move.ConnectionData> connects = new ArrayList<>(baseConnects);
       if (tryNum < 2) {
         sortConnects(connects, dx, dy);
         if (tryNum == 1) Collections.reverse(connects);
@@ -72,19 +72,19 @@ class Connector {
         Collections.shuffle(connects);
       }
 
-      final var candidate = tryList(req, gesture, connects, dx, dy, pathLocs, initNodes, stopTime);
+      final com.cburch.logisim.tools.move.MoveResult candidate = tryList(req, gesture, connects, dx, dy, pathLocs, initNodes, stopTime);
       if (candidate == null) {
         return null;
       } else if (bestResult == null) {
         bestResult = candidate;
       } else {
-        final var unsatisfied1 = bestResult.getUnsatisifiedConnections().size();
-        final var unsatisfied2 = candidate.getUnsatisifiedConnections().size();
+        final int unsatisfied1 = bestResult.getUnsatisifiedConnections().size();
+        final int unsatisfied2 = candidate.getUnsatisifiedConnections().size();
         if (unsatisfied2 < unsatisfied1) {
           bestResult = candidate;
         } else if (unsatisfied2 == unsatisfied1) {
-          final var dist1 = bestResult.getTotalDistance();
-          final var dist2 = candidate.getTotalDistance();
+          final int dist1 = bestResult.getTotalDistance();
+          final int dist2 = candidate.getTotalDistance();
           if (dist2 < dist1) bestResult = candidate;
         }
       }
@@ -100,7 +100,7 @@ class Connector {
   private static ArrayList<Location> convertToPath(SearchNode last) {
     com.cburch.logisim.tools.move.SearchNode next = last;
     com.cburch.logisim.tools.move.SearchNode prev = last.getPrevious();
-    final var ret = new ArrayList<Location>();
+    final java.util.ArrayList<com.cburch.logisim.data.Location> ret = new ArrayList<Location>();
     ret.add(next.getLocation());
     while (prev != null) {
       if (prev.getDirection() != next.getDirection()) {
@@ -117,12 +117,12 @@ class Connector {
   }
 
   private static SearchNode findShortestPath(List<SearchNode> nodes, Set<Location> pathLocs, AvoidanceMap avoid) {
-    final var q = new PriorityQueue<>(nodes);
-    final var visited = new HashSet<SearchNode>();
+    final java.util.PriorityQueue<com.cburch.logisim.tools.move.SearchNode> q = new PriorityQueue<>(nodes);
+    final java.util.HashSet<com.cburch.logisim.tools.move.SearchNode> visited = new HashSet<SearchNode>();
     int iters = 0;
     while (!q.isEmpty() && iters < MAX_SEARCH_ITERATIONS) {
       iters++;
-      final var node = q.remove();
+      final com.cburch.logisim.tools.move.SearchNode node = q.remove();
       if (iters % 64 == 0 && ConnectorThread.isOverrideRequested() || node == null) {
         return null;
       }
@@ -133,7 +133,7 @@ class Connector {
       if (!added) {
         continue;
       }
-      final var loc = node.getLocation();
+      final com.cburch.logisim.data.Location loc = node.getLocation();
       com.cburch.logisim.data.Direction dir = node.getDirection();
       int neighbors = 3;
       java.lang.Object allowed = avoid.get(loc);
@@ -192,8 +192,8 @@ class Connector {
       Set<Location> connLocs,
       List<SearchNode> connNodes,
       AvoidanceMap selAvoid) {
-    final var cur = conn.getLocation();
-    final var dest = cur.translate(dx, dy);
+    final com.cburch.logisim.data.Location cur = conn.getLocation();
+    final com.cburch.logisim.data.Location dest = cur.translate(dx, dy);
     if (selAvoid.get(cur) == null) {
       com.cburch.logisim.data.Direction preferred = conn.getDirection();
       if (preferred == null) {
@@ -206,20 +206,20 @@ class Connector {
       connNodes.add(new SearchNode(conn, cur, preferred, dest));
     }
 
-    for (final var wire : conn.getWirePath()) {
-      for (final var loc : wire) {
+    for (final com.cburch.logisim.circuit.Wire wire : conn.getWirePath()) {
+      for (final com.cburch.logisim.data.Location loc : wire) {
         if (selAvoid.get(loc) == null || loc.equals(dest)) {
           boolean added = connLocs.add(loc);
           if (added) {
             Direction dir = null;
             if (wire.endsAt(loc)) {
               if (wire.isVertical()) {
-                final var y0 = loc.getY();
-                final var y1 = wire.getOtherEnd(loc).getY();
+                final int y0 = loc.getY();
+                final int y1 = wire.getOtherEnd(loc).getY();
                 dir = y0 < y1 ? Direction.NORTH : Direction.SOUTH;
               } else {
-                final var x0 = loc.getX();
-                final var x1 = wire.getOtherEnd(loc).getX();
+                final int x0 = loc.getX();
+                final int x1 = wire.getOtherEnd(loc).getX();
                 dir = x0 < x1 ? Direction.WEST : Direction.EAST;
               }
             }
@@ -236,13 +236,13 @@ class Connector {
       AvoidanceMap avoid,
       ReplacementMap repl,
       Set<Location> unmarkable) {
-    final var pathIt = path.iterator();
+    final java.util.Iterator<com.cburch.logisim.data.Location> pathIt = path.iterator();
     com.cburch.logisim.data.Location loc0 = pathIt.next();
     if (!loc0.equals(conn.getLocation())) {
       com.cburch.logisim.data.Location pathLoc = conn.getWirePathStart();
       boolean found = loc0.equals(pathLoc);
-      for (final var wire : conn.getWirePath()) {
-        final var nextLoc = wire.getOtherEnd(pathLoc);
+      for (final com.cburch.logisim.circuit.Wire wire : conn.getWirePath()) {
+        final com.cburch.logisim.data.Location nextLoc = wire.getOtherEnd(pathLoc);
         if (found) { // existing wire will be removed
           repl.remove(wire);
           avoid.unmarkWire(wire, nextLoc, unmarkable);
@@ -251,7 +251,7 @@ class Connector {
           found = true;
           if (!loc0.equals(nextLoc)) {
             avoid.unmarkWire(wire, nextLoc, unmarkable);
-            final var shortenedWire = Wire.create(pathLoc, loc0);
+            final com.cburch.logisim.circuit.Wire shortenedWire = Wire.create(pathLoc, loc0);
             repl.replace(wire, shortenedWire);
             avoid.markWire(shortenedWire, 0, 0);
           }
@@ -260,8 +260,8 @@ class Connector {
       }
     }
     while (pathIt.hasNext()) {
-      final var loc1 = pathIt.next();
-      final var newWire = Wire.create(loc0, loc1);
+      final com.cburch.logisim.data.Location loc1 = pathIt.next();
+      final com.cburch.logisim.circuit.Wire newWire = Wire.create(loc0, loc1);
       repl.add(newWire);
       avoid.markWire(newWire, 0, 0);
       loc0 = loc1;
@@ -269,18 +269,18 @@ class Connector {
   }
 
   private static List<ConnectionData> pruneImpossible(List<ConnectionData> connects, AvoidanceMap avoid, int dx, int dy) {
-    final var pathWires = new ArrayList<Wire>();
-    for (final var conn : connects) {
+    final java.util.ArrayList<com.cburch.logisim.circuit.Wire> pathWires = new ArrayList<Wire>();
+    for (final com.cburch.logisim.tools.move.ConnectionData conn : connects) {
       pathWires.addAll(conn.getWirePath());
     }
 
-    final var impossible = new ArrayList<ConnectionData>();
-    for (final var it = connects.iterator(); it.hasNext(); ) {
-      final var conn = it.next();
-      final var dest = conn.getLocation().translate(dx, dy);
+    final java.util.ArrayList<com.cburch.logisim.tools.move.ConnectionData> impossible = new ArrayList<ConnectionData>();
+    for (final java.util.Iterator<com.cburch.logisim.tools.move.ConnectionData> it = connects.iterator(); it.hasNext(); ) {
+      final com.cburch.logisim.tools.move.ConnectionData conn = it.next();
+      final com.cburch.logisim.data.Location dest = conn.getLocation().translate(dx, dy);
       if (avoid.get(dest) != null) {
         boolean isInPath = false;
-        for (final var wire : pathWires) {
+        for (final com.cburch.logisim.circuit.Wire wire : pathWires) {
           if (wire.contains(dest)) {
             isInPath = true;
             break;
@@ -303,10 +303,10 @@ class Connector {
    */
   private static void sortConnects(List<ConnectionData> connects, final int dx, final int dy) {
     connects.sort((ac, bc) -> {
-      final var a = ac.getLocation();
-      final var b = bc.getLocation();
-      final var abx = a.getX() - b.getX();
-      final var aby = a.getY() - b.getY();
+      final com.cburch.logisim.data.Location a = ac.getLocation();
+      final com.cburch.logisim.data.Location b = bc.getLocation();
+      final int abx = a.getX() - b.getX();
+      final int aby = a.getY() - b.getY();
       return abx * dx + aby * dy;
     });
   }
@@ -320,25 +320,25 @@ class Connector {
       Map<ConnectionData, Set<Location>> pathLocs,
       Map<ConnectionData, List<SearchNode>> initNodes,
       long stopTime) {
-    final var avoid = gesture.getFixedAvoidanceMap().cloneMap();
+    final com.cburch.logisim.tools.move.AvoidanceMap avoid = gesture.getFixedAvoidanceMap().cloneMap();
     avoid.markAll(gesture.getSelected(), dx, dy);
 
-    final var replacements = new ReplacementMap();
-    final var unconnected = new ArrayList<ConnectionData>();
+    final com.cburch.logisim.circuit.ReplacementMap replacements = new ReplacementMap();
+    final java.util.ArrayList<com.cburch.logisim.tools.move.ConnectionData> unconnected = new ArrayList<ConnectionData>();
     int totalDistance = 0;
-    for (final var conn : connects) {
+    for (final com.cburch.logisim.tools.move.ConnectionData conn : connects) {
       if (ConnectorThread.isOverrideRequested()) return null;
       if (System.currentTimeMillis() - stopTime > 0) {
         unconnected.add(conn);
         continue;
       }
-      final var connNodes = initNodes.get(conn);
-      final var connPathLocs = pathLocs.get(conn);
-      final var node = findShortestPath(connNodes, connPathLocs, avoid);
+      final java.util.List<com.cburch.logisim.tools.move.SearchNode> connNodes = initNodes.get(conn);
+      final java.util.Set<com.cburch.logisim.data.Location> connPathLocs = pathLocs.get(conn);
+      final com.cburch.logisim.tools.move.SearchNode node = findShortestPath(connNodes, connPathLocs, avoid);
       if (node != null) {
         // normal case - a path was found
         totalDistance += node.getDistance();
-        final var path = convertToPath(node);
+        final java.util.ArrayList<com.cburch.logisim.data.Location> path = convertToPath(node);
         processPath(path, conn, avoid, replacements, connPathLocs);
       } else if (ConnectorThread.isOverrideRequested()) {
         // search was aborted: return null to indicate this

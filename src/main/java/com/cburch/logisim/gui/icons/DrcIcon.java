@@ -55,8 +55,8 @@ public class DrcIcon extends BaseIcon {
   }
 
   private void paintText(Graphics2D g2) {
-    final var f = g2.getFont().deriveFont(scale((float) getIconWidth() / 3)).deriveFont(Font.BOLD);
-    final var t = new TextLayout("DRC", f, g2.getFontRenderContext());
+    final java.awt.Font f = g2.getFont().deriveFont(scale((float) getIconWidth() / 3)).deriveFont(Font.BOLD);
+    final java.awt.font.TextLayout t = new TextLayout("DRC", f, g2.getFontRenderContext());
     g2.setColor(Color.BLUE.darker().darker());
     t.draw(
         g2,
@@ -65,11 +65,11 @@ public class DrcIcon extends BaseIcon {
   }
 
   private void paintText(Graphics2D g2, String s) {
-    final var f =
+    final java.awt.Font f =
         g2.getFont()
             .deriveFont(scale((float) getIconWidth() / (float) s.length()))
             .deriveFont(Font.BOLD);
-    final var t = new TextLayout(s, f, g2.getFontRenderContext());
+    final java.awt.font.TextLayout t = new TextLayout(s, f, g2.getFontRenderContext());
     g2.setColor(Color.RED.darker().darker());
     t.draw(
         g2,

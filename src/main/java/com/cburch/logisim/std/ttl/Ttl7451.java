@@ -35,7 +35,7 @@ public class Ttl7451 extends AbstractTtlGate {
   @Override
   public void paintInternal(InstancePainter painter, int x, int y, int height, boolean up) {
     super.paintBase(painter, false, false);
-    final var gfx = painter.getGraphics();
+    final java.awt.Graphics gfx = painter.getGraphics();
     Drawgates.paintAnd(gfx, x + 50, y + 24, 10, 10, false);
     Drawgates.paintAnd(gfx, x + 50, y + 36, 10, 10, false);
     Drawgates.paintOr(gfx, x + 70, y + 30, 10, 10, true, false);
@@ -44,7 +44,7 @@ public class Ttl7451 extends AbstractTtlGate {
     Drawgates.paintAnd(gfx, x + 100, y + 36, 10, 10, false);
     Drawgates.paintOr(gfx, x + 120, y + 30, 10, 10, true, false);
 
-    final var offset =
+    final int offset =
         (AppPreferences.GATE_SHAPE.get().equals(AppPreferences.SHAPE_RECTANGULAR)) ? 4 : 0;
 
     int[] posX = new int[] {x + 50, x + 53 + offset / 2, x + 53 + offset / 2, x + 56 + offset};

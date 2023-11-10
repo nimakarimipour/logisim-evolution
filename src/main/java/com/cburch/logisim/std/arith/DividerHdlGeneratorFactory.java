@@ -46,7 +46,7 @@ public class DividerHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist TheNetlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getBuffer()
             .pair("nrOfBits", NR_OF_BITS_STRING)
             .pair("unsigned", UNSIGNED_STRING)
             .pair("calcBits", CALC_BITS_STRING);

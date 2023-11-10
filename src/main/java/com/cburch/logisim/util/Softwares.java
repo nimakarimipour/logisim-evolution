@@ -49,16 +49,16 @@ public final class Softwares {
     }
 
     try {
-      final var command = new ArrayList<String>();
+      final java.util.ArrayList<java.lang.String> command = new ArrayList<String>();
       command.add(FileUtil.correctPath(questaPath) + QUESTA_BIN[VLIB]);
       command.add("work");
 
-      final var vlibBuilder = new ProcessBuilder(command);
+      final java.lang.ProcessBuilder vlibBuilder = new ProcessBuilder(command);
       vlibBuilder.directory(tmpDir);
-      final var vlib = vlibBuilder.start();
+      final java.lang.Process vlib = vlibBuilder.start();
 
-      final var is = vlib.getInputStream();
-      final var isr = new InputStreamReader(is);
+      final java.io.InputStream is = vlib.getInputStream();
+      final java.io.InputStreamReader isr = new InputStreamReader(is);
       reader = new BufferedReader(isr);
 
       String line;
@@ -91,7 +91,7 @@ public final class Softwares {
   private static String[] loadQuesta() {
     String[] questaProgs = {"vcom", "vsim", "vmap", "vlib"};
 
-    final var osname = System.getProperty("os.name");
+    final java.lang.String osname = System.getProperty("os.name");
     if (osname == null) throw new IllegalArgumentException("no os.name");
     else if (osname.toLowerCase().contains("windows"))
       for (int i = 0; i < questaProgs.length; i++) questaProgs[i] += ".exe";
@@ -106,13 +106,13 @@ public final class Softwares {
   public static String setQuestaPath(Component parent) {
     String path = null;
 
-    final var chooser = JFileChoosers.create();
+    final javax.swing.JFileChooser chooser = JFileChoosers.create();
     chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
     chooser.setDialogTitle(S.get("questaDialogTitle"));
     chooser.setApproveButtonText(S.get("questaDialogButton"));
     int action = chooser.showOpenDialog(parent);
     if (action == JFileChooser.APPROVE_OPTION) {
-      final var file = chooser.getSelectedFile();
+      final java.io.File file = chooser.getSelectedFile();
 
       try {
         path = file.getCanonicalPath();
@@ -146,8 +146,8 @@ public final class Softwares {
     if (software.equals(QUESTA)) programs = QUESTA_BIN;
     else return false;
 
-    for (final var program : programs) {
-      final var test = new File(FileUtil.correctPath(path) + program);
+    for (final java.lang.String program : programs) {
+      final java.io.File test = new File(FileUtil.correctPath(path) + program);
       if (!test.exists()) return false;
     }
 
@@ -157,7 +157,7 @@ public final class Softwares {
   public static int validateVhdl(String vhdl, StringBuilder title, StringBuilder result) {
     if (!AppPreferences.QUESTA_VALIDATION.get()) return SUCCESS;
 
-    final var questaPath = getQuestaPath();
+    final java.lang.String questaPath = getQuestaPath();
 
     if (questaPath == null) {
       result.append(S.get("questaValidationAbordedMessage"));
@@ -170,7 +170,7 @@ public final class Softwares {
 
     try {
       tmp = FileUtil.createTmpFile(vhdl, "tmp", ".vhd");
-      final var tmpDir = new File(tmp.getParentFile().getCanonicalPath());
+      final java.io.File tmpDir = new File(tmp.getParentFile().getCanonicalPath());
 
       if (!createWorkLibrary(tmpDir, questaPath, result)) {
         title.insert(0, S.get("questaLibraryErrorTitle"));
@@ -188,12 +188,12 @@ public final class Softwares {
       command.add("work");
       command.add(tmp.getName());
 
-      final var questa = new ProcessBuilder(command);
+      final java.lang.ProcessBuilder questa = new ProcessBuilder(command);
       questa.directory(tmpDir);
       Process vcom = questa.start();
 
-      final var is = vcom.getInputStream();
-      final var isr = new InputStreamReader(is);
+      final java.io.InputStream is = vcom.getInputStream();
+      final java.io.InputStreamReader isr = new InputStreamReader(is);
       reader = new BufferedReader(isr);
 
       String line;

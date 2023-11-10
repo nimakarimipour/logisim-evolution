@@ -29,7 +29,7 @@ public class VhdlHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
   public void getGenerationTimeWiresPorts(Netlist theNetlist, AttributeSet attrs) {
     VhdlContent content = ((VhdlEntityAttributes) attrs).getContent();
     int i = 0;
-    for (final var port : content.getPorts()) {
+    for (final com.cburch.logisim.vhdl.base.VhdlParser.PortDescription port : content.getPorts()) {
       myPorts.add(port.getType(), port.getName(), port.getWidth().getWidth(), i++);
     }
   }

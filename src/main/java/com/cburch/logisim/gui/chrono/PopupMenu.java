@@ -40,16 +40,16 @@ public class PopupMenu extends MouseAdapter {
           }
         }
       }
-      final var g = new ButtonGroup();
-      for (final var r : RadixOption.OPTIONS) {
-        final var m = new JRadioButtonMenuItem(r.toDisplayString());
+      final javax.swing.ButtonGroup g = new ButtonGroup();
+      for (final com.cburch.logisim.circuit.RadixOption r : RadixOption.OPTIONS) {
+        final javax.swing.JRadioButtonMenuItem m = new JRadioButtonMenuItem(r.toDisplayString());
         add(m);
         m.setEnabled(signals.size() > 0);
         g.add(m);
         if (r == radix) m.setSelected(true);
         m.addActionListener(
             e -> {
-              for (final var s : signals) s.info.setRadix(r);
+              for (final com.cburch.logisim.gui.log.Signal s : signals) s.info.setRadix(r);
             });
       }
       addSeparator();
@@ -58,8 +58,8 @@ public class PopupMenu extends MouseAdapter {
       m.setEnabled(signals.size() > 0);
       m.addActionListener(
           e -> {
-            final var items = new SignalInfo.List();
-            for (final var s : signals) {
+            final com.cburch.logisim.gui.log.SignalInfo.List items = new SignalInfo.List();
+            for (final com.cburch.logisim.gui.log.Signal s : signals) {
               items.add(s.info);
             }
             chronoPanel.getModel().remove(items);
@@ -80,7 +80,7 @@ public class PopupMenu extends MouseAdapter {
   }
 
   public void doPop(MouseEvent e) {
-    final var menu = new PopupContents();
+    final com.cburch.logisim.gui.chrono.PopupMenu.PopupContents menu = new PopupContents();
     menu.show(e.getComponent(), e.getX(), e.getY());
   }
 

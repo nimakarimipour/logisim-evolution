@@ -30,7 +30,7 @@ class ClockState implements Cloneable {
   }
 
   public boolean updateClock(Value newClock, Object trigger) {
-    final var oldClock = lastClock;
+    final com.cburch.logisim.data.Value oldClock = lastClock;
     lastClock = newClock;
     if (trigger == null || trigger == StdAttr.TRIG_RISING) {
       return oldClock == Value.FALSE && newClock == Value.TRUE;
@@ -46,7 +46,7 @@ class ClockState implements Cloneable {
   }
 
   public boolean updateClock(Value newClock) {
-    final var oldClock = lastClock;
+    final com.cburch.logisim.data.Value oldClock = lastClock;
     lastClock = newClock;
     return oldClock == Value.FALSE && newClock == Value.TRUE;
   }
@@ -54,11 +54,11 @@ class ClockState implements Cloneable {
   public boolean updateClock(Value newClock, int which) {
     com.cburch.logisim.data.Value[] values = lastClock.getAll();
     if (values.length <= which) {
-      final var nvalue = (Value.createKnown(BitWidth.create(which + 1), 0)).getAll();
+      final com.cburch.logisim.data.Value[] nvalue = (Value.createKnown(BitWidth.create(which + 1), 0)).getAll();
       System.arraycopy(values, 0, nvalue, 0, values.length);
       values = nvalue;
     }
-    final var oldClock = values[which];
+    final com.cburch.logisim.data.Value oldClock = values[which];
     values[which] = newClock;
     lastClock = Value.create(values);
     return oldClock == Value.FALSE && newClock == Value.TRUE;

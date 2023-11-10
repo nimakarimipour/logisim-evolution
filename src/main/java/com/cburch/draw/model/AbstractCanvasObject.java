@@ -62,7 +62,7 @@ public abstract class AbstractCanvasObject implements AttributeSet, CanvasObject
   @Override
   public CanvasObject clone() {
     try {
-      final var ret = (AbstractCanvasObject) super.clone();
+      final com.cburch.draw.model.AbstractCanvasObject ret = (AbstractCanvasObject) super.clone();
       ret.listeners = new EventSourceWeakSupport<>();
       return ret;
     } catch (CloneNotSupportedException e) {
@@ -81,15 +81,15 @@ public abstract class AbstractCanvasObject implements AttributeSet, CanvasObject
   }
 
   protected void fireAttributeListChanged() {
-    final var e = new AttributeEvent(this);
-    for (final var listener : listeners) {
+    final com.cburch.logisim.data.AttributeEvent e = new AttributeEvent(this);
+    for (final com.cburch.logisim.data.AttributeListener listener : listeners) {
       listener.attributeListChanged(e);
     }
   }
 
   @Override
   public Attribute<?> getAttribute(String name) {
-    for (final var attr : getAttributes()) {
+    for (final com.cburch.logisim.data.Attribute<?> attr : getAttributes()) {
       if (attr.getName().equals(name)) return attr;
     }
     return null;
@@ -107,12 +107,12 @@ public abstract class AbstractCanvasObject implements AttributeSet, CanvasObject
   }
 
   protected Location getRandomPoint(Bounds bds, Random rand) {
-    final var x = bds.getX();
-    final var y = bds.getY();
-    final var w = bds.getWidth();
-    final var h = bds.getHeight();
+    final int x = bds.getX();
+    final int y = bds.getY();
+    final int w = bds.getWidth();
+    final int h = bds.getHeight();
     for (int i = 0; i < GENERATE_RANDOM_TRIES; i++) {
-      final var loc = Location.create(x + rand.nextInt(w), y + rand.nextInt(h), false);
+      final com.cburch.logisim.data.Location loc = Location.create(x + rand.nextInt(w), y + rand.nextInt(h), false);
       if (contains(loc, false)) return loc;
     }
     return null;
@@ -140,26 +140,26 @@ public abstract class AbstractCanvasObject implements AttributeSet, CanvasObject
 
   @Override
   public boolean overlaps(CanvasObject other) {
-    final var a = this.getBounds();
-    final var b = other.getBounds();
-    final var c = a.intersect(b);
-    final var rand = new Random();
+    final com.cburch.logisim.data.Bounds a = this.getBounds();
+    final com.cburch.logisim.data.Bounds b = other.getBounds();
+    final com.cburch.logisim.data.Bounds c = a.intersect(b);
+    final java.util.Random rand = new Random();
     if (c.getWidth() == 0 || c.getHeight() == 0) {
       return false;
     } else if (other instanceof AbstractCanvasObject that) {
       for (int i = 0; i < OVERLAP_TRIES; i++) {
         if (i % 2 == 0) {
-          final var loc = this.getRandomPoint(c, rand);
+          final com.cburch.logisim.data.Location loc = this.getRandomPoint(c, rand);
           if (loc != null && that.contains(loc, false)) return true;
         } else {
-          final var loc = that.getRandomPoint(c, rand);
+          final com.cburch.logisim.data.Location loc = that.getRandomPoint(c, rand);
           if (loc != null && this.contains(loc, false)) return true;
         }
       }
       return false;
     } else {
       for (int i = 0; i < OVERLAP_TRIES; i++) {
-        final var loc = this.getRandomPoint(c, rand);
+        final com.cburch.logisim.data.Location loc = this.getRandomPoint(c, rand);
         if (loc != null && other.contains(loc, false)) return true;
       }
       return false;
@@ -172,13 +172,13 @@ public abstract class AbstractCanvasObject implements AttributeSet, CanvasObject
   }
 
   protected boolean setForFill(Graphics g) {
-    final var attrs = getAttributes();
+    final java.util.List<com.cburch.logisim.data.Attribute<?>> attrs = getAttributes();
     if (attrs.contains(DrawAttr.PAINT_TYPE)) {
-      final var value = getValue(DrawAttr.PAINT_TYPE);
+      final com.cburch.logisim.data.AttributeOption value = getValue(DrawAttr.PAINT_TYPE);
       if (value == DrawAttr.PAINT_STROKE) return false;
     }
 
-    final var color = getValue(DrawAttr.FILL_COLOR);
+    final java.awt.Color color = getValue(DrawAttr.FILL_COLOR);
     if (color != null && color.getAlpha() == 0) {
       return false;
     } else {
@@ -188,15 +188,15 @@ public abstract class AbstractCanvasObject implements AttributeSet, CanvasObject
   }
 
   protected boolean setForStroke(Graphics g) {
-    final var attrs = getAttributes();
+    final java.util.List<com.cburch.logisim.data.Attribute<?>> attrs = getAttributes();
     if (attrs.contains(DrawAttr.PAINT_TYPE)) {
-      final var value = getValue(DrawAttr.PAINT_TYPE);
+      final com.cburch.logisim.data.AttributeOption value = getValue(DrawAttr.PAINT_TYPE);
       if (value == DrawAttr.PAINT_FILL) return false;
     }
 
-    final var width = getValue(DrawAttr.STROKE_WIDTH);
+    final java.lang.Integer width = getValue(DrawAttr.STROKE_WIDTH);
     if (width != null && width > 0) {
-      final var color = getValue(DrawAttr.STROKE_COLOR);
+      final java.awt.Color color = getValue(DrawAttr.STROKE_COLOR);
       if (color != null && color.getAlpha() == 0) {
         return false;
       } else {
@@ -216,12 +216,12 @@ public abstract class AbstractCanvasObject implements AttributeSet, CanvasObject
 
   @Override
   public final <V> void setValue(Attribute<V> attr, V value) {
-    final var old = getValue(attr);
-    final var same = Objects.equals(old, value);
+    final V old = getValue(attr);
+    final boolean same = Objects.equals(old, value);
     if (!same) {
       updateValue(attr, value);
-      final var e = new AttributeEvent(this, attr, value, old);
-      for (final var listener : listeners) {
+      final com.cburch.logisim.data.AttributeEvent e = new AttributeEvent(this, attr, value, old);
+      for (final com.cburch.logisim.data.AttributeListener listener : listeners) {
         listener.attributeValueChanged(e);
       }
     }

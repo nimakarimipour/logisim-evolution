@@ -41,7 +41,7 @@ public abstract class EditHandler {
   public abstract void computeEnabled();
 
   protected void setEnabled(LogisimMenuItem action, boolean value) {
-    final var l = listener;
+    final com.cburch.logisim.gui.menu.EditHandler.Listener l = listener;
     if (l != null) {
       l.enableChanged(this, action, value);
     }
@@ -52,7 +52,7 @@ public abstract class EditHandler {
   }
 
   public void actionPerformed(ActionEvent e) {
-    final var src = e.getSource();
+    final java.lang.Object src = e.getSource();
     if (src == LogisimMenuBar.CUT) cut();
     else if (src == LogisimMenuBar.COPY) copy();
     else if (src == LogisimMenuBar.PASTE) paste();

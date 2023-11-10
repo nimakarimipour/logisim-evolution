@@ -80,9 +80,9 @@ public class TclComponentData implements InstanceData {
     boolean newTick = false;
     boolean found = false;
 
-    for (final var p : instanceState.getInstance().getPorts()) {
+    for (final com.cburch.logisim.instance.Port p : instanceState.getInstance().getPorts()) {
       if (p.getToolTip().equals("sysclk_i")) {
-        final var val = instanceState.getPortValue(instanceState.getPortIndex(p));
+        final com.cburch.logisim.data.Value val = instanceState.getPortValue(instanceState.getPortIndex(p));
         newTick = (val != prevClockValue);
         if (newTick) {
           prevClockValue = val;

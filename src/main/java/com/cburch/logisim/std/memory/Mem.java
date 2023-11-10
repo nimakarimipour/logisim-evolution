@@ -134,11 +134,11 @@ public abstract class Mem extends InstanceFactory {
   @Override
   protected void configureNewInstance(Instance instance) {
     configurePorts(instance);
-    final var bds = instance.getBounds();
-    final var x = bds.getX() + bds.getWidth() / 2;
-    final var y = bds.getY() - 2;
-    final var halign = GraphicsUtil.H_CENTER;
-    final var valign = GraphicsUtil.V_BOTTOM;
+    final com.cburch.logisim.data.Bounds bds = instance.getBounds();
+    final int x = bds.getX() + bds.getWidth() / 2;
+    final int y = bds.getY() - 2;
+    final int halign = GraphicsUtil.H_CENTER;
+    final int valign = GraphicsUtil.V_BOTTOM;
     instance.setTextField(StdAttr.LABEL, StdAttr.LABEL_FONT, x, y, halign, valign);
   }
 

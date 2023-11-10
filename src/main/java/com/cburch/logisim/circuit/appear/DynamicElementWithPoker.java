@@ -40,30 +40,30 @@ public abstract class DynamicElementWithPoker extends DynamicElement {
   }
 
   public Bounds getScreenBounds(InstanceState state) {
-    final var dir = state.getAttributeValue(StdAttr.FACING);
-    final var loc = state.getInstance().getLocation();
+    final com.cburch.logisim.data.Direction dir = state.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Location loc = state.getInstance().getLocation();
     if (dir == Direction.EAST) {
-      final var posX = bounds.getX() - anchorPosition.getX() + loc.getX();
-      final var posY = bounds.getY() - anchorPosition.getY() + loc.getY();
+      final int posX = bounds.getX() - anchorPosition.getX() + loc.getX();
+      final int posY = bounds.getY() - anchorPosition.getY() + loc.getY();
       return Bounds.create(posX, posY, bounds.getWidth(), bounds.getHeight());
     }
     if (dir == Direction.WEST) {
-      final var posX = anchorPosition.getX() - bounds.getX() - bounds.getWidth() + loc.getX();
-      final var posY = anchorPosition.getY() - bounds.getY() - bounds.getHeight() + loc.getY();
+      final int posX = anchorPosition.getX() - bounds.getX() - bounds.getWidth() + loc.getX();
+      final int posY = anchorPosition.getY() - bounds.getY() - bounds.getHeight() + loc.getY();
       return Bounds.create(posX, posY, bounds.getWidth(), bounds.getHeight());
     }
     if (dir == Direction.NORTH) {
-      final var posX = bounds.getY() - anchorPosition.getY() + loc.getX();
-      final var posY = bounds.getX() - anchorPosition.getX() - bounds.getWidth() + loc.getY();
+      final int posX = bounds.getY() - anchorPosition.getY() + loc.getX();
+      final int posY = bounds.getX() - anchorPosition.getX() - bounds.getWidth() + loc.getY();
       return Bounds.create(posX, posY, bounds.getHeight(), bounds.getWidth());
     }
-    final var posX = anchorPosition.getY() - bounds.getY() - bounds.getHeight() + loc.getX();
-    final var posY = bounds.getX() - anchorPosition.getX() + loc.getY();
+    final int posX = anchorPosition.getY() - bounds.getY() - bounds.getHeight() + loc.getX();
+    final int posY = bounds.getX() - anchorPosition.getX() + loc.getY();
     return Bounds.create(posX, posY, bounds.getHeight(), bounds.getWidth());
   }
 
   public Boolean mouseInside(InstanceState state, MouseEvent e) {
-    final var b = getScreenBounds(state);
+    final com.cburch.logisim.data.Bounds b = getScreenBounds(state);
     return b.contains(e.getX(), e.getY());
   }
 

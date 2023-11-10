@@ -121,7 +121,7 @@ public final class Instance implements Location.At {
 
   public void computeLabelTextField(int avoid, Object labelLoc) {
     if (avoid != 0) {
-      final var facing = getAttributeValue(StdAttr.FACING);
+      final com.cburch.logisim.data.Direction facing = getAttributeValue(StdAttr.FACING);
       if (facing == Direction.NORTH)
         avoid = (avoid & 0x10) | ((avoid << 1) & 0xf) | ((avoid & 0xf) >> 3);
       else if (facing == Direction.EAST)
@@ -130,7 +130,7 @@ public final class Instance implements Location.At {
         avoid = (avoid & 0x10) | ((avoid << 3) & 0xf) | ((avoid & 0xf) >> 1);
     }
 
-    final var bds = getBounds();
+    final com.cburch.logisim.data.Bounds bds = getBounds();
     int x = bds.getX() + bds.getWidth() / 2;
     int y = bds.getY() + bds.getHeight() / 2;
     int hAlign = GraphicsUtil.H_CENTER;

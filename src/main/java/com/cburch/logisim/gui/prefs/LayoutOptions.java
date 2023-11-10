@@ -50,8 +50,8 @@ class LayoutOptions extends OptionsPanel {
         };
 
     for (int i = 0; i < 2; i++) {
-      final var opts = RadixOption.OPTIONS;
-      final var items = new PrefOption[opts.length];
+      final com.cburch.logisim.circuit.RadixOption[] opts = RadixOption.OPTIONS;
+      final com.cburch.logisim.gui.prefs.PrefOption[] items = new PrefOption[opts.length];
       for (int j = 0; j < RadixOption.OPTIONS.length; j++) {
         items[j] = new PrefOption(opts[j].getSaveString(), opts[j].getDisplayGetter());
       }
@@ -101,7 +101,7 @@ class LayoutOptions extends OptionsPanel {
                   AppPreferences.PIN_APPEAR_DOT_BIGGER, S.getter("layoutPinAppearanceDotBigger"))
             });
 
-    final var panel = new JPanel(new TableLayout(2));
+    final javax.swing.JPanel panel = new JPanel(new TableLayout(2));
     panel.add(defaultAppearance.getJLabel());
     panel.add(defaultAppearance.getJComboBox());
     panel.add(afterAdd.getJLabel());
@@ -114,7 +114,7 @@ class LayoutOptions extends OptionsPanel {
     panel.add(prefPinAppearance.getJComboBox());
 
     setLayout(new TableLayout(1));
-    for (final var check : checks) {
+    for (final com.cburch.logisim.gui.prefs.PrefBoolean check : checks) {
       add(check);
     }
     add(panel);
@@ -132,7 +132,7 @@ class LayoutOptions extends OptionsPanel {
 
   @Override
   public void localeChanged() {
-    for (final var check : checks) {
+    for (final com.cburch.logisim.gui.prefs.PrefBoolean check : checks) {
       check.localeChanged();
     }
     radix1.localeChanged();
@@ -144,7 +144,7 @@ class LayoutOptions extends OptionsPanel {
   private static class MyListener implements PreferenceChangeListener {
     @Override
     public void preferenceChange(PreferenceChangeEvent evt) {
-      final var update = evt.getKey().equals(AppPreferences.PinAppearance.getIdentifier());
+      final boolean update = evt.getKey().equals(AppPreferences.PinAppearance.getIdentifier());
       if (update) {
         for (Project proj : Projects.getOpenProjects()) proj.getFrame().repaint();
       }

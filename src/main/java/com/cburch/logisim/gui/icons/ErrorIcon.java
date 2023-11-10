@@ -54,11 +54,11 @@ public class ErrorIcon implements Icon {
 
   @Override
   public void paintIcon(Component c, Graphics g, int x, int y) {
-    final var g2 = (Graphics2D) g.create();
+    final java.awt.Graphics2D g2 = (Graphics2D) g.create();
     g2.translate(x, y);
-    final var mywh = !forwardArrow && !backwardArrow ? wh : (3 * wh) >> 2;
-    final var xoff = !forwardArrow && !backwardArrow ? 0 : wh >> 3;
-    final var trd = mywh / 3;
+    final int mywh = !forwardArrow && !backwardArrow ? wh : (3 * wh) >> 2;
+    final int xoff = !forwardArrow && !backwardArrow ? 0 : wh >> 3;
+    final int trd = mywh / 3;
     int[] xPos = {
       xoff,
       xoff + trd,
@@ -76,18 +76,18 @@ public class ErrorIcon implements Icon {
     g2.setColor(Color.RED.darker().darker());
     g2.drawPolygon(xPos, ypos, 8);
     g2.setColor(Color.WHITE);
-    final var f = g2.getFont().deriveFont((float) mywh / (float) 1.3).deriveFont(Font.BOLD);
-    final var t = new TextLayout("X", f, g2.getFontRenderContext());
-    final var xc = (float) mywh / (float) 2 - (float) t.getBounds().getCenterX() + (float) xoff;
-    final var yc = (float) mywh / (float) 2 - (float) t.getBounds().getCenterY();
+    final java.awt.Font f = g2.getFont().deriveFont((float) mywh / (float) 1.3).deriveFont(Font.BOLD);
+    final java.awt.font.TextLayout t = new TextLayout("X", f, g2.getFontRenderContext());
+    final float xc = (float) mywh / (float) 2 - (float) t.getBounds().getCenterX() + (float) xoff;
+    final float yc = (float) mywh / (float) 2 - (float) t.getBounds().getCenterY();
     t.draw(g2, xc, yc);
     if (forwardArrow) {
       g2.setColor(Color.BLACK);
-      final var five = (5 * wh) >> 3;
-      final var six = (6 * wh) >> 3;
-      final var seven = (7 * wh) >> 3;
+      final int five = (5 * wh) >> 3;
+      final int six = (6 * wh) >> 3;
+      final int seven = (7 * wh) >> 3;
       final int[] axPos = {xoff, five, five, seven, five, five, xoff};
-      final var yOff = AppPreferences.getScaled(1);
+      final int yOff = AppPreferences.getScaled(1);
       final int[] ayPos = {
         seven - yOff, seven - yOff, six, seven, wh - 1, seven + yOff, seven + yOff
       };
@@ -95,11 +95,11 @@ public class ErrorIcon implements Icon {
     }
     if (backwardArrow) {
       g2.setColor(Color.BLACK);
-      final var three = (3 * wh) >> 3;
-      final var six = (6 * wh) >> 3;
-      final var seven = (7 * wh) >> 3;
+      final int three = (3 * wh) >> 3;
+      final int six = (6 * wh) >> 3;
+      final int seven = (7 * wh) >> 3;
       final int[] axPos = {seven, three, three, xoff, three, three, seven};
-      final var yOff = AppPreferences.getScaled(1);
+      final int yOff = AppPreferences.getScaled(1);
       final int[] ayPos = {
         seven - yOff, seven - yOff, six, seven, wh - 1, seven + yOff, seven + yOff
       };

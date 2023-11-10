@@ -41,9 +41,9 @@ public class Drawing implements CanvasModel {
 
   @Override
   public void addObjects(int index, Collection<? extends CanvasObject> shapes) {
-    final var indexes = new LinkedHashMap<CanvasObject, Integer>();
+    final java.util.LinkedHashMap<com.cburch.draw.model.CanvasObject,java.lang.Integer> indexes = new LinkedHashMap<CanvasObject, Integer>();
     int i = index;
-    for (final var shape : shapes) {
+    for (final com.cburch.draw.model.CanvasObject shape : shapes) {
       indexes.put(shape, i);
       i++;
     }
@@ -59,11 +59,11 @@ public class Drawing implements CanvasModel {
     // this is separate method so that subclass can call super.add to either
     // of the add methods, and it won't get redirected into the subclass
     // in calling the other add method
-    final var e = CanvasModelEvent.forAdd(this, shapes.keySet());
+    final com.cburch.draw.model.CanvasModelEvent e = CanvasModelEvent.forAdd(this, shapes.keySet());
     if (!shapes.isEmpty() && isChangeAllowed(e)) {
-      for (final var entry : shapes.entrySet()) {
-        final var shape = entry.getKey();
-        final var index = entry.getValue();
+      for (final java.util.Map.Entry<? extends com.cburch.draw.model.CanvasObject,java.lang.Integer> entry : shapes.entrySet()) {
+        final com.cburch.draw.model.CanvasObject shape = entry.getKey();
+        final java.lang.Integer index = entry.getValue();
         canvasObjects.add(index, shape);
         overlaps.addShape(shape);
       }
@@ -73,18 +73,18 @@ public class Drawing implements CanvasModel {
 
   @Override
   public Handle deleteHandle(Handle handle) {
-    final var e = CanvasModelEvent.forDeleteHandle(this, handle);
+    final com.cburch.draw.model.CanvasModelEvent e = CanvasModelEvent.forDeleteHandle(this, handle);
     if (!isChangeAllowed(e)) return null;
 
-    final var o = handle.getObject();
-    final var ret = o.deleteHandle(handle);
+    final com.cburch.draw.model.CanvasObject o = handle.getObject();
+    final com.cburch.draw.model.Handle ret = o.deleteHandle(handle);
     overlaps.invalidateShape(o);
     fireChanged(e);
     return ret;
   }
 
   private void fireChanged(CanvasModelEvent e) {
-    for (final var listener : listeners) {
+    for (final com.cburch.draw.model.CanvasModelListener listener : listeners) {
       listener.modelChanged(e);
     }
   }
@@ -96,7 +96,7 @@ public class Drawing implements CanvasModel {
 
   @Override
   public List<CanvasObject> getObjectsFromTop() {
-    final var ret = new ArrayList<>(getObjectsFromBottom());
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> ret = new ArrayList<>(getObjectsFromBottom());
     Collections.reverse(ret);
     return ret;
   }
@@ -104,7 +104,7 @@ public class Drawing implements CanvasModel {
   @Override
   public Collection<CanvasObject> getObjectsIn(Bounds bds) {
     List<CanvasObject> ret = null;
-    for (final var shape : getObjectsFromBottom()) {
+    for (final com.cburch.draw.model.CanvasObject shape : getObjectsFromBottom()) {
       if (bds.contains(shape.getBounds())) {
         if (ret == null) ret = new ArrayList<>();
         ret.add(shape);
@@ -121,8 +121,8 @@ public class Drawing implements CanvasModel {
 
   @Override
   public void insertHandle(Handle desired, Handle previous) {
-    final var obj = desired.getObject();
-    final var e = CanvasModelEvent.forInsertHandle(this, desired);
+    final com.cburch.draw.model.CanvasObject obj = desired.getObject();
+    final com.cburch.draw.model.CanvasModelEvent e = CanvasModelEvent.forInsertHandle(this, desired);
     if (isChangeAllowed(e)) {
       obj.insertHandle(desired, previous);
       overlaps.invalidateShape(obj);
@@ -136,12 +136,12 @@ public class Drawing implements CanvasModel {
 
   @Override
   public Handle moveHandle(HandleGesture gesture) {
-    final var e = CanvasModelEvent.forMoveHandle(this, gesture);
-    final var o = gesture.getHandle().getObject();
+    final com.cburch.draw.model.CanvasModelEvent e = CanvasModelEvent.forMoveHandle(this, gesture);
+    final com.cburch.draw.model.CanvasObject o = gesture.getHandle().getObject();
     if (canvasObjects.contains(o)
         && (gesture.getDeltaX() != 0 || gesture.getDeltaY() != 0)
         && isChangeAllowed(e)) {
-      final var moved = o.moveHandle(gesture);
+      final com.cburch.draw.model.Handle moved = o.moveHandle(gesture);
       gesture.setResultingHandle(moved);
       overlaps.invalidateShape(o);
       fireChanged(e);
@@ -153,9 +153,9 @@ public class Drawing implements CanvasModel {
 
   @Override
   public void paint(Graphics g, Selection selection) {
-    final var suppressed = selection.getDrawsSuppressed();
-    for (final var shape : getObjectsFromBottom()) {
-      final var dup = g.create();
+    final java.util.Set<com.cburch.draw.model.CanvasObject> suppressed = selection.getDrawsSuppressed();
+    for (final com.cburch.draw.model.CanvasObject shape : getObjectsFromBottom()) {
+      final java.awt.Graphics dup = g.create();
       if (suppressed.contains(shape)) {
         selection.drawSuppressed(dup, shape);
       } else {
@@ -172,10 +172,10 @@ public class Drawing implements CanvasModel {
 
   @Override
   public void removeObjects(Collection<? extends CanvasObject> shapes) {
-    final var found = restrict(shapes);
-    final var e = CanvasModelEvent.forRemove(this, found);
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> found = restrict(shapes);
+    final com.cburch.draw.model.CanvasModelEvent e = CanvasModelEvent.forRemove(this, found);
     if (!found.isEmpty() && isChangeAllowed(e)) {
-      for (final var shape : found) {
+      for (final com.cburch.draw.model.CanvasObject shape : found) {
         canvasObjects.remove(shape);
         overlaps.removeShape(shape);
       }
@@ -186,15 +186,15 @@ public class Drawing implements CanvasModel {
   @Override
   public void reorderObjects(List<ReorderRequest> requests) {
     boolean hasEffect = false;
-    for (final var r : requests) {
+    for (final com.cburch.draw.model.ReorderRequest r : requests) {
       if (r.getFromIndex() != r.getToIndex()) {
         hasEffect = true;
         break;
       }
     }
-    final var e = CanvasModelEvent.forReorder(this, requests);
+    final com.cburch.draw.model.CanvasModelEvent e = CanvasModelEvent.forReorder(this, requests);
     if (hasEffect && isChangeAllowed(e)) {
-      for (final var r : requests) {
+      for (final com.cburch.draw.model.ReorderRequest r : requests) {
         if (canvasObjects.get(r.getFromIndex()) != r.getObject()) {
           throw new IllegalArgumentException(
               "object not present" + " at indicated index: " + r.getFromIndex());
@@ -207,8 +207,8 @@ public class Drawing implements CanvasModel {
   }
 
   private ArrayList<CanvasObject> restrict(Collection<? extends CanvasObject> shapes) {
-    final var ret = new ArrayList<CanvasObject>(shapes.size());
-    for (final var shape : shapes) {
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> ret = new ArrayList<CanvasObject>(shapes.size());
+    for (final com.cburch.draw.model.CanvasObject shape : shapes) {
       if (canvasObjects.contains(shape)) {
         ret.add(shape);
       }
@@ -218,18 +218,18 @@ public class Drawing implements CanvasModel {
 
   @Override
   public void setAttributeValues(Map<AttributeMapKey, Object> values) {
-    final var oldValues = new HashMap<AttributeMapKey, Object>();
-    for (final var key : values.keySet()) {
+    final java.util.HashMap<com.cburch.draw.model.AttributeMapKey,java.lang.Object> oldValues = new HashMap<AttributeMapKey, Object>();
+    for (final com.cburch.draw.model.AttributeMapKey key : values.keySet()) {
       @SuppressWarnings("unchecked")
-      final var attr = (Attribute<Object>) key.getAttribute();
-      final var oldValue = key.getObject().getValue(attr);
+      final Attribute<Object> attr = (Attribute<Object>) key.getAttribute();
+      final java.lang.Object oldValue = key.getObject().getValue(attr);
       oldValues.put(key, oldValue);
     }
-    final var e = CanvasModelEvent.forChangeAttributes(this, oldValues, values);
+    final com.cburch.draw.model.CanvasModelEvent e = CanvasModelEvent.forChangeAttributes(this, oldValues, values);
     if (isChangeAllowed(e)) {
-      for (final var entry : values.entrySet()) {
-        final var key = entry.getKey();
-        final var shape = key.getObject();
+      for (final java.util.Map.Entry<com.cburch.draw.model.AttributeMapKey,java.lang.Object> entry : values.entrySet()) {
+        final com.cburch.draw.model.AttributeMapKey key = entry.getKey();
+        final com.cburch.draw.model.CanvasObject shape = key.getObject();
         @SuppressWarnings("unchecked")
         Attribute<Object> attr = (Attribute<Object>) key.getAttribute();
         shape.setValue(attr, entry.getValue());
@@ -241,8 +241,8 @@ public class Drawing implements CanvasModel {
 
   @Override
   public void setText(Text text, String value) {
-    final var oldValue = text.getText();
-    final var e = CanvasModelEvent.forChangeText(this, text, oldValue, value);
+    final java.lang.String oldValue = text.getText();
+    final com.cburch.draw.model.CanvasModelEvent e = CanvasModelEvent.forChangeText(this, text, oldValue, value);
     if (canvasObjects.contains(text) && !oldValue.equals(value) && isChangeAllowed(e)) {
       text.setText(value);
       overlaps.invalidateShape(text);
@@ -252,10 +252,10 @@ public class Drawing implements CanvasModel {
 
   @Override
   public void translateObjects(Collection<? extends CanvasObject> shapes, int dx, int dy) {
-    final var found = restrict(shapes);
-    final var e = CanvasModelEvent.forTranslate(this, found);
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> found = restrict(shapes);
+    final com.cburch.draw.model.CanvasModelEvent e = CanvasModelEvent.forTranslate(this, found);
     if (!found.isEmpty() && (dx != 0 || dy != 0) && isChangeAllowed(e)) {
-      for (final var shape : shapes) {
+      for (final com.cburch.draw.model.CanvasObject shape : shapes) {
         shape.translate(dx, dy);
         overlaps.invalidateShape(shape);
       }

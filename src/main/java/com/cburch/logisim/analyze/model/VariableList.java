@@ -43,14 +43,14 @@ public class VariableList {
   public boolean containsDuplicate(VariableList data, Var oldVar, String name) {
     boolean found = false;
     for (int i = 0, n = vars.size(); i < n && !found; i++) {
-      final var other = vars.get(i);
+      final com.cburch.logisim.analyze.model.Var other = vars.get(i);
       if (other != oldVar && name.equals(other.name)) {
         found = true;
         break;
       }
     }
     for (int i = 0; i < others.size() && !found; i++) {
-      final var l = others.get(i);
+      final com.cburch.logisim.analyze.model.VariableList l = others.get(i);
       if (l.equals(data)) continue;
       found |= l.containsDuplicate(data, oldVar, name);
     }
@@ -61,10 +61,10 @@ public class VariableList {
     if (data.size() + variable.width > maxSize) {
       throw new IllegalArgumentException("maximum size is " + maxSize);
     }
-    final var index = data.size();
+    final int index = data.size();
     data.add(variable);
-    for (final var bit : variable) names.add(bit);
-    final var bitIndex = names.size() - 1;
+    for (final java.lang.String bit : variable) names.add(bit);
+    final int bitIndex = names.size() - 1;
     fireEvent(VariableListEvent.ADD, variable, index, bitIndex);
   }
 
@@ -78,7 +78,7 @@ public class VariableList {
 
   private void fireEvent(int type, Var variable, Integer index, Integer bitIndex) {
     if (listeners.isEmpty()) return;
-    final var event = new VariableListEvent(this, type, variable, index, bitIndex);
+    final com.cburch.logisim.analyze.model.VariableListEvent event = new VariableListEvent(this, type, variable, index, bitIndex);
     for (VariableListListener l : listeners) {
       l.listChanged(event);
     }
@@ -89,11 +89,11 @@ public class VariableList {
   }
 
   public void move(Var variable, int delta) {
-    final var index = data.indexOf(variable);
+    final int index = data.indexOf(variable);
     if (index < 0) throw new NoSuchElementException(variable.toString());
-    final var bitIndex = names.indexOf(variable.bitName(0));
+    final int bitIndex = names.indexOf(variable.bitName(0));
     if (bitIndex < 0) throw new NoSuchElementException(variable.toString());
-    final var newIndex = index + delta;
+    final int newIndex = index + delta;
     if (newIndex < 0) {
       throw new IllegalArgumentException("cannot move index " + index + " by " + delta);
     }
@@ -106,15 +106,15 @@ public class VariableList {
     data.add(newIndex, variable);
     names.subList(bitIndex + 1 - variable.width, bitIndex + 1).clear();
     int i = (newIndex == 0 ? 0 : (1 + names.indexOf(data.get(newIndex - 1).bitName(0))));
-    for (final var bit : variable) names.add(i++, bit);
-    final var bitDelta = names.indexOf(variable.bitName(0)) - bitIndex;
+    for (final java.lang.String bit : variable) names.add(i++, bit);
+    final int bitDelta = names.indexOf(variable.bitName(0)) - bitIndex;
     fireEvent(VariableListEvent.MOVE, variable, delta, bitDelta);
   }
 
   public void remove(Var variable) {
-    final var index = data.indexOf(variable);
+    final int index = data.indexOf(variable);
     if (index < 0) throw new NoSuchElementException(variable.toString());
-    final var bitIndex = names.indexOf(variable.bitName(0));
+    final int bitIndex = names.indexOf(variable.bitName(0));
     if (bitIndex < 0) throw new NoSuchElementException(variable.toString());
     data.remove(index);
     names.subList(bitIndex + 1 - variable.width, bitIndex + 1).clear();
@@ -126,15 +126,15 @@ public class VariableList {
   }
 
   public void replace(Var oldVar, Var newVar) {
-    final var index = data.indexOf(oldVar);
+    final int index = data.indexOf(oldVar);
     if (index < 0) throw new NoSuchElementException(oldVar.toString());
-    final var bitIndex = names.indexOf(oldVar.bitName(0));
+    final int bitIndex = names.indexOf(oldVar.bitName(0));
     if (bitIndex < 0) throw new NoSuchElementException(oldVar.toString());
     if (oldVar.equals(newVar)) return;
     data.set(index, newVar);
     names.subList(bitIndex + 1 - oldVar.width, bitIndex + 1).clear();
     int i = bitIndex + 1 - oldVar.width;
-    for (final var bit : newVar) {
+    for (final java.lang.String bit : newVar) {
       names.add(i++, bit);
     }
     fireEvent(VariableListEvent.REPLACE, oldVar, index, bitIndex);
@@ -147,8 +147,8 @@ public class VariableList {
     data.clear();
     data.addAll(values);
     names.clear();
-    for (final var variable : values) {
-      for (final var bit : variable) names.add(bit);
+    for (final com.cburch.logisim.analyze.model.Var variable : values) {
+      for (final java.lang.String bit : variable) names.add(bit);
     }
     fireEvent(VariableListEvent.ALL_REPLACED);
   }

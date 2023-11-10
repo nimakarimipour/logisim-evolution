@@ -32,7 +32,7 @@ public class FatArrowIcon extends BaseIcon {
     else if (dir.equals(Direction.EAST)) g2.rotate(Math.PI / 2);
     g2.translate(-AppPreferences.getScaled(7), -AppPreferences.getScaled(7));
     g2.setColor(Color.blue);
-    final var path = new GeneralPath();
+    final java.awt.geom.GeneralPath path = new GeneralPath();
     path.moveTo(AppPreferences.getScaled(points[0]), AppPreferences.getScaled(points[1]));
     for (int i = 2; i < points.length; i += 2)
       path.lineTo(AppPreferences.getScaled(points[i]), AppPreferences.getScaled(points[i + 1]));

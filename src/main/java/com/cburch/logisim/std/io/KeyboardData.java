@@ -41,7 +41,7 @@ class KeyboardData implements InstanceData, Cloneable {
   @Override
   public Object clone() {
     try {
-      final var ret = (KeyboardData) super.clone();
+      final com.cburch.logisim.std.io.KeyboardData ret = (KeyboardData) super.clone();
       ret.buffer = this.buffer.clone();
       return ret;
     } catch (CloneNotSupportedException e) {
@@ -50,9 +50,9 @@ class KeyboardData implements InstanceData, Cloneable {
   }
 
   public boolean delete() {
-    final var buf = buffer;
-    final var len = bufferLength;
-    final var pos = cursorPos;
+    final char[] buf = buffer;
+    final int len = bufferLength;
+    final int pos = cursorPos;
     if (pos >= len) return false;
     if (len >= pos + 1) System.arraycopy(buf, pos + 1, buf, pos, len - (pos + 1));
     bufferLength = len - 1;
@@ -62,13 +62,13 @@ class KeyboardData implements InstanceData, Cloneable {
   }
 
   public char dequeue() {
-    final var buf = buffer;
-    final var len = bufferLength;
+    final char[] buf = buffer;
+    final int len = bufferLength;
     if (len == 0) return '\0';
-    final var ret = buf[0];
+    final char ret = buf[0];
     if (len >= 1) System.arraycopy(buf, 1, buf, 0, len - 1);
     bufferLength = len - 1;
-    final var pos = cursorPos;
+    final int pos = cursorPos;
     if (pos > 0) cursorPos = pos - 1;
     str = null;
     dispValid = false;
@@ -102,8 +102,8 @@ class KeyboardData implements InstanceData, Cloneable {
   }
 
   public int getNextSpecial(int pos) {
-    final var buf = buffer;
-    final var len = bufferLength;
+    final char[] buf = buffer;
+    final int len = bufferLength;
     for (int i = pos; i < len; i++) {
       char c = buf[i];
       if (Character.isISOControl(c)) return i;
@@ -112,10 +112,10 @@ class KeyboardData implements InstanceData, Cloneable {
   }
 
   public boolean insert(char value) {
-    final var buf = buffer;
-    final var len = bufferLength;
+    final char[] buf = buffer;
+    final int len = bufferLength;
     if (len >= buf.length) return false;
-    final var pos = cursorPos;
+    final int pos = cursorPos;
     if (len >= pos) System.arraycopy(buf, pos, buf, pos + 1, len - pos);
     buf[pos] = value;
     bufferLength = len + 1;
@@ -130,9 +130,9 @@ class KeyboardData implements InstanceData, Cloneable {
   }
 
   public boolean moveCursorBy(int delta) {
-    final var len = bufferLength;
-    final var pos = cursorPos;
-    final var newPos = pos + delta;
+    final int len = bufferLength;
+    final int pos = cursorPos;
+    final int newPos = pos + delta;
     if (newPos < 0 || newPos > len) return false;
     cursorPos = newPos;
     dispValid = false;
@@ -140,9 +140,9 @@ class KeyboardData implements InstanceData, Cloneable {
   }
 
   public boolean setCursor(int value) {
-    final var len = bufferLength;
+    final int len = bufferLength;
     if (value > len) value = len;
-    final var pos = cursorPos;
+    final int pos = cursorPos;
     if (pos == value) return false;
     cursorPos = value;
     dispValid = false;
@@ -150,20 +150,20 @@ class KeyboardData implements InstanceData, Cloneable {
   }
 
   public Value setLastClock(Value newClock) {
-    final var ret = lastClock;
+    final com.cburch.logisim.data.Value ret = lastClock;
     lastClock = newClock;
     return ret;
   }
 
   @Override
   public String toString() {
-    final var s = str;
+    final java.lang.String s = str;
     if (s != null) return s;
-    final var build = new StringBuilder();
-    final var buf = buffer;
-    final var len = bufferLength;
+    final java.lang.StringBuilder build = new StringBuilder();
+    final char[] buf = buffer;
+    final int len = bufferLength;
     for (int i = 0; i < len; i++) {
-      final var c = buf[i];
+      final char c = buf[i];
       build.append(Character.isISOControl(c) ? ' ' : c);
     }
     str = build.toString();
@@ -172,10 +172,10 @@ class KeyboardData implements InstanceData, Cloneable {
 
   public void updateBufferLength(int len) {
     synchronized (this) {
-      final var buf = buffer;
-      final var oldLen = buf.length;
+      final char[] buf = buffer;
+      final int oldLen = buf.length;
       if (oldLen != len) {
-        final var newBuf = new char[len];
+        final char[] newBuf = new char[len];
         System.arraycopy(buf, 0, newBuf, 0, Math.min(len, oldLen));
         if (len < oldLen) {
           if (bufferLength > len) bufferLength = len;
@@ -190,20 +190,20 @@ class KeyboardData implements InstanceData, Cloneable {
 
   public void updateDisplay(FontMetrics fm) {
     if (dispValid) return;
-    final var pos = cursorPos;
+    final int pos = cursorPos;
     int i0 = dispStart;
     int i1 = dispEnd;
-    final var str = toString();
-    final var len = str.length();
-    final var max = Keyboard.WIDTH - 8 - 4;
+    final java.lang.String str = toString();
+    final int len = str.length();
+    final int max = Keyboard.WIDTH - 8 - 4;
     if (str.equals("") || fm.stringWidth(str) <= max) {
       i0 = 0;
       i1 = len;
     } else {
       // grow to include end of string if possible
-      final var w0 = fm.stringWidth(str.charAt(0) + "m");
-      final var w1 = fm.stringWidth("m");
-      final var w = i0 == 0 ? fm.stringWidth(str) : w0 + fm.stringWidth(str.substring(i0));
+      final int w0 = fm.stringWidth(str.charAt(0) + "m");
+      final int w1 = fm.stringWidth("m");
+      final int w = i0 == 0 ? fm.stringWidth(str) : w0 + fm.stringWidth(str.substring(i0));
       if (w <= max) i1 = len;
 
       // rearrange start/end so as to include cursor

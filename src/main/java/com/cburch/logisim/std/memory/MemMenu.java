@@ -73,15 +73,15 @@ class MemMenu implements ActionListener, MenuExtender {
   }
 
   private JMenuItem createItem(boolean enabled, String label) {
-    final var ret = new JMenuItem(label);
+    final javax.swing.JMenuItem ret = new JMenuItem(label);
     ret.setEnabled(enabled);
     ret.addActionListener(this);
     return ret;
   }
 
   private void doClear() {
-    final var s = factory.getState(instance, circState);
-    final var isAllZero = s.getContents().isClear();
+    final com.cburch.logisim.std.memory.MemState s = factory.getState(instance, circState);
+    final boolean isAllZero = s.getContents().isClear();
     if (isAllZero) return;
 
     int choice =
@@ -97,18 +97,18 @@ class MemMenu implements ActionListener, MenuExtender {
 
   private void doEdit() {
     if (factory.getState(instance, circState) == null) return;
-    final var frame = factory.getHexFrame(proj, instance, circState);
+    final com.cburch.logisim.gui.hex.HexFrame frame = factory.getHexFrame(proj, instance, circState);
     frame.setVisible(true);
     frame.toFront();
   }
 
   private void doLoad() {
-    final var m = factory.getState(instance, circState).getContents();
+    final com.cburch.logisim.std.memory.MemContents m = factory.getState(instance, circState).getContents();
     HexFile.open(m, frame, proj, instance);
   }
 
   private void doSave() {
-    final var m = factory.getState(instance, circState).getContents();
+    final com.cburch.logisim.std.memory.MemContents m = factory.getState(instance, circState).getContents();
     HexFile.save(m, frame, proj, instance);
   }
 }

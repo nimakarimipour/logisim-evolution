@@ -34,16 +34,16 @@ public class RamHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public void getGenerationTimeWiresPorts(Netlist theNetlist, AttributeSet attrs) {
-    final var nrOfBits = attrs.getValue(Mem.DATA_ATTR).getWidth();
-    final var be = attrs.getValue(RamAttributes.ATTR_ByteEnables);
-    final var byteEnables = be != null && be.equals(RamAttributes.BUS_WITH_BYTEENABLES);
-    final var byteEnableOffset = RamAppearance.getBEIndex(0, attrs);
-    final var nrBePorts = RamAppearance.getNrBEPorts(attrs);
-    final var nrOfaddressLines = attrs.getValue(Mem.ADDR_ATTR).getWidth();
-    final var trigger = attrs.getValue(StdAttr.TRIGGER);
-    final var async = StdAttr.TRIG_HIGH.equals(trigger) || StdAttr.TRIG_LOW.equals(trigger);
-    final var ramEntries = (1 << nrOfaddressLines);
-    final var truncated = (nrOfBits % 8) != 0;
+    final int nrOfBits = attrs.getValue(Mem.DATA_ATTR).getWidth();
+    final com.cburch.logisim.data.AttributeOption be = attrs.getValue(RamAttributes.ATTR_ByteEnables);
+    final boolean byteEnables = be != null && be.equals(RamAttributes.BUS_WITH_BYTEENABLES);
+    final int byteEnableOffset = RamAppearance.getBEIndex(0, attrs);
+    final int nrBePorts = RamAppearance.getNrBEPorts(attrs);
+    final int nrOfaddressLines = attrs.getValue(Mem.ADDR_ATTR).getWidth();
+    final com.cburch.logisim.data.AttributeOption trigger = attrs.getValue(StdAttr.TRIGGER);
+    final boolean async = StdAttr.TRIG_HIGH.equals(trigger) || StdAttr.TRIG_LOW.equals(trigger);
+    final int ramEntries = (1 << nrOfaddressLines);
+    final boolean truncated = (nrOfBits % 8) != 0;
     myWires
         .addWire("s_ramdataOut", nrOfBits)
         .addRegister("s_tickDelayLine", 3)
@@ -94,11 +94,11 @@ public class RamHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist theNetlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer()
         .pair("clock", HdlPorts.getClockName(1))
         .pair("tick", HdlPorts.getTickName(1));
-    final var be = attrs.getValue(RamAttributes.ATTR_ByteEnables);
-    final var byteEnables = be != null && be.equals(RamAttributes.BUS_WITH_BYTEENABLES);
+    final com.cburch.logisim.data.AttributeOption be = attrs.getValue(RamAttributes.ATTR_ByteEnables);
+    final boolean byteEnables = be != null && be.equals(RamAttributes.BUS_WITH_BYTEENABLES);
     if (Hdl.isVhdl()) {
       contents.empty().addVhdlKeywords().addRemarkBlock("The control signals are defined here");
       if (byteEnables) {
@@ -149,19 +149,19 @@ public class RamHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
           .empty()
           .addRemarkBlock("The actual memorie(s) is(are) defined here");
       if (byteEnables) {
-        final var truncated = (attrs.getValue(Mem.DATA_ATTR).getWidth() % 8) != 0;
+        final boolean truncated = (attrs.getValue(Mem.DATA_ATTR).getWidth() % 8) != 0;
         for (int i = 0; i < RamAppearance.getNrBEPorts(attrs); i++) {
           contents
               .add("mem{{1}} : {{process}}({{clock}}, s_we{{1}}, s_dataInReg, s_addressReg) {{is}}", i)
               .add("{{begin}}")
               .add("   {{if}} (rising_edge({{clock}})) {{then}}")
               .add("      {{if}} (s_we{{1}} = '1') {{then}}", i);
-          final var startIndex = i * 8;
-          final var endIndex =
+          final int startIndex = i * 8;
+          final int endIndex =
               (i == (RamAppearance.getNrBEPorts(attrs) - 1))
                   ? attrs.getValue(Mem.DATA_ATTR).getWidth() - 1
                   : (i + 1) * 8 - 1;
-          final var memName =
+          final java.lang.String memName =
               (i == (RamAppearance.getNrBEPorts(attrs) - 1) && truncated)
                   ? "s_truncMemContents"
                   : String.format("s_byteMem%dContents", i);
@@ -195,8 +195,8 @@ public class RamHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
               .add("{{begin}}")
               .add("   {{if}} (rising_edge({{clock}}) {{then}}")
               .add("      {{if}} (s_byteEnable{{1}} = '1') {{then}}", i);
-          final var startIndex = i * 8;
-          final var endIndex =
+          final int startIndex = i * 8;
+          final int endIndex =
               (i == (RamAppearance.getNrBEPorts(attrs) - 1))
                   ? attrs.getValue(Mem.DATA_ATTR).getWidth() - 1
                   : (i + 1) * 8 - 1;
@@ -227,13 +227,13 @@ public class RamHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
   public boolean isHdlSupportedTarget(AttributeSet attrs) {
     if (attrs == null) return false;
     Object busVal = attrs.getValue(RamAttributes.ATTR_DBUS);
-    final var separate = busVal != null && busVal.equals(RamAttributes.BUS_SEP);
+    final boolean separate = busVal != null && busVal.equals(RamAttributes.BUS_SEP);
     Object trigger = attrs.getValue(StdAttr.TRIGGER);
-    final var asynch = trigger == null || trigger.equals(StdAttr.TRIG_HIGH) || trigger.equals(StdAttr.TRIG_LOW);
-    final var byteEnabled = RamAppearance.getNrLEPorts(attrs) == 0;
-    final var syncRead = !attrs.containsAttribute(Mem.ASYNC_READ) || !attrs.getValue(Mem.ASYNC_READ);
-    final var clearPin = attrs.getValue(RamAttributes.CLEAR_PIN) == null ? false : attrs.getValue(RamAttributes.CLEAR_PIN);
-    final var readAfterWrite = !attrs.containsAttribute(Mem.READ_ATTR) || attrs.getValue(Mem.READ_ATTR).equals(Mem.READAFTERWRITE);
+    final boolean asynch = trigger == null || trigger.equals(StdAttr.TRIG_HIGH) || trigger.equals(StdAttr.TRIG_LOW);
+    final boolean byteEnabled = RamAppearance.getNrLEPorts(attrs) == 0;
+    final boolean syncRead = !attrs.containsAttribute(Mem.ASYNC_READ) || !attrs.getValue(Mem.ASYNC_READ);
+    final boolean clearPin = attrs.getValue(RamAttributes.CLEAR_PIN) == null ? false : attrs.getValue(RamAttributes.CLEAR_PIN);
+    final boolean readAfterWrite = !attrs.containsAttribute(Mem.READ_ATTR) || attrs.getValue(Mem.READ_ATTR).equals(Mem.READAFTERWRITE);
     return Hdl.isVhdl() && separate && !asynch && byteEnabled && syncRead && !clearPin && readAfterWrite;
   }
 }

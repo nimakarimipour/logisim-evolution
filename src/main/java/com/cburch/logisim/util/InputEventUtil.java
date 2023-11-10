@@ -30,9 +30,9 @@ public final class InputEventUtil {
 
   public static int fromDisplayString(String str) {
     int ret = 0;
-    final var toks = new StringTokenizer(str);
+    final java.util.StringTokenizer toks = new StringTokenizer(str);
     while (toks.hasMoreTokens()) {
-      final var s = toks.nextToken();
+      final java.lang.String s = toks.nextToken();
       if (s.equals(S.get("ctrlMod"))) ret |= InputEvent.CTRL_DOWN_MASK;
       else if (s.equals(S.get("altMod"))) ret |= InputEvent.ALT_DOWN_MASK;
       else if (s.equals(S.get("shiftMod"))) ret |= InputEvent.SHIFT_DOWN_MASK;
@@ -58,16 +58,16 @@ public final class InputEventUtil {
 
   public static int fromString(String str) {
     int ret = 0;
-    final var toks = new StringTokenizer(str);
+    final java.util.StringTokenizer toks = new StringTokenizer(str);
     while (toks.hasMoreTokens()) {
-      final var s = toks.nextToken();
+      final java.lang.String s = toks.nextToken();
       ret |= parseInput(s);
     }
     return ret;
   }
 
   public static String toDisplayString(int mods) {
-    final var arr = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> arr = new ArrayList<String>();
     if ((mods & InputEvent.CTRL_DOWN_MASK) != 0) arr.add(S.get("ctrlMod"));
     if ((mods & InputEvent.ALT_DOWN_MASK) != 0) arr.add(S.get("altMod"));
     if ((mods & InputEvent.SHIFT_DOWN_MASK) != 0) arr.add(S.get("shiftMod"));
@@ -77,9 +77,9 @@ public final class InputEventUtil {
 
     if (arr.isEmpty()) return "";
 
-    final var it = arr.iterator();
+    final java.util.Iterator<java.lang.String> it = arr.iterator();
     if (it.hasNext()) {
-      final var ret = new StringBuilder();
+      final java.lang.StringBuilder ret = new StringBuilder();
       ret.append(it.next());
       while (it.hasNext()) {
         ret.append(" ");
@@ -92,15 +92,15 @@ public final class InputEventUtil {
   }
 
   public static String toKeyDisplayString(int mods) {
-    final var arr = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> arr = new ArrayList<String>();
     if ((mods & InputEvent.META_DOWN_MASK) != 0) arr.add(S.get("metaMod"));
     if ((mods & InputEvent.CTRL_DOWN_MASK) != 0) arr.add(S.get("ctrlMod"));
     if ((mods & InputEvent.ALT_DOWN_MASK) != 0) arr.add(S.get("altMod"));
     if ((mods & InputEvent.SHIFT_DOWN_MASK) != 0) arr.add(S.get("shiftMod"));
 
-    final var it = arr.iterator();
+    final java.util.Iterator<java.lang.String> it = arr.iterator();
     if (it.hasNext()) {
-      final var ret = new StringBuilder();
+      final java.lang.StringBuilder ret = new StringBuilder();
       ret.append(it.next());
       while (it.hasNext()) {
         ret.append(" ");
@@ -113,7 +113,7 @@ public final class InputEventUtil {
   }
 
   public static String toString(int mods) {
-    final var arr = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> arr = new ArrayList<String>();
     if ((mods & InputEvent.CTRL_DOWN_MASK) != 0) arr.add(CTRL);
     if ((mods & InputEvent.ALT_DOWN_MASK) != 0) arr.add(ALT);
     if ((mods & InputEvent.SHIFT_DOWN_MASK) != 0) arr.add(SHIFT);
@@ -121,9 +121,9 @@ public final class InputEventUtil {
     if ((mods & InputEvent.BUTTON2_DOWN_MASK) != 0) arr.add(BUTTON2);
     if ((mods & InputEvent.BUTTON3_DOWN_MASK) != 0) arr.add(BUTTON3);
 
-    final var it = arr.iterator();
+    final java.util.Iterator<java.lang.String> it = arr.iterator();
     if (it.hasNext()) {
-      final var ret = new StringBuilder();
+      final java.lang.StringBuilder ret = new StringBuilder();
       ret.append(it.next());
       while (it.hasNext()) {
         ret.append(" ");

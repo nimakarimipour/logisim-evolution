@@ -51,12 +51,12 @@ class SimulateOptions extends OptionsPanel {
   public SimulateOptions(OptionsFrame window) {
     super(window);
 
-    final var simLimitPanel = new JPanel();
+    final javax.swing.JPanel simLimitPanel = new JPanel();
     simLimitPanel.add(simLimitLabel);
     simLimitPanel.add(simLimit);
     simLimit.addActionListener(myListener);
 
-    final var gateUndefinedPanel = new JPanel();
+    final javax.swing.JPanel gateUndefinedPanel = new JPanel();
     gateUndefinedPanel.add(gateUndefinedLabel);
     gateUndefinedPanel.add(gateUndefined);
     gateUndefined.addActionListener(myListener);
@@ -73,7 +73,7 @@ class SimulateOptions extends OptionsPanel {
     add(simRandomness);
 
     window.getOptions().getAttributeSet().addAttributeListener(myListener);
-    final var attrs = getOptions().getAttributeSet();
+    final com.cburch.logisim.data.AttributeSet attrs = getOptions().getAttributeSet();
     myListener.loadSimLimit(attrs.getValue(Options.ATTR_SIM_LIMIT));
     myListener.loadGateUndefined(attrs.getValue(Options.ATTR_GATE_UNDEFINED));
     myListener.loadSimRandomness(attrs.getValue(Options.ATTR_SIM_RAND));
@@ -100,28 +100,28 @@ class SimulateOptions extends OptionsPanel {
   private class MyListener implements ActionListener, AttributeListener {
     @Override
     public void actionPerformed(ActionEvent event) {
-      final var source = event.getSource();
+      final java.lang.Object source = event.getSource();
       if (source == simLimit) {
-        final var opt = (Integer) simLimit.getSelectedItem();
+        final java.lang.Integer opt = (Integer) simLimit.getSelectedItem();
         if (opt != null) {
-          final var attrs = getOptions().getAttributeSet();
+          final com.cburch.logisim.data.AttributeSet attrs = getOptions().getAttributeSet();
           getProject().doAction(OptionsActions.setAttribute(attrs, Options.ATTR_SIM_LIMIT, opt));
         }
       } else if (source == simRandomness) {
-        final var attrs = getOptions().getAttributeSet();
+        final com.cburch.logisim.data.AttributeSet attrs = getOptions().getAttributeSet();
         Object val = simRandomness.isSelected() ? Options.SIM_RAND_DFLT : Integer.valueOf(0);
         getProject().doAction(OptionsActions.setAttribute(attrs, Options.ATTR_SIM_RAND, val));
       } else if (source == gateUndefined) {
-        final var opt = (ComboOption) gateUndefined.getSelectedItem();
+        final com.cburch.logisim.gui.opts.ComboOption opt = (ComboOption) gateUndefined.getSelectedItem();
         if (opt != null) {
-          final var attrs = getOptions().getAttributeSet();
+          final com.cburch.logisim.data.AttributeSet attrs = getOptions().getAttributeSet();
           getProject()
               .doAction(
                   OptionsActions.setAttribute(attrs, Options.ATTR_GATE_UNDEFINED, opt.getValue()));
         }
       } else if (source == memUnknown) {
         AppPreferences.Memory_Startup_Unknown.set(memUnknown.isSelected());
-        final var sim = getProject().getSimulator();
+        final com.cburch.logisim.circuit.Simulator sim = getProject().getSimulator();
         if (sim != null) sim.reset();
       }
     }
@@ -129,7 +129,7 @@ class SimulateOptions extends OptionsPanel {
     @Override
     public void attributeValueChanged(AttributeEvent e) {
       final Attribute<?> attr = e.getAttribute();
-      final var val = e.getValue();
+      final java.lang.Object val = e.getValue();
       if (attr == Options.ATTR_SIM_LIMIT) {
         loadSimLimit((Integer) val);
       } else if (attr == Options.ATTR_SIM_RAND) {
@@ -145,10 +145,10 @@ class SimulateOptions extends OptionsPanel {
 
     @SuppressWarnings("rawtypes")
     private void loadSimLimit(Integer val) {
-      final var value = val;
-      final var model = simLimit.getModel();
+      final java.lang.Integer value = val;
+      final javax.swing.ComboBoxModel model = simLimit.getModel();
       for (int i = 0; i < model.getSize(); i++) {
-        final var opt = (Integer) model.getElementAt(i);
+        final java.lang.Integer opt = (Integer) model.getElementAt(i);
         if (opt == value) {
           simLimit.setSelectedItem(opt);
         }

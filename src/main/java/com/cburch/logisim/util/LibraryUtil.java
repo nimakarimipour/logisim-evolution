@@ -42,10 +42,10 @@ public final class LibraryUtil {
    */
   public static String getName(Class<?> cls) {
     try {
-      final var fields = cls.getDeclaredFields();
-      for (final var field : fields) {
+      final java.lang.reflect.Field[] fields = cls.getDeclaredFields();
+      for (final java.lang.reflect.Field field : fields) {
         if (field.getName().equals(ID_FIELD_NAME)) {
-          final var id = (String) field.get(null);
+          final java.lang.String id = (String) field.get(null);
           if (id != null) return id;
           throw new NullPointerException(
               "The " + ID_FIELD_NAME + " for " + cls + " cannot be NULL");

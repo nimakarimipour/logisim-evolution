@@ -30,9 +30,9 @@ public class MultiplexerHdlGeneratorFactory extends AbstractHdlGeneratorFactory 
 
   @Override
   public void getGenerationTimeWiresPorts(Netlist theNetlist, AttributeSet attrs) {
-    final var nrOfSelectBits = attrs.getValue(PlexersLibrary.ATTR_SELECT).getWidth();
-    final var selectInputIndex = (1 << nrOfSelectBits);
-    final var hasenable = attrs.getValue(PlexersLibrary.ATTR_ENABLE);
+    final int nrOfSelectBits = attrs.getValue(PlexersLibrary.ATTR_SELECT).getWidth();
+    final int selectInputIndex = (1 << nrOfSelectBits);
+    final java.lang.Boolean hasenable = attrs.getValue(PlexersLibrary.ATTR_ENABLE);
     for (int inp = 0; inp < selectInputIndex; inp++)
       myPorts.add(Port.INPUT, String.format("muxIn_%d", inp), NR_OF_BITS_ID, inp, StdAttr.WIDTH);
     myPorts
@@ -46,9 +46,9 @@ public class MultiplexerHdlGeneratorFactory extends AbstractHdlGeneratorFactory 
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist theNetList, AttributeSet attrs) {
-    final var contents = LineBuffer.getBuffer();
-    final var nrOfSelectBits = attrs.getValue(PlexersLibrary.ATTR_SELECT).getWidth();
-    final var nrOfBits = attrs.getValue(StdAttr.WIDTH).getWidth();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getBuffer();
+    final int nrOfSelectBits = attrs.getValue(PlexersLibrary.ATTR_SELECT).getWidth();
+    final int nrOfBits = attrs.getValue(StdAttr.WIDTH).getWidth();
     if (Hdl.isVhdl()) {
       contents.empty().addVhdlKeywords().add("makeMux : {{process}}(enable,");
       for (int i = 0; i < (1 << nrOfSelectBits); i++)

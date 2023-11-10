@@ -77,7 +77,7 @@ public class XilinxDownload implements VendorDownload {
     this.HdlType = hdlType;
     this.writeToFlash = writeToFlash;
 
-    final var part = boardInfo.fpga.getPart().toUpperCase();
+    final java.lang.String part = boardInfo.fpga.getPart().toUpperCase();
     isCpld = part.startsWith("XC2C") || part.startsWith("XA2C") || part.startsWith("XCR3") || part.startsWith("XC9500") || part.startsWith("XA9500");
     bitfileExt = isCpld ? "jed" : "bit";
   }
@@ -123,7 +123,7 @@ public class XilinxDownload implements VendorDownload {
       command.add(xilinxVendor.getBinaryPath(5));
       command.add("-batch");
       command.add(scriptPath.replace(projectPath, "../") + File.separator + DOWNLOAD_FILE);
-      final var xilinx = new ProcessBuilder(command);
+      final java.lang.ProcessBuilder xilinx = new ProcessBuilder(command);
       xilinx.directory(new File(sandboxPath));
       return xilinx;
     } else {
@@ -165,7 +165,7 @@ public class XilinxDownload implements VendorDownload {
 
   @Override
   public boolean createDownloadScripts() {
-    final var jtagPos = String.valueOf(boardInfo.fpga.getFpgaJTAGChainPosition());
+    final java.lang.String jtagPos = String.valueOf(boardInfo.fpga.getFpgaJTAGChainPosition());
     java.io.File scriptFile = FileWriter.getFilePointer(scriptPath, SCRIPT_FILE);
     java.io.File vhdlListFile = FileWriter.getFilePointer(scriptPath, VHDL_LIST_FILE);
     java.io.File ucfFile = FileWriter.getFilePointer(ucfPath, UCF_FILE);
@@ -180,7 +180,7 @@ public class XilinxDownload implements VendorDownload {
           && ucfFile.exists()
           && downloadFile.exists();
     }
-    final var contents = LineBuffer.getBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getBuffer()
             .pair("JTAGPos", jtagPos)
             .pair("fileExt", bitfileExt)
             .pair("fileBaseName", ToplevelHdlGeneratorFactory.FPGA_TOP_LEVEL_NAME)
@@ -271,7 +271,7 @@ public class XilinxDownload implements VendorDownload {
           if (map.isExternalInverted(i)) temp.append("n_");
           temp.append(map.getHdlString(i)).append("\" ");
           temp.append("LOC = \"").append(map.getPinLocation(i)).append("\" ");
-          final var info = map.getFpgaInfo(i);
+          final com.cburch.logisim.fpga.data.FpgaIoInformationContainer info = map.getFpgaInfo(i);
           if (info != null) {
             if (info.getPullBehavior() != PullBehaviors.UNKNOWN
                 && info.getPullBehavior() != PullBehaviors.FLOAT) {
@@ -296,7 +296,7 @@ public class XilinxDownload implements VendorDownload {
         }
       }
     }
-    final var LedArrayMap = DownloadBase.getLedArrayMaps(mapInfo, rootNetList, boardInfo);
+    final java.util.Map<java.lang.String,java.lang.String> LedArrayMap = DownloadBase.getLedArrayMaps(mapInfo, rootNetList, boardInfo);
     for (java.lang.String key : LedArrayMap.keySet()) {
       contents.add("NET \"" + LedArrayMap.get(key) + "\" LOC=\"" + key + "\";");
     }
@@ -309,20 +309,20 @@ public class XilinxDownload implements VendorDownload {
   }
 
   private ProcessBuilder stage0Synth() {
-    final var command = LineBuffer.getBuffer();
+    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
     command
         .add(xilinxVendor.getBinaryPath(0))
         .add("-ifn")
         .add(scriptPath.replace(projectPath, "../") + File.separator + SCRIPT_FILE)
         .add("-ofn")
         .add("logisim.log");
-    final var stage0 = new ProcessBuilder(command.get());
+    final java.lang.ProcessBuilder stage0 = new ProcessBuilder(command.get());
     stage0.directory(new File(sandboxPath));
     return stage0;
   }
 
   private ProcessBuilder stage1Constraints() {
-    final var command = LineBuffer.getBuffer();
+    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
     command
         .add(xilinxVendor.getBinaryPath(1))
         .add("-intstyle")
@@ -331,14 +331,14 @@ public class XilinxDownload implements VendorDownload {
         .add(ucfPath.replace(projectPath, "../") + File.separator + UCF_FILE)
         .add("logisim.ngc")
         .add("logisim.ngd");
-    final var stage1 = new ProcessBuilder(command.get());
+    final java.lang.ProcessBuilder stage1 = new ProcessBuilder(command.get());
     stage1.directory(new File(sandboxPath));
     return stage1;
   }
 
   private ProcessBuilder stage2Map() {
     if (isCpld) return null; /* mapping is skipped for the CPLD target*/
-    final var command = LineBuffer.getBuffer();
+    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
     command
         .add(xilinxVendor.getBinaryPath(2))
         .add("-intstyle")
@@ -346,13 +346,13 @@ public class XilinxDownload implements VendorDownload {
         .add("-o")
         .add("logisim_map")
         .add("logisim.ngd");
-    final var stage2 = new ProcessBuilder(command.get());
+    final java.lang.ProcessBuilder stage2 = new ProcessBuilder(command.get());
     stage2.directory(new File(sandboxPath));
     return stage2;
   }
 
   private ProcessBuilder stage3Par() {
-    final var command = LineBuffer.getBuffer();
+    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
     if (!isCpld) {
       command
           .add(xilinxVendor.getBinaryPath(3))
@@ -365,12 +365,12 @@ public class XilinxDownload implements VendorDownload {
           .add("logisim_par")
           .add("logisim_map.pcf");
     } else {
-      final var pinPullBehavior = switch (boardInfo.fpga.getUnusedPinsBehavior()) {
+      final java.lang.String pinPullBehavior = switch (boardInfo.fpga.getUnusedPinsBehavior()) {
         case PullBehaviors.PULL_UP -> "pullup";
         case PullBehaviors.PULL_DOWN -> "pulldown";
         default -> "float";
       };
-      final var fpga = boardInfo.fpga;
+      final com.cburch.logisim.fpga.data.FpgaClass fpga = boardInfo.fpga;
       command
           .add(xilinxVendor.getBinaryPath(6))
           .add("-p")
@@ -386,13 +386,13 @@ public class XilinxDownload implements VendorDownload {
           .add("logisim_cpldfit.log")
           .add("logisim.ngd");
     }
-    final var stage3 = new ProcessBuilder(command.get());
+    final java.lang.ProcessBuilder stage3 = new ProcessBuilder(command.get());
     stage3.directory(new File(sandboxPath));
     return stage3;
   }
 
   private ProcessBuilder stage4Bit() {
-    final var command = LineBuffer.getBuffer();
+    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
     if (!isCpld) {
       command.add(xilinxVendor.getBinaryPath(4)).add("-w");
       if (boardInfo.fpga.getUnusedPinsBehavior() == PullBehaviors.PULL_UP) command.add("-g").add("UnusedPin:PULLUP");
@@ -401,18 +401,18 @@ public class XilinxDownload implements VendorDownload {
     } else {
       command.add(xilinxVendor.getBinaryPath(7)).add("-i").add("logisim.vm6");
     }
-    final var stage4 = new ProcessBuilder(command.get());
+    final java.lang.ProcessBuilder stage4 = new ProcessBuilder(command.get());
     stage4.directory(new File(sandboxPath));
     return stage4;
   }
 
   private static String getFpgaDeviceString(BoardInformation currentBoard) {
-    final var fpga = currentBoard.fpga;
+    final com.cburch.logisim.fpga.data.FpgaClass fpga = currentBoard.fpga;
     return String.format("%s-%s-%s", fpga.getPart(), fpga.getPackage(), fpga.getSpeedGrade());
   }
 
   private static String getXilinxClockPin(BoardInformation currentBoard) {
-    final var result = new StringBuilder();
+    final java.lang.StringBuilder result = new StringBuilder();
     result.append("LOC = \"").append(currentBoard.fpga.getClockPinLocation()).append("\"");
     if (currentBoard.fpga.getClockPull() == PullBehaviors.PULL_UP) {
       result.append(" | PULLUP");

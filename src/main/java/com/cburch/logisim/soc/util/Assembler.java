@@ -61,9 +61,9 @@ public class Assembler extends AbstractParser implements LocaleListener {
   }
 
   public List<Integer> getErrorPositions() {
-    final var positions = new ArrayList<Integer>();
-    for (final var info : errorMarkers.keySet()) {
-      final var pos = info.getMarkedOffset();
+    final java.util.ArrayList<java.lang.Integer> positions = new ArrayList<Integer>();
+    for (final org.fife.ui.rtextarea.GutterIconInfo info : errorMarkers.keySet()) {
+      final int pos = info.getMarkedOffset();
       if (positions.isEmpty()) {
         positions.add(pos);
       } else {
@@ -82,18 +82,18 @@ public class Assembler extends AbstractParser implements LocaleListener {
 
   public boolean assemble() {
     reset();
-    final var assemblerTokens = new LinkedList<AssemblerToken>();
+    final java.util.LinkedList<com.cburch.logisim.soc.util.AssemblerToken> assemblerTokens = new LinkedList<AssemblerToken>();
     assemblerInfo = new AssemblerInfo(assembler);
     /* first pass: we build a list of AssemblerTokens from the token
      * list provided by the AssemblerHighlighter */
-    final var text = pane.getTextArea();
+    final org.fife.ui.rtextarea.RTextArea text = pane.getTextArea();
     for (int i = 0; i < text.getLineCount(); i++) {
       assemblerTokens.addAll(checkAndBuildTokens(i));
     }
     /* second pass, we are going to collect all labels */
-    final var labels = new HashMap<String, Long>();
-    final var labelToken = new HashMap<String, AssemblerToken>();
-    for (final var asm : assemblerTokens) {
+    final java.util.HashMap<java.lang.String,java.lang.Long> labels = new HashMap<String, Long>();
+    final java.util.HashMap<java.lang.String,com.cburch.logisim.soc.util.AssemblerToken> labelToken = new HashMap<String, AssemblerToken>();
+    for (final com.cburch.logisim.soc.util.AssemblerToken asm : assemblerTokens) {
       if (asm.getType() == AssemblerToken.LABEL)
         if (labels.containsKey(asm.getValue())) {
           addError(
@@ -111,7 +111,7 @@ public class Assembler extends AbstractParser implements LocaleListener {
     }
     labelToken.clear();
     /* Third pass, we are going to mark all known labels and references to the pc*/
-    for (final var asm : assemblerTokens) {
+    for (final com.cburch.logisim.soc.util.AssemblerToken asm : assemblerTokens) {
       if (asm.getType() == AssemblerToken.MAYBE_LABEL) {
         if (labels.containsKey(asm.getValue()))
           asm.setType(AssemblerToken.PARAMETER_LABEL);
@@ -124,16 +124,16 @@ public class Assembler extends AbstractParser implements LocaleListener {
      * 5+10*2 => (5+10)*2 = 30
      * 10*2+5 => (10*2)+5 = 25
      */
-    final var toBeRemoved = new ArrayList<AssemblerToken>();
+    final java.util.ArrayList<com.cburch.logisim.soc.util.AssemblerToken> toBeRemoved = new ArrayList<AssemblerToken>();
     for (int i = 0; i < assemblerTokens.size(); i++) {
-      final var asm = assemblerTokens.get(i);
+      final com.cburch.logisim.soc.util.AssemblerToken asm = assemblerTokens.get(i);
       if (AssemblerToken.MATH_OPERATORS.contains(asm.getType())) {
         if ((i + 1) >= assemblerTokens.size()) {
           addError(asm.getoffset(), S.getter("AssemblerReguiresNumberAfterMath"), errorMarkers.keySet());
           continue;
         }
         com.cburch.logisim.soc.util.AssemblerToken before = (i == 0) ? null : assemblerTokens.get(i - 1);
-        final var after = assemblerTokens.get(i + 1);
+        final com.cburch.logisim.soc.util.AssemblerToken after = assemblerTokens.get(i + 1);
         if (before == null
             || (!before.isNumber() && before.getType() != AssemblerToken.PROGRAM_COUNTER))
           before = null;
@@ -141,7 +141,7 @@ public class Assembler extends AbstractParser implements LocaleListener {
           addError(asm.getoffset(), S.getter("AssemblerReguiresNumberAfterMath"), errorMarkers.keySet());
           continue;
         }
-        final var beforeValue = before == null ? 0 : before.getNumberValue();
+        final int beforeValue = before == null ? 0 : before.getNumberValue();
         if (after.getType() == AssemblerToken.PROGRAM_COUNTER
             || (before != null && before.getType() == AssemblerToken.PROGRAM_COUNTER)) {
           i++;
@@ -218,8 +218,8 @@ public class Assembler extends AbstractParser implements LocaleListener {
           }
         } while (next.getType() == AssemblerToken.STRING && (i + 1) < assemblerTokens.size());
       } else if (asm.getType() == AssemblerToken.BRACKET_OPEN && (i + 2) < assemblerTokens.size()) {
-        final var second = assemblerTokens.get(i + 1);
-        final var third = assemblerTokens.get(i + 2);
+        final com.cburch.logisim.soc.util.AssemblerToken second = assemblerTokens.get(i + 1);
+        final com.cburch.logisim.soc.util.AssemblerToken third = assemblerTokens.get(i + 2);
         if (second.getType() == AssemblerToken.REGISTER && third.getType() == AssemblerToken.BRACKET_CLOSE) {
           second.setType(AssemblerToken.BRACKETED_REGISTER);
           toBeRemoved.add(asm);
@@ -229,7 +229,7 @@ public class Assembler extends AbstractParser implements LocaleListener {
       }
     }
     assemblerTokens.removeAll(toBeRemoved);
-    for (final var error : assemblerInfo.getErrors().keySet()) {
+    for (final com.cburch.logisim.soc.util.AssemblerToken error : assemblerInfo.getErrors().keySet()) {
       addError(error.getoffset(), assemblerInfo.getErrors().get(error), errorMarkers.keySet());
     }
     /* fifth pass: perform cpu specific operations */
@@ -237,17 +237,17 @@ public class Assembler extends AbstractParser implements LocaleListener {
     /* sixth pass: We are going to detect and remove the macros */
     toBeRemoved.clear();
     boolean errors = false;
-    final var iter = assemblerTokens.iterator();
-    final var macros = new HashMap<String, AssemblerMacro>();
+    final java.util.Iterator<com.cburch.logisim.soc.util.AssemblerToken> iter = assemblerTokens.iterator();
+    final java.util.HashMap<java.lang.String,com.cburch.logisim.soc.util.AssemblerMacro> macros = new HashMap<String, AssemblerMacro>();
     while (iter.hasNext()) {
-      final var asm = iter.next();
+      final com.cburch.logisim.soc.util.AssemblerToken asm = iter.next();
       if (asm.getType() == AssemblerToken.ASM_INSTRUCTION && asm.getValue().equals(".macro")) {
         toBeRemoved.add(asm);
         if (!iter.hasNext()) {
           addError(asm.getoffset(), S.getter("AssemblerExpectedMacroName"), errorMarkers.keySet());
           break;
         }
-        final var name = iter.next();
+        final com.cburch.logisim.soc.util.AssemblerToken name = iter.next();
         toBeRemoved.add(name);
         if (name.getType() != AssemblerToken.MAYBE_LABEL) {
           addError(asm.getoffset(), S.getter("AssemblerExpectedMacroName"), errorMarkers.keySet());
@@ -260,7 +260,7 @@ public class Assembler extends AbstractParser implements LocaleListener {
               errorMarkers.keySet());
           break;
         }
-        final var nrParameters = iter.next();
+        final com.cburch.logisim.soc.util.AssemblerToken nrParameters = iter.next();
         toBeRemoved.add(nrParameters);
         if (!nrParameters.isNumber()) {
           addError(
@@ -269,10 +269,10 @@ public class Assembler extends AbstractParser implements LocaleListener {
               errorMarkers.keySet());
           break;
         }
-        final var macro = new AssemblerMacro(name.getValue(), nrParameters.getNumberValue());
+        final com.cburch.logisim.soc.util.AssemblerMacro macro = new AssemblerMacro(name.getValue(), nrParameters.getNumberValue());
         boolean endOfMacro = false;
         while (!endOfMacro && iter.hasNext()) {
-          final var macroAsm = iter.next();
+          final com.cburch.logisim.soc.util.AssemblerToken macroAsm = iter.next();
           if (macroAsm.getType() == AssemblerToken.ASM_INSTRUCTION) {
             if (macroAsm.getValue().equals(".endm"))
               endOfMacro = true;
@@ -294,11 +294,11 @@ public class Assembler extends AbstractParser implements LocaleListener {
           addError(asm.getoffset(), S.getter("AssemblerEndOfMacroNotFound"), errorMarkers.keySet());
           errors = true;
         } else {
-          final var markers = new HashMap<AssemblerToken, StringGetter>();
+          final java.util.HashMap<com.cburch.logisim.soc.util.AssemblerToken,com.cburch.logisim.util.StringGetter> markers = new HashMap<AssemblerToken, StringGetter>();
           if (macro.checkParameters(markers))
             macros.put(macro.getName(), macro);
           else {
-            for (final var marker : markers.keySet()) {
+            for (final com.cburch.logisim.soc.util.AssemblerToken marker : markers.keySet()) {
               addError(marker.getoffset(), markers.get(marker), errorMarkers.keySet());
             }
             errors = true;
@@ -309,29 +309,29 @@ public class Assembler extends AbstractParser implements LocaleListener {
     if (errors) return errorMarkers.isEmpty();
     assemblerTokens.removeAll(toBeRemoved);
     /* go trough the remaining tokens and the macros and mark the macros */
-    for (final var asm : assemblerTokens)
+    for (final com.cburch.logisim.soc.util.AssemblerToken asm : assemblerTokens)
       if (asm.getType() == AssemblerToken.MAYBE_LABEL)
         if (macros.containsKey(asm.getValue())) {
           asm.setType(AssemblerToken.MACRO);
         }
-    final var markers = new HashMap<AssemblerToken, StringGetter>();
-    for (final var name : macros.keySet()) {
+    final java.util.HashMap<com.cburch.logisim.soc.util.AssemblerToken,com.cburch.logisim.util.StringGetter> markers = new HashMap<AssemblerToken, StringGetter>();
+    for (final java.lang.String name : macros.keySet()) {
       macros.get(name).checkForMacros(markers, macros.keySet());
     }
     // finally replace the local labels; this has to be done at this point as before the macros
     // inside a macro were not yet marked as being macro
-    for (final var name : macros.keySet()) {
+    for (final java.lang.String name : macros.keySet()) {
       macros.get(name).replaceLabels(labels, markers, assembler, macros);
     }
     if (!markers.isEmpty()) {
-      for (final var marker : markers.keySet()) {
+      for (final com.cburch.logisim.soc.util.AssemblerToken marker : markers.keySet()) {
         addError(marker.getoffset(), markers.get(marker), errorMarkers.keySet());
       }
       return errorMarkers.isEmpty();
     }
     /* here the real work starts */
     assemblerInfo.assemble(assemblerTokens, labels, macros);
-    for (final var error : assemblerInfo.getErrors().keySet()) {
+    for (final com.cburch.logisim.soc.util.AssemblerToken error : assemblerInfo.getErrors().keySet()) {
       addError(error.getoffset(), assemblerInfo.getErrors().get(error), errorMarkers.keySet());
     }
     if (labels.containsKey("_start")) entryPoint = labels.get("_start");
@@ -340,7 +340,7 @@ public class Assembler extends AbstractParser implements LocaleListener {
 
   public void addError(int location, StringGetter sg, Set<GutterIconInfo> known) {
     /* first search for the known icons */
-    for (final var knownError : known) {
+    for (final org.fife.ui.rtextarea.GutterIconInfo knownError : known) {
       if (knownError.getMarkedOffset() == location) {
         return;
       }
@@ -358,10 +358,10 @@ public class Assembler extends AbstractParser implements LocaleListener {
   }
 
   public LinkedList<AssemblerToken> checkAndBuildTokens(int lineNumber) {
-    final var lineTokens = new LinkedList<AssemblerToken>();
+    final java.util.LinkedList<com.cburch.logisim.soc.util.AssemblerToken> lineTokens = new LinkedList<AssemblerToken>();
     int startOffset;
     int endOffset;
-    final var text = (RSyntaxTextArea) pane.getTextArea();
+    final org.fife.ui.rsyntaxtextarea.RSyntaxTextArea text = (RSyntaxTextArea) pane.getTextArea();
     try {
       startOffset = text.getLineStartOffset(lineNumber);
     } catch (BadLocationException e1) {
@@ -374,8 +374,8 @@ public class Assembler extends AbstractParser implements LocaleListener {
     }
     org.fife.ui.rsyntaxtextarea.Token first = text.getTokenListForLine(lineNumber);
     /* search for all error markers on this line */
-    final var lineErrorMarkers = new HashSet<GutterIconInfo>();
-    for (final var error : errorMarkers.keySet()) {
+    final java.util.HashSet<org.fife.ui.rtextarea.GutterIconInfo> lineErrorMarkers = new HashSet<GutterIconInfo>();
+    for (final org.fife.ui.rtextarea.GutterIconInfo error : errorMarkers.keySet()) {
       if (error.getMarkedOffset() >= startOffset && error.getMarkedOffset() <= endOffset)
         lineErrorMarkers.add(error);
     }
@@ -384,9 +384,9 @@ public class Assembler extends AbstractParser implements LocaleListener {
       if (first.getType() != Token.NULL
           && first.getType() != Token.COMMENT_EOL
           && first.getType() != Token.WHITESPACE) {
-        final var name = first.getLexeme();
-        final var type = first.getType();
-        final var offset = first.getOffset();
+        final java.lang.String name = first.getLexeme();
+        final int type = first.getType();
+        final int offset = first.getOffset();
         if (type == Token.LITERAL_CHAR) {
           switch (name) {
             case ",":
@@ -476,14 +476,14 @@ public class Assembler extends AbstractParser implements LocaleListener {
       first = first.getNextToken();
     }
     /* second pass, detect the labels */
-    final var toBeRemoved = new ArrayList<AssemblerToken>();
+    final java.util.ArrayList<com.cburch.logisim.soc.util.AssemblerToken> toBeRemoved = new ArrayList<AssemblerToken>();
     for (int i = 0; i < lineTokens.size(); i++) {
-      final var asm = lineTokens.get(i);
+      final com.cburch.logisim.soc.util.AssemblerToken asm = lineTokens.get(i);
       if (asm.getType() == AssemblerToken.LABEL_IDENTIFIER) {
         if (i == 0)
           addError(asm.getoffset(), S.getter("AssemblerMissingLabelBefore"), lineErrorMarkers);
         else {
-          final var before = lineTokens.get(i - 1);
+          final com.cburch.logisim.soc.util.AssemblerToken before = lineTokens.get(i - 1);
           if (before.getType() == AssemblerToken.MAYBE_LABEL) {
             before.setType(AssemblerToken.LABEL);
           } else
@@ -495,9 +495,9 @@ public class Assembler extends AbstractParser implements LocaleListener {
         toBeRemoved.add(asm);
       }
     }
-    for (final var del : toBeRemoved) lineTokens.remove(del);
+    for (final com.cburch.logisim.soc.util.AssemblerToken del : toBeRemoved) lineTokens.remove(del);
     /* all errors left are old ones, so clean up */
-    for (final var olderr : lineErrorMarkers) {
+    for (final org.fife.ui.rtextarea.GutterIconInfo olderr : lineErrorMarkers) {
       pane.getGutter().removeTrackingIcon(olderr);
       errorMarkers.remove(olderr);
     }
@@ -533,9 +533,9 @@ public class Assembler extends AbstractParser implements LocaleListener {
 
   @Override
   public void localeChanged() {
-    final var oldSet = new HashMap<>(errorMarkers);
+    final java.util.HashMap<org.fife.ui.rtextarea.GutterIconInfo,com.cburch.logisim.util.StringGetter> oldSet = new HashMap<>(errorMarkers);
     errorMarkers.clear();
-    for (final var error : oldSet.keySet()) {
+    for (final org.fife.ui.rtextarea.GutterIconInfo error : oldSet.keySet()) {
       pane.getGutter().removeTrackingIcon(error);
       GutterIconInfo newError;
       try {
@@ -554,16 +554,16 @@ public class Assembler extends AbstractParser implements LocaleListener {
 
   @Override
   public ParseResult parse(RSyntaxDocument doc, String style) {
-    final var result = new DefaultParseResult(this);
-    final var offsets = new HashMap<Integer, String>();
-    for (final var gutterIconInfo : errorMarkers.keySet()) {
+    final org.fife.ui.rsyntaxtextarea.parser.DefaultParseResult result = new DefaultParseResult(this);
+    final java.util.HashMap<java.lang.Integer,java.lang.String> offsets = new HashMap<Integer, String>();
+    for (final org.fife.ui.rtextarea.GutterIconInfo gutterIconInfo : errorMarkers.keySet()) {
       offsets.put(gutterIconInfo.getMarkedOffset(), errorMarkers.get(gutterIconInfo).toString());
     }
-    for (final var token : doc) {
+    for (final org.fife.ui.rsyntaxtextarea.Token token : doc) {
       int offs = token.getOffset();
       if (offsets.containsKey(offs)) {
-        final var len = token.length();
-        final var line = doc.getDefaultRootElement().getElementIndex(offs);
+        final int len = token.length();
+        final int line = doc.getDefaultRootElement().getElementIndex(offs);
         result.addNotice(new DefaultParserNotice(this, offsets.get(offs), line, offs, len));
       }
     }

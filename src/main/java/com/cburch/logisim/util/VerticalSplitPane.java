@@ -32,7 +32,7 @@ public class VerticalSplitPane extends JPanel {
 
     @Override
     void setDragValue(int value) {
-      final var in = VerticalSplitPane.this.getInsets();
+      final java.awt.Insets in = VerticalSplitPane.this.getInsets();
       setFraction((double) value / (VerticalSplitPane.this.getWidth() - in.left - in.right));
       revalidate();
     }
@@ -47,9 +47,9 @@ public class VerticalSplitPane extends JPanel {
 
     @Override
     public void layoutContainer(Container parent) {
-      final var in = parent.getInsets();
-      final var maxWidth = parent.getWidth() - (in.left + in.right);
-      final var maxHeight = parent.getHeight() - (in.top + in.bottom);
+      final java.awt.Insets in = parent.getInsets();
+      final int maxWidth = parent.getWidth() - (in.left + in.right);
+      final int maxHeight = parent.getHeight() - (in.top + in.bottom);
       int split;
       if (fraction <= 0.0) {
         split = 0;
@@ -74,9 +74,9 @@ public class VerticalSplitPane extends JPanel {
     public Dimension minimumLayoutSize(Container parent) {
       if (fraction <= 0.0) return compRight.getMinimumSize();
       if (fraction >= 1.0) return compLeft.getMinimumSize();
-      final var in = parent.getInsets();
-      final var d0 = compLeft.getMinimumSize();
-      final var d1 = compRight.getMinimumSize();
+      final java.awt.Insets in = parent.getInsets();
+      final java.awt.Dimension d0 = compLeft.getMinimumSize();
+      final java.awt.Dimension d1 = compRight.getMinimumSize();
       return new Dimension(
           in.left + d0.width + d1.width + in.right,
           in.top + Math.max(d0.height, d1.height) + in.bottom);
@@ -86,9 +86,9 @@ public class VerticalSplitPane extends JPanel {
     public Dimension preferredLayoutSize(Container parent) {
       if (fraction <= 0.0) return compRight.getPreferredSize();
       if (fraction >= 1.0) return compLeft.getPreferredSize();
-      final var in = parent.getInsets();
-      final var d0 = compLeft.getPreferredSize();
-      final var d1 = compRight.getPreferredSize();
+      final java.awt.Insets in = parent.getInsets();
+      final java.awt.Dimension d0 = compLeft.getPreferredSize();
+      final java.awt.Dimension d1 = compRight.getPreferredSize();
       return new Dimension(
           in.left + d0.width + d1.width + in.right,
           in.top + Math.max(d0.height, d1.height) + in.bottom);

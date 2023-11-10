@@ -29,11 +29,11 @@ public class Ttl74163 extends Ttl74161 {
   public void propagateTtl(InstanceState state) {
     com.cburch.logisim.std.ttl.TtlRegisterData data = getStateData(state);
 
-    final var triggered = data.updateClock(state.getPortValue(PORT_INDEX_CLK), StdAttr.TRIG_RISING);
+    final boolean triggered = data.updateClock(state.getPortValue(PORT_INDEX_CLK), StdAttr.TRIG_RISING);
     long counter = data.getValue().toLongValue();
     if (triggered) {
-      final var nClear = state.getPortValue(PORT_INDEX_nCLR).toLongValue();
-      final var nLoad = state.getPortValue(PORT_INDEX_nLOAD).toLongValue();
+      final long nClear = state.getPortValue(PORT_INDEX_nCLR).toLongValue();
+      final long nLoad = state.getPortValue(PORT_INDEX_nLOAD).toLongValue();
       if (nClear == 0) {
         counter = 0;
       } else if (nLoad == 0) {

@@ -49,8 +49,8 @@ public class Ram extends Mem {
         label = null;
       }
       if (option instanceof Long) {
-        final var disp = S.get("ramComponent");
-        final var loc = state.getInstance().getLocation();
+        final java.lang.String disp = S.get("ramComponent");
+        final com.cburch.logisim.data.Location loc = state.getInstance().getLocation();
         return (label == null) ? disp + loc + "[" + option + "]" : label + "[" + option + "]";
       } else {
         return label;
@@ -84,7 +84,7 @@ public class Ram extends Mem {
     @Override
     public Value getLogValue(InstanceState state, Object option) {
       if (option instanceof Long addr) {
-        final var memState = (MemState) state.getData();
+        final com.cburch.logisim.std.memory.MemState memState = (MemState) state.getData();
         return Value.createKnown(BitWidth.create(memState.getDataBits()), memState.getContents().get(addr));
       } else {
         return Value.NIL;
@@ -119,14 +119,14 @@ public class Ram extends Mem {
 
   @Override
   public String getHDLName(AttributeSet attrs) {
-    final var label = CorrectLabel.getCorrectLabel(attrs.getValue(StdAttr.LABEL));
+    final java.lang.String label = CorrectLabel.getCorrectLabel(attrs.getValue(StdAttr.LABEL));
     return (label.length() == 0)
             ? "RAM"
             : "RAMCONTENTS_" + label;
   }
 
   private MemContents getNewContents(AttributeSet attrs) {
-    final var contents =
+    final com.cburch.logisim.std.memory.MemContents contents =
         MemContents.create(
             attrs.getValue(Mem.ADDR_ATTR).getWidth(), attrs.getValue(Mem.DATA_ATTR).getWidth(), true);
     contents.condFillRandom();
@@ -145,7 +145,7 @@ public class Ram extends Mem {
   }
 
   public static void closeHexFrame(RamState state) {
-    final var contents = state.getContents();
+    final com.cburch.logisim.std.memory.MemContents contents = state.getContents();
     HexFrame ret;
     synchronized (windowRegistry) {
       ret = windowRegistry.remove(contents);
@@ -156,14 +156,14 @@ public class Ram extends Mem {
 
   @Override
   public HexFrame getHexFrame(Project proj, Instance instance, CircuitState circState) {
-    final var ret = (RamState) instance.getData(circState);
+    final com.cburch.logisim.std.memory.RamState ret = (RamState) instance.getData(circState);
     return getHexFrame((ret == null) ? getNewContents(instance.getAttributeSet()) : ret.getContents(), proj, instance);
   }
 
   public boolean reset(CircuitState state, Instance instance) {
-    final var ret = (RamState) instance.getData(state);
+    final com.cburch.logisim.std.memory.RamState ret = (RamState) instance.getData(state);
     if (ret == null) return true;
-    final var contents = ret.getContents();
+    final com.cburch.logisim.std.memory.MemContents contents = ret.getContents();
     if (instance.getAttributeValue(RamAttributes.ATTR_TYPE).equals(RamAttributes.VOLATILE)) {
       contents.condClear();
     }
@@ -188,7 +188,7 @@ public class Ram extends Mem {
   MemState getState(InstanceState state) {
     com.cburch.logisim.std.memory.RamState ret = (RamState) state.getData();
     if (ret == null) {
-      final var instance = state.getInstance();
+      final com.cburch.logisim.instance.Instance instance = state.getInstance();
       ret = new RamState(instance, getNewContents(instance.getAttributeSet()), new MemListener(instance));
       state.setData(ret);
     } else {
@@ -225,18 +225,18 @@ public class Ram extends Mem {
 
   @Override
   public void propagate(InstanceState state) {
-    final var attrs = state.getAttributeSet();
-    final var myState = (RamState) getState(state);
+    final com.cburch.logisim.data.AttributeSet attrs = state.getAttributeSet();
+    final com.cburch.logisim.std.memory.RamState myState = (RamState) getState(state);
 
     // first we check the clear pin
     if (attrs.getValue(RamAttributes.CLEAR_PIN)) {
-      final var clearValue = state.getPortValue(RamAppearance.getClrIndex(0, attrs));
+      final com.cburch.logisim.data.Value clearValue = state.getPortValue(RamAppearance.getClrIndex(0, attrs));
       if (clearValue.equals(Value.TRUE)) {
         myState.getContents().clear();
-        final var dataBits = state.getAttributeValue(DATA_ATTR);
+        final com.cburch.logisim.data.BitWidth dataBits = state.getAttributeValue(DATA_ATTR);
 
         for (int i = 0; i < RamAppearance.getNrDataOutPorts(attrs); i++) {
-          final var portVal = isSeparate(attrs)
+          final com.cburch.logisim.data.Value portVal = isSeparate(attrs)
                   ? Value.createKnown(dataBits, 0)
                   : Value.createUnknown(dataBits);
           state.setPort(RamAppearance.getDataOutIndex(i, attrs), portVal, DELAY);
@@ -247,9 +247,9 @@ public class Ram extends Mem {
     }
 
     // next we get the address and the mem value currently stored
-    final var addrValue = state.getPortValue(RamAppearance.getAddrIndex(0, attrs));
+    final com.cburch.logisim.data.Value addrValue = state.getPortValue(RamAppearance.getAddrIndex(0, attrs));
     long addr = addrValue.toLongValue();
-    final var goodAddr = addrValue.isFullyDefined() && addr >= 0;
+    final boolean goodAddr = addrValue.isFullyDefined() && addr >= 0;
     if (goodAddr && addr != myState.getCurrent()) {
       myState.setCurrent(addr);
       myState.scrollToShow(addr);
@@ -264,22 +264,22 @@ public class Ram extends Mem {
   }
 
   private void propagateLineEnables(InstanceState state, long addr, boolean goodAddr, boolean errorValue) {
-    final var attrs = state.getAttributeSet();
-    final var myState = (RamState) getState(state);
-    final var separate = isSeparate(attrs);
+    final com.cburch.logisim.data.AttributeSet attrs = state.getAttributeSet();
+    final com.cburch.logisim.std.memory.RamState myState = (RamState) getState(state);
+    final boolean separate = isSeparate(attrs);
 
-    final var dataLines = Math.max(1, RamAppearance.getNrLEPorts(attrs));
-    final var misaligned = addr % dataLines != 0;
-    final var misalignError = misaligned && !state.getAttributeValue(ALLOW_MISALIGNED);
+    final int dataLines = Math.max(1, RamAppearance.getNrLEPorts(attrs));
+    final boolean misaligned = addr % dataLines != 0;
+    final boolean misalignError = misaligned && !state.getAttributeValue(ALLOW_MISALIGNED);
 
     // perform writes
     Object trigger = state.getAttributeValue(StdAttr.TRIGGER);
-    final var triggered = myState.setClock(state.getPortValue(RamAppearance.getClkIndex(0, attrs)), trigger);
-    final var writeEnabled = triggered && (state.getPortValue(RamAppearance.getWEIndex(0, attrs)) == Value.TRUE);
+    final boolean triggered = myState.setClock(state.getPortValue(RamAppearance.getClkIndex(0, attrs)), trigger);
+    final boolean writeEnabled = triggered && (state.getPortValue(RamAppearance.getWEIndex(0, attrs)) == Value.TRUE);
     if (writeEnabled && goodAddr && !misalignError) {
       for (int i = 0; i < dataLines; i++) {
         if (dataLines > 1) {
-          final var le = state.getPortValue(RamAppearance.getLEIndex(i, attrs));
+          final com.cburch.logisim.data.Value le = state.getPortValue(RamAppearance.getLEIndex(i, attrs));
           if (le != null && le.equals(Value.FALSE))
             continue;
         }
@@ -289,8 +289,8 @@ public class Ram extends Mem {
     }
 
     // perform reads
-    final var width = state.getAttributeValue(DATA_ATTR);
-    final var outputEnabled = separate || !state.getPortValue(RamAppearance.getOEIndex(0, attrs)).equals(Value.FALSE);
+    final com.cburch.logisim.data.BitWidth width = state.getAttributeValue(DATA_ATTR);
+    final boolean outputEnabled = separate || !state.getPortValue(RamAppearance.getOEIndex(0, attrs)).equals(Value.FALSE);
     if (outputEnabled && goodAddr && !misalignError) {
       for (int i = 0; i < dataLines; i++) {
         long val = myState.getContents().get(addr + i);
@@ -306,22 +306,22 @@ public class Ram extends Mem {
   }
 
   private void propagateByteEnables(InstanceState state, long addr, boolean goodAddr, boolean errorValue) {
-    final var attrs = state.getAttributeSet();
-    final var myState = (RamState) getState(state);
-    final var separate = isSeparate(attrs);
+    final com.cburch.logisim.data.AttributeSet attrs = state.getAttributeSet();
+    final com.cburch.logisim.std.memory.RamState myState = (RamState) getState(state);
+    final boolean separate = isSeparate(attrs);
     long oldMemValue = myState.getContents().get(myState.getCurrent());
     long newMemValue = oldMemValue;
     // perform writes
     Object trigger = state.getAttributeValue(StdAttr.TRIGGER);
-    final var weValue = state.getPortValue(RamAppearance.getWEIndex(0, attrs));
-    final var async = trigger.equals(StdAttr.TRIG_HIGH) || trigger.equals(StdAttr.TRIG_LOW);
-    final var edge =
+    final com.cburch.logisim.data.Value weValue = state.getPortValue(RamAppearance.getWEIndex(0, attrs));
+    final boolean async = trigger.equals(StdAttr.TRIG_HIGH) || trigger.equals(StdAttr.TRIG_LOW);
+    final boolean edge =
         !async && myState
             .setClock(state.getPortValue(RamAppearance.getClkIndex(0, attrs)), trigger);
-    final var weAsync =
+    final boolean weAsync =
         (trigger.equals(StdAttr.TRIG_HIGH) && weValue.equals(Value.TRUE))
             || (trigger.equals(StdAttr.TRIG_LOW) && weValue.equals(Value.FALSE));
-    final var weTriggered = (async && weAsync) || (edge && weValue.equals(Value.TRUE));
+    final boolean weTriggered = (async && weAsync) || (edge && weValue.equals(Value.TRUE));
     if (goodAddr && weTriggered) {
       long dataInValue = state.getPortValue(RamAppearance.getDataInIndex(0, attrs)).toLongValue();
       if (RamAppearance.getNrBEPorts(attrs) == 0) {
@@ -340,8 +340,8 @@ public class Ram extends Mem {
     }
 
     // perform reads
-    final var dataBits = state.getAttributeValue(DATA_ATTR);
-    final var outputNotEnabled = state.getPortValue(RamAppearance.getOEIndex(0, attrs)).equals(Value.FALSE);
+    final com.cburch.logisim.data.BitWidth dataBits = state.getAttributeValue(DATA_ATTR);
+    final boolean outputNotEnabled = state.getPortValue(RamAppearance.getOEIndex(0, attrs)).equals(Value.FALSE);
     if (!separate && outputNotEnabled) {
       /* put the bus in tri-state in case of a combined bus and no output enable */
       state.setPort(RamAppearance.getDataOutIndex(0, attrs), Value.createUnknown(dataBits), DELAY);
@@ -356,7 +356,7 @@ public class Ram extends Mem {
       return;
     }
 
-    final var asyncRead = async || attrs.getValue(Mem.ASYNC_READ);
+    final boolean asyncRead = async || attrs.getValue(Mem.ASYNC_READ);
 
     if (asyncRead) {
       state.setPort(RamAppearance.getDataOutIndex(0, attrs), Value.createKnown(dataBits, newMemValue), DELAY);

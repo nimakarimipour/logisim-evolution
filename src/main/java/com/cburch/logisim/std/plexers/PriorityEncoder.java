@@ -60,11 +60,11 @@ public class PriorityEncoder extends InstanceFactory {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    final var dir = attrs.getValue(StdAttr.FACING);
-    final var select = attrs.getValue(PlexersLibrary.ATTR_SELECT);
-    final var inputs = 1 << select.getWidth();
-    final var offs = -5 * inputs;
-    final var len = 10 * inputs + 10;
+    final com.cburch.logisim.data.Direction dir = attrs.getValue(StdAttr.FACING);
+    final com.cburch.logisim.data.BitWidth select = attrs.getValue(PlexersLibrary.ATTR_SELECT);
+    final int inputs = 1 << select.getWidth();
+    final int offs = -5 * inputs;
+    final int len = 10 * inputs + 10;
     if (dir == Direction.NORTH) {
       return Bounds.create(offs, 0, len, 40);
     } else if (dir == Direction.SOUTH) {
@@ -93,11 +93,11 @@ public class PriorityEncoder extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var g = painter.getGraphics();
-    final var facing = painter.getAttributeValue(StdAttr.FACING);
+    final java.awt.Graphics g = painter.getGraphics();
+    final com.cburch.logisim.data.Direction facing = painter.getAttributeValue(StdAttr.FACING);
 
     painter.drawBounds();
-    final var bds = painter.getBounds();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
     g.setColor(Color.GRAY);
     int x0;
     int y0;
@@ -128,9 +128,9 @@ public class PriorityEncoder extends InstanceFactory {
 
   @Override
   public void propagate(InstanceState state) {
-    final var select = state.getAttributeValue(PlexersLibrary.ATTR_SELECT);
+    final com.cburch.logisim.data.BitWidth select = state.getAttributeValue(PlexersLibrary.ATTR_SELECT);
     int n = 1 << select.getWidth();
-    final var enabled = state.getPortValue(n + EN_IN) != Value.FALSE;
+    final boolean enabled = state.getPortValue(n + EN_IN) != Value.FALSE;
 
     int out = -1;
     Value outDefault;
@@ -160,9 +160,9 @@ public class PriorityEncoder extends InstanceFactory {
 
   private void updatePorts(Instance instance) {
     Object dir = instance.getAttributeValue(StdAttr.FACING);
-    final var select = instance.getAttributeValue(PlexersLibrary.ATTR_SELECT);
+    final com.cburch.logisim.data.BitWidth select = instance.getAttributeValue(PlexersLibrary.ATTR_SELECT);
     int n = 1 << select.getWidth();
-    final var ps = new Port[n + 4];
+    final com.cburch.logisim.instance.Port[] ps = new Port[n + 4];
     if (dir == Direction.NORTH || dir == Direction.SOUTH) {
       int x = -5 * n + 10;
       int y = dir == Direction.NORTH ? 40 : -40;

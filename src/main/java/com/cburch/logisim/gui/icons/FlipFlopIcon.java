@@ -52,8 +52,8 @@ public class FlipFlopIcon extends BaseIcon {
         // do nothing. Should not really happen.
       }
     }
-    final var f = g2.getFont().deriveFont((float) ((double) AppPreferences.getIconSize() / 2.1));
-    final var l = new TextLayout(str, f, g2.getFontRenderContext());
+    final java.awt.Font f = g2.getFont().deriveFont((float) ((double) AppPreferences.getIconSize() / 2.1));
+    final java.awt.font.TextLayout l = new TextLayout(str, f, g2.getFontRenderContext());
     l.draw(g2, (float) (getIconWidth() / 2 - l.getBounds().getCenterX()), (float) (getIconHeight() / 2 - l.getBounds().getCenterY()));
   }
 
@@ -73,7 +73,7 @@ public class FlipFlopIcon extends BaseIcon {
     final int[] yp = {scale(11), scale(12), scale(13)};
     g2.drawPolygon(xp, yp, 3);
     g2.drawOval(scale(12), scale(10), scale(4), scale(4));
-    final var p = new GeneralPath();
+    final java.awt.geom.GeneralPath p = new GeneralPath();
     switch (type) {
       case D_FLIPFLOP -> {
         p.moveTo(scale(7), scale(5));

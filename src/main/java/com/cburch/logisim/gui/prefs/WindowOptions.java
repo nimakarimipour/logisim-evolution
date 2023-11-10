@@ -66,8 +66,8 @@ class WindowOptions extends OptionsPanel {
   public WindowOptions(PreferencesFrame window) {
     super(window);
 
-    final var listener = new SettingsChangeListener();
-    final var panel = new JPanel(new TableLayout(2));
+    final com.cburch.logisim.gui.prefs.WindowOptions.SettingsChangeListener listener = new SettingsChangeListener();
+    final javax.swing.JPanel panel = new JPanel(new TableLayout(2));
 
     checks =
         new PrefBoolean[] {
@@ -118,7 +118,7 @@ class WindowOptions extends OptionsPanel {
     panel.add(gridZoomedDotColorTitle);
     panel.add(gridZoomedDotColor);
 
-    final var gridColorsResetButton = new JButton();
+    final javax.swing.JButton gridColorsResetButton = new JButton();
     gridColorsResetButton.addActionListener(listener);
     gridColorsResetButton.setActionCommand(cmdResetGridColors);
     gridColorsResetButton.setText(S.get("windowGridColorsReset"));
@@ -158,7 +158,7 @@ class WindowOptions extends OptionsPanel {
     lookAndFeel.setSize(50, 20);
 
     lookAndFeelInfos = UIManager.getInstalledLookAndFeels();
-    for (final var info : lookAndFeelInfos) {
+    for (final javax.swing.UIManager.LookAndFeelInfo info : lookAndFeelInfos) {
       lookAndFeel.insertItemAt(info.getName(), index);
       if (info.getClassName().equals(AppPreferences.LookAndFeel.get())) {
         lookAndFeel.setSelectedIndex(index);
@@ -171,19 +171,19 @@ class WindowOptions extends OptionsPanel {
     panel.add(lookAndFeel);
     lookAndFeel.addActionListener(listener);
 
-    final var previewLabel = new JLabel(S.get("windowToolbarPreview"));
+    final javax.swing.JLabel previewLabel = new JLabel(S.get("windowToolbarPreview"));
     panel.add(previewLabel);
     previewContainer = new JPanel();
     panel.add(previewContainer);
     initThemePreviewer();
 
     setLayout(new TableLayout(1));
-    final var but = new JButton();
+    final javax.swing.JButton but = new JButton();
     but.addActionListener(listener);
     but.setActionCommand(cmdResetWindowLayout);
     but.setText(S.get("windowToolbarReset"));
     add(but);
-    for (final var check : checks) {
+    for (final com.cburch.logisim.gui.prefs.PrefBoolean check : checks) {
       add(check);
     }
     add(panel);
@@ -222,7 +222,7 @@ class WindowOptions extends OptionsPanel {
 
   @Override
   public void localeChanged() {
-    for (final var check : checks) {
+    for (final com.cburch.logisim.gui.prefs.PrefBoolean check : checks) {
       check.localeChanged();
     }
     toolbarPlacement.localeChanged();
@@ -236,12 +236,12 @@ class WindowOptions extends OptionsPanel {
 
     @Override
     public void stateChanged(ChangeEvent e) {
-      final var source = (JSlider) e.getSource();
+      final javax.swing.JSlider source = (JSlider) e.getSource();
       if (!source.getValueIsAdjusting()) {
         int value = source.getValue();
         AppPreferences.SCALE_FACTOR.set((double) value / 100.0);
-        final var nowOpen = Projects.getOpenProjects();
-        for (final var proj : nowOpen) {
+        final java.util.List<com.cburch.logisim.proj.Project> nowOpen = Projects.getOpenProjects();
+        for (final com.cburch.logisim.proj.Project proj : nowOpen) {
           proj.getFrame().revalidate();
           proj.getFrame().repaint();
         }
@@ -258,21 +258,21 @@ class WindowOptions extends OptionsPanel {
         }
       } else if (e.getActionCommand().equals(cmdResetWindowLayout)) {
         AppPreferences.resetWindow();
-        final var nowOpen = Projects.getOpenProjects();
-        for (final var proj : nowOpen) {
+        final java.util.List<com.cburch.logisim.proj.Project> nowOpen = Projects.getOpenProjects();
+        for (final com.cburch.logisim.proj.Project proj : nowOpen) {
           proj.getFrame().resetLayout();
           proj.getFrame().revalidate();
           proj.getFrame().repaint();
         }
       } else if (e.getActionCommand().equals(cmdResetGridColors)) {
         //        AppPreferences.resetWindow();
-        final var nowOpen = Projects.getOpenProjects();
+        final java.util.List<com.cburch.logisim.proj.Project> nowOpen = Projects.getOpenProjects();
         AppPreferences.setDefaultGridColors();
-        for (final var proj : nowOpen) {
+        for (final com.cburch.logisim.proj.Project proj : nowOpen) {
           proj.getFrame().repaint();
         }
       } else if (e.getActionCommand().equals(cmdSetAutoScaleFactor)) {
-        final var tmp = AppPreferences.getAutoScaleFactor();
+        final double tmp = AppPreferences.getAutoScaleFactor();
         AppPreferences.SCALE_FACTOR.set(tmp);
         AppPreferences.getPrefs().remove(AppPreferences.SCALE_FACTOR.getIdentifier());
         zoomValue.setValue((int) (tmp * 100));

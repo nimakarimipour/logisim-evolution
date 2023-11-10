@@ -46,7 +46,7 @@ public final class JFileChoosers {
 
     @Override
     public File getSelectedFile() {
-      final var dir = getCurrentDirectory();
+      final java.io.File dir = getCurrentDirectory();
       if (dir != null) {
         JFileChoosers.currentDirectory = dir.toString();
       }
@@ -56,7 +56,7 @@ public final class JFileChoosers {
 
   public static JFileChooser create() {
     RuntimeException first = null;
-    for (final var prop : PROP_NAMES) {
+    for (final java.lang.String prop : PROP_NAMES) {
       try {
         String dirname;
         if (prop == null) {
@@ -70,14 +70,14 @@ public final class JFileChoosers {
         if ("".equals(dirname)) {
           return new LogisimFileChooser();
         } else {
-          final var dir = new File(dirname);
+          final java.io.File dir = new File(dirname);
           if (dir.canRead()) {
             return new LogisimFileChooser(dir);
           }
         }
       } catch (RuntimeException t) {
         if (first == null) first = t;
-        final var u = t.getCause();
+        final java.lang.Throwable u = t.getCause();
         if (!(u instanceof IOException)) throw t;
       }
     }
@@ -108,7 +108,7 @@ public final class JFileChoosers {
     } else if (selected.isDirectory()) {
       return createAt(selected);
     } else {
-      final var ret = createAt(selected.getParentFile());
+      final javax.swing.JFileChooser ret = createAt(selected.getParentFile());
       ret.setSelectedFile(selected);
       return ret;
     }

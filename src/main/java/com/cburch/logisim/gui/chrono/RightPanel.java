@@ -68,17 +68,17 @@ public class RightPanel extends JPanel {
   }
 
   private void configure() {
-    final var n = model.getSignalCount();
+    final int n = model.getSignalCount();
     height = n * ChronoPanel.SIGNAL_HEIGHT;
     setBackground(Color.WHITE);
-    final var timeScale = model.getTimeScale();
-    final var numTicks = ((model.getEndTime() - model.getStartTime()) + timeScale - 1) / timeScale;
+    final long timeScale = model.getTimeScale();
+    final long numTicks = ((model.getEndTime() - model.getStartTime()) + timeScale - 1) / timeScale;
     width = (int) (tickWidth * numTicks + EXTRA_SPACE + 0.5);
     header = new Timeline();
     header.setPreferredSize(new Dimension(width, ChronoPanel.HEADER_HEIGHT));
     addMouseListener(myListener);
     addMouseMotionListener(myListener);
-    final var tracker =
+    final java.awt.event.MouseAdapter tracker =
         new MouseAdapter() {
           void track(MouseEvent e) {
             if (SwingUtilities.isLeftMouseButton(e)) chronoPanel.setSignalCursorX(e.getX());
@@ -106,19 +106,19 @@ public class RightPanel extends JPanel {
   }
 
   int indexOf(Signal s) {
-    final var n = rows.size();
+    final int n = rows.size();
     for (int i = 0; i < n; i++) {
-      final var waveForm = rows.get(i);
+      final com.cburch.logisim.gui.chrono.RightPanel.Waveform waveForm = rows.get(i);
       if (waveForm.signal == s) return i;
     }
     return -1;
   }
 
   public void updateSignals() {
-    final var n = model.getSignalCount();
+    final int n = model.getSignalCount();
     for (int i = 0; i < n; i++) {
-      final var s = model.getSignal(i);
-      final var idx = indexOf(s);
+      final com.cburch.logisim.gui.log.Signal s = model.getSignal(i);
+      final int idx = indexOf(s);
       if (idx < 0) {
         // new signal, add in correct position
         rows.add(i, new Waveform(s));
@@ -132,8 +132,8 @@ public class RightPanel extends JPanel {
   }
 
   public void updateWaveforms(boolean force) {
-    final var t0 = model.getStartTime();
-    final var t1 = model.getEndTime();
+    final long t0 = model.getStartTime();
+    final long t1 = model.getEndTime();
     if (!force && t0 == timeStartDraw && t1 == timeNextDraw) {
       // already drawn all signal values
       return;
@@ -147,17 +147,17 @@ public class RightPanel extends JPanel {
   }
 
   private void updateSize(boolean scrollRight) {
-    final var timeScale = model.getTimeScale();
-    final var numTicks = ((timeNextDraw - timeStartDraw) + timeScale - 1) / timeScale;
-    final var m = model.getSignalCount();
+    final long timeScale = model.getTimeScale();
+    final long numTicks = ((timeNextDraw - timeStartDraw) + timeScale - 1) / timeScale;
+    final int m = model.getSignalCount();
     height = m * ChronoPanel.SIGNAL_HEIGHT;
     width = (int) (tickWidth * numTicks + EXTRA_SPACE + 0.5);
-    final var d = getPreferredSize();
+    final java.awt.Dimension d = getPreferredSize();
     if (d.width == width && d.height == height) return;
     final int oldWidth = d.width;
-    final var v = chronoPanel.getRightViewport();
-    final var sb = chronoPanel.getHorizontalScrollBar();
-    final var oldR = v == null ? null : v.getViewRect();
+    final javax.swing.JViewport v = chronoPanel.getRightViewport();
+    final javax.swing.JScrollBar sb = chronoPanel.getHorizontalScrollBar();
+    final java.awt.Rectangle oldR = v == null ? null : v.getViewRect();
 
     d.width = width;
     d.height = height;
@@ -179,10 +179,10 @@ public class RightPanel extends JPanel {
     // never go below left=0 (0%) or above right=width-1 (100%)
     // try to not go above cursor-CURSOR_GAP
 
-    final var r = v.getViewRect(); // has this updated yet?
+    final java.awt.Rectangle r = v.getViewRect(); // has this updated yet?
 
-    final var edgeVisible = (oldWidth <= oldR.x + oldR.width);
-    final var cursorVisible = (oldR.x <= curX && curX <= oldR.x + oldR.width);
+    final boolean edgeVisible = (oldWidth <= oldR.x + oldR.width);
+    final boolean cursorVisible = (oldR.x <= curX && curX <= oldR.x + oldR.width);
     if (cursorVisible && edgeVisible) {
       // cursor was on screen, keep it on screen
       r.x = Math.max(oldR.x, curX - CURSOR_GAP);
@@ -209,9 +209,9 @@ public class RightPanel extends JPanel {
   }
 
   public void setSignalCursorX(int posX) {
-    final var f = model.getTimeScale() / tickWidth;
+    final double f = model.getTimeScale() / tickWidth;
     curX = Math.max(0, posX);
-    final var t0 = model.getStartTime();
+    final long t0 = model.getStartTime();
     curT = Math.max(t0, snapToPixel((long) f, (long) (t0 + curX * f)));
     if (curT >= model.getEndTime()) {
       curX = Integer.MAX_VALUE; // pin to right side
@@ -222,7 +222,7 @@ public class RightPanel extends JPanel {
   }
 
   public int getSignalCursorX() {
-    final var timeScale = model.getTimeScale();
+    final long timeScale = model.getTimeScale();
     return curX == Integer.MAX_VALUE
         ? (int) ((model.getEndTime() - model.getStartTime() - 1) * tickWidth / timeScale)
         : curX;
@@ -234,12 +234,12 @@ public class RightPanel extends JPanel {
 
   public void changeSpotlight(Signal oldSignal, Signal newSignal) {
     if (oldSignal != null) {
-      final var waveform = rows.get(oldSignal.idx);
+      final com.cburch.logisim.gui.chrono.RightPanel.Waveform waveform = rows.get(oldSignal.idx);
       waveform.flush();
       repaint(waveform.getBounds());
     }
     if (newSignal != null) {
-      final var waveform = rows.get(newSignal.idx);
+      final com.cburch.logisim.gui.chrono.RightPanel.Waveform waveform = rows.get(newSignal.idx);
       waveform.flush();
       repaint(waveform.getBounds());
     }
@@ -247,8 +247,8 @@ public class RightPanel extends JPanel {
 
   public void updateSelected(int firstIdx, int lastIdx) {
     for (int i = firstIdx; i <= lastIdx; i++) {
-      final var waveform = rows.get(i);
-      final var selected = selectionModel.isSelectedIndex(i);
+      final com.cburch.logisim.gui.chrono.RightPanel.Waveform waveform = rows.get(i);
+      final boolean selected = selectionModel.isSelectedIndex(i);
       if (selected != waveform.selected) {
         waveform.selected = selected;
         waveform.flush();
@@ -258,12 +258,12 @@ public class RightPanel extends JPanel {
   }
 
   private void flushWaveforms() {
-    for (final var w : rows) w.flush();
+    for (final com.cburch.logisim.gui.chrono.RightPanel.Waveform w : rows) w.flush();
   }
 
   @Override
   public void paintComponent(Graphics graphics) {
-    final var gfx = (Graphics2D) graphics;
+    final java.awt.Graphics2D gfx = (Graphics2D) graphics;
     /* Anti-aliasing changes from https://github.com/hausen/logisim-evolution */
     gfx.setRenderingHint(
         RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -272,12 +272,12 @@ public class RightPanel extends JPanel {
     gfx.fillRect(0, 0, getWidth(), getHeight()); // entire viewport, not just (width, height)
     gfx.setColor(Color.BLACK);
     if (rows.isEmpty()) {
-      final var f = gfx.getFont();
+      final java.awt.Font f = gfx.getFont();
       gfx.setFont(MSG_FONT);
-      final var lines = S.get("NoSignalsSelected");
-      final var x = AppPreferences.getScaled(15);
+      final java.lang.String lines = S.get("NoSignalsSelected");
+      final int x = AppPreferences.getScaled(15);
       int y = AppPreferences.getScaled(15);
-      for (final var s : lines.split("\\|")) {
+      for (final java.lang.String s : lines.split("\\|")) {
         gfx.drawString(s.trim(), x, y);
         y += AppPreferences.getScaled(14);
       }
@@ -290,13 +290,13 @@ public class RightPanel extends JPanel {
       gfx.drawString("Oops! Chronogram is too large to display.", 15, 15);
       gfx.drawString("Try zooming out, or reset the simulation.", 15, 29);
     } else {
-      for (final var w : rows) w.paintWaveform(gfx);
+      for (final com.cburch.logisim.gui.chrono.RightPanel.Waveform w : rows) w.paintWaveform(gfx);
       paintCursor(gfx);
     }
   }
 
   private void paintCursor(Graphics2D g) {
-    final var x = getSignalCursorX();
+    final int x = getSignalCursorX();
     g.setColor(Color.RED);
     g.setStroke(new BasicStroke(1));
     g.drawLine(x, 0, x, getHeight());
@@ -309,7 +309,7 @@ public class RightPanel extends JPanel {
 
     Signal getSignal(int y, boolean force) {
       int idx = y / WAVE_HEIGHT;
-      final var n = model.getSignalCount();
+      final int n = model.getSignalCount();
       if (idx < 0 && force) idx = 0;
       else if (idx >= n && force) idx = n - 1;
       return (idx < 0 || idx >= n) ? null : model.getSignal(idx);
@@ -334,7 +334,7 @@ public class RightPanel extends JPanel {
     public void mousePressed(MouseEvent e) {
       if (SwingUtilities.isLeftMouseButton(e)) {
         chronoPanel.setSignalCursorX(e.getX());
-        final var signal = getSignal(e.getY(), false);
+        final com.cburch.logisim.gui.log.Signal signal = getSignal(e.getY(), false);
         if (signal == null) {
           shiftDrag = controlDrag = subtracting = false;
           return;
@@ -362,7 +362,7 @@ public class RightPanel extends JPanel {
       if (SwingUtilities.isLeftMouseButton(e)) {
         chronoPanel.setSignalCursorX(e.getX());
         if (!selectionModel.getValueIsAdjusting()) return;
-        final var signal = getSignal(e.getY(), false);
+        final com.cburch.logisim.gui.log.Signal signal = getSignal(e.getY(), false);
         if (signal == null) return;
         selectionModel.setLeadSelectionIndex(signal.idx);
       }
@@ -372,7 +372,7 @@ public class RightPanel extends JPanel {
     public void mouseReleased(MouseEvent e) {
       if (SwingUtilities.isLeftMouseButton(e)) {
         if (!selectionModel.getValueIsAdjusting()) return;
-        final var signal = getSignal(e.getY(), true);
+        final com.cburch.logisim.gui.log.Signal signal = getSignal(e.getY(), true);
         if (signal == null) return;
         int idx = selectionModel.getAnchorSelectionIndex();
         if (idx < 0) {
@@ -388,12 +388,12 @@ public class RightPanel extends JPanel {
     @Override
     public void mouseClicked(MouseEvent e) {
       if (!SwingUtilities.isRightMouseButton(e)) return;
-      final var signals = chronoPanel.getLeftPanel().getSelectedValuesList();
+      final com.cburch.logisim.gui.log.Signal.List signals = chronoPanel.getLeftPanel().getSelectedValuesList();
       if (signals.isEmpty()) {
-        final var signal = getSignal(e.getY(), false);
+        final com.cburch.logisim.gui.log.Signal signal = getSignal(e.getY(), false);
         if (signal != null) signals.add(signal);
       }
-      final var m = new PopupMenu(chronoPanel, signals);
+      final com.cburch.logisim.gui.chrono.PopupMenu m = new PopupMenu(chronoPanel, signals);
       m.doPop(e);
     }
   }
@@ -420,23 +420,23 @@ public class RightPanel extends JPanel {
     private void drawSignal(Graphics2D g, boolean bold, Color[] colors) {
       g.setStroke(new BasicStroke(bold ? 2 : 1));
 
-      final var t0 = model.getStartTime();
+      final long t0 = model.getStartTime();
       Signal.Iterator cur = signal.new Iterator(t0);
 
-      final var fm = g.getFontMetrics();
+      final java.awt.FontMetrics fm = g.getFontMetrics();
 
-      final var max = signal.getFormattedMaxValue();
-      final var min = signal.getFormattedMinValue();
-      final var labelWidth = Math.max(fm.stringWidth(max), fm.stringWidth(min));
+      final java.lang.String max = signal.getFormattedMaxValue();
+      final java.lang.String min = signal.getFormattedMinValue();
+      final int labelWidth = Math.max(fm.stringWidth(max), fm.stringWidth(min));
 
-      final var z = tickWidth / model.getTimeScale();
+      final double z = tickWidth / model.getTimeScale();
       boolean prevHi = false;
       boolean prevLo = false;
       Color prevFill = null;
       while (cur.value != null) {
-        final var v = cur.getFormattedValue();
-        final var x0 = (int) (z * (cur.time - t0));
-        final var x1 = (int) (z * (cur.time + cur.duration - t0));
+        final java.lang.String v = cur.getFormattedValue();
+        final int x0 = (int) (z * (cur.time - t0));
+        final int x1 = (int) (z * (cur.time + cur.duration - t0));
 
         boolean hi = true;
         boolean lo = true;
@@ -467,7 +467,7 @@ public class RightPanel extends JPanel {
 
         if (prevFill != null) {
           // draw left transition
-          final var xt = x0 + Math.min(slope, (x1 - x0) / 2);
+          final int xt = x0 + Math.min(slope, (x1 - x0) / 2);
           // if (xt <= x0 + 3)
           //   xt = x0;
           if (xt == x0) {
@@ -577,13 +577,13 @@ public class RightPanel extends JPanel {
 
     private void createOffscreen() {
       buf = (BufferedImage) createImage(width, WAVE_HEIGHT);
-      final var g = buf.createGraphics();
+      final java.awt.Graphics2D g = buf.createGraphics();
       g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_DEFAULT);
       g.setRenderingHint(
           RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
       g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-      final var isBold = (model.getSpotlight() == signal);
-      final var colors = chronoPanel.rowColors(signal.info, selected);
+      final boolean isBold = (model.getSpotlight() == signal);
+      final java.awt.Color[] colors = chronoPanel.rowColors(signal.info, selected);
       g.setColor(Color.WHITE);
       g.fillRect(0, 0, width, ChronoPanel.GAP - 1);
       g.fillRect(0, LOW, width, ChronoPanel.GAP - 1);
@@ -599,7 +599,7 @@ public class RightPanel extends JPanel {
         // TODO: reallocating image each time seems silly
         createOffscreen();
       }
-      final var y = WAVE_HEIGHT * signal.idx;
+      final int y = WAVE_HEIGHT * signal.idx;
       g.drawImage(buf, null, 0, y);
     }
 
@@ -613,24 +613,24 @@ public class RightPanel extends JPanel {
 
     // fixme: Offscreen image can be max 32k pixels wide. We should not be
     // making such huge offscreen images anyway.
-    final var timeScale = model.getTimeScale();
-    final var t0 = model.getStartTime();
-    final var t1 = model.getEndTime();
-    final var numTicks = (t1 - t0 + timeScale - 1) / timeScale;
-    final var newTickWidth = 20 * Math.pow(1.15, zoom + sens - 20);
-    final var newWidth = (int) (newTickWidth * numTicks + EXTRA_SPACE + 0.5);
+    final long timeScale = model.getTimeScale();
+    final long t0 = model.getStartTime();
+    final long t1 = model.getEndTime();
+    final long numTicks = (t1 - t0 + timeScale - 1) / timeScale;
+    final double newTickWidth = 20 * Math.pow(1.15, zoom + sens - 20);
+    final int newWidth = (int) (newTickWidth * numTicks + EXTRA_SPACE + 0.5);
     if (newWidth > 32000) return;
-    final var f = timeScale / tickWidth;
-    final var mouseT = t0 + posX * f;
-    final var sb = chronoPanel.getHorizontalScrollBar();
-    final var vx = posX - sb.getValue();
+    final double f = timeScale / tickWidth;
+    final double mouseT = t0 + posX * f;
+    final javax.swing.JScrollBar sb = chronoPanel.getHorizontalScrollBar();
+    final int vx = posX - sb.getValue();
 
     // adjust pixel scale
     zoom += sens;
     tickWidth = 20 * Math.pow(1.15, zoom - 20);
 
     // adjust cursor pixel coordinate to match cursor time
-    final var q = tickWidth / timeScale;
+    final double q = tickWidth / timeScale;
     if (curX != Integer.MAX_VALUE) curX = (int) Math.max(0, (curT - t0) * q);
 
     updateSize(false); // don't scroll right
@@ -659,7 +659,7 @@ public class RightPanel extends JPanel {
 
     @Override
     public void paintComponent(Graphics gr) {
-      final var g = (Graphics2D) gr;
+      final java.awt.Graphics2D g = (Graphics2D) gr;
       /* Anti-aliasing changes from https://github.com/hausen/logisim-evolution */
       g.setRenderingHint(
           RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -673,15 +673,15 @@ public class RightPanel extends JPanel {
     }
 
     void paintCursorWithLabel(Graphics2D g) {
-      final var x = getSignalCursorX();
-      final var t = getCurrentTime();
+      final int x = getSignalCursorX();
+      final long t = getCurrentTime();
       g.setFont(TIME_FONT);
 
-      final var s = Model.formatDuration(t);
-      final var fm = g.getFontMetrics();
-      final var r = fm.getStringBounds(s, g);
+      final java.lang.String s = Model.formatDuration(t);
+      final java.awt.FontMetrics fm = g.getFontMetrics();
+      final java.awt.geom.Rectangle2D r = fm.getStringBounds(s, g);
       g.setColor(Color.YELLOW);
-      final var y = (height - ChronoPanel.GAP) / 2;
+      final int y = (height - ChronoPanel.GAP) / 2;
       g.fillRect(
           x + 2 + (int) r.getX() - 1,
           y + (int) r.getY() - 1,
@@ -694,8 +694,8 @@ public class RightPanel extends JPanel {
     }
 
     void paintScale(Graphics2D g) {
-      final var timeScale = model.getTimeScale();
-      final var pixelPerTime = tickWidth / timeScale;
+      final long timeScale = model.getTimeScale();
+      final double pixelPerTime = tickWidth / timeScale;
 
       // Pick the smallest unit among:
       //   10,  20,  25,  50
@@ -714,17 +714,17 @@ public class RightPanel extends JPanel {
       long numMinor = subd[j];
       long divMinor = divMajor / numMinor;
 
-      final var f = g.getFont();
+      final java.awt.Font f = g.getFont();
       g.setFont(TIME_FONT);
-      final var time0 = model.getStartTime();
-      final var timeL = (time0 / divMajor) * divMajor;
-      final var h = ChronoPanel.HEADER_HEIGHT - ChronoPanel.GAP;
+      final long time0 = model.getStartTime();
+      final long timeL = (time0 / divMajor) * divMajor;
+      final int h = ChronoPanel.HEADER_HEIGHT - ChronoPanel.GAP;
       g.setColor(Color.BLACK);
       g.drawLine(0, height - 2, width, height - 2);
       for (int i = 0; true; i++) {
-        final var t = timeL + divMinor * i;
+        final long t = timeL + divMinor * i;
         if (t < time0) continue;
-        final var x = (int) ((t - time0) * pixelPerTime);
+        final int x = (int) ((t - time0) * pixelPerTime);
         if (x >= width) break;
         if (i % numMinor == 0) {
           if (x + EXTRA_SPACE <= width) {
@@ -742,14 +742,14 @@ public class RightPanel extends JPanel {
   @Override
   public void addNotify() {
     super.addNotify();
-    final var jsp = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, this);
+    final javax.swing.JScrollPane jsp = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, this);
     if (jsp != null && header != null) jsp.setColumnHeaderView(header);
   }
 
   @Override
   public void removeNotify() {
     super.addNotify();
-    final var jsp = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, this);
+    final javax.swing.JScrollPane jsp = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, this);
     if (jsp != null) jsp.setColumnHeaderView(null);
   }
 

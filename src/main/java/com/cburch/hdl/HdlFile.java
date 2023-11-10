@@ -23,9 +23,9 @@ public class HdlFile {
 
   public static void open(File file, HdlContentEditor editor) throws IOException {
 
-    try (final var in = new BufferedReader(new FileReader(file))) {
+    try (final java.io.BufferedReader in = new BufferedReader(new FileReader(file))) {
 
-      final var content = new StringBuilder();
+      final java.lang.StringBuilder content = new StringBuilder();
       String l;
 
       while ((l = in.readLine()) != null) {
@@ -40,8 +40,8 @@ public class HdlFile {
 
   public static void save(File file, HdlContentEditor editor) throws IOException {
 
-    try (final var out = new BufferedWriter(new FileWriter(file))) {
-      final var data = editor.getText();
+    try (final java.io.BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
+      final java.lang.String data = editor.getText();
       out.write(data, 0, data.length());
     } catch (IOException ex) {
       throw new IOException(S.get("hdlFileWriterError"));

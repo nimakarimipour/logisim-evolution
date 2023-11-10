@@ -64,13 +64,13 @@ public class ShiftRegisterData extends ClockState implements InstanceData {
 
   public void setDimensions(BitWidth newWidth, int newLength) {
     com.cburch.logisim.data.Value[] v = vs;
-    final var oldWidth = width;
-    final var oldW = oldWidth.getWidth();
-    final var newW = newWidth.getWidth();
+    final com.cburch.logisim.data.BitWidth oldWidth = width;
+    final int oldW = oldWidth.getWidth();
+    final int newW = newWidth.getWidth();
     if (v.length != newLength) {
-      final var newV = new Value[newLength];
+      final com.cburch.logisim.data.Value[] newV = new Value[newLength];
       int j = vsPos;
-      final var copy = Math.min(newLength, v.length);
+      final int copy = Math.min(newLength, v.length);
       for (int i = 0; i < copy; i++) {
         newV[i] = v[j];
         j++;
@@ -83,7 +83,7 @@ public class ShiftRegisterData extends ClockState implements InstanceData {
     }
     if (oldW != newW) {
       for (int i = 0; i < v.length; i++) {
-        final var vi = v[i];
+        final com.cburch.logisim.data.Value vi = v[i];
         if (vi.getWidth() != newW) {
           v[i] = vi.extendWidth(newW, Value.FALSE);
         }

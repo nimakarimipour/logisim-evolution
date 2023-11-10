@@ -24,7 +24,7 @@ class PrefMonitorString extends AbstractPrefMonitor<String> {
   public PrefMonitorString(String name, String dflt) {
     super(name);
     this.dflt = dflt;
-    final var prefs = AppPreferences.getPrefs();
+    final java.util.prefs.Preferences prefs = AppPreferences.getPrefs();
     this.value = prefs.get(name, dflt);
     prefs.addPreferenceChangeListener(this);
   }
@@ -34,12 +34,12 @@ class PrefMonitorString extends AbstractPrefMonitor<String> {
   }
 
   public void preferenceChange(PreferenceChangeEvent event) {
-    final var prefs = event.getNode();
-    final var prop = event.getKey();
-    final var name = getIdentifier();
+    final java.util.prefs.Preferences prefs = event.getNode();
+    final java.lang.String prop = event.getKey();
+    final java.lang.String name = getIdentifier();
     if (prop.equals(name)) {
-      final var oldValue = value;
-      final var newValue = prefs.get(name, dflt);
+      final java.lang.String oldValue = value;
+      final java.lang.String newValue = prefs.get(name, dflt);
       if (!isSame(oldValue, newValue)) {
         value = newValue;
         AppPreferences.firePropertyChange(name, oldValue, newValue);
@@ -48,7 +48,7 @@ class PrefMonitorString extends AbstractPrefMonitor<String> {
   }
 
   public void set(String newValue) {
-    final var oldValue = value;
+    final java.lang.String oldValue = value;
     if (!isSame(oldValue, newValue)) {
       value = newValue;
       AppPreferences.getPrefs().put(getIdentifier(), newValue);

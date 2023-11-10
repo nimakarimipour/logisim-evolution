@@ -27,9 +27,9 @@ public final class IconsUtil {
   }
 
   public static ImageIcon getIcon(String name) {
-    final var url = IconsUtil.class.getClassLoader().getResource(PATH + "/" + name);
+    final java.net.URL url = IconsUtil.class.getClassLoader().getResource(PATH + "/" + name);
     if (url == null) return null;
-    final var icon = new ImageIcon(url);
+    final javax.swing.ImageIcon icon = new ImageIcon(url);
     icon.setImage(
         icon.getImage()
             .getScaledInstance(
@@ -46,9 +46,9 @@ public final class IconsUtil {
       return;
     }
 
-    final var g2 = (Graphics2D) g.create();
-    final var cx = x + icon.getIconWidth() / 2.0;
-    final var cy = y + icon.getIconHeight() / 2.0;
+    final java.awt.Graphics2D g2 = (Graphics2D) g.create();
+    final double cx = x + icon.getIconWidth() / 2.0;
+    final double cy = y + icon.getIconHeight() / 2.0;
     if (dir == Direction.WEST) {
       g2.rotate(Math.PI, cx, cy);
     } else if (dir == Direction.NORTH) {

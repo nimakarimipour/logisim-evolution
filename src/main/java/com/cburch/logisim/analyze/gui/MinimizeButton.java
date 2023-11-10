@@ -39,24 +39,24 @@ public class MinimizeButton  extends JButton {
   }
 
   void doOptimize() {
-    final var choice = OptionPane.showConfirmDialog(
+    final int choice = OptionPane.showConfirmDialog(
           parent, 
           S.get("OptimizeLongTimeWarning"), 
           S.get("minimizeFunctionTitle"), 
           OptionPane.YES_NO_OPTION);
     if (choice != OptionPane.YES_OPTION) return;
-    final var info = new JTextArea(20, 80);
+    final javax.swing.JTextArea info = new JTextArea(20, 80);
     info.setEditable(false);
     info.setFont(new Font("monospaced", Font.PLAIN, 12));
     info.setForeground(Color.WHITE);
     info.setBackground(Color.BLACK);
-    final var caret = (DefaultCaret) info.getCaret();
+    final javax.swing.text.DefaultCaret caret = (DefaultCaret) info.getCaret();
     caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-    final var pane = new JScrollPane(info);
+    final javax.swing.JScrollPane pane = new JScrollPane(info);
     pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    final var doneButton = new JButton(S.get("minimizeDone"));
-    final var infoPanel = new JDialog(
+    final javax.swing.JButton doneButton = new JButton(S.get("minimizeDone"));
+    final javax.swing.JDialog infoPanel = new JDialog(
           parent, 
           S.get("minimizeFunctionTitle"), 
           true);
@@ -66,7 +66,7 @@ public class MinimizeButton  extends JButton {
     doneButton.setVisible(false);
     infoPanel.setLocationRelativeTo(parent);
     infoPanel.pack();
-    final var dialogThread = new Thread(
+    final java.lang.Thread dialogThread = new Thread(
           new Runnable() {
               void done() {
                 infoPanel.dispose();
@@ -79,7 +79,7 @@ public class MinimizeButton  extends JButton {
           }
     );
     dialogThread.start();
-    final var optimizeThread = new Thread(
+    final java.lang.Thread optimizeThread = new Thread(
         new Runnable() {
             public void run() {
                 model.getOutputExpressions().forcedOptimize(info, format);

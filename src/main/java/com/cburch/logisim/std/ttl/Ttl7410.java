@@ -47,8 +47,8 @@ public class Ttl7410 extends AbstractTtlGate {
   @Override
   public void paintInternal(InstancePainter painter, int x, int y, int height, boolean up) {
     super.paintBase(painter, false, false);
-    final var g = painter.getGraphics();
-    final var LineOffset =
+    final java.awt.Graphics g = painter.getGraphics();
+    final int LineOffset =
         ((!isAND) & (AppPreferences.GATE_SHAPE.get().equals(AppPreferences.SHAPE_SHAPED))) ? -4 : 0;
     if (isAND) {
       Drawgates.paintAnd(g, x + 45, y + 20, 10, 10, inverted);
@@ -59,7 +59,7 @@ public class Ttl7410 extends AbstractTtlGate {
       Drawgates.paintOr(g, x + 125, y + 20, 10, 10, inverted, false);
       Drawgates.paintOr(g, x + 105, y + 40, 10, 10, inverted, false);
     }
-    final var offset = inverted ? 0 : -4;
+    final int offset = inverted ? 0 : -4;
     int[] xpos = new int[] {x + 49 + offset, x + 50, x + 50};
     int[] ypos = new int[] {y + 20, y + 20, y + AbstractTtlGate.PIN_HEIGHT};
     g.drawPolyline(xpos, ypos, 3);

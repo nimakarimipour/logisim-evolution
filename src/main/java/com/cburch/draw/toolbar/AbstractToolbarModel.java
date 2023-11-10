@@ -25,15 +25,15 @@ public abstract class AbstractToolbarModel implements ToolbarModel {
   }
 
   protected void fireToolbarAppearanceChanged() {
-    final var event = new ToolbarModelEvent(this);
-    for (final var listener : listeners) {
+    final com.cburch.draw.toolbar.ToolbarModelEvent event = new ToolbarModelEvent(this);
+    for (final com.cburch.draw.toolbar.ToolbarModelListener listener : listeners) {
       listener.toolbarAppearanceChanged(event);
     }
   }
 
   protected void fireToolbarContentsChanged() {
-    final var event = new ToolbarModelEvent(this);
-    for (final var listener : listeners) {
+    final com.cburch.draw.toolbar.ToolbarModelEvent event = new ToolbarModelEvent(this);
+    for (final com.cburch.draw.toolbar.ToolbarModelListener listener : listeners) {
       listener.toolbarContentsChanged(event);
     }
   }

@@ -110,7 +110,7 @@ public class VgaAttributes extends AbstractAttributeSet {
 
   @Override
   protected void copyInto(AbstractAttributeSet dest) {
-    final var d = (VgaAttributes) dest;
+    final com.cburch.logisim.soc.vga.VgaAttributes d = (VgaAttributes) dest;
     d.labelFont = labelFont;
     d.labelVisible = labelVisible;
     d.state = new VgaState();
@@ -186,7 +186,7 @@ public class VgaAttributes extends AbstractAttributeSet {
       return;
     }
     if (attr == StdAttr.LABEL_VISIBILITY) {
-      final var b = (Boolean) value;
+      final java.lang.Boolean b = (Boolean) value;
       if (b != labelVisible) {
         labelVisible = b;
         fireAttributeValueChanged(attr, value, oldValue);

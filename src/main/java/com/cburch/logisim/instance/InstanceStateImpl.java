@@ -99,8 +99,8 @@ public class InstanceStateImpl implements InstanceState {
 
   @Override
   public boolean isPortConnected(int index) {
-    final var circ = circuitState.getCircuit();
-    final var loc = component.getEnd(index).getLocation();
+    final com.cburch.logisim.circuit.Circuit circ = circuitState.getCircuit();
+    final com.cburch.logisim.data.Location loc = component.getEnd(index).getLocation();
     return circ.isConnected(loc, component);
   }
 
@@ -116,7 +116,7 @@ public class InstanceStateImpl implements InstanceState {
 
   @Override
   public void setPort(int portIndex, Value value, int delay) {
-    final var end = component.getEnd(portIndex);
+    final com.cburch.logisim.comp.EndData end = component.getEnd(portIndex);
     circuitState.setValue(end.getLocation(), value, component, delay);
   }
 }

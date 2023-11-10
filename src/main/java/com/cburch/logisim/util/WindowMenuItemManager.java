@@ -30,7 +30,7 @@ public abstract class WindowMenuItemManager {
 
     @Override
     public void windowClosing(WindowEvent event) {
-      final var frame = getJFrame(false, null);
+      final javax.swing.JFrame frame = getJFrame(false, null);
       if (frame.getDefaultCloseOperation() == JFrame.HIDE_ON_CLOSE) {
         removeFromManager();
       }
@@ -71,7 +71,7 @@ public abstract class WindowMenuItemManager {
   }
 
   void createMenuItem(WindowMenu menu) {
-    final var ret = new WindowMenuItem(this);
+    final com.cburch.logisim.util.WindowMenuItem ret = new WindowMenuItem(this);
     menuItems.put(menu, ret);
     menu.addMenuItem(this, ret, persistent);
   }
@@ -108,8 +108,8 @@ public abstract class WindowMenuItemManager {
   private void removeFromManager() {
     if (!persistent && inManager) {
       inManager = false;
-      for (final var menu : WindowMenuManager.getMenus()) {
-        final var menuItem = menuItems.get(menu);
+      for (final com.cburch.logisim.util.WindowMenu menu : WindowMenuManager.getMenus()) {
+        final javax.swing.JRadioButtonMenuItem menuItem = menuItems.get(menu);
         menu.removeMenuItem(this, menuItem);
       }
       WindowMenuManager.removeManager(this);
@@ -117,19 +117,19 @@ public abstract class WindowMenuItemManager {
   }
 
   void removeMenuItem(WindowMenu menu) {
-    final var item = menuItems.remove(menu);
+    final javax.swing.JRadioButtonMenuItem item = menuItems.remove(menu);
     if (item != null) menu.removeMenuItem(this, item);
   }
 
   void setSelected(boolean selected) {
-    for (final var item : menuItems.values()) {
+    for (final javax.swing.JRadioButtonMenuItem item : menuItems.values()) {
       item.setSelected(selected);
     }
   }
 
   public void setText(String value) {
     text = value;
-    for (final var menuItem : menuItems.values()) {
+    for (final javax.swing.JRadioButtonMenuItem menuItem : menuItems.values()) {
       menuItem.setText(text);
     }
   }

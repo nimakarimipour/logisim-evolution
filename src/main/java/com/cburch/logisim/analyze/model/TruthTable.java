@@ -48,13 +48,13 @@ public class TruthTable {
 
     public int baseIndex() {
       int idx = 0;
-      for (final var input : inputs) idx = (idx << 1) | (input == Entry.ONE ? 1 : 0);
+      for (final com.cburch.logisim.analyze.model.Entry input : inputs) idx = (idx << 1) | (input == Entry.ONE ? 1 : 0);
       return idx;
     }
 
     public int dcMask() {
       int mask = 0;
-      for (final var input : inputs) mask = (mask << 1) | (input == Entry.DONT_CARE ? 1 : 0);
+      for (final com.cburch.logisim.analyze.model.Entry input : inputs) mask = (mask << 1) | (input == Entry.DONT_CARE ? 1 : 0);
       return mask;
     }
 
@@ -66,7 +66,7 @@ public class TruthTable {
 
     @Override
     public String toString() {
-      final var s = new StringBuilder("row[");
+      final java.lang.StringBuilder s = new StringBuilder("row[");
       for (int i = 0; i < inputs.length; i++) {
         if (i != 0) s.append(" ");
         s.append(inputs[i].getDescription());
@@ -78,9 +78,9 @@ public class TruthTable {
     }
 
     public String toBitString(List<Var> vars) {
-      final var s = new StringBuilder();
+      final java.lang.StringBuilder s = new StringBuilder();
       int i = 0;
-      for (final var variable : vars) {
+      for (final com.cburch.logisim.analyze.model.Var variable : vars) {
         s.append(" ");
         for (int j = 0; j < variable.width; j++) s.append(inputs[i++].toBitString());
       }
@@ -96,7 +96,7 @@ public class TruthTable {
     }
 
     public boolean intersects(Row other) {
-      final var dc = dcMask() | other.dcMask();
+      final int dc = dcMask() | other.dcMask();
       return (other.baseIndex() & ~dc) == (baseIndex() & ~dc);
     }
 
@@ -144,15 +144,15 @@ public class TruthTable {
   }
 
   private void initRows() {
-    final var inputs = getInputColumnCount();
-    final var n = getRowCount();
+    final int inputs = getInputColumnCount();
+    final int n = getRowCount();
     rows.clear();
     rows.ensureCapacity(n);
     for (int i = 0; i < n; i++) rows.add(new Row(i, inputs, 0));
   }
 
   private void initColumns() {
-    final var outputs = getOutputColumnCount();
+    final int outputs = getOutputColumnCount();
     columns.clear();
     columns.ensureCapacity(outputs);
     for (int i = 0; i < outputs; i++) columns.add(null /* created lazily */);
@@ -173,18 +173,18 @@ public class TruthTable {
   }
 
   public void compactVisibleRows() {
-    final var partition = Implicant.computePartition(model);
+    final java.util.SortedMap<com.cburch.logisim.analyze.model.Implicant,java.lang.String> partition = Implicant.computePartition(model);
     rows.clear();
     initColumns();
-    final var ni = getInputColumnCount();
-    final var no = getOutputColumnCount();
-    for (final var it : partition.entrySet()) {
-      final var imp = it.getKey();
-      final var val = it.getValue();
-      final var r = new Row(imp.values, ni, imp.unknowns);
+    final int ni = getInputColumnCount();
+    final int no = getOutputColumnCount();
+    for (final java.util.Map.Entry<com.cburch.logisim.analyze.model.Implicant,java.lang.String> it : partition.entrySet()) {
+      final com.cburch.logisim.analyze.model.Implicant imp = it.getKey();
+      final java.lang.String val = it.getValue();
+      final com.cburch.logisim.analyze.model.TruthTable.Row r = new Row(imp.values, ni, imp.unknowns);
       rows.add(r);
       for (int col = 0; col < no; col++) {
-        final var value = Entry.parse("" + val.charAt(col));
+        final com.cburch.logisim.analyze.model.Entry value = Entry.parse("" + val.charAt(col));
         com.cburch.logisim.analyze.model.Entry[] column = columns.get(col);
         if (column == null && value == DEFAULT_ENTRY) continue;
         else if (column == null) column = getOutputColumn(col);
@@ -201,18 +201,18 @@ public class TruthTable {
 
   public void setOutputColumn(int col, Entry[] values) {
     if (values.length != getRowCount()) throw new IllegalArgumentException("bad column length");
-    final var oldValues = columns.set(col, values);
+    final com.cburch.logisim.analyze.model.Entry[] oldValues = columns.set(col, values);
     if (oldValues == values) return;
     // Expand rows as dictated by column inconsistencies
     boolean rowsChanged = false;
     for (int i = rows.size() - 1; i >= 0; i--) {
-      final var r = rows.get(i);
-      final var base = r.baseIndex();
-      final var v = values[base];
+      final com.cburch.logisim.analyze.model.TruthTable.Row r = rows.get(i);
+      final int base = r.baseIndex();
+      final com.cburch.logisim.analyze.model.Entry v = values[base];
       boolean split = true;
       while (split) {
         split = false;
-        for (final var idx : r) {
+        for (final java.lang.Integer idx : r) {
           if (v != values[idx]) {
             splitRow(r, idx);
             rowsChanged = true;
@@ -227,16 +227,16 @@ public class TruthTable {
   }
 
   void splitRow(Row r, int idx) {
-    final var base = r.baseIndex();
+    final int base = r.baseIndex();
     if (idx == base || !r.contains(idx)) throw new IllegalArgumentException("bad row split");
-    final var diff = idx ^ base;
-    final var n = r.duplicity();
+    final int diff = idx ^ base;
+    final int n = r.duplicity();
     if (n <= 1) throw new IllegalStateException("row duplicity should be at least 2");
-    final var splits = new Row(base, r.inputs.length, diff);
+    final com.cburch.logisim.analyze.model.TruthTable.Row splits = new Row(base, r.inputs.length, diff);
     int m = 0;
     rows.remove(r);
-    for (final var other : splits) {
-      final var s = new Row(other, r.inputs.length, r.dcMask() & ~diff);
+    for (final java.lang.Integer other : splits) {
+      final com.cburch.logisim.analyze.model.TruthTable.Row s = new Row(other, r.inputs.length, r.dcMask() & ~diff);
       m += s.duplicity();
       int pos = Collections.binarySearch(rows, s, sortByInputs);
       if (pos < 0) rows.add(-pos - 1, s);
@@ -246,21 +246,21 @@ public class TruthTable {
   }
 
   public Entry getVisibleOutputEntry(int row, int col) {
-    final var r = rows.get(row);
-    final var idx = r.baseIndex();
+    final com.cburch.logisim.analyze.model.TruthTable.Row r = rows.get(row);
+    final int idx = r.baseIndex();
     return getOutputEntry(idx, col);
   }
 
   public Entry getOutputEntry(int idx, int col) {
     if (idx < 0 || col < 0) return DEFAULT_ENTRY;
-    final var column = columns.get(col);
+    final com.cburch.logisim.analyze.model.Entry[] column = columns.get(col);
     return (column == null ? DEFAULT_ENTRY : idx < column.length ? column[idx] : DEFAULT_ENTRY);
   }
 
   public String getVisibleOutputs(int row) {
-    final var r = rows.get(row);
-    final var idx = r.baseIndex();
-    final var s = new StringBuilder();
+    final com.cburch.logisim.analyze.model.TruthTable.Row r = rows.get(row);
+    final int idx = r.baseIndex();
+    final java.lang.StringBuilder s = new StringBuilder();
     for (Entry[] column : columns) {
       s.append((column == null ? DEFAULT_ENTRY : column[idx]).getDescription());
     }
@@ -268,17 +268,17 @@ public class TruthTable {
   }
 
   public Entry getVisibleInputEntry(int row, int col) {
-    final var r = rows.get(row);
+    final com.cburch.logisim.analyze.model.TruthTable.Row r = rows.get(row);
     return r.inputs[col];
   }
 
   public int getVisibleRowDcMask(int row) {
-    final var r = rows.get(row);
+    final com.cburch.logisim.analyze.model.TruthTable.Row r = rows.get(row);
     return r.dcMask();
   }
 
   public int getVisibleRowIndex(int row) {
-    final var r = rows.get(row);
+    final com.cburch.logisim.analyze.model.TruthTable.Row r = rows.get(row);
     return r.baseIndex();
   }
 
@@ -288,7 +288,7 @@ public class TruthTable {
 
   public Entry getInputEntry(int idx, int col) {
     if (idx < 0 || idx >= getRowCount()) throw new IndexOutOfBoundsException("bad row index");
-    final var inputs = getInputColumnCount();
+    final int inputs = getInputColumnCount();
     if (col < 0 || col >= inputs) throw new IndexOutOfBoundsException("bad input column index");
     return isInputSet(idx, col, inputs) ? Entry.ONE : Entry.ZERO;
   }
@@ -311,7 +311,7 @@ public class TruthTable {
 
   private boolean identicalOutputs(int idx1, int idx2) {
     if (idx1 == idx2) return true;
-    for (final var column : columns) {
+    for (final com.cburch.logisim.analyze.model.Entry[] column : columns) {
       if (column == null) continue;
       if (column[idx1] != column[idx2]) return false;
     }
@@ -321,7 +321,7 @@ public class TruthTable {
   private void mergeOutputs(int idx1, int idx2, boolean[] changed) {
     if (idx1 == idx2) return;
     for (int col = 0; col < columns.size(); col++) {
-      final var column = columns.get(col);
+      final com.cburch.logisim.analyze.model.Entry[] column = columns.get(col);
       if (column == null) continue;
       if (column[idx1] != column[idx2]) {
         column[idx2] = column[idx1];
@@ -331,18 +331,18 @@ public class TruthTable {
   }
 
   private boolean setDontCare(Row r, int dc, boolean force, boolean[] changed) {
-    final var newRow = new Row(r.baseIndex(), r.inputs.length, r.dcMask() | dc);
-    final var base = newRow.baseIndex();
+    final com.cburch.logisim.analyze.model.TruthTable.Row newRow = new Row(r.baseIndex(), r.inputs.length, r.dcMask() | dc);
+    final int base = newRow.baseIndex();
     if (!force) {
-      for (final var idx : newRow) {
+      for (final java.lang.Integer idx : newRow) {
         if (!identicalOutputs(base, idx)) return false;
       }
     }
     for (int i = 0; i < rows.size(); i++) {
-      final var row = rows.get(i);
+      final com.cburch.logisim.analyze.model.TruthTable.Row row = rows.get(i);
       if (!newRow.intersects(row)) continue;
       if (newRow.contains(row)) {
-        for (final var idx : row) mergeOutputs(base, idx, changed);
+        for (final java.lang.Integer idx : row) mergeOutputs(base, idx, changed);
         rows.remove(i);
       } else {
         // find a bit we can flip in s so it doesn't conflict
@@ -356,18 +356,18 @@ public class TruthTable {
       }
       i--; // back up, may need a second split
     }
-    final var pos = Collections.binarySearch(rows, newRow, sortByInputs);
+    final int pos = Collections.binarySearch(rows, newRow, sortByInputs);
     if (pos < 0) rows.add(-pos - 1, newRow);
     else throw new IllegalStateException("failed row merge");
     return true;
   }
 
   public boolean setVisibleInputEntry(int row, int col, Entry value, boolean force) {
-    final var r = rows.get(row);
+    final com.cburch.logisim.analyze.model.TruthTable.Row r = rows.get(row);
     if (r.inputs[col] == value) return false;
-    final var dc = (1 << (r.inputs.length - 1 - col));
+    final int dc = (1 << (r.inputs.length - 1 - col));
     if (value == Entry.DONT_CARE) {
-      final var changed = new boolean[columns.size()];
+      final boolean[] changed = new boolean[columns.size()];
       if (!setDontCare(r, dc, force, changed)) return false;
       fireRowsChanged();
       for (int ocol = 0; ocol < columns.size(); ocol++) {
@@ -385,7 +385,7 @@ public class TruthTable {
   }
 
   public void setVisibleOutputEntry(int row, int col, Entry value) {
-    final var r = rows.get(row);
+    final com.cburch.logisim.analyze.model.TruthTable.Row r = rows.get(row);
     com.cburch.logisim.analyze.model.Entry[] column = columns.get(col);
     if (column == null && value == DEFAULT_ENTRY) return;
     else if (column == null) column = getOutputColumn(col);
@@ -400,7 +400,7 @@ public class TruthTable {
 
   Row findRow(int idx) {
     for (int i = rows.size() - 1; i >= 0; i--) {
-      final var r = rows.get(i);
+      final com.cburch.logisim.analyze.model.TruthTable.Row r = rows.get(i);
       if (r.contains(idx)) return r;
     }
     throw new IllegalStateException("missing row");
@@ -408,26 +408,26 @@ public class TruthTable {
 
   public int findVisibleRowContaining(int idx) {
     for (int i = rows.size() - 1; i >= 0; i--) {
-      final var r = rows.get(i);
+      final com.cburch.logisim.analyze.model.TruthTable.Row r = rows.get(i);
       if (r.contains(idx)) return i;
     }
     throw new IllegalStateException("missing row");
   }
 
   public void setVisibleRows(List<Entry[]> newEntries, boolean force) {
-    final var ni = getInputColumnCount();
-    final var no = getOutputColumnCount();
-    final var newRows = new ArrayList<Row>(newEntries.size());
-    for (final var values : newEntries) {
+    final int ni = getInputColumnCount();
+    final int no = getOutputColumnCount();
+    final java.util.ArrayList<com.cburch.logisim.analyze.model.TruthTable.Row> newRows = new ArrayList<Row>(newEntries.size());
+    for (final com.cburch.logisim.analyze.model.Entry[] values : newEntries) {
       if (values.length != ni + no) throw new IllegalArgumentException("wrong column count");
       newRows.add(new Row(values, ni));
     }
     // check that newRows has no intersections
-    final var ivars = getInputVariables();
-    final var taken = new int[getRowCount()];
+    final java.util.List<com.cburch.logisim.analyze.model.Var> ivars = getInputVariables();
+    final int[] taken = new int[getRowCount()];
     for (int i = 0; i < newRows.size(); i++) {
-      final var r = newRows.get(i);
-      for (final var idx : r) {
+      final com.cburch.logisim.analyze.model.TruthTable.Row r = newRows.get(i);
+      for (final java.lang.Integer idx : r) {
         if (taken[idx] != 0 && !force) {
           throw new IllegalArgumentException(
               String.format(
@@ -464,13 +464,13 @@ public class TruthTable {
     initColumns();
 
     for (Entry[] values : newEntries) {
-      final var r = new Row(values, ni);
+      final com.cburch.logisim.analyze.model.TruthTable.Row r = new Row(values, ni);
       for (int col = 0; col < no; col++) {
-        final var value = values[ni + col];
+        final com.cburch.logisim.analyze.model.Entry value = values[ni + col];
         com.cburch.logisim.analyze.model.Entry[] column = columns.get(col);
         if (column == null && value == DEFAULT_ENTRY) continue;
         else if (column == null) column = getOutputColumn(col);
-        for (final var idx : r) column[idx] = value;
+        for (final java.lang.Integer idx : r) column[idx] = value;
       }
     }
     fireRowsChanged();
@@ -485,7 +485,7 @@ public class TruthTable {
     else if (column == null) column = getOutputColumn(col);
     if (column[idx] == value) return;
     column[idx] = value;
-    final var r = findRow(idx);
+    final com.cburch.logisim.analyze.model.TruthTable.Row r = findRow(idx);
     if (r.duplicity() > 1) {
       splitRow(r, idx);
       fireRowsChanged();
@@ -513,35 +513,35 @@ public class TruthTable {
     }
 
     private void outputsChanged(VariableListEvent event) {
-      final var v = event.getVariable();
-      final var action = event.getType();
+      final com.cburch.logisim.analyze.model.Var v = event.getVariable();
+      final int action = event.getType();
       if (action == VariableListEvent.ALL_REPLACED) {
         initColumns();
       } else if (action == VariableListEvent.ADD) {
-        final var bitIndex = event.getBitIndex();
+        final java.lang.Integer bitIndex = event.getBitIndex();
         for (int b = v.width - 1; b >= 0; b--) columns.add(bitIndex - b, null /* lazily created */);
       } else if (action == VariableListEvent.MOVE) {
-        final var delta = event.getBitIndex();
-        final var newIndex = getOutputIndex(v.bitName(0));
+        final java.lang.Integer delta = event.getBitIndex();
+        final int newIndex = getOutputIndex(v.bitName(0));
         if (delta > 0) {
           for (int b = 0; b < v.width; b++) {
-            final var column = columns.remove(newIndex - delta - b);
+            final com.cburch.logisim.analyze.model.Entry[] column = columns.remove(newIndex - delta - b);
             columns.add(newIndex - b, column);
           }
         } else if (delta < 0) {
           for (int b = v.width - 1; b >= 0; b--) {
-            final var column = columns.remove(newIndex - delta - b);
+            final com.cburch.logisim.analyze.model.Entry[] column = columns.remove(newIndex - delta - b);
             columns.add(newIndex - b, column);
           }
         }
       } else if (action == VariableListEvent.REMOVE) {
-        final var bitIndex = event.getBitIndex();
+        final java.lang.Integer bitIndex = event.getBitIndex();
         for (int b = 0; b < v.width; b++) columns.remove(bitIndex - b);
       } else if (action == VariableListEvent.REPLACE) {
-        final var bitIndex = event.getBitIndex();
-        final var newVar = getOutputVariable(event.getIndex());
+        final java.lang.Integer bitIndex = event.getBitIndex();
+        final com.cburch.logisim.analyze.model.Var newVar = getOutputVariable(event.getIndex());
         int lost = v.width - newVar.width;
-        final var pos = bitIndex + 1 - v.width;
+        final int pos = bitIndex + 1 - v.width;
         if (lost > 0) {
           while (lost-- != 0) columns.remove(pos);
         } else if (lost < 0) {
@@ -551,30 +551,30 @@ public class TruthTable {
     }
 
     private void inputsChanged(VariableListEvent event) {
-      final var v = event.getVariable();
-      final var action = event.getType();
+      final com.cburch.logisim.analyze.model.Var v = event.getVariable();
+      final int action = event.getType();
       if (action == VariableListEvent.ADD) {
-        final var bitIndex = event.getBitIndex();
+        final java.lang.Integer bitIndex = event.getBitIndex();
         int oldCount = getInputColumnCount() - v.width;
         for (int b = v.width - 1; b >= 0; b--) addInput(bitIndex - b, oldCount++);
       } else if (action == VariableListEvent.REMOVE) {
-        final var bitIndex = event.getBitIndex();
+        final java.lang.Integer bitIndex = event.getBitIndex();
         int oldCount = getInputColumnCount() + v.width;
         for (int b = 0; b < v.width; b++) removeInput(bitIndex - b, oldCount--);
       } else if (action == VariableListEvent.MOVE) {
-        final var delta = event.getBitIndex();
-        final var newIndex = getInputIndex(v.bitName(0));
+        final java.lang.Integer delta = event.getBitIndex();
+        final int newIndex = getInputIndex(v.bitName(0));
         if (delta > 0) {
           for (int b = 0; b < v.width; b++) moveInput(newIndex - delta - b, newIndex - b);
         } else if (delta < 0) {
           for (int b = v.width - 1; b >= 0; b--) moveInput(newIndex - delta - b, newIndex - b);
         }
       } else if (action == VariableListEvent.REPLACE) {
-        final var bitIndex = event.getBitIndex();
-        final var newVar = getInputVariable(event.getIndex());
+        final java.lang.Integer bitIndex = event.getBitIndex();
+        final com.cburch.logisim.analyze.model.Var newVar = getInputVariable(event.getIndex());
         int lost = v.width - newVar.width;
         int oldCount = getInputColumnCount() + lost;
-        final var pos = bitIndex + 1 - v.width;
+        final int pos = bitIndex + 1 - v.width;
         if (lost > 0) {
           while (lost-- != 0) removeInput(pos, oldCount--);
         } else if (lost < 0) {
@@ -586,22 +586,22 @@ public class TruthTable {
     }
 
     private void moveInput(int oldIndex, int newIndex) {
-      final var inputs = getInputColumnCount();
+      final int inputs = getInputColumnCount();
       oldIndex = inputs - 1 - oldIndex;
       newIndex = inputs - 1 - newIndex;
-      final var allMask = (1 << inputs) - 1;
-      final var sameMask =
+      final int allMask = (1 << inputs) - 1;
+      final int sameMask =
           allMask
               ^ ((1 << (1 + Math.max(oldIndex, newIndex))) - 1)
               ^ ((1 << Math.min(oldIndex, newIndex)) - 1); // bits that don't change
-      final var moveMask = 1 << oldIndex; // bit that moves
-      final var moveDist = Math.abs(newIndex - oldIndex);
-      final var moveLeft = newIndex > oldIndex;
-      final var blockMask = allMask ^ sameMask ^ moveMask; // bits that move by one
+      final int moveMask = 1 << oldIndex; // bit that moves
+      final int moveDist = Math.abs(newIndex - oldIndex);
+      final boolean moveLeft = newIndex > oldIndex;
+      final int blockMask = allMask ^ sameMask ^ moveMask; // bits that move by one
       ArrayList<Row> ret = new ArrayList<>(2 * rows.size());
-      for (final var row : rows) {
-        final var i = row.baseIndex();
-        final var dc = row.dcMask();
+      for (final com.cburch.logisim.analyze.model.TruthTable.Row row : rows) {
+        final int i = row.baseIndex();
+        final int dc = row.dcMask();
         int idx0;
         int dc0;
         if (moveLeft) {
@@ -619,14 +619,14 @@ public class TruthTable {
 
     private void addInput(int index, int oldCount) {
       // add another Entry column to each row.input
-      final var ret = new ArrayList<Row>(2 * rows.size());
-      for (final var row : rows) {
-        final var i = row.baseIndex();
-        final var dc = row.dcMask();
-        final var b = 1 << (oldCount - index); // _0001000
+      final java.util.ArrayList<com.cburch.logisim.analyze.model.TruthTable.Row> ret = new ArrayList<Row>(2 * rows.size());
+      for (final com.cburch.logisim.analyze.model.TruthTable.Row row : rows) {
+        final int i = row.baseIndex();
+        final int dc = row.dcMask();
+        final int b = 1 << (oldCount - index); // _0001000
         int mask = b - 1; // _0000111
-        final var idx0 = ((i & ~mask) << 1) | 0 | (i & mask); // xxxx0yyy
-        final var dc0 = ((dc & ~mask) << 1) | 0 | (dc & mask); // wwww0zzz
+        final int idx0 = ((i & ~mask) << 1) | 0 | (i & mask); // xxxx0yyy
+        final int dc0 = ((dc & ~mask) << 1) | 0 | (dc & mask); // wwww0zzz
         ret.add(new Row(idx0 | 0, oldCount + 1, dc0)); // xxxx0yyy
         ret.add(new Row(idx0 | b, oldCount + 1, dc0)); // xxxx1yyy
       }
@@ -636,22 +636,22 @@ public class TruthTable {
 
     private void removeInput(int index, int oldCount) {
       // force an Entry column of each row.input to 'x', then remove it
-      final var b = (1 << (oldCount - 1 - index)); // _0001000
-      final var changed = new boolean[columns.size()];
+      final int b = (1 << (oldCount - 1 - index)); // _0001000
+      final boolean[] changed = new boolean[columns.size()];
       // loop rows by index to avoid java.util.ConcurrentModificationException
       //noinspection ForLoopReplaceableByForEach
       for (int i = 0; i < rows.size(); ++i) {
-        final var r = rows.get(i);
+        final com.cburch.logisim.analyze.model.TruthTable.Row r = rows.get(i);
         if (r.inputs[index] == Entry.DONT_CARE) continue;
         setDontCare(r, b, true, changed); // mutates row
       }
-      final var mask = b - 1; // _0000111
-      final var ret = new ArrayList<Row>(rows.size());
-      for (final var r : rows) {
-        final var i = r.baseIndex();
-        final var dc = r.dcMask();
-        final var idx0 = ((i >> 1) & ~mask) | (i & mask); // __xxxyyy
-        final var dc0 = ((dc >> 1) & ~mask) | (dc & mask); // wwww0zzz
+      final int mask = b - 1; // _0000111
+      final java.util.ArrayList<com.cburch.logisim.analyze.model.TruthTable.Row> ret = new ArrayList<Row>(rows.size());
+      for (final com.cburch.logisim.analyze.model.TruthTable.Row r : rows) {
+        final int i = r.baseIndex();
+        final int dc = r.dcMask();
+        final int idx0 = ((i >> 1) & ~mask) | (i & mask); // __xxxyyy
+        final int dc0 = ((dc >> 1) & ~mask) | (dc & mask); // wwww0zzz
         ret.add(new Row(idx0, oldCount - 1, dc0));
       }
       ret.sort(sortByInputs);
@@ -659,21 +659,21 @@ public class TruthTable {
     }
 
     private Entry[] inputsChangedForOutput(Entry[] column, VariableListEvent event) {
-      final var v = event.getVariable();
-      final var action = event.getType();
+      final com.cburch.logisim.analyze.model.Var v = event.getVariable();
+      final int action = event.getType();
       if (action == VariableListEvent.ADD) {
         java.lang.Integer bitIndex = event.getBitIndex();
         int oldCount = getInputColumnCount() - v.width;
         for (int b = v.width - 1; b >= 0; b--)
           column = addInputForOutput(column, bitIndex - b, oldCount++);
       } else if (action == VariableListEvent.REMOVE) {
-        final var bitIndex = event.getBitIndex();
+        final java.lang.Integer bitIndex = event.getBitIndex();
         int oldCount = getInputColumnCount() + v.width;
         for (int b = 0; b < v.width; b++)
           column = removeInputForOutput(column, bitIndex - b, oldCount--);
       } else if (action == VariableListEvent.MOVE) {
-        final var delta = event.getBitIndex();
-        final var newIndex = getInputIndex(v.bitName(0));
+        final java.lang.Integer delta = event.getBitIndex();
+        final int newIndex = getInputIndex(v.bitName(0));
         if (delta > 0) {
           for (int b = 0; b < v.width; b++)
             column = moveInputForOutput(column, newIndex - delta - b, newIndex - b);
@@ -682,11 +682,11 @@ public class TruthTable {
             column = moveInputForOutput(column, newIndex - delta - b, newIndex - b);
         }
       } else if (action == VariableListEvent.REPLACE) {
-        final var bitIndex = event.getBitIndex();
-        final var newVar = getInputVariable(event.getIndex());
+        final java.lang.Integer bitIndex = event.getBitIndex();
+        final com.cburch.logisim.analyze.model.Var newVar = getInputVariable(event.getIndex());
         int lost = v.width - newVar.width;
         int oldCount = getInputColumnCount() + lost;
-        final var pos = bitIndex + 1 - v.width;
+        final int pos = bitIndex + 1 - v.width;
         if (lost > 0) {
           while (lost-- != 0) column = removeInputForOutput(column, pos, oldCount--);
         } else if (lost < 0) {
@@ -697,18 +697,18 @@ public class TruthTable {
     }
 
     private Entry[] moveInputForOutput(Entry[] old, int oldIndex, int newIndex) {
-      final var inputs = getInputColumnCount();
+      final int inputs = getInputColumnCount();
       oldIndex = inputs - 1 - oldIndex;
       newIndex = inputs - 1 - newIndex;
-      final var ret = new Entry[old.length];
-      final var sameMask =
+      final com.cburch.logisim.analyze.model.Entry[] ret = new Entry[old.length];
+      final int sameMask =
           (old.length - 1)
               ^ ((1 << (1 + Math.max(oldIndex, newIndex))) - 1)
               ^ ((1 << Math.min(oldIndex, newIndex)) - 1); // bits that don't change
-      final var moveMask = 1 << oldIndex; // bit that moves
-      final var moveDist = Math.abs(newIndex - oldIndex);
-      final var moveLeft = newIndex > oldIndex;
-      final var blockMask = (old.length - 1) ^ sameMask ^ moveMask; // bits that move by one
+      final int moveMask = 1 << oldIndex; // bit that moves
+      final int moveDist = Math.abs(newIndex - oldIndex);
+      final boolean moveLeft = newIndex > oldIndex;
+      final int blockMask = (old.length - 1) ^ sameMask ^ moveMask; // bits that move by one
       for (int i = 0; i < old.length; i++) {
         int j; // new index
         if (moveLeft) {
@@ -724,7 +724,7 @@ public class TruthTable {
     private Entry[] removeInputForOutput(Entry[] old, int index, int oldCount) {
       com.cburch.logisim.analyze.model.Entry[] ret = new Entry[old.length / 2];
       int j = 0;
-      final var mask = 1 << (oldCount - 1 - index);
+      final int mask = 1 << (oldCount - 1 - index);
       for (int i = 0; i < old.length; i++) {
         if ((i & mask) == 0) {
           Entry e0 = old[i];
@@ -736,9 +736,9 @@ public class TruthTable {
     }
 
     private Entry[] addInputForOutput(Entry[] old, int index, int oldCount) {
-      final var ret = new Entry[2 * old.length];
-      final var b = 1 << (oldCount - index); // _0001000
-      final var mask = b - 1; // _0000111
+      final com.cburch.logisim.analyze.model.Entry[] ret = new Entry[2 * old.length];
+      final int b = 1 << (oldCount - index); // _0001000
+      final int mask = b - 1; // _0000111
       for (int i = 0; i < old.length; i++) {
         ret[((i & ~mask) << 1) | 0 | (i & mask)] = old[i]; // xxxx0yyy
         ret[((i & ~mask) << 1) | b | (i & mask)] = old[i]; // xxxx1yyy
@@ -756,21 +756,21 @@ public class TruthTable {
   }
 
   private void fireRowsChanged() {
-    final var event = new TruthTableEvent(this, null);
+    final com.cburch.logisim.analyze.model.TruthTableEvent event = new TruthTableEvent(this, null);
     for (TruthTableListener l : listeners) {
       l.rowsChanged(event);
     }
   }
 
   private void fireCellsChanged(int col) {
-    final var event = new TruthTableEvent(this, col);
+    final com.cburch.logisim.analyze.model.TruthTableEvent event = new TruthTableEvent(this, col);
     for (TruthTableListener l : listeners) {
       l.cellsChanged(event);
     }
   }
 
   private void fireStructureChanged(VariableListEvent cause) {
-    final var event = new TruthTableEvent(this, cause);
+    final com.cburch.logisim.analyze.model.TruthTableEvent event = new TruthTableEvent(this, cause);
     for (TruthTableListener l : listeners) {
       l.structureChanged(event);
     }

@@ -57,7 +57,7 @@ public class ComponentMapParser {
     String absoluteFileName = fileToPase.getPath();
 
     // Create instance of DocumentBuilderFactory
-    final var factory = XmlUtil.getHardenedBuilderFactory();
+    final javax.xml.parsers.DocumentBuilderFactory factory = XmlUtil.getHardenedBuilderFactory();
     // Get the DocumentBuilder
     DocumentBuilder parser = null;
 
@@ -68,7 +68,7 @@ public class ComponentMapParser {
     }
 
     // Create blank DOM Document
-    final var xml = new File(absoluteFileName);
+    final java.io.File xml = new File(absoluteFileName);
     Document mapDoc = null;
     try {
       mapDoc = parser.parse(xml);
@@ -77,12 +77,12 @@ public class ComponentMapParser {
     }
 
     nodeList = mapDoc.getElementsByTagName("LogisimGoesFPGABoardMapInformation");
-    final var circuitInfo = nodeList.item(0);
-    final var circuitInfoDetails = circuitInfo.getChildNodes();
+    final org.w3c.dom.Node circuitInfo = nodeList.item(0);
+    final org.w3c.dom.NodeList circuitInfoDetails = circuitInfo.getChildNodes();
 
     for (int i = 0; i < circuitInfoDetails.getLength(); i++) {
       if (circuitInfoDetails.item(i).getNodeName().equals("GlobalMapInformation")) {
-        final var attrs = circuitInfoDetails.item(i).getAttributes();
+        final org.w3c.dom.NamedNodeMap attrs = circuitInfoDetails.item(i).getAttributes();
         for (int j = 0; j < attrs.getLength(); j++) {
           if (attrs.item(j).getNodeName().equals("BoardName")) {
             if (!boardInfo.getBoardName().equals(attrs.item(j).getNodeValue())) {
@@ -107,7 +107,7 @@ public class ComponentMapParser {
         int width = -1;
         int height = -1;
         java.lang.String key = "";
-        final var attrs = circuitInfoDetails.item(i).getAttributes();
+        final org.w3c.dom.NamedNodeMap attrs = circuitInfoDetails.item(i).getAttributes();
         for (int j = 0; j < attrs.getLength(); j++) {
           if (attrs.item(j).getNodeName().equals(MapSectionStrings[0])) {
             key = attrs.item(j).getNodeValue();
@@ -127,7 +127,7 @@ public class ComponentMapParser {
         }
         if (!key.isEmpty() && (x > 0) && (y > 0) && (width > 0) && (height > 0)) {
           BoardRectangle rect = null;
-          for (final var comp : boardInfo.getAllComponents()) {
+          for (final com.cburch.logisim.fpga.data.FpgaIoInformationContainer comp : boardInfo.getAllComponents()) {
             if ((comp.getRectangle().getXpos() == x)
                 && (comp.getRectangle().getYpos() == y)
                 && (comp.getRectangle().getWidth() == width)

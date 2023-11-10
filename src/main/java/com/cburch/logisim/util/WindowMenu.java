@@ -27,7 +27,7 @@ public class WindowMenu extends JMenu {
   private class MyListener implements LocaleListener, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-      final var src = e.getSource();
+      final java.lang.Object src = e.getSource();
       if (src == minimize) {
         doMinimize();
       } else if (src == zoom) {
@@ -36,7 +36,7 @@ public class WindowMenu extends JMenu {
         doClose();
       } else if (src instanceof WindowMenuItem choice) {
         if (choice.isSelected()) {
-          final var item = findOwnerItem();
+          final com.cburch.logisim.util.WindowMenuItem item = findOwnerItem();
           if (item != null) {
             item.setSelected(true);
           }
@@ -87,7 +87,7 @@ public class WindowMenu extends JMenu {
     this.owner = owner;
     WindowMenuManager.addMenu(this);
 
-    final var menuMask = getToolkit().getMenuShortcutKeyMaskEx();
+    final int menuMask = getToolkit().getMenuShortcutKeyMaskEx();
     minimize.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, menuMask));
     close.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, menuMask));
 
@@ -116,7 +116,7 @@ public class WindowMenu extends JMenu {
   }
 
   private void computeContents() {
-    final var bgroup = new ButtonGroup();
+    final javax.swing.ButtonGroup bgroup = new ButtonGroup();
     bgroup.add(nullItem);
 
     removeAll();
@@ -181,9 +181,9 @@ public class WindowMenu extends JMenu {
     if (owner == null) return;
 
     owner.pack();
-    final var screenSize = owner.getToolkit().getScreenSize();
-    final var windowSize = owner.getPreferredSize();
-    final var windowLoc = owner.getLocation();
+    final java.awt.Dimension screenSize = owner.getToolkit().getScreenSize();
+    final java.awt.Dimension windowSize = owner.getPreferredSize();
+    final java.awt.Point windowLoc = owner.getLocation();
 
     boolean locChanged = false;
     boolean sizeChanged = false;

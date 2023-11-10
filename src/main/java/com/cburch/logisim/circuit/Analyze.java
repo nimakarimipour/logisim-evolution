@@ -71,7 +71,7 @@ public class Analyze {
 
     @Override
     public Expression put(LocationBit point, Expression expression) {
-      final var ret = super.put(point, expression);
+      final com.cburch.logisim.analyze.model.Expression ret = super.put(point, expression);
       if (currentCause != null) causes.put(point, currentCause);
       if (!Objects.equals(ret, expression)) {
         dirtyPoints.add(point);
@@ -95,8 +95,8 @@ public class Analyze {
    * self-referential; if so, return it.
    */
   private static Expression checkForCircularExpressions(ExpressionMap expressionMap) {
-    for (final var point : expressionMap.dirtyPoints) {
-      final var expr = expressionMap.get(point);
+    for (final com.cburch.logisim.circuit.Analyze.LocationBit point : expressionMap.dirtyPoints) {
+      final com.cburch.logisim.analyze.model.Expression expr = expressionMap.get(point);
       if (expr.isCircular()) return expr;
     }
     return null;
@@ -110,19 +110,19 @@ public class Analyze {
    * difficulties arise.
    */
   public static void computeExpression(AnalyzerModel model, Circuit circuit, Map<Instance, String> pinNames) throws AnalyzeException {
-    final var expressionMap = new ExpressionMap(circuit);
+    final com.cburch.logisim.circuit.Analyze.ExpressionMap expressionMap = new ExpressionMap(circuit);
 
-    final var inputVars = new ArrayList<Var>();
-    final var outputVars = new ArrayList<Var>();
-    final var outputPins = new ArrayList<Instance>();
-    for (final var entry : pinNames.entrySet()) {
-      final var pin = entry.getKey();
-      final var label = entry.getValue();
-      final var width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
+    final java.util.ArrayList<com.cburch.logisim.analyze.model.Var> inputVars = new ArrayList<Var>();
+    final java.util.ArrayList<com.cburch.logisim.analyze.model.Var> outputVars = new ArrayList<Var>();
+    final java.util.ArrayList<com.cburch.logisim.instance.Instance> outputPins = new ArrayList<Instance>();
+    for (final java.util.Map.Entry<com.cburch.logisim.instance.Instance,java.lang.String> entry : pinNames.entrySet()) {
+      final com.cburch.logisim.instance.Instance pin = entry.getKey();
+      final java.lang.String label = entry.getValue();
+      final int width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
       if (Pin.FACTORY.isInputPin(pin)) {
         expressionMap.currentCause = Instance.getComponentFor(pin);
         for (int b = 0; b < width; b++) {
-          final var e = Expressions.variable(width > 1 ? label + "[" + b + "]" : label);
+          final com.cburch.logisim.analyze.model.Expression e = Expressions.variable(width > 1 ? label + "[" + b + "]" : label);
           expressionMap.put(new LocationBit(pin.getLocation(), b), e);
         }
         inputVars.add(new Var(label, width));
@@ -134,7 +134,7 @@ public class Analyze {
 
     propagateComponents(expressionMap, circuit.getNonWires());
 
-    final var maxIterations = 100;
+    final int maxIterations = 100;
     for (int iterations = 0; !expressionMap.dirtyPoints.isEmpty(); iterations++) {
       if (iterations > maxIterations) {
         throw new AnalyzeException.Circular();
@@ -142,21 +142,21 @@ public class Analyze {
 
       propagateWires(expressionMap, new HashSet<>(expressionMap.dirtyPoints));
 
-      final var dirtyComponents = getDirtyComponents(circuit, expressionMap.dirtyPoints);
+      final java.util.HashSet<com.cburch.logisim.comp.Component> dirtyComponents = getDirtyComponents(circuit, expressionMap.dirtyPoints);
       expressionMap.dirtyPoints.clear();
       propagateComponents(expressionMap, dirtyComponents);
 
-      final var expr = checkForCircularExpressions(expressionMap);
+      final com.cburch.logisim.analyze.model.Expression expr = checkForCircularExpressions(expressionMap);
       if (expr != null) throw new AnalyzeException.Circular();
     }
 
     model.setVariables(inputVars, outputVars);
-    for (final var pin : outputPins) {
-      final var label = pinNames.get(pin);
-      final var width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
+    for (final com.cburch.logisim.instance.Instance pin : outputPins) {
+      final java.lang.String label = pinNames.get(pin);
+      final int width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
       for (int b = 0; b < width; b++) {
-        final var loc = new LocationBit(pin.getLocation(), b);
-        final var name = (width > 1 ? label + "[" + b + "]" : label);
+        final com.cburch.logisim.circuit.Analyze.LocationBit loc = new LocationBit(pin.getLocation(), b);
+        final java.lang.String name = (width > 1 ? label + "[" + b + "]" : label);
         model.getOutputExpressions().setExpression(name, expressionMap.get(loc));
       }
     }
@@ -167,46 +167,46 @@ public class Analyze {
   //
   /** Returns a truth table corresponding to the circuit. */
   public static void computeTable(AnalyzerModel model, Project proj, Circuit circuit, Map<Instance, String> pinLabels) {
-    final var inputPins = new ArrayList<Instance>();
-    final var inputVars = new ArrayList<Var>();
-    final var inputNames = new ArrayList<String>();
-    final var outputPins = new ArrayList<Instance>();
-    final var outputVars = new ArrayList<Var>();
-    final var outputNames = new ArrayList<String>();
-    for (final var entry : pinLabels.entrySet()) {
-      final var pin = entry.getKey();
-      final var width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
-      final var variable = new Var(entry.getValue(), width);
+    final java.util.ArrayList<com.cburch.logisim.instance.Instance> inputPins = new ArrayList<Instance>();
+    final java.util.ArrayList<com.cburch.logisim.analyze.model.Var> inputVars = new ArrayList<Var>();
+    final java.util.ArrayList<java.lang.String> inputNames = new ArrayList<String>();
+    final java.util.ArrayList<com.cburch.logisim.instance.Instance> outputPins = new ArrayList<Instance>();
+    final java.util.ArrayList<com.cburch.logisim.analyze.model.Var> outputVars = new ArrayList<Var>();
+    final java.util.ArrayList<java.lang.String> outputNames = new ArrayList<String>();
+    for (final java.util.Map.Entry<com.cburch.logisim.instance.Instance,java.lang.String> entry : pinLabels.entrySet()) {
+      final com.cburch.logisim.instance.Instance pin = entry.getKey();
+      final int width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
+      final com.cburch.logisim.analyze.model.Var variable = new Var(entry.getValue(), width);
       if (Pin.FACTORY.isInputPin(pin)) {
         inputPins.add(pin);
-        for (final var name : variable) inputNames.add(name);
+        for (final java.lang.String name : variable) inputNames.add(name);
         inputVars.add(variable);
       } else {
         outputPins.add(pin);
-        for (final var name : variable) outputNames.add(name);
+        for (final java.lang.String name : variable) outputNames.add(name);
         outputVars.add(variable);
       }
     }
 
-    final var inputCount = inputNames.size();
-    final var rowCount = 1 << inputCount;
-    final var columns = new Entry[outputNames.size()][rowCount];
+    final int inputCount = inputNames.size();
+    final int rowCount = 1 << inputCount;
+    final com.cburch.logisim.analyze.model.Entry[][] columns = new Entry[outputNames.size()][rowCount];
 
     for (int i = 0; i < rowCount; i++) {
-      final var circuitState = new CircuitState(proj, circuit);
+      final com.cburch.logisim.circuit.CircuitState circuitState = new CircuitState(proj, circuit);
       int incol = 0;
-      for (final var pin : inputPins) {
-        final var width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
-        final var v = new Value[width];
+      for (final com.cburch.logisim.instance.Instance pin : inputPins) {
+        final int width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
+        final com.cburch.logisim.data.Value[] v = new Value[width];
         for (int b = width - 1; b >= 0; b--) {
           boolean value = TruthTable.isInputSet(i, incol++, inputCount);
           v[b] = value ? Value.TRUE : Value.FALSE;
         }
-        final var pinState = circuitState.getInstanceState(pin);
+        final com.cburch.logisim.instance.InstanceState pinState = circuitState.getInstanceState(pin);
         Pin.FACTORY.setValue(pinState, Value.create(v));
       }
 
-      final var prop = circuitState.getPropagator();
+      final com.cburch.logisim.circuit.Propagator prop = circuitState.getPropagator();
       prop.propagate();
       /*
        * TODO for the SimulatorPrototype class do { prop.step(); } while
@@ -220,12 +220,12 @@ public class Analyze {
         }
       } else {
         int outcol = 0;
-        for (final var pin : outputPins) {
+        for (final com.cburch.logisim.instance.Instance pin : outputPins) {
           int width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
-          final var pinState = circuitState.getInstanceState(pin);
+          final com.cburch.logisim.instance.InstanceState pinState = circuitState.getInstanceState(pin);
           Entry out;
           for (int b = width - 1; b >= 0; b--) {
-            final var outValue = Pin.FACTORY.getValue(pinState).get(b);
+            final com.cburch.logisim.data.Value outValue = Pin.FACTORY.getValue(pinState).get(b);
             if (outValue == Value.TRUE)
               out = Entry.ONE;
             else if (outValue == Value.FALSE)
@@ -248,8 +248,8 @@ public class Analyze {
 
   // computes outputs of affected components
   private static HashSet<Component> getDirtyComponents(Circuit circuit, Set<LocationBit> pointsToProcess) {
-    final var dirtyComponents = new HashSet<Component>();
-    for (final var point : pointsToProcess) {
+    final java.util.HashSet<com.cburch.logisim.comp.Component> dirtyComponents = new HashSet<Component>();
+    for (final com.cburch.logisim.circuit.Analyze.LocationBit point : pointsToProcess) {
       dirtyComponents.addAll(circuit.getNonWires(point.loc));
     }
     return dirtyComponents;
@@ -263,17 +263,17 @@ public class Analyze {
    * order, with ties broken left-right).
    */
   public static SortedMap<Instance, String> getPinLabels(Circuit circuit) {
-    final var ret = new TreeMap<Instance, String>(Location.CompareVertical);
+    final java.util.TreeMap<com.cburch.logisim.instance.Instance,java.lang.String> ret = new TreeMap<Instance, String>(Location.CompareVertical);
 
     // Put the pins into the TreeMap, with null labels
-    for (final var pin : circuit.getAppearance().getPortOffsets(Direction.EAST).values()) {
+    for (final com.cburch.logisim.instance.Instance pin : circuit.getAppearance().getPortOffsets(Direction.EAST).values()) {
       ret.put(pin, null);
     }
 
     // Process first the pins that the user has given labels.
-    final var pinList = new ArrayList<>(ret.keySet());
-    final var labelsTaken = new HashSet<String>();
-    for (final var pin : pinList) {
+    final java.util.ArrayList<com.cburch.logisim.instance.Instance> pinList = new ArrayList<>(ret.keySet());
+    final java.util.HashSet<java.lang.String> labelsTaken = new HashSet<String>();
+    for (final com.cburch.logisim.instance.Instance pin : pinList) {
       java.lang.String label = pin.getAttributeSet().getValue(StdAttr.LABEL);
       label = toValidLabel(label);
       if (label != null) {
@@ -288,7 +288,7 @@ public class Analyze {
     }
 
     // Now process the unlabeled pins.
-    for (final var pin : pinList) {
+    for (final com.cburch.logisim.instance.Instance pin : pinList) {
       if (ret.get(pin) != null) continue;
 
       String defaultList;
@@ -304,7 +304,7 @@ public class Analyze {
         }
       }
 
-      final var options = defaultList.split(",");
+      final java.lang.String[] options = defaultList.split(",");
       String label = null;
       for (int i = 0; label == null && i < options.length; i++) {
         if (!labelsTaken.contains(options[i])) {
@@ -330,8 +330,8 @@ public class Analyze {
   }
 
   private static void propagateComponents(ExpressionMap expressionMap, Collection<Component> components) throws AnalyzeException {
-    for (final var comp : components) {
-      final var computer = (ExpressionComputer) comp.getFeature(ExpressionComputer.class);
+    for (final com.cburch.logisim.comp.Component comp : components) {
+      final com.cburch.logisim.circuit.ExpressionComputer computer = (ExpressionComputer) comp.getFeature(ExpressionComputer.class);
       if (computer != null) {
         try {
           expressionMap.currentCause = comp;
@@ -350,23 +350,23 @@ public class Analyze {
   // propagates expressions down wires
   private static void propagateWires(ExpressionMap expressionMap, HashSet<LocationBit> pointsToProcess) throws AnalyzeException {
     expressionMap.currentCause = null;
-    for (final var locationBit : pointsToProcess) {
-      final var e = expressionMap.get(locationBit);
+    for (final com.cburch.logisim.circuit.Analyze.LocationBit locationBit : pointsToProcess) {
+      final com.cburch.logisim.analyze.model.Expression e = expressionMap.get(locationBit);
       expressionMap.currentCause = expressionMap.causes.get(locationBit);
-      final var bundle = expressionMap.circuit.wires.getWireBundle(locationBit.loc);
+      final com.cburch.logisim.circuit.WireBundle bundle = expressionMap.circuit.wires.getWireBundle(locationBit.loc);
       if (e != null && bundle != null && bundle.isValid() && bundle.threads != null) {
         if (bundle.threads.length <= locationBit.bit) {
           throw new AnalyzeException.CannotHandle("incompatible widths");
         }
-        final var t = bundle.threads[locationBit.bit];
-        for (final var tb : t.getBundles()) {
-          for (final var p2 : tb.b.points) {
+        final com.cburch.logisim.circuit.WireThread t = bundle.threads[locationBit.bit];
+        for (final com.cburch.logisim.circuit.CircuitWires.ThreadBundle tb : t.getBundles()) {
+          for (final com.cburch.logisim.data.Location p2 : tb.b.points) {
             if (p2.equals(locationBit.loc)) continue;
-            final var p2b = new LocationBit(p2, tb.loc);
-            final var old = expressionMap.get(p2b);
+            final com.cburch.logisim.circuit.Analyze.LocationBit p2b = new LocationBit(p2, tb.loc);
+            final com.cburch.logisim.analyze.model.Expression old = expressionMap.get(p2b);
             if (old != null) {
-              final var eCause = expressionMap.currentCause;
-              final var oldCause = expressionMap.causes.get(p2b);
+              final com.cburch.logisim.comp.Component eCause = expressionMap.currentCause;
+              final com.cburch.logisim.comp.Component oldCause = expressionMap.causes.get(p2b);
               if (eCause != oldCause && !old.equals(e)) {
                 throw new AnalyzeException.Conflict();
               }
@@ -381,7 +381,7 @@ public class Analyze {
   private static String toValidLabel(String label) {
     if (label == null) return null;
     StringBuilder end = null;
-    final var ret = new StringBuilder();
+    final java.lang.StringBuilder ret = new StringBuilder();
     boolean afterWhitespace = false;
     for (int i = 0; i < label.length(); i++) {
       char c = label.charAt(i);

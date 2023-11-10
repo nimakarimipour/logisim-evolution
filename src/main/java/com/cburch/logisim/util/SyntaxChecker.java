@@ -33,7 +33,7 @@ public final class SyntaxChecker {
     if (StringUtil.isNullOrEmpty(val)) return null;
     variableMatcher = variablePattern.matcher(val);
     forbiddenMatcher = forbiddenPattern.matcher(val);
-    final var hdl = CorrectLabel.hdlCorrectLabel(val);
+    final java.lang.String hdl = CorrectLabel.hdlCorrectLabel(val);
     java.lang.String message = "";
     if (!variableMatcher.matches()) {
       message = message.concat(S.get("variableInvalidCharacters"));
@@ -55,7 +55,7 @@ public final class SyntaxChecker {
   }
 
   public static boolean isVariableNameAcceptable(String val, Boolean showDialog) {
-    final var message = getErrorMessage(val);
+    final java.lang.String message = getErrorMessage(val);
     if (message != null && showDialog) {
       OptionPane.showMessageDialog(null, message.concat("\n" + S.get("variableNameNotAcceptable")));
     }

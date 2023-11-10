@@ -47,12 +47,12 @@ public class RegisterHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public SortedMap<String, String> getPortMap(Netlist Nets, Object MapInfo) {
-    final var map = new TreeMap<String, String>(super.getPortMap(Nets, MapInfo));
+    final java.util.TreeMap<java.lang.String,java.lang.String> map = new TreeMap<String, String>(super.getPortMap(Nets, MapInfo));
     if (MapInfo instanceof final netlistComponent comp && Hdl.isVhdl()) {
-      final var nrOfBits = comp.getComponent().getAttributeSet().getValue(StdAttr.WIDTH).getWidth();
+      final int nrOfBits = comp.getComponent().getAttributeSet().getValue(StdAttr.WIDTH).getWidth();
       if (nrOfBits == 1) {
-        final var inMap = map.get("d");
-        final var outMap = map.get("q");
+        final java.lang.String inMap = map.get("d");
+        final java.lang.String outMap = map.get("q");
         map.remove("d");
         map.remove("q");
         map.put("d(0)", inMap);
@@ -64,7 +64,7 @@ public class RegisterHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist nets, AttributeSet attrs) {
-    final var contents = LineBuffer.getBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getBuffer()
             .pair("invertClock", INVERT_CLOCK_STRING)
             .pair("clock", HdlPorts.getClockName(1))
             .pair("Tick", HdlPorts.getTickName(1));

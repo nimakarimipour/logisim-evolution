@@ -114,12 +114,12 @@ public class LFrame extends JFrame implements WindowClosable {
 
   public static void attachIcon(Window frame) {
     if (allIcons == null) {
-      final var loadedIcons = new ArrayList<Image>();
-      final var loader = LFrame.class.getClassLoader();
-      for (final var size : sizes) {
-        final var url = loader.getResource(pathBasePart + size + ".png");
+      final java.util.ArrayList<java.awt.Image> loadedIcons = new ArrayList<Image>();
+      final java.lang.ClassLoader loader = LFrame.class.getClassLoader();
+      for (final int size : sizes) {
+        final java.net.URL url = loader.getResource(pathBasePart + size + ".png");
         if (url != null) {
-          final var icon = new ImageIcon(url);
+          final javax.swing.ImageIcon icon = new ImageIcon(url);
           loadedIcons.add(icon.getImage());
           if (size == defaultSize) {
             defaultIcon = icon.getImage();
@@ -132,7 +132,7 @@ public class LFrame extends JFrame implements WindowClosable {
     boolean success = false;
     try {
       if (CollectionUtil.isNotEmpty(allIcons)) {
-        final var set = frame.getClass().getMethod("setIconImages", List.class);
+        final java.lang.reflect.Method set = frame.getClass().getMethod("setIconImages", List.class);
         set.invoke(frame, allIcons);
         success = true;
       }
@@ -147,7 +147,7 @@ public class LFrame extends JFrame implements WindowClosable {
 
   @Override
   public void requestClose() {
-    final var closing = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
+    final java.awt.event.WindowEvent closing = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
     processWindowEvent(closing);
   }
 

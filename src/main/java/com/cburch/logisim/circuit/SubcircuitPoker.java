@@ -27,14 +27,14 @@ public class SubcircuitPoker extends InstancePoker {
 
   @Override
   public Bounds getBounds(InstancePainter painter) {
-    final var bds = painter.getInstance().getBounds();
+    final com.cburch.logisim.data.Bounds bds = painter.getInstance().getBounds();
     int cx = bds.getX() + bds.getWidth() / 2;
     int cy = bds.getY() + bds.getHeight() / 2;
     return Bounds.create(cx - 5, cy - 5, 15, 15);
   }
 
   private boolean isWithin(InstanceState state, MouseEvent e) {
-    final var bds = state.getInstance().getBounds();
+    final com.cburch.logisim.data.Bounds bds = state.getInstance().getBounds();
     int cx = bds.getX() + bds.getWidth() / 2;
     int cy = bds.getY() + bds.getHeight() / 2;
     int dx = e.getX() - cx;
@@ -44,7 +44,7 @@ public class SubcircuitPoker extends InstancePoker {
 
   @Override
   public void mousePressed(InstanceState state, MouseEvent e) {
-    for (final var c :
+    for (final com.cburch.draw.model.CanvasObject c :
         ((SubcircuitFactory) state.getInstance().getFactory())
             .getSubcircuit()
             .getAppearance()
@@ -60,7 +60,7 @@ public class SubcircuitPoker extends InstancePoker {
 
   @Override
   public void mouseReleased(InstanceState state, MouseEvent e) {
-    for (final var c :
+    for (final com.cburch.draw.model.CanvasObject c :
         ((SubcircuitFactory) state.getInstance().getFactory())
             .getSubcircuit()
             .getAppearance()
@@ -82,15 +82,15 @@ public class SubcircuitPoker extends InstancePoker {
   @Override
   public void paint(InstancePainter painter) {
     if (painter.getDestination() instanceof Canvas && painter.getData() instanceof CircuitState) {
-      final var bds = painter.getInstance().getBounds();
-      final var cx = bds.getX() + bds.getWidth() / 2;
-      final var cy = bds.getY() + bds.getHeight() / 2;
+      final com.cburch.logisim.data.Bounds bds = painter.getInstance().getBounds();
+      final int cx = bds.getX() + bds.getWidth() / 2;
+      final int cy = bds.getY() + bds.getHeight() / 2;
 
-      final var tx = cx + 7;
-      final var ty = cy + 7;
+      final int tx = cx + 7;
+      final int ty = cy + 7;
       int[] xp = {tx - 2, cx + 13, cx + 15, tx + 2};
       int[] yp = {ty + 2, cy + 15, cy + 13, ty - 2};
-      final var g = painter.getGraphics();
+      final java.awt.Graphics g = painter.getGraphics();
       if (mouseDown) {
         g.setColor(MAGNIFYING_INTERIOR_DOWN);
       } else {

@@ -122,12 +122,12 @@ public abstract class TclComponent extends InstanceFactory {
    */
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     java.awt.FontMetrics metric = g.getFontMetrics();
 
-    final var bds = painter.getBounds();
-    final var x0 = bds.getX() + (bds.getWidth() / 2);
-    final var y0 = bds.getY() + metric.getHeight() + 12;
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+    final int x0 = bds.getX() + (bds.getWidth() / 2);
+    final int y0 = bds.getY() + metric.getHeight() + 12;
     GraphicsUtil.drawText(
         g,
         StringUtil.resizeString(getDisplayName(), metric, WIDTH),
@@ -136,7 +136,7 @@ public abstract class TclComponent extends InstanceFactory {
         GraphicsUtil.H_CENTER,
         GraphicsUtil.V_BOTTOM);
 
-    final var glbLabel = painter.getAttributeValue(StdAttr.LABEL);
+    final java.lang.String glbLabel = painter.getAttributeValue(StdAttr.LABEL);
     if (glbLabel != null) {
       Font font = g.getFont();
       g.setFont(painter.getAttributeValue(StdAttr.LABEL_FONT));
@@ -189,7 +189,7 @@ public abstract class TclComponent extends InstanceFactory {
      * doesn't change when you move the component when InstanceComponent
      * does.
      */
-    final var tclComponentData = TclComponentData.get(state);
+    final com.cburch.logisim.std.tcl.TclComponentData tclComponentData = TclComponentData.get(state);
     tclComponentData.getTclWrapper().start();
 
     /*
@@ -200,10 +200,10 @@ public abstract class TclComponent extends InstanceFactory {
     if (tclComponentData.isConnected()) {
 
       /* Send port values to the TCL wrapper */
-      for (final var p : state.getInstance().getPorts()) {
-        final var index = state.getPortIndex(p);
-        final var val = state.getPortValue(index);
-        final var message = p.getType() + ":" + p.getToolTip() + ":" + val.toBinaryString() + ":" + index;
+      for (final com.cburch.logisim.instance.Port p : state.getInstance().getPorts()) {
+        final int index = state.getPortIndex(p);
+        final com.cburch.logisim.data.Value val = state.getPortValue(index);
+        final java.lang.String message = p.getType() + ":" + p.getToolTip() + ":" + val.toBinaryString() + ":" + index;
 
         tclComponentData.send(message);
       }
@@ -234,16 +234,16 @@ public abstract class TclComponent extends InstanceFactory {
         && serverResponse.length() > 0
         && !serverResponse.equals("sync")) {
 
-      final var parameters = serverResponse.split(":");
+      final java.lang.String[] parameters = serverResponse.split(":");
 
       /* Skip if we receive crap, still better than an out of range */
       if (parameters.length < 2) continue;
 
       java.lang.String busValue = parameters[1];
-      final var portId = Integer.parseInt(parameters[2]);
+      final int portId = Integer.parseInt(parameters[2]);
 
       // Expected response width
-      final var width = state.getFactory().getPorts().get(portId).getFixedBitWidth().getWidth();
+      final int width = state.getFactory().getPorts().get(portId).getFixedBitWidth().getWidth();
 
       /*
        * If the received string is too long, cut the leftmost part to
@@ -255,14 +255,14 @@ public abstract class TclComponent extends InstanceFactory {
        * If the received value is not wide enough, complete with X on
        * the MSB
        */
-      final var vectorValues = new Value[width];
+      final com.cburch.logisim.data.Value[] vectorValues = new Value[width];
       for (int i = width - 1; i >= busValue.length(); i--) {
         vectorValues[i] = Value.UNKNOWN;
       }
 
       /* Transform char to Logisim Value */
       int idx = busValue.length() - 1;
-      for (final var bit : busValue.toCharArray()) {
+      for (final char bit : busValue.toCharArray()) {
 
         try {
           vectorValues[idx] = switch (Character.getNumericValue(bit)) {

@@ -54,10 +54,10 @@ public class Line extends AbstractCanvasObject {
 
   @Override
   public boolean contains(Location loc, boolean assumeFilled) {
-    final var xq = loc.getX();
-    final var yq = loc.getY();
-    final var d = LineUtil.ptDistSqSegment(x0, y0, x1, y1, xq, yq);
-    final var thresh = Math.max(ON_LINE_THRESH, strokeWidth / 2);
+    final int xq = loc.getX();
+    final int yq = loc.getY();
+    final double d = LineUtil.ptDistSqSegment(x0, y0, x1, y1, xq, yq);
+    final int thresh = Math.max(ON_LINE_THRESH, strokeWidth / 2);
     return d < thresh * thresh;
   }
 
@@ -94,10 +94,10 @@ public class Line extends AbstractCanvasObject {
       return UnmodifiableList.create(
           new Handle[] {new Handle(this, x0, y0), new Handle(this, x1, y1)});
     } else {
-      final var h = gesture.getHandle();
-      final var dx = gesture.getDeltaX();
-      final var dy = gesture.getDeltaY();
-      final var ret = new Handle[2];
+      final com.cburch.draw.model.Handle h = gesture.getHandle();
+      final int dx = gesture.getDeltaX();
+      final int dy = gesture.getDeltaY();
+      final com.cburch.draw.model.Handle[] ret = new Handle[2];
       ret[0] = new Handle(this, h.isAt(x0, y0) ? Location.create(x0 + dx, y0 + dy, false) : Location.create(x0, y0, false));
       ret[1] = new Handle(this, h.isAt(x1, y1) ? Location.create(x1 + dx, y1 + dy, false) : Location.create(x1, y1, false));
       return UnmodifiableList.create(ret);
@@ -106,10 +106,10 @@ public class Line extends AbstractCanvasObject {
 
   @Override
   public Location getRandomPoint(Bounds bds, Random rand) {
-    final var u = rand.nextDouble();
+    final double u = rand.nextDouble();
     int x = (int) Math.round(x0 + u * (x1 - x0));
     int y = (int) Math.round(y0 + u * (y1 - y0));
-    final var w = strokeWidth;
+    final int w = strokeWidth;
     if (w > 1) {
       x += (rand.nextInt(w) - w / 2);
       y += (rand.nextInt(w) - w / 2);
@@ -152,9 +152,9 @@ public class Line extends AbstractCanvasObject {
 
   @Override
   public Handle moveHandle(HandleGesture gesture) {
-    final var h = gesture.getHandle();
-    final var dx = gesture.getDeltaX();
-    final var dy = gesture.getDeltaY();
+    final com.cburch.draw.model.Handle h = gesture.getHandle();
+    final int dx = gesture.getDeltaX();
+    final int dy = gesture.getDeltaY();
     Handle ret = null;
     if (h.isAt(x0, y0)) {
       x0 += dx;
@@ -177,7 +177,7 @@ public class Line extends AbstractCanvasObject {
       int y0 = this.y0;
       int x1 = this.x1;
       int y1 = this.y1;
-      final var h = gesture.getHandle();
+      final com.cburch.draw.model.Handle h = gesture.getHandle();
       if (h.isAt(x0, y0)) {
         x0 += gesture.getDeltaX();
         y0 += gesture.getDeltaY();

@@ -54,25 +54,25 @@ public class Rom extends Mem {
     @Override
     public java.awt.Component getCellEditor(Window source, MemContents value) {
       if (source instanceof Frame frame) {
-        final var proj = frame.getProject();
+        final com.cburch.logisim.proj.Project proj = frame.getProject();
         RomAttributes.register(value, proj);
       }
-      final var ret = new ContentsCell(source, value);
+      final com.cburch.logisim.std.memory.Rom.ContentsCell ret = new ContentsCell(source, value);
       ret.mouseClicked(null);
       return ret;
     }
 
     @Override
     public MemContents parse(String value) {
-      final var lineBreak = value.indexOf('\n');
-      final var first = lineBreak < 0 ? value : value.substring(0, lineBreak);
-      final var rest = lineBreak < 0 ? "" : value.substring(lineBreak + 1);
-      final var toks = new StringTokenizer(first);
+      final int lineBreak = value.indexOf('\n');
+      final java.lang.String first = lineBreak < 0 ? value : value.substring(0, lineBreak);
+      final java.lang.String rest = lineBreak < 0 ? "" : value.substring(lineBreak + 1);
+      final java.util.StringTokenizer toks = new StringTokenizer(first);
       try {
-        final var header = toks.nextToken();
+        final java.lang.String header = toks.nextToken();
         if (!header.equals("addr/data:")) return null;
-        final var addr = Integer.parseInt(toks.nextToken());
-        final var data = Integer.parseInt(toks.nextToken());
+        final int addr = Integer.parseInt(toks.nextToken());
+        final int data = Integer.parseInt(toks.nextToken());
         return HexFile.parseFromCircFile(rest, addr, data);
       } catch (IOException | NoSuchElementException | NumberFormatException e) {
         return null;
@@ -86,9 +86,9 @@ public class Rom extends Mem {
 
     @Override
     public String toStandardString(MemContents state) {
-      final var addr = state.getLogLength();
-      final var data = state.getWidth();
-      final var contents = HexFile.saveToString(state);
+      final int addr = state.getLogLength();
+      final int data = state.getWidth();
+      final java.lang.String contents = HexFile.saveToString(state);
       return "addr/data: " + addr + " " + data + "\n" + contents;
     }
   }
@@ -108,8 +108,8 @@ public class Rom extends Mem {
     @Override
     public void mouseClicked(MouseEvent e) {
       if (contents == null) return;
-      final var proj = (source instanceof Frame frame) ? frame.getProject() : null;
-      final var frame = RomAttributes.getHexFrame(contents, proj, null);
+      final com.cburch.logisim.proj.Project proj = (source instanceof Frame frame) ? frame.getProject() : null;
+      final com.cburch.logisim.gui.hex.HexFrame frame = RomAttributes.getHexFrame(contents, proj, null);
       frame.setVisible(true);
       frame.toFront();
     }
@@ -130,8 +130,8 @@ public class Rom extends Mem {
   @Override
   protected void configureNewInstance(Instance instance) {
     super.configureNewInstance(instance);
-    final var contents = getMemContents(instance);
-    final var listener = new MemListener(instance);
+    final com.cburch.logisim.std.memory.MemContents contents = getMemContents(instance);
+    final com.cburch.logisim.std.memory.Mem.MemListener listener = new MemListener(instance);
     memListeners.put(instance, listener);
     contents.addHexModelListener(listener);
     instance.addAttributeListener();
@@ -158,13 +158,13 @@ public class Rom extends Mem {
 
   public static void closeHexFrame(Component c) {
     if (!(c instanceof InstanceComponent)) return;
-    final var inst = ((InstanceComponent) c).getInstance();
+    final com.cburch.logisim.instance.Instance inst = ((InstanceComponent) c).getInstance();
     RomAttributes.closeHexFrame(getMemContents(inst));
   }
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    final var len = attrs.getValue(Mem.DATA_ATTR).getWidth();
+    final int len = attrs.getValue(Mem.DATA_ATTR).getWidth();
     if (attrs.getValue(StdAttr.APPEARANCE) == StdAttr.APPEAR_CLASSIC) {
       return Bounds.create(0, 0, SymbolWidth + 40, 140);
     } else {
@@ -176,7 +176,7 @@ public class Rom extends Mem {
   MemState getState(Instance instance, CircuitState state) {
     com.cburch.logisim.std.memory.MemState ret = (MemState) instance.getData(state);
     if (ret == null) {
-      final var contents = getMemContents(instance);
+      final com.cburch.logisim.std.memory.MemContents contents = getMemContents(instance);
       ret = new MemState(contents);
       instance.setData(state, ret);
     }
@@ -187,7 +187,7 @@ public class Rom extends Mem {
   MemState getState(InstanceState state) {
     com.cburch.logisim.std.memory.MemState ret = (MemState) state.getData();
     if (ret == null) {
-      final var contents = getMemContents(state.getInstance());
+      final com.cburch.logisim.std.memory.MemContents contents = getMemContents(state.getInstance());
       ret = new MemState(contents);
       state.setData(ret);
     }
@@ -213,14 +213,14 @@ public class Rom extends Mem {
 
   @Override
   public void propagate(InstanceState state) {
-    final var myState = getState(state);
-    final var dataBits = state.getAttributeValue(DATA_ATTR);
-    final var attrs = state.getAttributeSet();
+    final com.cburch.logisim.std.memory.MemState myState = getState(state);
+    final com.cburch.logisim.data.BitWidth dataBits = state.getAttributeValue(DATA_ATTR);
+    final com.cburch.logisim.data.AttributeSet attrs = state.getAttributeSet();
 
-    final var addrValue = state.getPortValue(RamAppearance.getAddrIndex(0, attrs));
-    final var nrDataLines = RamAppearance.getNrDataOutPorts(attrs);
+    final com.cburch.logisim.data.Value addrValue = state.getPortValue(RamAppearance.getAddrIndex(0, attrs));
+    final int nrDataLines = RamAppearance.getNrDataOutPorts(attrs);
 
-    final var addr = addrValue.toLongValue();
+    final long addr = addrValue.toLongValue();
     if (addrValue.isErrorValue() || (addrValue.isFullyDefined() && addr < 0)) {
       for (int i = 0; i < nrDataLines; i++)
         state.setPort(RamAppearance.getDataOutIndex(i, attrs), Value.createError(dataBits), DELAY);

@@ -154,20 +154,20 @@ public class DrawingAttributeSet implements AttributeSet, Cloneable {
 
   @Override
   public <V> void setValue(Attribute<V> attr, V value) {
-    final var ait = attrs.iterator();
-    final var vit = values.listIterator();
+    final java.util.Iterator<com.cburch.logisim.data.Attribute<?>> ait = attrs.iterator();
+    final java.util.ListIterator<java.lang.Object> vit = values.listIterator();
     while (ait.hasNext()) {
-      final var a = ait.next();
+      final com.cburch.logisim.data.Attribute<?> a = ait.next();
       vit.next();
       if (a.equals(attr)) {
         vit.set(value);
         com.cburch.logisim.data.AttributeEvent event = new AttributeEvent(this, attr, value, null);
-        for (final var listener : listeners) {
+        for (final com.cburch.logisim.data.AttributeListener listener : listeners) {
           listener.attributeValueChanged(event);
         }
         if (attr == DrawAttr.PAINT_TYPE) {
           event = new AttributeEvent(this);
-          for (final var listener : listeners) {
+          for (final com.cburch.logisim.data.AttributeListener listener : listeners) {
             listener.attributeListChanged(event);
           }
         }

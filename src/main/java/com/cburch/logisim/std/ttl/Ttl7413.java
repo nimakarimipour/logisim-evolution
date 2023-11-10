@@ -46,10 +46,10 @@ public class Ttl7413 extends AbstractTtlGate {
   @Override
   public void paintInternal(InstancePainter painter, int x, int y, int height, boolean up) {
     super.paintBase(painter, false, false);
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     Drawgates.paintAnd(g, x + 125, y + 20, 10, 10, inverted);
     Drawgates.paintAnd(g, x + 105, y + 40, 10, 10, inverted);
-    final var offset = inverted ? 0 : -4;
+    final int offset = inverted ? 0 : -4;
     g.drawLine(x + 129 + offset, y + 20, x + 130, y + 20);
     g.drawLine(x + 130, y + AbstractTtlGate.PIN_HEIGHT, x + 130, y + 20);
     g.drawLine(x + 109 + offset, y + 40, x + 110, y + 40);

@@ -39,28 +39,28 @@ public class AppearanceEditHandler extends EditHandler implements SelectionListe
   AppearanceEditHandler(AppearanceCanvas canvas) {
     this.canvas = canvas;
     canvas.getSelection().addSelectionListener(this);
-    final var model = canvas.getModel();
+    final com.cburch.draw.model.CanvasModel model = canvas.getModel();
     if (model != null) model.addCanvasModelListener(this);
     canvas.addPropertyChangeListener(Canvas.MODEL_PROPERTY, this);
   }
 
   @Override
   public void addControlPoint() {
-    final var sel = canvas.getSelection();
-    final var handle = sel.getSelectedHandle();
+    final com.cburch.draw.canvas.Selection sel = canvas.getSelection();
+    final com.cburch.draw.model.Handle handle = sel.getSelectedHandle();
     canvas.doAction(new ModelInsertHandleAction(canvas.getModel(), handle));
   }
 
   @Override
   public void computeEnabled() {
-    final var proj = canvas.getProject();
-    final var circ = canvas.getCircuit();
-    final var sel = canvas.getSelection();
-    final var selEmpty = sel.isEmpty();
-    final var canChange = proj.getLogisimFile().contains(circ);
-    final var clipExists = !Clipboard.isEmpty();
+    final com.cburch.logisim.proj.Project proj = canvas.getProject();
+    final com.cburch.logisim.circuit.Circuit circ = canvas.getCircuit();
+    final com.cburch.draw.canvas.Selection sel = canvas.getSelection();
+    final boolean selEmpty = sel.isEmpty();
+    final boolean canChange = proj.getLogisimFile().contains(circ);
+    final boolean clipExists = !Clipboard.isEmpty();
     boolean selHasRemovable = false;
-    for (final var o : sel.getSelected()) {
+    for (final com.cburch.draw.model.CanvasObject o : sel.getSelected()) {
       if (!(o instanceof AppearanceElement)) {
         selHasRemovable = true;
         break;
@@ -69,11 +69,11 @@ public class AppearanceEditHandler extends EditHandler implements SelectionListe
     boolean canRaise;
     boolean canLower;
     if (!selEmpty && canChange) {
-      final var zs = ZOrder.getZIndex(sel.getSelected(), canvas.getModel());
+      final java.util.Map<com.cburch.draw.model.CanvasObject,java.lang.Integer> zs = ZOrder.getZIndex(sel.getSelected(), canvas.getModel());
       int zMin = Integer.MAX_VALUE;
       int zMax = Integer.MIN_VALUE;
       int count = 0;
-      for (final var entry : zs.entrySet()) {
+      for (final java.util.Map.Entry<com.cburch.draw.model.CanvasObject,java.lang.Integer> entry : zs.entrySet()) {
         if (!(entry.getKey() instanceof AppearanceElement)) {
           count++;
           int z = entry.getValue();
@@ -81,7 +81,7 @@ public class AppearanceEditHandler extends EditHandler implements SelectionListe
           if (z > zMax) zMax = z;
         }
       }
-      final var maxPoss = AppearanceCanvas.getMaxIndex(canvas.getModel());
+      final int maxPoss = AppearanceCanvas.getMaxIndex(canvas.getModel());
       if (count > 0 && count <= maxPoss) {
         canRaise = zMin <= maxPoss - count;
         canLower = zMax >= count;
@@ -95,9 +95,9 @@ public class AppearanceEditHandler extends EditHandler implements SelectionListe
     }
     boolean canAddCtrl = false;
     boolean canRemCtrl = false;
-    final var handle = sel.getSelectedHandle();
+    final com.cburch.draw.model.Handle handle = sel.getSelectedHandle();
     if (handle != null && canChange) {
-      final var o = handle.getObject();
+      final com.cburch.draw.model.CanvasObject o = handle.getObject();
       canAddCtrl = o.canInsertHandle(handle.getLocation()) != null;
       canRemCtrl = o.canDeleteHandle(handle.getLocation()) != null;
     }
@@ -132,13 +132,13 @@ public class AppearanceEditHandler extends EditHandler implements SelectionListe
 
   @Override
   public void delete() {
-    final var sel = canvas.getSelection();
-    final var n = sel.getSelected().size();
-    final var select = new ArrayList<CanvasObject>(n);
-    final var remove = new ArrayList<CanvasObject>(n);
+    final com.cburch.draw.canvas.Selection sel = canvas.getSelection();
+    final int n = sel.getSelected().size();
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> select = new ArrayList<CanvasObject>(n);
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> remove = new ArrayList<CanvasObject>(n);
     Location anchorLocation = null;
     Direction anchorFacing = null;
-    for (final var obj : sel.getSelected()) {
+    for (final com.cburch.draw.model.CanvasObject obj : sel.getSelected()) {
       if (obj.canRemove()) {
         remove.add(obj);
       } else {
@@ -167,13 +167,13 @@ public class AppearanceEditHandler extends EditHandler implements SelectionListe
 
   @Override
   public void duplicate() {
-    final var sel = canvas.getSelection();
-    final var n = sel.getSelected().size();
-    final var select = new ArrayList<CanvasObject>(n);
-    final var clones = new ArrayList<CanvasObject>(n);
-    for (final var obj : sel.getSelected()) {
+    final com.cburch.draw.canvas.Selection sel = canvas.getSelection();
+    final int n = sel.getSelected().size();
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> select = new ArrayList<CanvasObject>(n);
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> clones = new ArrayList<CanvasObject>(n);
+    for (final com.cburch.draw.model.CanvasObject obj : sel.getSelected()) {
       if (obj.canRemove()) {
-        final var copy = obj.clone();
+        final com.cburch.draw.model.CanvasObject copy = obj.clone();
         copy.translate(10, 10);
         clones.add(copy);
         select.add(copy);
@@ -193,7 +193,7 @@ public class AppearanceEditHandler extends EditHandler implements SelectionListe
 
   @Override
   public void lower() {
-    final var act = ModelReorderAction.createLower(canvas.getModel(), canvas.getSelection().getSelected());
+    final com.cburch.draw.actions.ModelReorderAction act = ModelReorderAction.createLower(canvas.getModel(), canvas.getSelection().getSelected());
     if (act != null) {
       canvas.doAction(act);
     }
@@ -201,7 +201,7 @@ public class AppearanceEditHandler extends EditHandler implements SelectionListe
 
   @Override
   public void lowerBottom() {
-    final var act = ModelReorderAction.createLowerBottom(canvas.getModel(), canvas.getSelection().getSelected());
+    final com.cburch.draw.actions.ModelReorderAction act = ModelReorderAction.createLowerBottom(canvas.getModel(), canvas.getSelection().getSelected());
     if (act != null) {
       canvas.doAction(act);
     }
@@ -214,23 +214,23 @@ public class AppearanceEditHandler extends EditHandler implements SelectionListe
 
   @Override
   public void paste() {
-    final var clip = Clipboard.get();
-    final var contents = clip.getElements();
-    final var add = new ArrayList<CanvasObject>(contents.size());
-    for (final var obj : contents) {
+    final com.cburch.logisim.gui.appear.ClipboardContents clip = Clipboard.get();
+    final java.util.Collection<com.cburch.draw.model.CanvasObject> contents = clip.getElements();
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> add = new ArrayList<CanvasObject>(contents.size());
+    for (final com.cburch.draw.model.CanvasObject obj : contents) {
       add.add(obj.clone());
     }
     if (add.isEmpty()) return;
 
     // find how far we have to translate shapes so that at least one of the
     // pasted shapes doesn't match what's already in the model
-    final var raw = canvas.getModel().getObjectsFromBottom();
-    final var cur = new MatchingSet<>(raw);
+    final java.util.List<com.cburch.draw.model.CanvasObject> raw = canvas.getModel().getObjectsFromBottom();
+    final com.cburch.draw.util.MatchingSet<com.cburch.draw.model.CanvasObject> cur = new MatchingSet<>(raw);
     int dx = 0;
     while (true) {
       // if any shapes in "add" aren't in canvas, we are done
       boolean allMatch = true;
-      for (final var obj : add) {
+      for (final com.cburch.draw.model.CanvasObject obj : add) {
         if (!cur.contains(obj)) {
           allMatch = false;
           break;
@@ -239,7 +239,7 @@ public class AppearanceEditHandler extends EditHandler implements SelectionListe
       if (!allMatch) break;
 
       // otherwise translate everything by 10 pixels and repeat test
-      for (final var obj : add) {
+      for (final com.cburch.draw.model.CanvasObject obj : add) {
         obj.translate(10, 10);
       }
       dx += 10;
@@ -265,13 +265,13 @@ public class AppearanceEditHandler extends EditHandler implements SelectionListe
 
   @Override
   public void propertyChange(PropertyChangeEvent e) {
-    final var prop = e.getPropertyName();
+    final java.lang.String prop = e.getPropertyName();
     if (prop.equals(Canvas.MODEL_PROPERTY)) {
-      final var oldModel = (CanvasModel) e.getOldValue();
+      final com.cburch.draw.model.CanvasModel oldModel = (CanvasModel) e.getOldValue();
       if (oldModel != null) {
         oldModel.removeCanvasModelListener(this);
       }
-      final var newModel = (CanvasModel) e.getNewValue();
+      final com.cburch.draw.model.CanvasModel newModel = (CanvasModel) e.getNewValue();
       if (newModel != null) {
         newModel.addCanvasModelListener(this);
       }
@@ -280,7 +280,7 @@ public class AppearanceEditHandler extends EditHandler implements SelectionListe
 
   @Override
   public void raise() {
-    final var act = ModelReorderAction.createRaise(canvas.getModel(), canvas.getSelection().getSelected());
+    final com.cburch.draw.actions.ModelReorderAction act = ModelReorderAction.createRaise(canvas.getModel(), canvas.getSelection().getSelected());
     if (act != null) {
       canvas.doAction(act);
     }
@@ -288,7 +288,7 @@ public class AppearanceEditHandler extends EditHandler implements SelectionListe
 
   @Override
   public void raiseTop() {
-    final var act = ModelReorderAction.createRaiseTop(canvas.getModel(), canvas.getSelection().getSelected());
+    final com.cburch.draw.actions.ModelReorderAction act = ModelReorderAction.createRaiseTop(canvas.getModel(), canvas.getSelection().getSelected());
     if (act != null) {
       canvas.doAction(act);
     }
@@ -296,14 +296,14 @@ public class AppearanceEditHandler extends EditHandler implements SelectionListe
 
   @Override
   public void removeControlPoint() {
-    final var sel = canvas.getSelection();
-    final var handle = sel.getSelectedHandle();
+    final com.cburch.draw.canvas.Selection sel = canvas.getSelection();
+    final com.cburch.draw.model.Handle handle = sel.getSelectedHandle();
     canvas.doAction(new ModelDeleteHandleAction(canvas.getModel(), handle));
   }
 
   @Override
   public void selectAll() {
-    final var sel = canvas.getSelection();
+    final com.cburch.draw.canvas.Selection sel = canvas.getSelection();
     sel.setSelected(canvas.getModel().getObjectsFromBottom(), true);
     canvas.repaint();
   }

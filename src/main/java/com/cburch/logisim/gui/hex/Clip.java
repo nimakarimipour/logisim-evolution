@@ -38,7 +38,7 @@ class Clip implements ClipboardOwner {
   }
 
   public void copy() {
-    final var caret = editor.getCaret();
+    final com.cburch.hex.Caret caret = editor.getCaret();
     long p0 = caret.getMark();
     long p1 = caret.getDot();
     if (p0 < 0 || p1 < 0) return;
@@ -49,13 +49,13 @@ class Clip implements ClipboardOwner {
     }
     p1++;
 
-    final var data = new long[(int) (p1 - p0)];
-    final var model = editor.getModel();
+    final long[] data = new long[(int) (p1 - p0)];
+    final com.cburch.hex.HexModel model = editor.getModel();
     for (long i = p0; i < p1; i++) {
       data[(int) (i - p0)] = model.get(i);
     }
 
-    final var clip = editor.getToolkit().getSystemClipboard();
+    final java.awt.datatransfer.Clipboard clip = editor.getToolkit().getSystemClipboard();
     clip.setContents(new Data(data), this);
   }
 
@@ -63,14 +63,14 @@ class Clip implements ClipboardOwner {
   public void lostOwnership(Clipboard clip, Transferable transfer) {}
 
   public void paste() {
-    final var clip = editor.getToolkit().getSystemClipboard();
-    final var xfer = clip.getContents(this);
-    final var model = (MemContents) editor.getModel();
+    final java.awt.datatransfer.Clipboard clip = editor.getToolkit().getSystemClipboard();
+    final java.awt.datatransfer.Transferable xfer = clip.getContents(this);
+    final com.cburch.logisim.std.memory.MemContents model = (MemContents) editor.getModel();
     MemContents pasted = null;
     int numWords = 0;
     if (xfer.isDataFlavorSupported(binaryFlavor)) {
       try {
-        final var data = (long[]) xfer.getTransferData(binaryFlavor);
+        final long[] data = (long[]) xfer.getTransferData(binaryFlavor);
         numWords = data.length;
         int addrBits = 32 - Integer.numberOfLeadingZeros(numWords);
         pasted = MemContents.create(addrBits, model.getValueWidth(), false);
@@ -87,7 +87,7 @@ class Clip implements ClipboardOwner {
       }
 
       try {
-        final var r = HexFile.parseFromClipboard(buf, model.getLogLength(), model.getValueWidth());
+        final com.cburch.logisim.gui.hex.HexFile.ParseResult r = HexFile.parseFromClipboard(buf, model.getLogLength(), model.getValueWidth());
         pasted = r.model;
         numWords = r.numWords;
       } catch (IOException e) {
@@ -107,7 +107,7 @@ class Clip implements ClipboardOwner {
       return;
     }
 
-    final var caret = editor.getCaret();
+    final com.cburch.hex.Caret caret = editor.getCaret();
     long p0 = caret.getMark();
     long p1 = caret.getDot();
     if (p0 == p1) {
@@ -162,7 +162,7 @@ class Clip implements ClipboardOwner {
         return data;
       } else if (flavor == DataFlavor.stringFlavor) {
         int bits = 1;
-        for (final var datum : data) {
+        for (final long datum : data) {
           long k = datum >> bits;
           while (k != 0 && bits < 32) {
             bits++;
@@ -171,7 +171,7 @@ class Clip implements ClipboardOwner {
         }
 
         int chars = (bits + 3) / 4;
-        final var buf = new StringBuilder();
+        final java.lang.StringBuilder buf = new StringBuilder();
         for (int i = 0; i < data.length; i++) {
           if (i > 0) buf.append(i % 8 == 0 ? '\n' : ' ');
           buf.append(String.format("%0" + chars + "x", data[i]));

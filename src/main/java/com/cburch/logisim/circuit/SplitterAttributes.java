@@ -41,9 +41,9 @@ public class SplitterAttributes extends AbstractAttributeSet {
 
     public boolean sameOptions(BitOutAttribute other) {
       if (options.length != other.options.length) return false;
-      for (final var a : options) {
+      for (final com.cburch.logisim.circuit.SplitterAttributes.BitOutOption a : options) {
         boolean found = false;
-        for (final var b : other.options) {
+        for (final com.cburch.logisim.circuit.SplitterAttributes.BitOutOption b : other.options) {
           if (a.toString().equals(b.toString())) {
             found = true;
             break;
@@ -57,8 +57,8 @@ public class SplitterAttributes extends AbstractAttributeSet {
     @SuppressWarnings({"rawtypes"})
     @Override
     public java.awt.Component getCellEditor(Integer value) {
-      final var index = value;
-      final var combo = new ComboBox<>(options);
+      final java.lang.Integer index = value;
+      final com.cburch.logisim.gui.generic.ComboBox<com.cburch.logisim.circuit.SplitterAttributes.BitOutOption> combo = new ComboBox<>(options);
       combo.setSelectedIndex(index);
       combo.setMaximumRowCount(options.length);
       return combo;
@@ -84,7 +84,7 @@ public class SplitterAttributes extends AbstractAttributeSet {
 
     @Override
     public String toStandardString(Integer value) {
-      final var index = value;
+      final java.lang.Integer index = value;
       if (index == 0) {
         return UNCHOSEN_VAL;
       } else {
@@ -127,12 +127,12 @@ public class SplitterAttributes extends AbstractAttributeSet {
   }
 
   static byte[] computeDistribution(int fanout, int bits, int order) {
-    final var ret = new byte[bits];
+    final byte[] ret = new byte[bits];
     if (order >= 0) {
       if (fanout >= bits) {
         for (int i = 0; i < bits; i++) ret[i] = (byte) (i + 1);
       } else {
-        final var threads_per_end = bits / fanout;
+        final int threads_per_end = bits / fanout;
         int endsWithExtra = bits % fanout;
         int curEnd = -1; // immediately increments
         int leftInEnd = 0;
@@ -153,7 +153,7 @@ public class SplitterAttributes extends AbstractAttributeSet {
       if (fanout >= bits) {
         for (int i = 0; i < bits; i++) ret[i] = (byte) (fanout - i);
       } else {
-        final var threads_per_end = bits / fanout;
+        final int threads_per_end = bits / fanout;
         int endsWithExtra = bits % fanout;
         int curEnd = -1;
         int leftInEnd = 0;
@@ -210,7 +210,7 @@ public class SplitterAttributes extends AbstractAttributeSet {
   }
 
   public boolean isNoConnect(int index) {
-    for (final var b : bitEnd) {
+    for (final byte b : bitEnd) {
       if (b == index)
         return false;
     }
@@ -218,11 +218,11 @@ public class SplitterAttributes extends AbstractAttributeSet {
   }
 
   private void configureDefaults() {
-    final var offs = INIT_ATTRIBUTES.size();
+    final int offs = INIT_ATTRIBUTES.size();
     int curNum = attrs.size() - offs;
 
     // compute default values
-    final var dflt = computeDistribution(fanout, bitEnd.length, 1);
+    final byte[] dflt = computeDistribution(fanout, bitEnd.length, 1);
 
     boolean changed = curNum != bitEnd.length;
 
@@ -235,7 +235,7 @@ public class SplitterAttributes extends AbstractAttributeSet {
     // set existing attributes
     for (int i = 0; i < curNum; i++) {
       if (bitEnd[i] != dflt[i]) {
-        final var attr = (BitOutAttribute) attrs.get(offs + i);
+        final com.cburch.logisim.circuit.SplitterAttributes.BitOutAttribute attr = (BitOutAttribute) attrs.get(offs + i);
         bitEnd[i] = dflt[i];
         fireAttributeValueChanged(attr, (int) bitEnd[i], null);
       }
@@ -243,7 +243,7 @@ public class SplitterAttributes extends AbstractAttributeSet {
 
     // add new attributes
     for (int i = curNum; i < bitEnd.length; i++) {
-      final var attr = new BitOutAttribute(i, options);
+      final com.cburch.logisim.circuit.SplitterAttributes.BitOutAttribute attr = new BitOutAttribute(i, options);
       bitEnd[i] = dflt[i];
       attrs.add(attr);
     }
@@ -260,22 +260,22 @@ public class SplitterAttributes extends AbstractAttributeSet {
     }
 
     // go ahead and set the options for the existing attributes
-    final var offs = INIT_ATTRIBUTES.size();
-    final var curNum = attrs.size() - offs;
+    final int offs = INIT_ATTRIBUTES.size();
+    final int curNum = attrs.size() - offs;
     for (int i = 0; i < curNum; i++) {
-      final var attr = (BitOutAttribute) attrs.get(offs + i);
+      final com.cburch.logisim.circuit.SplitterAttributes.BitOutAttribute attr = (BitOutAttribute) attrs.get(offs + i);
       attr.options = options;
     }
   }
 
   @Override
   protected void copyInto(AbstractAttributeSet destObj) {
-    final var dest = (SplitterAttributes) destObj;
+    final com.cburch.logisim.circuit.SplitterAttributes dest = (SplitterAttributes) destObj;
     dest.parameters = this.parameters;
     dest.attrs = new ArrayList<>(this.attrs.size());
     dest.attrs.addAll(INIT_ATTRIBUTES);
     for (int i = INIT_ATTRIBUTES.size(), n = this.attrs.size(); i < n; i++) {
-      final var attr = (BitOutAttribute) this.attrs.get(i);
+      final com.cburch.logisim.circuit.SplitterAttributes.BitOutAttribute attr = (BitOutAttribute) this.attrs.get(i);
       dest.attrs.add(attr.createCopy());
     }
 
@@ -324,14 +324,14 @@ public class SplitterAttributes extends AbstractAttributeSet {
   @Override
   public <V> void setValue(Attribute<V> attr, V value) {
     if (attr == StdAttr.FACING) {
-      final var newFacing = (Direction) value;
+      final com.cburch.logisim.data.Direction newFacing = (Direction) value;
       if (facing.equals(newFacing)) return;
       facing = (Direction) value;
       configureOptions();
       parameters = null;
     } else if (attr == ATTR_FANOUT) {
       int newValue = (Integer) value;
-      final var bits = bitEnd;
+      final byte[] bits = bitEnd;
       for (int i = 0; i < bits.length; i++) {
         if (bits[i] > newValue) bits[i] = (byte) newValue;
       }
@@ -341,18 +341,18 @@ public class SplitterAttributes extends AbstractAttributeSet {
       configureDefaults();
       parameters = null;
     } else if (attr == ATTR_WIDTH) {
-      final var width = (BitWidth) value;
+      final com.cburch.logisim.data.BitWidth width = (BitWidth) value;
       if (bitEnd.length == width.getWidth()) return;
       bitEnd = new byte[width.getWidth()];
       configureOptions();
       configureDefaults();
     } else if (attr == ATTR_SPACING) {
-      final var s = (Integer) value;
+      final java.lang.Integer s = (Integer) value;
       if (s == spacing) return;
       spacing = s;
       parameters = null;
     } else if (attr == ATTR_APPEARANCE) {
-      final var appearance = (AttributeOption) value;
+      final com.cburch.logisim.data.AttributeOption appearance = (AttributeOption) value;
       if (appear.equals(appearance)) return;
       appear = appearance;
       parameters = null;
@@ -377,7 +377,7 @@ public class SplitterAttributes extends AbstractAttributeSet {
       return null;
     }
 
-    final var answer = new ArrayList<Attribute<?>>(bitEnd.length);
+    final java.util.ArrayList<com.cburch.logisim.data.Attribute<?>> answer = new ArrayList<Attribute<?>>(bitEnd.length);
     for (int index = 0; index < bitEnd.length; index++) {
       answer.add(getBitOutAttribute(index));
     }

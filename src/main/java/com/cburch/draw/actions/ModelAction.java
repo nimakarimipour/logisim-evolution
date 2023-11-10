@@ -28,7 +28,7 @@ public abstract class ModelAction implements UndoAction {
     if (coll.size() != 1) {
       return S.get("shapeMultiple");
     } else {
-      final var shape = coll.iterator().next();
+      final com.cburch.draw.model.CanvasObject shape = coll.iterator().next();
       return shape.getDisplayName();
     }
   }

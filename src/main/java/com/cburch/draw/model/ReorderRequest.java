@@ -49,8 +49,8 @@ public class ReorderRequest {
 
     @Override
     public int compare(ReorderRequest a, ReorderRequest b) {
-      final var i = onFrom ? a.fromIndex : a.toIndex;
-      final var j = onFrom ? b.fromIndex : b.toIndex;
+      final int i = onFrom ? a.fromIndex : a.toIndex;
+      final int j = onFrom ? b.fromIndex : b.toIndex;
       if (i < j) {
         return asc ? -1 : 1;
       } else if (i > j) {

@@ -130,28 +130,28 @@ class AttrTableSelectionModel extends AttributeSetTableModel implements Selectio
 
   @Override
   public void setValueRequested(Attribute<Object> attr, Object value) throws AttrTableSetException {
-    final var selection = frame.getCanvas().getSelection();
-    final var circuit = frame.getCanvas().getCircuit();
+    final com.cburch.logisim.gui.main.Selection selection = frame.getCanvas().getSelection();
+    final com.cburch.logisim.circuit.Circuit circuit = frame.getCanvas().getCircuit();
     if (circuit != null && selection.isEmpty()) {
-      final var circuitModel = new AttrTableCircuitModel(project, circuit);
+      final com.cburch.logisim.gui.main.AttrTableCircuitModel circuitModel = new AttrTableCircuitModel(project, circuit);
       circuitModel.setValueRequested(attr, value);
     } else {
-      final var act = new SetAttributeAction(circuit, S.getter("selectionAttributeAction"));
+      final com.cburch.logisim.tools.SetAttributeAction act = new SetAttributeAction(circuit, S.getter("selectionAttributeAction"));
       AutoLabel labeler = null;
       if (attr.equals(StdAttr.LABEL)) {
         labeler = new AutoLabel((String) value, circuit);
       }
-      final var comps = new TreeSet<>(new PositionComparator());
+      final java.util.TreeSet<com.cburch.logisim.comp.Component> comps = new TreeSet<>(new PositionComparator());
       comps.addAll(selection.getComponents());
-      for (final var comp : comps) {
+      for (final com.cburch.logisim.comp.Component comp : comps) {
         if (!(comp instanceof Wire)) {
           if (comp.getFactory() instanceof SubcircuitFactory fac) {
             if (attr.equals(CircuitAttributes.NAMED_CIRCUIT_BOX_FIXED_SIZE)
                 || attr.equals(CircuitAttributes.NAME_ATTR)) {
               try {
-                final var mutation = new CircuitMutation(fac.getSubcircuit());
+                final com.cburch.logisim.circuit.CircuitMutation mutation = new CircuitMutation(fac.getSubcircuit());
                 mutation.setForCircuit(attr, value);
-                final var action = mutation.toAction(null);
+                final com.cburch.logisim.proj.Action action = mutation.toAction(null);
                 project.doAction(action);
               } catch (CircuitException ex) {
                 OptionPane.showMessageDialog(project.getFrame(), ex.getMessage());
@@ -169,11 +169,11 @@ class AttrTableSelectionModel extends AttributeSetTableModel implements Selectio
               }
             } else act.set(comp, attr, "");
           } else {
-            final var compAttrSet = comp.getAttributeSet();
+            final com.cburch.logisim.data.AttributeSet compAttrSet = comp.getAttributeSet();
             if (compAttrSet != null) {
-              final var mayBeChangedList = compAttrSet.attributesMayAlsoBeChanged(attr, value);
+              final java.util.List<com.cburch.logisim.data.Attribute<?>> mayBeChangedList = compAttrSet.attributesMayAlsoBeChanged(attr, value);
               if (mayBeChangedList != null) {
-                for (final var mayChangeAttr : mayBeChangedList) {
+                for (final com.cburch.logisim.data.Attribute<?> mayChangeAttr : mayBeChangedList) {
                   // mayChangeAttr is set to its current value to have it restored on undo
                   act.set(comp, mayChangeAttr, compAttrSet.getValue(mayChangeAttr));
                 }

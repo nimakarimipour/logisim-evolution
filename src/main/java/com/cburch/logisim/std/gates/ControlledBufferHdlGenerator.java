@@ -21,12 +21,12 @@ public class ControlledBufferHdlGenerator extends InlinedHdlGeneratorFactory {
   @Override
   public LineBuffer getInlinedCode(
       Netlist nets, Long componentId, netlistComponent componentInfo, String circuitName) {
-    final var contents = LineBuffer.getBuffer();
-    final var triName = Hdl.getNetName(componentInfo, 2, true, nets);
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getBuffer();
+    final java.lang.String triName = Hdl.getNetName(componentInfo, 2, true, nets);
     java.lang.String inpName = "";
     java.lang.String outpName = "";
     java.lang.String triState = "";
-    final var nrBits =
+    final int nrBits =
         componentInfo.getComponent().getAttributeSet().getValue(StdAttr.WIDTH).getWidth();
     if (nrBits > 1) {
       inpName = Hdl.getBusName(componentInfo, 1, nets);
@@ -38,7 +38,7 @@ public class ControlledBufferHdlGenerator extends InlinedHdlGeneratorFactory {
       triState = Hdl.isVhdl() ? "'Z'" : "1'bZ";
     }
     if (componentInfo.isEndConnected(2) && componentInfo.isEndConnected(0)) {
-      final var invert =
+      final java.lang.String invert =
           ((ControlledBuffer) componentInfo.getComponent().getFactory()).isInverter()
               ? Hdl.notOperator()
               : "";

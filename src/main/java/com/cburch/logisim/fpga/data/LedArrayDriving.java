@@ -22,7 +22,7 @@ public class LedArrayDriving {
 
   public static char getId(String identifier) {
     char result = 0;
-    final var thelist = LedArrayDriving.getStrings();
+    final java.util.List<java.lang.String> thelist = LedArrayDriving.getStrings();
     for (String s : thelist) {
       if (s.equals(identifier)) return result;
       result++;

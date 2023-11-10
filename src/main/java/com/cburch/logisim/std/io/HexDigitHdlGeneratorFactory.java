@@ -22,19 +22,19 @@ public class HexDigitHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
   @Override
   public LineBuffer getInlinedCode(
       Netlist nets, Long componentId, netlistComponent componentInfo, String circuitName) {
-    final var startId = componentInfo.getLocalBubbleOutputStartId();
-    final var bubbleBusName = LOCAL_OUTPUT_BUBBLE_BUS_NAME;
-    final var signalName =
+    final int startId = componentInfo.getLocalBubbleOutputStartId();
+    final java.lang.String bubbleBusName = LOCAL_OUTPUT_BUBBLE_BUS_NAME;
+    final java.lang.String signalName =
         LineBuffer.format(
             "{{1}}{{<}}{{2}}{{3}}{{4}}{{>}}",
             bubbleBusName, (startId + 6), Hdl.vectorLoopId(), startId);
-    final var contents =
+    final com.cburch.logisim.util.LineBuffer contents =
         LineBuffer.getHdlBuffer()
             .pair("bubbleBusName", bubbleBusName)
             .pair("sigName", signalName)
             .pair("dpName", Hdl.getNetName(componentInfo, HexDigit.DP, true, nets));
     if (componentInfo.isEndConnected(HexDigit.HEX)) {
-      final var generator =
+      final com.cburch.logisim.fpga.hdlgenerator.WithSelectHdlGenerator generator =
           (new WithSelectHdlGenerator(
                   componentInfo.getComponent().getAttributeSet().getValue(StdAttr.LABEL),
                   Hdl.getBusName(componentInfo, HexDigit.HEX, nets),

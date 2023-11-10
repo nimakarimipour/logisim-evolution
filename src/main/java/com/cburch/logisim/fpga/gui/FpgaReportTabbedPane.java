@@ -85,7 +85,7 @@ public class FpgaReportTabbedPane extends JTabbedPane
     textAreaInfo.setText(null);
     javax.swing.text.DefaultCaret caret = (DefaultCaret) textAreaInfo.getCaret();
     caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-    final var textMessages = new JScrollPane(textAreaInfo);
+    final javax.swing.JScrollPane textMessages = new JScrollPane(textAreaInfo);
     textMessages.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     textMessages.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     panelInfos = new JPanel();
@@ -106,7 +106,7 @@ public class FpgaReportTabbedPane extends JTabbedPane
     warnings.setCellRenderer(warningsList.getMyRenderer());
     warnings.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     warnings.addMouseListener(this);
-    final var textWarnings = new JScrollPane(warnings);
+    final javax.swing.JScrollPane textWarnings = new JScrollPane(warnings);
     textWarnings.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     textWarnings.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     panelWarnings = new JPanel();
@@ -132,7 +132,7 @@ public class FpgaReportTabbedPane extends JTabbedPane
     errors.setCellRenderer(errorsList.getMyRenderer());
     errors.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     errors.addMouseListener(this);
-    final var textErrors = new JScrollPane(errors);
+    final javax.swing.JScrollPane textErrors = new JScrollPane(errors);
     textErrors.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     textErrors.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     panelErrors = new JPanel();
@@ -156,7 +156,7 @@ public class FpgaReportTabbedPane extends JTabbedPane
     textAreaConsole.setText(null);
     caret = (DefaultCaret) textAreaConsole.getCaret();
     caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-    final var textConsole = new JScrollPane(textAreaConsole);
+    final javax.swing.JScrollPane textConsole = new JScrollPane(textAreaConsole);
     textConsole.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     textConsole.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     panelConsole = new JPanel();
@@ -195,20 +195,20 @@ public class FpgaReportTabbedPane extends JTabbedPane
   }
 
   private void updateInfoWindow() {
-    final var line = new StringBuilder();
-    for (final var mes : infoMessages) {
+    final java.lang.StringBuilder line = new StringBuilder();
+    for (final java.lang.String mes : infoMessages) {
       line.append(mes);
     }
     infoWindow.set(line.toString(), infoMessages.size());
   }
 
   private void updateInfoTab() {
-    final var line = new StringBuilder();
-    for (final var mes : infoMessages) {
+    final java.lang.StringBuilder line = new StringBuilder();
+    for (final java.lang.String mes : infoMessages) {
       line.append(mes);
     }
     textAreaInfo.setText(line.toString());
-    final var idx = indexOfComponent(panelInfos);
+    final int idx = indexOfComponent(panelInfos);
     if (idx >= 0) {
       setSelectedIndex(idx);
       setTitleAt(idx, "Infos (" + infoMessages.size() + ")");
@@ -219,7 +219,7 @@ public class FpgaReportTabbedPane extends JTabbedPane
 
   public void addWarning(Object message) {
     warningsList.add(message);
-    final var idx = indexOfComponent(panelWarnings);
+    final int idx = indexOfComponent(panelWarnings);
     if (idx >= 0) {
       setSelectedIndex(idx);
       setTitleAt(idx, "Warnings (" + warningsList.getCountNr() + ")");
@@ -230,7 +230,7 @@ public class FpgaReportTabbedPane extends JTabbedPane
 
   public void addErrors(Object message) {
     errorsList.add(message);
-    final var idx = indexOfComponent(panelErrors);
+    final int idx = indexOfComponent(panelErrors);
     if (idx >= 0) {
       setSelectedIndex(idx);
       setTitleAt(idx, "Errors (" + errorsList.getCountNr() + ")");
@@ -249,20 +249,20 @@ public class FpgaReportTabbedPane extends JTabbedPane
   }
 
   private void updateConsoleWindow() {
-    final var lines = new StringBuilder();
-    for (final var mes : consoleMessages) {
+    final java.lang.StringBuilder lines = new StringBuilder();
+    for (final java.lang.String mes : consoleMessages) {
       lines.append(mes);
     }
     consoleWindow.set(lines.toString(), 0);
   }
 
   private void updateConsoleTab() {
-    final var lines = new StringBuilder();
-    for (final var mes : consoleMessages) {
+    final java.lang.StringBuilder lines = new StringBuilder();
+    for (final java.lang.String mes : consoleMessages) {
       lines.append(mes);
     }
     textAreaConsole.setText(lines.toString());
-    final var idx = indexOfComponent(panelConsole);
+    final int idx = indexOfComponent(panelConsole);
     if (idx >= 0) {
       setSelectedIndex(idx);
       panelConsole.revalidate();
@@ -297,7 +297,7 @@ public class FpgaReportTabbedPane extends JTabbedPane
     errorsList.clear();
     idx = indexOfComponent(panelErrors);
     if (idx >= 0) setTitleAt(idx, "Errors (" + errorsList.getCountNr() + ")");
-    final var rect = getBounds();
+    final java.awt.Rectangle rect = getBounds();
     rect.x = 0;
     rect.y = 0;
     if (EventQueue.isDispatchThread()) paintImmediately(rect);
@@ -398,9 +398,9 @@ public class FpgaReportTabbedPane extends JTabbedPane
 
   @Override
   public void mouseReleased(MouseEvent e) {
-    final var sourceIsWarningsWindow =
+    final boolean sourceIsWarningsWindow =
         warningsWindow != null && e.getSource().equals(warningsWindow.getListObject());
-    final var sourceIsErrorsWindow =
+    final boolean sourceIsErrorsWindow =
         errorsWindow != null && e.getSource().equals(errorsWindow.getListObject());
     if (e.getSource().equals(errors) || sourceIsErrorsWindow) {
       clearDrcTrace();
@@ -445,7 +445,7 @@ public class FpgaReportTabbedPane extends JTabbedPane
     }
     if (e.getSource().equals(errorsWindow)) {
       int idx = getComponentCount();
-      final var comps = new HashSet<>(Arrays.asList(getComponents()));
+      final java.util.HashSet<java.awt.Component> comps = new HashSet<>(Arrays.asList(getComponents()));
       if (comps.contains(panelConsole)) idx = indexOfComponent(panelConsole);
       add(panelErrors, idx);
       setTitleAt(idx, "Errors (" + errorsList.getCountNr() + ")");

@@ -50,7 +50,7 @@ public class AppearancePort extends AppearanceElement {
 
   @Override
   public Bounds getBounds() {
-    final var r = isInput() ? INPUT_RADIUS : OUTPUT_RADIUS;
+    final int r = isInput() ? INPUT_RADIUS : OUTPUT_RADIUS;
     return super.getBounds(r);
   }
 
@@ -61,7 +61,7 @@ public class AppearancePort extends AppearanceElement {
 
   @Override
   public String getDisplayNameAndLabel() {
-    final var label = pin.getAttributeValue(StdAttr.LABEL);
+    final java.lang.String label = pin.getAttributeValue(StdAttr.LABEL);
     return (label != null && label.length() > 0)
         ? String.format("%s \"%s\"", getDisplayName(), label)
         : getDisplayName();
@@ -86,7 +86,7 @@ public class AppearancePort extends AppearanceElement {
   }
 
   private boolean isInput() {
-    final var p = pin;
+    final com.cburch.logisim.instance.Instance p = pin;
     return p == null || Pin.FACTORY.isInputPin(p);
   }
 
@@ -105,15 +105,15 @@ public class AppearancePort extends AppearanceElement {
 
   @Override
   public void paint(Graphics g, HandleGesture gesture) {
-    final var location = getLocation();
-    final var x = location.getX();
-    final var y = location.getY();
+    final com.cburch.logisim.data.Location location = getLocation();
+    final int x = location.getX();
+    final int y = location.getY();
     g.setColor(COLOR);
     if (isInput()) {
-      final var r = INPUT_RADIUS;
+      final int r = INPUT_RADIUS;
       g.drawRect(x - r, y - r, 2 * r, 2 * r);
     } else {
-      final var r = OUTPUT_RADIUS;
+      final int r = OUTPUT_RADIUS;
       g.drawOval(x - r, y - r, 2 * r, 2 * r);
     }
     g.fillOval(x - MINOR_RADIUS, y - MINOR_RADIUS, 2 * MINOR_RADIUS, 2 * MINOR_RADIUS);
@@ -125,9 +125,9 @@ public class AppearancePort extends AppearanceElement {
 
   @Override
   public Element toSvgElement(Document doc) {
-    final var loc = getLocation();
-    final var pinLoc = pin.getLocation();
-    final var ret = doc.createElement("circ-port");
+    final com.cburch.logisim.data.Location loc = getLocation();
+    final com.cburch.logisim.data.Location pinLoc = pin.getLocation();
+    final org.w3c.dom.Element ret = doc.createElement("circ-port");
     ret.setAttribute("x", Integer.toString(loc.getX()));
     ret.setAttribute("y", Integer.toString(loc.getY()));
     ret.setAttribute("dir", isInput() ? "in" : "out");

@@ -77,13 +77,13 @@ public class ToolAttributeAction extends Action {
   boolean affectsAppearance() {
     AttributeSet attrs = config.getEvent().getAttributeSet();
     if (attrs instanceof FactoryAttributes factoryAttributes) {
-      final var factory = factoryAttributes.getFactory();
+      final com.cburch.logisim.comp.ComponentFactory factory = factoryAttributes.getFactory();
       if (factory instanceof SubcircuitFactory) {
-        for (final var attr : config.getAttributeValues().keySet()) {
+        for (final com.cburch.logisim.data.Attribute<?> attr : config.getAttributeValues().keySet()) {
           if (attr == CircuitAttributes.APPEARANCE_ATTR) return true;
         }
       } else if (factory instanceof VhdlEntity) {
-        for (final var attr : config.getAttributeValues().keySet()) {
+        for (final com.cburch.logisim.data.Attribute<?> attr : config.getAttributeValues().keySet()) {
           if (attr == StdAttr.APPEARANCE) return true;
         }
       }
@@ -126,14 +126,14 @@ public class ToolAttributeAction extends Action {
       Map<Circuit, Integer> accessMap = new HashMap<>();
       AttributeSet attrs = config.getEvent().getAttributeSet();
       if (attrs instanceof FactoryAttributes factoryAttributes) {
-        final var factory = factoryAttributes.getFactory();
+        final com.cburch.logisim.comp.ComponentFactory factory = factoryAttributes.getFactory();
         if (factory instanceof SubcircuitFactory sub) {
-          final var circuit = sub.getSubcircuit();
-          for (final var supercirc : circuit.getCircuitsUsingThis()) {
+          final com.cburch.logisim.circuit.Circuit circuit = sub.getSubcircuit();
+          for (final com.cburch.logisim.circuit.Circuit supercirc : circuit.getCircuitsUsingThis()) {
             accessMap.put(supercirc, READ_WRITE);
           }
         } else if (factory instanceof VhdlEntity vhdl) {
-          for (final var supercirc : vhdl.getCircuitsUsingThis()) {
+          for (final com.cburch.logisim.circuit.Circuit supercirc : vhdl.getCircuitsUsingThis()) {
             accessMap.put(supercirc, READ_WRITE);
           }
         }

@@ -38,7 +38,7 @@ public class ReptarLocalBusHdlGeneratorFactory extends AbstractHdlGeneratorFacto
 
   @Override
   public List<String> getArchitecture(Netlist nets, AttributeSet attrs, String componentName) {
-    final var contents = LineBuffer.getBuffer();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getBuffer();
     if (Hdl.isVhdl()) {
       contents
           .pair("compName", componentName)
@@ -131,7 +131,7 @@ public class ReptarLocalBusHdlGeneratorFactory extends AbstractHdlGeneratorFacto
 
   @Override
   public Map<String, String> getPortMap(Netlist nets, Object mapInfo) {
-    final var map = new TreeMap<String, String>();
+    final java.util.TreeMap<java.lang.String,java.lang.String> map = new TreeMap<String, String>();
     if (!(mapInfo instanceof final netlistComponent componentInfo)) return map;
     map.putAll(super.getPortMap(nets, mapInfo));
     map.put(

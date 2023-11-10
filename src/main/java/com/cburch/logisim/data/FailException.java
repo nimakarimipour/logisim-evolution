@@ -63,7 +63,7 @@ public class FailException extends TestException {
   }
 
   public List<FailException> getAll() {
-    final var ret = new ArrayList<FailException>();
+    final java.util.ArrayList<com.cburch.logisim.data.FailException> ret = new ArrayList<FailException>();
     ret.add(this);
     ret.addAll(more);
     return ret;

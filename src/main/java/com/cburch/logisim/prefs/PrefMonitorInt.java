@@ -19,7 +19,7 @@ class PrefMonitorInt extends AbstractPrefMonitor<Integer> {
     super(name);
     this.dflt = dflt;
     this.value = dflt;
-    final var prefs = AppPreferences.getPrefs();
+    final java.util.prefs.Preferences prefs = AppPreferences.getPrefs();
     set(prefs.getInt(name, dflt));
     prefs.addPreferenceChangeListener(this);
   }
@@ -29,12 +29,12 @@ class PrefMonitorInt extends AbstractPrefMonitor<Integer> {
   }
 
   public void preferenceChange(PreferenceChangeEvent event) {
-    final var prefs = event.getNode();
-    final var prop = event.getKey();
-    final var name = getIdentifier();
+    final java.util.prefs.Preferences prefs = event.getNode();
+    final java.lang.String prop = event.getKey();
+    final java.lang.String name = getIdentifier();
     if (prop.equals(name)) {
-      final var oldValue = value;
-      final var newValue = prefs.getInt(name, dflt);
+      final int oldValue = value;
+      final int newValue = prefs.getInt(name, dflt);
       if (newValue != oldValue) {
         value = newValue;
         AppPreferences.firePropertyChange(name, oldValue, newValue);
@@ -43,7 +43,7 @@ class PrefMonitorInt extends AbstractPrefMonitor<Integer> {
   }
 
   public void set(Integer newValue) {
-    final var newVal = newValue;
+    final java.lang.Integer newVal = newValue;
     if (value != newVal) {
       AppPreferences.getPrefs().putInt(getIdentifier(), newVal);
     }

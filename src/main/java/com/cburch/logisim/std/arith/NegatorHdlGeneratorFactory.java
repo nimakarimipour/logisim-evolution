@@ -32,7 +32,7 @@ public class NegatorHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist TheNetlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getBuffer();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getBuffer();
     if (Hdl.isVhdl()) {
       int nrOfBits = attrs.getValue(StdAttr.WIDTH).getWidth();
       contents

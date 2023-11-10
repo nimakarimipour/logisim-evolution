@@ -40,8 +40,8 @@ public class ArithmeticIcon extends BaseIcon {
   protected void paintIcon(Graphics2D g2) {
     g2.setStroke(new BasicStroke(scale(2)));
     g2.setColor(Color.BLACK);
-    final var scale = opp.length() >= nrOfChars ? nrOfChars : 1;
-    final var yOff = opp.length() > nrOfChars ? getIconHeight() >> 2 : getIconHeight() >> 1;
+    final int scale = opp.length() >= nrOfChars ? nrOfChars : 1;
+    final int yOff = opp.length() > nrOfChars ? getIconHeight() >> 2 : getIconHeight() >> 1;
     java.awt.Font font = g2.getFont().deriveFont((float) getIconWidth() / scale).deriveFont(Font.BOLD);
     g2.drawRect(scale(1), scale(1), getIconWidth() - scale(2), getIconHeight() - scale(2));
     java.awt.font.TextLayout textLayout =

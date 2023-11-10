@@ -16,7 +16,7 @@ class Assignments {
   private final Map<String, Boolean> map = new HashMap<>();
 
   public boolean get(String variable) {
-    final var value = map.get(variable);
+    final java.lang.Boolean value = map.get(variable);
     return value != null && value;
   }
 

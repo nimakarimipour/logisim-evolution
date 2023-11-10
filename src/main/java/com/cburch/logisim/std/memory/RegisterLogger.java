@@ -18,7 +18,7 @@ import com.cburch.logisim.instance.StdAttr;
 public class RegisterLogger extends InstanceLogger {
   @Override
   public String getLogName(InstanceState state, Object option) {
-    final var ret = state.getAttributeValue(StdAttr.LABEL);
+    final java.lang.String ret = state.getAttributeValue(StdAttr.LABEL);
     return ret != null && !ret.equals("") ? ret : null;
   }
 
@@ -31,7 +31,7 @@ public class RegisterLogger extends InstanceLogger {
   public Value getLogValue(InstanceState state, Object option) {
     com.cburch.logisim.data.BitWidth dataWidth = state.getAttributeValue(StdAttr.WIDTH);
     if (dataWidth == null) dataWidth = BitWidth.create(0);
-    final var data = (RegisterData) state.getData();
+    final com.cburch.logisim.std.memory.RegisterData data = (RegisterData) state.getData();
     if (data == null) return Value.createKnown(dataWidth, 0);
     return data.value;
   }

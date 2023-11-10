@@ -67,7 +67,7 @@ class LogThread extends UniquelyNamedThread implements Model.Listener {
     }
     Signal.Iterator[] cur = new Signal.Iterator[model.getSignalCount()];
     for (int i = 0; i < model.getSignalCount(); i++) {
-      final var s = model.getSignal(i);
+      final com.cburch.logisim.gui.log.Signal s = model.getSignal(i);
       cur[i] = cursors.get(s);
       if (cur[i] == null) {
         cur[i] = s.new Iterator(timeNextWrite);
@@ -77,7 +77,7 @@ class LogThread extends UniquelyNamedThread implements Model.Listener {
     long timeStop = model.getEndTime();
     while (timeNextWrite < timeStop) {
       long duration = timeStop - timeNextWrite;
-      final var buf = new StringBuilder();
+      final java.lang.StringBuilder buf = new StringBuilder();
       for (int i = 0; i < cur.length; i++) {
         if (i > 0) buf.append("\t");
         buf.append(cur[i].getFormattedValue());
@@ -85,7 +85,7 @@ class LogThread extends UniquelyNamedThread implements Model.Listener {
       }
       // TODO: only write duration if not in coarse-step or coarse-clock mode?
       writer.println(buf + "\t# " + Model.formatDuration(duration));
-      for (final var c : cur) c.advance(duration);
+      for (final com.cburch.logisim.gui.log.Signal.Iterator c : cur) c.advance(duration);
       timeNextWrite += duration;
     }
     lastWrite = System.currentTimeMillis();

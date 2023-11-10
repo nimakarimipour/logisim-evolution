@@ -27,8 +27,8 @@ public final class ProjectsDirty {
     @Override
     public void libraryChanged(LibraryEvent event) {
       if (event.getAction() == LibraryEvent.DIRTY_STATE) {
-        final var lib = proj.getLogisimFile();
-        final var file = lib.getLoader().getMainFile();
+        final com.cburch.logisim.file.LogisimFile lib = proj.getLogisimFile();
+        final java.io.File file = lib.getLoader().getMainFile();
         LibraryManager.instance.setDirty(file, lib.isDirty());
       }
     }
@@ -37,16 +37,16 @@ public final class ProjectsDirty {
   private static class ProjectListListener implements PropertyChangeListener {
     @Override
     public synchronized void propertyChange(PropertyChangeEvent event) {
-      for (final var listener : listeners) {
+      for (final com.cburch.logisim.file.ProjectsDirty.DirtyListener listener : listeners) {
         listener.proj.removeLibraryListener(listener);
       }
       listeners.clear();
-      for (final var proj : Projects.getOpenProjects()) {
-        final var l = new DirtyListener(proj);
+      for (final com.cburch.logisim.proj.Project proj : Projects.getOpenProjects()) {
+        final com.cburch.logisim.file.ProjectsDirty.DirtyListener l = new DirtyListener(proj);
         proj.addLibraryListener(l);
         listeners.add(l);
 
-        final var lib = proj.getLogisimFile();
+        final com.cburch.logisim.file.LogisimFile lib = proj.getLogisimFile();
         LibraryManager.instance.setDirty(lib.getLoader().getMainFile(), lib.isDirty());
       }
     }

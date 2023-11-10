@@ -157,7 +157,7 @@ public class VhdlContentComponent extends HdlContent {
   }
 
   public boolean parseContent(String content) {
-    final var parser = new VhdlParser(content);
+    final com.cburch.logisim.std.hdl.VhdlParser parser = new VhdlParser(content);
     try {
       parser.parse();
     } catch (Exception ex) {
@@ -170,13 +170,13 @@ public class VhdlContentComponent extends HdlContent {
     libraries = parser.getLibraries();
     architecture = parser.getArchitecture();
 
-    final var inputsDesc = parser.getInputs();
-    final var outputsDesc = parser.getOutputs();
+    final java.util.List<com.cburch.logisim.std.hdl.VhdlParser.PortDescription> inputsDesc = parser.getInputs();
+    final java.util.List<com.cburch.logisim.std.hdl.VhdlParser.PortDescription> outputsDesc = parser.getOutputs();
     inputs = new Port[inputsDesc.size()];
     outputs = new Port[outputsDesc.size()];
 
     for (int i = 0; i < inputsDesc.size(); i++) {
-      final var desc = inputsDesc.get(i);
+      final com.cburch.logisim.std.hdl.VhdlParser.PortDescription desc = inputsDesc.get(i);
       inputs[i] =
           new Port(
               0,
@@ -187,7 +187,7 @@ public class VhdlContentComponent extends HdlContent {
     }
 
     for (int i = 0; i < outputsDesc.size(); i++) {
-      final var desc = outputsDesc.get(i);
+      final com.cburch.logisim.std.hdl.VhdlParser.PortDescription desc = outputsDesc.get(i);
       outputs[i] =
           new Port(
               VhdlEntityComponent.WIDTH,
@@ -205,18 +205,18 @@ public class VhdlContentComponent extends HdlContent {
 
   @Override
   public boolean setContent(String content) {
-    final var title = new StringBuilder();
-    final var result = new StringBuilder();
+    final java.lang.StringBuilder title = new StringBuilder();
+    final java.lang.StringBuilder result = new StringBuilder();
 
     switch (Softwares.validateVhdl(content, title, result)) {
       case Softwares.ERROR:
-        final var message = new JTextArea();
+        final javax.swing.JTextArea message = new JTextArea();
         message.setText(result.toString());
         message.setEditable(false);
         message.setLineWrap(false);
         message.setMargin(new Insets(5, 5, 5, 5));
 
-        final var sp = new JScrollPane(message);
+        final javax.swing.JScrollPane sp = new JScrollPane(message);
         sp.setPreferredSize(new Dimension(700, 400));
 
         OptionPane.showOptionDialog(

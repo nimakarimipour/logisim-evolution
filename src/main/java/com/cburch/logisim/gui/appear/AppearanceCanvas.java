@@ -67,7 +67,7 @@ public class AppearanceCanvas extends Canvas implements CanvasPaneContents, Acti
   }
 
   static int getMaxIndex(CanvasModel model) {
-    final var objects = model.getObjectsFromBottom();
+    final java.util.List<com.cburch.draw.model.CanvasObject> objects = model.getObjectsFromBottom();
     for (int i = objects.size() - 1; i >= 0; i--) {
       if (!(objects.get(i) instanceof AppearanceElement)) {
         return i;
@@ -84,19 +84,19 @@ public class AppearanceCanvas extends Canvas implements CanvasPaneContents, Acti
   private void computeSize(boolean immediate) {
     hidePopup();
 
-    final var circState = circuitState;
+    final com.cburch.logisim.circuit.CircuitState circState = circuitState;
     Bounds bounds =
         (circState == null)
             ? Bounds.create(0, 0, 50, 50)
             : circState.getCircuit().getAppearance().getAbsoluteBounds();
-    final var width = bounds.getX() + bounds.getWidth() + BOUNDS_BUFFER;
-    final var height = bounds.getY() + bounds.getHeight() + BOUNDS_BUFFER;
+    final int width = bounds.getX() + bounds.getWidth() + BOUNDS_BUFFER;
+    final int height = bounds.getY() + bounds.getHeight() + BOUNDS_BUFFER;
     Dimension dim =
         (canvasPane == null)
             ? new Dimension(width, height)
             : canvasPane.supportPreferredSize(width, height);
     if (!immediate) {
-      final var old = oldPreferredSize;
+      final com.cburch.logisim.data.Bounds old = oldPreferredSize;
       if (old != null
           && Math.abs(old.getWidth() - dim.width) < THRESH_SIZE_UPDATE
           && Math.abs(old.getHeight() - dim.height) < THRESH_SIZE_UPDATE) {
@@ -110,24 +110,24 @@ public class AppearanceCanvas extends Canvas implements CanvasPaneContents, Acti
 
   @Override
   public void doAction(UndoAction canvasAction) {
-    final var circuit = circuitState.getCircuit();
+    final com.cburch.logisim.circuit.Circuit circuit = circuitState.getCircuit();
     if (!proj.getLogisimFile().contains(circuit)) {
       return;
     }
 
     if (canvasAction instanceof ModelReorderAction reorder) {
-      final var max = getMaxIndex(getModel());
-      final var requests = reorder.getReorderRequests();
-      final var mod = new ArrayList<ReorderRequest>(requests.size());
+      final int max = getMaxIndex(getModel());
+      final java.util.List<com.cburch.draw.model.ReorderRequest> requests = reorder.getReorderRequests();
+      final java.util.ArrayList<com.cburch.draw.model.ReorderRequest> mod = new ArrayList<ReorderRequest>(requests.size());
       boolean changed = false;
       boolean movedToMax = false;
-      for (final var singleRequest : requests) {
-        final var obj = singleRequest.getObject();
+      for (final com.cburch.draw.model.ReorderRequest singleRequest : requests) {
+        final com.cburch.draw.model.CanvasObject obj = singleRequest.getObject();
         if (obj instanceof AppearanceElement) {
           changed = true;
         } else {
           if (singleRequest.getToIndex() > max) {
-            final var from = singleRequest.getFromIndex();
+            final int from = singleRequest.getFromIndex();
             changed = true;
             movedToMax = true;
             if (from == max && !movedToMax) {
@@ -148,8 +148,8 @@ public class AppearanceCanvas extends Canvas implements CanvasPaneContents, Acti
     }
 
     if (canvasAction instanceof ModelAddAction addAction) {
-      final var cur = addAction.getDestinationIndex();
-      final var max = getMaxIndex(getModel());
+      final int cur = addAction.getDestinationIndex();
+      final int max = getMaxIndex(getModel());
       if (cur > max) {
         canvasAction = new ModelAddAction(getModel(), addAction.getObjects(), max + 1);
       }
@@ -205,7 +205,7 @@ public class AppearanceCanvas extends Canvas implements CanvasPaneContents, Acti
   }
 
   private void hidePopup() {
-    final var man = popupManager;
+    final com.cburch.logisim.gui.appear.LayoutPopupManager man = popupManager;
     if (man != null) {
       man.hideCurrentPopup();
     }
@@ -219,8 +219,8 @@ public class AppearanceCanvas extends Canvas implements CanvasPaneContents, Acti
 
   @Override
   protected void paintForeground(Graphics g) {
-    final var zoom = grid.getZoomFactor();
-    final var gfxScaled = g.create();
+    final double zoom = grid.getZoomFactor();
+    final java.awt.Graphics gfxScaled = g.create();
     if (zoom != 1.0 && zoom != 0.0 && gfxScaled instanceof Graphics2D g2d) {
       g2d.scale(zoom, zoom);
     }
@@ -248,7 +248,7 @@ public class AppearanceCanvas extends Canvas implements CanvasPaneContents, Acti
 
   @Override
   public void repaintCanvasCoords(int x, int y, int width, int height) {
-    final var zoom = grid.getZoomFactor();
+    final double zoom = grid.getZoomFactor();
     if (zoom != 1.0) {
       x = (int) (x * zoom - 1);
       y = (int) (y * zoom - 1);
@@ -260,10 +260,10 @@ public class AppearanceCanvas extends Canvas implements CanvasPaneContents, Acti
 
   private void repairEvent(MouseEvent e, double zoom) {
     if (zoom != 1.0) {
-      final var oldx = e.getX();
-      final var oldy = e.getY();
-      final var newx = (int) Math.round(e.getX() / zoom);
-      final var newy = (int) Math.round(e.getY() / zoom);
+      final int oldx = e.getX();
+      final int oldy = e.getY();
+      final int newx = (int) Math.round(e.getX() / zoom);
+      final int newy = (int) Math.round(e.getY() / zoom);
       e.translatePoint(newx - oldx, newy - oldy);
     }
   }
@@ -281,13 +281,13 @@ public class AppearanceCanvas extends Canvas implements CanvasPaneContents, Acti
   public void setCircuit(Project proj, CircuitState circuitState) {
     this.proj = proj;
     this.circuitState = circuitState;
-    final var circuit = circuitState.getCircuit();
+    final com.cburch.logisim.circuit.Circuit circuit = circuitState.getCircuit();
     setModel(circuit.getAppearance().getCustomAppearanceDrawing(), this);
   }
 
   @Override
   public void setModel(CanvasModel value, ActionDispatcher dispatcher) {
-    final var oldModel = super.getModel();
+    final com.cburch.draw.model.CanvasModel oldModel = super.getModel();
     if (oldModel != null) {
       oldModel.removeCanvasModelListener(listener);
     }
@@ -349,9 +349,9 @@ public class AppearanceCanvas extends Canvas implements CanvasPaneContents, Acti
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-      final var prop = evt.getPropertyName();
+      final java.lang.String prop = evt.getPropertyName();
       if (prop.equals(GridPainter.ZOOM_PROPERTY)) {
-        final var t = getTool();
+        final com.cburch.draw.canvas.CanvasTool t = getTool();
         if (t != null) {
           t.zoomFactorChanged(AppearanceCanvas.this);
         }

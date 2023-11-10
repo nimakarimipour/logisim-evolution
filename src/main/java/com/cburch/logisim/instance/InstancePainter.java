@@ -103,7 +103,7 @@ public class InstancePainter implements InstanceState {
 
   @Override
   public <E> E getAttributeValue(Attribute<E> attr) {
-    final var as = (comp == null) ? attrs : comp.getAttributeSet();
+    final com.cburch.logisim.data.AttributeSet as = (comp == null) ? attrs : comp.getAttributeSet();
     return as.getValue(attr);
   }
 
@@ -122,7 +122,7 @@ public class InstancePainter implements InstanceState {
    */
   @Override
   public InstanceData getData() {
-    final var circState = context.getCircuitState();
+    final com.cburch.logisim.circuit.CircuitState circState = context.getCircuitState();
     if (circState == null || comp == null) {
       throw new UnsupportedOperationException("setData on InstancePainter");
     }
@@ -172,7 +172,7 @@ public class InstancePainter implements InstanceState {
   public Bounds getOffsetBounds() {
     if (comp == null) return factory.getOffsetBounds(attrs);
 
-    final var loc = comp.getLocation();
+    final com.cburch.logisim.data.Location loc = comp.getLocation();
     return comp.getBounds().translate(-loc.getX(), -loc.getY());
   }
 
@@ -183,7 +183,7 @@ public class InstancePainter implements InstanceState {
 
   @Override
   public Value getPortValue(int portIndex) {
-    final var s = context.getCircuitState();
+    final com.cburch.logisim.circuit.CircuitState s = context.getCircuitState();
     return (comp != null && s != null)
         ? s.getValue(comp.getEnd(portIndex).getLocation())
         : Value.UNKNOWN;
@@ -213,7 +213,7 @@ public class InstancePainter implements InstanceState {
 
   @Override
   public boolean isPortConnected(int index) {
-    final var loc = comp.getEnd(index).getLocation();
+    final com.cburch.logisim.data.Location loc = comp.getEnd(index).getLocation();
     return context.getCircuit().isConnected(loc, comp);
   }
 
@@ -223,7 +223,7 @@ public class InstancePainter implements InstanceState {
 
   @Override
   public void setData(InstanceData value) {
-    final var circState = context.getCircuitState();
+    final com.cburch.logisim.circuit.CircuitState circState = context.getCircuitState();
     if (circState == null || comp == null) {
       throw new UnsupportedOperationException("setData on InstancePainter");
     }

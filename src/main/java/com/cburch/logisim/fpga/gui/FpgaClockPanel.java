@@ -74,12 +74,12 @@ public class FpgaClockPanel extends JPanel implements ActionListener, LocaleList
   }
 
   public void updateFrequencyList(String circuitName) {
-    final var newTopCircuit = myProject.getLogisimFile().getCircuit(circuitName);
+    final com.cburch.logisim.circuit.Circuit newTopCircuit = myProject.getLogisimFile().getCircuit(circuitName);
     if ((newTopCircuit == null) || (newTopCircuit == rootSheet)) return;
     rootSheet = newTopCircuit;
-    final var savedDownloadFrequency = rootSheet.getDownloadFrequency();
-    final var savedSimFrequency = rootSheet.getTickFrequency();
-    final var selectedFrequency = (savedDownloadFrequency > 0) ? savedDownloadFrequency : savedSimFrequency;
+    final double savedDownloadFrequency = rootSheet.getDownloadFrequency();
+    final double savedSimFrequency = rootSheet.getTickFrequency();
+    final double selectedFrequency = (savedDownloadFrequency > 0) ? savedDownloadFrequency : savedSimFrequency;
     for (int i = 0; i < MenuSimulate.SUPPORTED_TICK_FREQUENCIES.length; i++) {
       if (MenuSimulate.SUPPORTED_TICK_FREQUENCIES[i].equals(selectedFrequency)) {
         frequenciesList.setSelectedIndex(i);
@@ -93,8 +93,8 @@ public class FpgaClockPanel extends JPanel implements ActionListener, LocaleList
   private void setSelectedFrequency(double freq) {
     if (freq <= 0) return;
     if (rootSheet != null) {
-      final var savedDownloadFrequency = rootSheet.getDownloadFrequency();
-      final var savedSimFrequency = rootSheet.getTickFrequency();
+      final double savedDownloadFrequency = rootSheet.getDownloadFrequency();
+      final double savedSimFrequency = rootSheet.getTickFrequency();
       if (((savedDownloadFrequency > 0) && (freq != savedDownloadFrequency))
           || ((freq != savedSimFrequency) && (freq != savedDownloadFrequency)))
         rootSheet.setDownloadFrequency(freq);

@@ -183,7 +183,7 @@ public class LineBuffer implements RandomAccess {
    * @return Instance of self for easy chaining.
    */
   public LineBuffer addVhdlKeywords() {
-    for (final var keyword : Vhdl.getVhdlKeywords()) pair(keyword.toLowerCase(), keyword);
+    for (final java.lang.String keyword : Vhdl.getVhdlKeywords()) pair(keyword.toLowerCase(), keyword);
     return this;
   }
 
@@ -230,7 +230,7 @@ public class LineBuffer implements RandomAccess {
     // Resolve positional arguments then apply paired ones.     WE need to do this first (instead of
     // letting add() do that) otherwise `contains` would be looking for non-final version of the
     // string.
-    final var line = applyPairs(format(fmt, args));
+    final java.lang.String line = applyPairs(format(fmt, args));
     if (!contents.contains(line)) add(line, true);
     return this;
   }
@@ -335,7 +335,7 @@ public class LineBuffer implements RandomAccess {
    * @return Instance of self for easy chaining.
    */
   public LineBuffer add(Collection<String> lines) {
-    for (final var line : lines) add(line);
+    for (final java.lang.String line : lines) add(line);
     return this;
   }
 
@@ -384,12 +384,12 @@ public class LineBuffer implements RandomAccess {
    */
   public static String applyPairs(String format, Pairs pairs) {
     if (pairs != null) {
-      for (final var set : pairs.getContainer().entrySet()) {
-        final var searchRegExp = String.format("\\{\\{\\s*%s\\s*\\}\\}", set.getKey());
+      for (final java.util.Map.Entry<java.lang.String,java.lang.Object> set : pairs.getContainer().entrySet()) {
+        final java.lang.String searchRegExp = String.format("\\{\\{\\s*%s\\s*\\}\\}", set.getKey());
         // Both backslashes (\) and dollar signs ($) in the replacement string may cause the
         // results to be different than if it were being treated as a literal replacement string
         // so as we do not need to support i.e. group references etc, we just need to escape it.
-        final var replacement = Matcher.quoteReplacement(set.getValue().toString());
+        final java.lang.String replacement = Matcher.quoteReplacement(set.getValue().toString());
         format = format.replaceAll(searchRegExp, replacement);
       }
     }
@@ -492,10 +492,10 @@ public class LineBuffer implements RandomAccess {
    * @return indented content of the buffer.
    */
   public List<String> getWithIndent(String indent) {
-    final var result = new ArrayList<String>();
-    for (final var content : contents) {
-      final var lines = content.split("\n");
-      for (final var line : lines) {
+    final java.util.ArrayList<java.lang.String> result = new ArrayList<String>();
+    for (final java.lang.String content : contents) {
+      final java.lang.String[] lines = content.split("\n");
+      for (final java.lang.String line : lines) {
         // We do not indent empty lines, just ones with content.
         result.add((line.length() == 0) ? line : indent + line);
       }
@@ -505,7 +505,7 @@ public class LineBuffer implements RandomAccess {
 
   /** Returns **copy** of internal pair buffer. */
   public Pairs getPairCopy() {
-    final var clone = (Pairs) pairs.clone();
+    final com.cburch.logisim.util.LineBuffer.Pairs clone = (Pairs) pairs.clone();
     return clone;
   }
 
@@ -576,12 +576,12 @@ public class LineBuffer implements RandomAccess {
               "Max allowed indentation is {{1}}, {{2}} given.", MAX_ALLOWED_INDENT, indentSpaces));
     }
 
-    final var maxRemarkLineLength = MAX_LINE_LENGTH - indentSpaces - (2 * Hdl.REMARK_MARKER_LENGTH);
-    final var indent = SPACE.repeat(indentSpaces);
-    final var contents = new ArrayList<String>();
+    final int maxRemarkLineLength = MAX_LINE_LENGTH - indentSpaces - (2 * Hdl.REMARK_MARKER_LENGTH);
+    final java.lang.String indent = SPACE.repeat(indentSpaces);
+    final java.util.ArrayList<java.lang.String> contents = new ArrayList<String>();
 
-    final var oneLine = new StringBuilder();
-    final var remarkLines =
+    final java.lang.StringBuilder oneLine = new StringBuilder();
+    final java.util.List<java.lang.String> remarkLines =
         List.of(WordUtils.wrap(remarkText, maxRemarkLineLength, "\n", true).split("\n"));
 
     // Generate header line
@@ -592,7 +592,7 @@ public class LineBuffer implements RandomAccess {
     contents.add(oneLine.toString());
     oneLine.setLength(0);
 
-    for (final var remarkLine : remarkLines) {
+    for (final java.lang.String remarkLine : remarkLines) {
       oneLine.append(indent).append(Hdl.getRemarkBlockLineStart()).append(remarkLine);
       if (remarkLine.length() < maxRemarkLineLength) {
         oneLine.append(SPACE.repeat(maxRemarkLineLength - remarkLine.length()));
@@ -718,8 +718,8 @@ public class LineBuffer implements RandomAccess {
     pairedPlaceholders.clear();
 
     // Separate positionals and other placeholders
-    final var pattern = Pattern.compile("^\\d+$");
-    for (final var phKey : placeholders) {
+    final java.util.regex.Pattern pattern = Pattern.compile("^\\d+$");
+    for (final java.lang.String phKey : placeholders) {
       if (pattern.matcher(phKey).find()) positionalPlaceholders.add(phKey);
       else pairedPlaceholders.add(phKey);
     }
@@ -741,7 +741,7 @@ public class LineBuffer implements RandomAccess {
   protected void validateLineWithPositionalArgs(String fmt, Object... args) {
     initValidator(fmt);
 
-    final var posArgsCnt = positionalPlaceholders.size();
+    final int posArgsCnt = positionalPlaceholders.size();
 
     // Do we have positional placeholders in fmt?
     if (positionalPlaceholders.isEmpty()) {
@@ -766,7 +766,7 @@ public class LineBuffer implements RandomAccess {
             fmt, posArgsCnt, args.length);
 
       // count matches, let's see if contents too.
-      for (final var posKey : positionalPlaceholders) {
+      for (final java.lang.String posKey : positionalPlaceholders) {
         if (Integer.parseInt(posKey) > posArgsCnt) {
           // Reference to non-existing position found. Warn about all detected issues. We fail
           // later.
@@ -787,7 +787,7 @@ public class LineBuffer implements RandomAccess {
     initValidator(fmt);
 
     // check if we use any non mapped placeholder
-    for (final var key : pairedPlaceholders) {
+    for (final java.lang.String key : pairedPlaceholders) {
       if (!placeholders.contains(key)) {
         abort("#E005: Placeholder '{{1}}' has no mapping while processing '{{2}}'.", key, fmt);
       }
@@ -814,7 +814,7 @@ public class LineBuffer implements RandomAccess {
     }
 
     // Check if paired placeholders used in formatting string are known at this point.
-    for (final var key : pairedPlaceholders) {
+    for (final java.lang.String key : pairedPlaceholders) {
       if (!(pairs.getContainer().containsKey(key)
           || (argPairs != null && argPairs.getContainer().containsKey(key)))) {
         abort("#E006: No mapping for '{{1}}' placeholder in '{{2}}'.", key, fmt);
@@ -831,14 +831,14 @@ public class LineBuffer implements RandomAccess {
    * @return Returns list of found placeholders. If no placeholder is found, returnes empty list.
    */
   public List<String> extractPlaceholders(String fmt) {
-    final var keys = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> keys = new ArrayList<String>();
 
-    final var regex = "(\\{\\{.+?\\}\\})+";
-    final var pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
-    final var matcher = pattern.matcher(fmt);
+    final java.lang.String regex = "(\\{\\{.+?\\}\\})+";
+    final java.util.regex.Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+    final java.util.regex.Matcher matcher = pattern.matcher(fmt);
     while (matcher.find()) {
       // Extract key from between the brackets:
-      final var bracketsCharCount = 2;
+      final int bracketsCharCount = 2;
       for (int i = 1; i <= matcher.groupCount(); i++) {
         java.lang.String keyStr = matcher.group(i);
         keyStr = keyStr.substring(bracketsCharCount, keyStr.length() - bracketsCharCount).strip();
@@ -861,8 +861,8 @@ public class LineBuffer implements RandomAccess {
   public boolean equals(Object other) {
     if (!(other instanceof LineBuffer && size() == ((LineBuffer) other).size())) return false;
     for (int i = 0; i < size(); i++) {
-      final var thisLine = get().get(i);
-      final var otherLine = ((LineBuffer) other).get().get(i);
+      final java.lang.String thisLine = get().get(i);
+      final java.lang.String otherLine = ((LineBuffer) other).get().get(i);
       if (!(thisLine.equals(otherLine))) return false;
     }
     return true;
@@ -917,9 +917,9 @@ public class LineBuffer implements RandomAccess {
      * @param args Arguments to use to build the map.
      */
     public static Pairs fromArgs(Object... args) {
-      final var map = new Pairs();
+      final com.cburch.logisim.util.LineBuffer.Pairs map = new Pairs();
       int idx = 1;
-      for (final var arg : args) {
+      for (final java.lang.Object arg : args) {
         map.addPositionalPair(String.valueOf(idx++), arg.toString());
       }
       return map;
@@ -961,7 +961,7 @@ public class LineBuffer implements RandomAccess {
      * @return Returns instance of container for easy chaining.
      */
     public Pairs addPairs(Pairs pairs) {
-      for (final var pair : pairs.entrySet()) {
+      for (final java.util.Map.Entry<java.lang.String,java.lang.Object> pair : pairs.entrySet()) {
         addNonPositionalPair(pair.getKey(), pair.getValue());
       }
       return this;
@@ -1006,8 +1006,8 @@ public class LineBuffer implements RandomAccess {
     /** Clones current instance of Pairs. */
     @Override
     protected Pairs clone() {
-      final var clone = new Pairs();
-      for (final var pair : pairContainer.entrySet()) {
+      final com.cburch.logisim.util.LineBuffer.Pairs clone = new Pairs();
+      for (final java.util.Map.Entry<java.lang.String,java.lang.Object> pair : pairContainer.entrySet()) {
         clone.pair(pair.getKey(), pair.getValue());
       }
       return clone;

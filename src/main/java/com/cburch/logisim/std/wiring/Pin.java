@@ -253,13 +253,13 @@ public class Pin extends InstanceFactory {
       super();
       this.state = state;
       pinState = getState(state);
-      final var value = pinState.intendedValue;
+      final com.cburch.logisim.data.Value value = pinState.intendedValue;
       bitWidth = value.getWidth();
-      final var attrs = (PinAttributes) state.getAttributeSet();
+      final com.cburch.logisim.std.wiring.PinAttributes attrs = (PinAttributes) state.getAttributeSet();
       tristate = (attrs.threeState && attrs.pull == PULL_NONE);
 
       setTitle(S.get("PinEnterFloat"));
-      final var gbc = new GridBagConstraints();
+      final java.awt.GridBagConstraints gbc = new GridBagConstraints();
       ok = new JButton(S.get("PinOkay"));
       cancel = new JButton(S.get("PinCancel"));
       ok.addActionListener(
@@ -286,7 +286,7 @@ public class Pin extends InstanceFactory {
               new DocumentListener() {
                 @Override
                 public void insertUpdate(DocumentEvent e) {
-                  final var s = text.getText();
+                  final java.lang.String s = text.getText();
                   if (isEditValid(s)) {
                     text.setBackground(VALID_COLOR);
                     ok.setEnabled(true);
@@ -327,7 +327,7 @@ public class Pin extends InstanceFactory {
     }
 
     public void accept() {
-      final var s = text.getText();
+      final java.lang.String s = text.getText();
       if (isEditValid(s)) {
         Value newVal;
         if (s.equals(Character.toString(Value.UNKNOWNCHAR).toLowerCase())
@@ -564,7 +564,7 @@ public class Pin extends InstanceFactory {
         dialog.setLocation(e.getXOnScreen() - 60, e.getYOnScreen() - 40);
         dialog.setVisible(true);
       } else if (radix == RadixOption.RADIX_FLOAT) {
-        final var dialog = new EditFloat(state);
+        final com.cburch.logisim.std.wiring.Pin.EditFloat dialog = new EditFloat(state);
         dialog.setLocation(e.getXOnScreen() - 60, e.getYOnScreen() - 40);
         dialog.setVisible(true);
       } else {
@@ -673,12 +673,12 @@ public class Pin extends InstanceFactory {
   }
 
   private static PinState getState(InstanceState state) {
-    final var attrs = (PinAttributes) state.getAttributeSet();
-    final var width = attrs.width;
+    final com.cburch.logisim.std.wiring.PinAttributes attrs = (PinAttributes) state.getAttributeSet();
+    final com.cburch.logisim.data.BitWidth width = attrs.width;
     com.cburch.logisim.std.wiring.Pin.PinState ret = (PinState) state.getData();
     if (ret == null) {
       java.lang.Long initialValue = attrs.getValue(ATTR_INITIAL);
-      final var newValue = attrs.threeState
+      final com.cburch.logisim.data.Value newValue = attrs.threeState
             ? Value.createUnknown(width)
             : Value.createKnown(width.getWidth(), initialValue);
       ret = new PinState(newValue, newValue);

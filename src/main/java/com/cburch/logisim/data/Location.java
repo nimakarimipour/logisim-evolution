@@ -20,25 +20,25 @@ import java.util.List;
 public class Location implements Comparable<Location> {
   public static Location create(int x, int y, boolean hasToSnap) {
     // we round to half-grid base
-    final var xRounded = hasToSnap ? Math.round(x / 5) * 5 : x;
-    final var yRounded = hasToSnap ? Math.round(y / 5) * 5 : y;
-    final var hashCode = 31 * xRounded + yRounded;
-    final var ret = cache.get(hashCode);
+    final int xRounded = hasToSnap ? Math.round(x / 5) * 5 : x;
+    final int yRounded = hasToSnap ? Math.round(y / 5) * 5 : y;
+    final int hashCode = 31 * xRounded + yRounded;
+    final java.lang.Object ret = cache.get(hashCode);
     if (ret != null) {
-      final var loc = (Location) ret;
+      final com.cburch.logisim.data.Location loc = (Location) ret;
       if (loc.x == xRounded && loc.y == yRounded) return loc;
     }
-    final var loc = new Location(hashCode, xRounded, yRounded, hasToSnap);
+    final com.cburch.logisim.data.Location loc = new Location(hashCode, xRounded, yRounded, hasToSnap);
     cache.put(hashCode, loc);
     return loc;
   }
 
   public static Location parse(String value) {
-    final var base = value;
+    final java.lang.String base = value;
 
     value = value.trim();
     if (value.charAt(0) == '(') {
-      final var len = value.length();
+      final int len = value.length();
       if (value.charAt(len - 1) != ')') {
         throw new NumberFormatException("invalid point '" + base + "'");
       }
@@ -52,8 +52,8 @@ public class Location implements Comparable<Location> {
         throw new NumberFormatException("invalid point '" + base + "'");
       }
     }
-    final var x = Integer.parseInt(value.substring(0, comma).trim());
-    final var y = Integer.parseInt(value.substring(comma + 1).trim());
+    final int x = Integer.parseInt(value.substring(0, comma).trim());
+    final int y = Integer.parseInt(value.substring(comma + 1).trim());
     return Location.create(x, y, true);
   }
 
@@ -110,8 +110,8 @@ public class Location implements Comparable<Location> {
     while (degrees >= 360) degrees -= 360;
     while (degrees < 0) degrees += 360;
 
-    final var dx = x - xc;
-    final var dy = y - yc;
+    final int dx = x - xc;
+    final int dy = y - yc;
     if (degrees == 90) {
       return create(xc + dy, yc - dx, hasToSnap);
     } else if (degrees == 180) {
@@ -155,8 +155,8 @@ public class Location implements Comparable<Location> {
   private static class Horizontal implements Comparator<At> {
     @Override
     public int compare(At a, At b) {
-      final var aloc = a.getLocation();
-      final var bloc = b.getLocation();
+      final com.cburch.logisim.data.Location aloc = a.getLocation();
+      final com.cburch.logisim.data.Location bloc = b.getLocation();
       if (aloc.x != bloc.x)
         return aloc.x - bloc.x;
       else if (aloc.y != bloc.y)
@@ -176,8 +176,8 @@ public class Location implements Comparable<Location> {
   private static class Vertical implements Comparator<At> {
     @Override
     public int compare(At a, At b) {
-      final var aloc = a.getLocation();
-      final var bloc = b.getLocation();
+      final com.cburch.logisim.data.Location aloc = a.getLocation();
+      final com.cburch.logisim.data.Location bloc = b.getLocation();
       if (aloc.y != bloc.y)
         return aloc.y - bloc.y;
       else if (aloc.x != bloc.x)

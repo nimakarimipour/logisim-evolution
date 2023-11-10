@@ -133,7 +133,7 @@ public abstract class RadixOption extends AttributeOption {
 
     @Override
     public int getMaxLength(BitWidth width) {
-      final var bits = width.getWidth();
+      final int bits = width.getWidth();
       return (bits <= 1) ? 1 : bits + ((bits - 1) / 4);
     }
 
@@ -201,7 +201,7 @@ public abstract class RadixOption extends AttributeOption {
   }
 
   public static RadixOption decode(String value) {
-    for (final var opt : OPTIONS) {
+    for (final com.cburch.logisim.circuit.RadixOption opt : OPTIONS) {
       if (value.equals(opt.saveName)) {
         return opt;
       }

@@ -292,10 +292,10 @@ public class TikZWriter extends Graphics2D {
   @Override
   public FontMetrics getFontMetrics(Font f) {
     /* TODO: just stubs, not related to LaTeX */
-    final var ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-    final var gd = ge.getDefaultScreenDevice();
-    final var config = gd.getDefaultConfiguration();
-    final var c = new Canvas(config);
+    final java.awt.GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    final java.awt.GraphicsDevice gd = ge.getDefaultScreenDevice();
+    final java.awt.GraphicsConfiguration config = gd.getDefaultConfiguration();
+    final java.awt.Canvas c = new Canvas(config);
     return c.getFontMetrics(f);
   }
 

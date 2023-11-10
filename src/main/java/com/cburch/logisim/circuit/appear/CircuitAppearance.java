@@ -77,29 +77,29 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
   }
 
   public boolean hasCustomAppearance() {
-    final var currentCustom = new ArrayList<>(getCustomObjectsFromBottom());
-    final var defaultCustom = new ArrayList<>(defaultCustomAppearance);
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> currentCustom = new ArrayList<>(getCustomObjectsFromBottom());
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> defaultCustom = new ArrayList<>(defaultCustomAppearance);
     java.util.Iterator<com.cburch.draw.model.CanvasObject> shapeIterator = currentCustom.iterator();
     while (shapeIterator.hasNext()) {
-      final var shape = shapeIterator.next(); 
+      final com.cburch.draw.model.CanvasObject shape = shapeIterator.next(); 
       if (shape instanceof AppearancePort || shape instanceof AppearanceAnchor)
         shapeIterator.remove();
     }
     shapeIterator = defaultCustom.iterator();
     while (shapeIterator.hasNext()) {
-      final var shape = shapeIterator.next(); 
+      final com.cburch.draw.model.CanvasObject shape = shapeIterator.next(); 
       if (shape instanceof AppearancePort || shape instanceof AppearanceAnchor)
         shapeIterator.remove();
     }
     if (currentCustom.size() != defaultCustom.size()) return true;
     shapeIterator = currentCustom.iterator();
     while (shapeIterator.hasNext()) {
-      final var currentShape = shapeIterator.next();
+      final com.cburch.draw.model.CanvasObject currentShape = shapeIterator.next();
       boolean deleteIt = false;
-      final var shapeDefaultIterator = defaultCustom.iterator();
+      final java.util.Iterator<com.cburch.draw.model.CanvasObject> shapeDefaultIterator = defaultCustom.iterator();
       while (shapeDefaultIterator.hasNext()) {
-        final var defaultShape = shapeDefaultIterator.next();
-        final var matches = currentShape.matches(defaultShape);
+        final com.cburch.draw.model.CanvasObject defaultShape = shapeDefaultIterator.next();
+        final boolean matches = currentShape.matches(defaultShape);
         deleteIt |= matches;
         if (matches) shapeDefaultIterator.remove();
       }
@@ -166,16 +166,16 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
    */
   public boolean contains(Location loc) {
     Location query;
-    final var anchor = findAnchor();
+    final com.cburch.logisim.circuit.appear.AppearanceAnchor anchor = findAnchor();
 
     if (anchor == null) {
       query = loc;
     } else {
-      final var anchorLoc = anchor.getLocation();
+      final com.cburch.logisim.data.Location anchorLoc = anchor.getLocation();
       query = loc.translate(anchorLoc.getX(), anchorLoc.getY());
     }
 
-    for (final var obj : getObjectsFromBottom()) {
+    for (final com.cburch.draw.model.CanvasObject obj : getObjectsFromBottom()) {
       if (!(obj instanceof AppearanceElement) && obj.contains(query, true)) {
         return true;
       }
@@ -192,13 +192,13 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
   }
 
   private Location findAnchorLocation() {
-    final var anchor = findAnchor();
+    final com.cburch.logisim.circuit.appear.AppearanceAnchor anchor = findAnchor();
     return (anchor == null) ? Location.create(100, 100, true) : anchor.getLocation();
   }
 
   void fireCircuitAppearanceChanged(int affected) {
-    final var event = new CircuitAppearanceEvent(circuit, affected);
-    for (final var listener : listeners) {
+    final com.cburch.logisim.circuit.appear.CircuitAppearanceEvent event = new CircuitAppearanceEvent(circuit, affected);
+    for (final com.cburch.logisim.circuit.appear.CircuitAppearanceListener listener : listeners) {
       listener.circuitAppearanceChanged(event);
     }
   }
@@ -210,9 +210,9 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
   private Bounds getBounds(boolean relativeToAnchor) {
     Bounds ret = null;
     Location offset = null;
-    for (final var obj : getObjectsFromBottom()) {
+    for (final com.cburch.draw.model.CanvasObject obj : getObjectsFromBottom()) {
       if (obj instanceof AppearanceElement appEl) {
-        final var loc = appEl.getLocation();
+        final com.cburch.logisim.data.Location loc = appEl.getLocation();
         if (obj instanceof AppearanceAnchor) offset = loc;
         ret = (ret == null) ? Bounds.create(loc) : ret.add(loc);
       } else {
@@ -239,7 +239,7 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
   }
 
   public Direction getFacing() {
-    final var anchor = findAnchor();
+    final com.cburch.logisim.circuit.appear.AppearanceAnchor anchor = findAnchor();
     return (anchor == null) ? Direction.EAST : anchor.getFacingDirection();
   }
 
@@ -250,8 +250,8 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
   public SortedMap<Location, Instance> getPortOffsets(Direction facing) {
     Location anchor = null;
     com.cburch.logisim.data.Direction defaultFacing = Direction.EAST;
-    final var ports = new ArrayList<AppearancePort>();
-    for (final var shape : getObjectsFromBottom()) {
+    final java.util.ArrayList<com.cburch.logisim.circuit.appear.AppearancePort> ports = new ArrayList<AppearancePort>();
+    for (final com.cburch.draw.model.CanvasObject shape : getObjectsFromBottom()) {
       if (shape instanceof AppearancePort appPort) {
         ports.add(appPort);
       } else if (shape instanceof AppearanceAnchor appAnchor) {
@@ -260,8 +260,8 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
       }
     }
 
-    final var ret = new TreeMap<Location, Instance>();
-    for (final var port : ports) {
+    final java.util.TreeMap<com.cburch.logisim.data.Location,com.cburch.logisim.instance.Instance> ret = new TreeMap<Location, Instance>();
+    for (final com.cburch.logisim.circuit.appear.AppearancePort port : ports) {
       com.cburch.logisim.data.Location loc = port.getLocation();
       if (anchor != null) {
         loc = loc.translate(-anchor.getX(), -anchor.getY());
@@ -289,19 +289,19 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
 
   @Override
   public List<CanvasObject> getObjectsFromTop() {
-    final var ret = new ArrayList<>(getObjectsFromBottom());
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> ret = new ArrayList<>(getObjectsFromBottom());
     Collections.reverse(ret);
     return ret;
   }
 
   public void paintSubcircuit(InstancePainter painter, Graphics g, Direction facing) {
-    final var defaultFacing = getFacing();
+    final com.cburch.logisim.data.Direction defaultFacing = getFacing();
     double rotate = 0.0D;
     if (facing != defaultFacing && g instanceof Graphics2D g2d) {
       rotate = defaultFacing.toRadians() - facing.toRadians();
       g2d.rotate(rotate);
     }
-    final var offset = findAnchorLocation();
+    final com.cburch.logisim.data.Location offset = findAnchorLocation();
     g.translate(-offset.getX(), -offset.getY());
     CircuitState state = null;
     if (painter.getShowState()) {
@@ -311,9 +311,9 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
         // Do nothing.
       }
     }
-    for (final var shape : getObjectsFromBottom()) {
+    for (final com.cburch.draw.model.CanvasObject shape : getObjectsFromBottom()) {
       if (!(shape instanceof AppearanceElement)) {
-        final var dup = g.create();
+        final java.awt.Graphics dup = g.create();
         if (shape instanceof DynamicElement dynEl) {
           dynEl.paintDynamic(dup, state);
           if (shape instanceof DynamicElementWithPoker dynElWithPoker)
@@ -330,14 +330,14 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
 
   public boolean isNamedBoxShapedFixedSize() {
     if (circuit == null || circuit.getStaticAttributes() == null) return true;
-    final var staticAttrs = circuit.getStaticAttributes(); 
+    final com.cburch.logisim.data.AttributeSet staticAttrs = circuit.getStaticAttributes(); 
     return staticAttrs.containsAttribute(CircuitAttributes.NAMED_CIRCUIT_BOX_FIXED_SIZE) 
         ? staticAttrs.getValue(CircuitAttributes.NAMED_CIRCUIT_BOX_FIXED_SIZE) 
         : true;
   }
 
   public void recomputeDefaultAppearance() {
-    final var shapes = DefaultAppearance.build(circuitPins.getPins(), getCircuitAppearance(), 
+    final java.util.List<com.cburch.draw.model.CanvasObject> shapes = DefaultAppearance.build(circuitPins.getPins(), getCircuitAppearance(), 
         isNamedBoxShapedFixedSize(), getName());
     setObjectsForce(shapes, true);
   }
@@ -361,36 +361,36 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
   }
 
   public void repairCustomAppearance(List<CanvasObject> oldCustomAppearanceElements, Project proj, Circuit circ) {
-    final var toBeRemoved = new ArrayList<CanvasObject>();
-    final var toBeAdded = new ArrayList<CanvasObject>();
-    final var apearanceToBeRemoved = new ArrayList<AppearanceElement>(); 
-    final var apearanceToBeAdded = new ArrayList<AppearanceElement>(); 
-    for (final var obj : getCustomObjectsFromBottom()) {
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> toBeRemoved = new ArrayList<CanvasObject>();
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> toBeAdded = new ArrayList<CanvasObject>();
+    final java.util.ArrayList<com.cburch.logisim.circuit.appear.AppearanceElement> apearanceToBeRemoved = new ArrayList<AppearanceElement>(); 
+    final java.util.ArrayList<com.cburch.logisim.circuit.appear.AppearanceElement> apearanceToBeAdded = new ArrayList<AppearanceElement>(); 
+    for (final com.cburch.draw.model.CanvasObject obj : getCustomObjectsFromBottom()) {
       if (obj instanceof AppearanceElement element) {
         apearanceToBeRemoved.add(element);
       } else {
         toBeRemoved.add(obj);
       }
     }
-    for (final var obj : oldCustomAppearanceElements) {
+    for (final com.cburch.draw.model.CanvasObject obj : oldCustomAppearanceElements) {
       if (obj instanceof AppearanceElement element) {
         apearanceToBeAdded.add(element);
       } else {
         toBeAdded.add(obj);
       }
     }
-    for (final var obj : apearanceToBeRemoved) {
+    for (final com.cburch.logisim.circuit.appear.AppearanceElement obj : apearanceToBeRemoved) {
       if (obj instanceof AppearanceAnchor oldAnchor) {
-        final var iterator = apearanceToBeAdded.iterator();
+        final java.util.Iterator<com.cburch.logisim.circuit.appear.AppearanceElement> iterator = apearanceToBeAdded.iterator();
         while (iterator.hasNext()) {
-          final var item = iterator.next();
+          final com.cburch.logisim.circuit.appear.AppearanceElement item = iterator.next();
           if (item instanceof AppearanceAnchor newAnchor) {
-            final var translates = new HashSet<CanvasObject>();
+            final java.util.HashSet<com.cburch.draw.model.CanvasObject> translates = new HashSet<CanvasObject>();
             translates.add(oldAnchor);
             oldAnchor.setValue(AppearanceAnchor.FACING, newAnchor.getValue(AppearanceAnchor.FACING));
-            final var dx = newAnchor.getLocation().getX() - oldAnchor.getLocation().getX();
-            final var dy = newAnchor.getLocation().getY() - oldAnchor.getLocation().getY();
-            final var action = new ModelTranslateAction(this, translates, dx, dy);
+            final int dx = newAnchor.getLocation().getX() - oldAnchor.getLocation().getX();
+            final int dy = newAnchor.getLocation().getY() - oldAnchor.getLocation().getY();
+            final com.cburch.draw.actions.ModelTranslateAction action = new ModelTranslateAction(this, translates, dx, dy);
             proj.doAction(new CanvasActionAdapter(circ, action));
             iterator.remove();
             break;
@@ -398,18 +398,18 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
         }
       }
     }
-    for (final var obj : apearanceToBeRemoved) {
+    for (final com.cburch.logisim.circuit.appear.AppearanceElement obj : apearanceToBeRemoved) {
       if (obj instanceof AppearancePort oldPort) {
-        final var iterator = apearanceToBeAdded.iterator();
+        final java.util.Iterator<com.cburch.logisim.circuit.appear.AppearanceElement> iterator = apearanceToBeAdded.iterator();
         while (iterator.hasNext()) {
-          final var item = iterator.next();
+          final com.cburch.logisim.circuit.appear.AppearanceElement item = iterator.next();
           if (item instanceof AppearancePort newPort) {
             if (newPort.getPin().getLocation().equals(oldPort.getPin().getLocation())) {
-              final var translates = new HashSet<CanvasObject>();
+              final java.util.HashSet<com.cburch.draw.model.CanvasObject> translates = new HashSet<CanvasObject>();
               translates.add(oldPort);
-              final var dx = newPort.getLocation().getX() - oldPort.getLocation().getX();
-              final var dy = newPort.getLocation().getY() - oldPort.getLocation().getY();
-              final var action = new ModelTranslateAction(this, translates, dx, dy);
+              final int dx = newPort.getLocation().getX() - oldPort.getLocation().getX();
+              final int dy = newPort.getLocation().getY() - oldPort.getLocation().getY();
+              final com.cburch.draw.actions.ModelTranslateAction action = new ModelTranslateAction(this, translates, dx, dy);
               proj.doAction(new CanvasActionAdapter(circ, action));
               iterator.remove();
               break;
@@ -423,8 +423,8 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
   }
 
   public void removeDynamicElement(InstanceComponent c) {
-    final var toRemove = new ArrayList<CanvasObject>();
-    for (final var obj : super.getObjectsFromBottom()) {
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> toRemove = new ArrayList<CanvasObject>();
+    for (final com.cburch.draw.model.CanvasObject obj : super.getObjectsFromBottom()) {
       if (obj instanceof DynamicElement el && el.getPath().contains(c)) {
         toRemove.add(obj);
       }
@@ -445,7 +445,7 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
     boolean oldSuppress = suppressRecompute;
     try {
       suppressRecompute = true;
-      final var hasCustom = hasCustomAppearance(); 
+      final boolean hasCustom = hasCustomAppearance(); 
       if (hasCustom) {
         defaultCustomAppearance = DefaultCustomAppearance.build(circuitPins.getPins()); 
         removeObjects(removes);
@@ -471,14 +471,14 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
     
     // Must manually deep-copy arrays in Java...
     // final var shapes = new ArrayList<CanvasObject>(shapesBase);
-    final var n = shapesBase.size();
-    final var shapes = new ArrayList<CanvasObject>(n);
+    final int n = shapesBase.size();
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> shapes = new ArrayList<CanvasObject>(n);
     for (int i = 0; i < n; i++) {
       shapes.add(shapesBase.get(i).clone());
     }
     int ports = 0;
     for (int i = n - 1; i >= 0; i--) { // count ports, move anchor to end
-      final var obj = shapes.get(i);
+      final com.cburch.draw.model.CanvasObject obj = shapes.get(i);
       if (obj instanceof AppearanceAnchor) {
         if (i != n - 1) {
           shapes.remove(i);
@@ -489,7 +489,7 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
       }
     }
     for (int i = (n - ports - 1) - 1; i >= 0; i--) { // move ports to top
-      final var obj = shapes.get(i);
+      final com.cburch.draw.model.CanvasObject obj = shapes.get(i);
       if (obj instanceof AppearancePort) {
         shapes.remove(i);
         shapes.add(n - ports - 1, obj);

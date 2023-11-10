@@ -78,7 +78,7 @@ public class TruthtableTextFile {
   public static void doSave(File file, AnalyzerModel model) throws IOException {
     try (PrintStream out = new PrintStream(file)) {
       out.println(S.get("tableRemark1"));
-      final var c = model.getCurrentCircuit();
+      final com.cburch.logisim.circuit.Circuit c = model.getCurrentCircuit();
       if (c != null) out.println(S.get("tableRemark2", c.getName()));
       out.println(S.get("tableRemark3", new Date()));
       out.println();
@@ -86,19 +86,19 @@ public class TruthtableTextFile {
       out.println();
       VariableList inputs = model.getInputs();
       VariableList outputs = model.getOutputs();
-      final var colwidth = new int[inputs.vars.size() + outputs.vars.size()];
+      final int[] colwidth = new int[inputs.vars.size() + outputs.vars.size()];
       int i = 0;
-      for (final var variable : inputs.vars)
+      for (final com.cburch.logisim.analyze.model.Var variable : inputs.vars)
         colwidth[i++] = Math.max(variable.toString().length(), variable.width);
-      for (final var variable : outputs.vars)
+      for (final com.cburch.logisim.analyze.model.Var variable : outputs.vars)
         colwidth[i++] = Math.max(variable.toString().length(), variable.width);
       i = 0;
-      for (final var variable : inputs.vars) {
+      for (final com.cburch.logisim.analyze.model.Var variable : inputs.vars) {
         center(out, variable.toString(), colwidth[i++]);
         out.print(" ");
       }
       out.print("|");
-      for (final var variable : outputs.vars) {
+      for (final com.cburch.logisim.analyze.model.Var variable : outputs.vars) {
         out.print(" ");
         center(out, variable.toString(), colwidth[i++]);
       }
@@ -107,15 +107,15 @@ public class TruthtableTextFile {
         for (int j = 0; j < colwidth[i] + 1; j++) out.print("~");
       }
       out.println("~");
-      final var table = model.getTruthTable();
-      final var rows = table.getVisibleRowCount();
+      final com.cburch.logisim.analyze.model.TruthTable table = model.getTruthTable();
+      final int rows = table.getVisibleRowCount();
       for (int row = 0; row < rows; row++) {
         i = 0;
         int col = 0;
-        for (final var variable : inputs.vars) {
-          final var s = new StringBuilder();
+        for (final com.cburch.logisim.analyze.model.Var variable : inputs.vars) {
+          final java.lang.StringBuilder s = new StringBuilder();
           for (int b = variable.width - 1; b >= 0; b--) {
-            final var val = table.getVisibleInputEntry(row, col++);
+            final com.cburch.logisim.analyze.model.Entry val = table.getVisibleInputEntry(row, col++);
             s.append(val.toBitString());
           }
           center(out, s.toString(), colwidth[i++]);
@@ -123,10 +123,10 @@ public class TruthtableTextFile {
         }
         out.print("|");
         col = 0;
-        for (final var variable : outputs.vars) {
-          final var s = new StringBuilder();
+        for (final com.cburch.logisim.analyze.model.Var variable : outputs.vars) {
+          final java.lang.StringBuilder s = new StringBuilder();
           for (int b = variable.width - 1; b >= 0; b--) {
-            final var val = table.getVisibleOutputEntry(row, col++);
+            final com.cburch.logisim.analyze.model.Entry val = table.getVisibleOutputEntry(row, col++);
             s.append(val.toBitString());
           }
           out.print(" ");
@@ -141,9 +141,9 @@ public class TruthtableTextFile {
 
   static void validateHeader(String line, VariableList inputs, VariableList outputs, int lineno)
       throws IOException {
-    final var s = line.split("\\s+");
+    final java.lang.String[] s = line.split("\\s+");
     com.cburch.logisim.analyze.model.VariableList cur = inputs;
-    for (final var value : s) {
+    for (final java.lang.String value : s) {
       if (value.equals("|")) {
         if (cur != inputs)
           throw new IOException(
@@ -256,11 +256,11 @@ public class TruthtableTextFile {
   static void validateRow(
       String line, VariableList inputs, VariableList outputs, ArrayList<Entry[]> rows, int lineno)
       throws IOException {
-    final var row = new Entry[inputs.bits.size() + outputs.bits.size()];
+    final com.cburch.logisim.analyze.model.Entry[] row = new Entry[inputs.bits.size() + outputs.bits.size()];
     int col = 0;
-    final var s = line.split("\\s+");
+    final java.lang.String[] s = line.split("\\s+");
     int ix = 0;
-    for (final var variable : inputs.vars) {
+    for (final com.cburch.logisim.analyze.model.Var variable : inputs.vars) {
       if (ix >= s.length || s[ix].equals("|"))
         throw new IOException(String.format("Line %d: Not enough input columns.", lineno));
       col = parseVal(row, col, s[ix++], variable, lineno);
@@ -270,7 +270,7 @@ public class TruthtableTextFile {
     else if (!s[ix].equals("|"))
       throw new IOException(String.format("Line %d: Too many input columns.", lineno));
     ix++;
-    for (final var variable : outputs.vars) {
+    for (final com.cburch.logisim.analyze.model.Var variable : outputs.vars) {
       if (ix >= s.length)
         throw new IOException(String.format("Line %d: Not enough output columns.", lineno));
       else if (s[ix].equals("|"))
@@ -286,9 +286,9 @@ public class TruthtableTextFile {
   public static void doLoad(File file, AnalyzerModel model, JFrame parent) throws IOException {
     int lineno = 0;
     try (Scanner sc = new Scanner(file)) {
-      final var inputs = new VariableList(AnalyzerModel.MAX_INPUTS);
-      final var outputs = new VariableList(AnalyzerModel.MAX_OUTPUTS);
-      final var rows = new ArrayList<Entry[]>();
+      final com.cburch.logisim.analyze.model.VariableList inputs = new VariableList(AnalyzerModel.MAX_INPUTS);
+      final com.cburch.logisim.analyze.model.VariableList outputs = new VariableList(AnalyzerModel.MAX_OUTPUTS);
+      final java.util.ArrayList<com.cburch.logisim.analyze.model.Entry[]> rows = new ArrayList<Entry[]>();
       while (sc.hasNextLine()) {
         lineno++;
         String line = sc.nextLine();
@@ -309,7 +309,7 @@ public class TruthtableTextFile {
       } catch (IllegalArgumentException e) {
         throw new IOException(e.getMessage());
       }
-      final var table = model.getTruthTable();
+      final com.cburch.logisim.analyze.model.TruthTable table = model.getTruthTable();
       try {
         table.setVisibleRows(rows, false);
       } catch (IllegalArgumentException e) {

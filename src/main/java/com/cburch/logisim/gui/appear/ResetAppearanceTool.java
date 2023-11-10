@@ -58,7 +58,7 @@ public class ResetAppearanceTool implements ToolbarClickableItem {
   @Override
   public void clicked() {
     if (canvas == null || canvas.getCircuit() == null) return;
-    final var appearance = canvas.getCircuit().getAppearance();
+    final com.cburch.logisim.circuit.appear.CircuitAppearance appearance = canvas.getCircuit().getAppearance();
     if (appearance == null) return;
     // FIXME: hardcoded string
     if (OptionPane.showConfirmDialog(canvas, 

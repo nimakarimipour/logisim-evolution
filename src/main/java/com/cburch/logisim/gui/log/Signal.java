@@ -63,7 +63,7 @@ public class Signal {
     if (last == null) {
       timeStart += duration;
     } else {
-      final var i = (firstIndex + curSize - 1) % curSize;
+      final int i = (firstIndex + curSize - 1) % curSize;
       dur[i / CHUNK][i % CHUNK] += duration;
     }
   }
@@ -74,13 +74,13 @@ public class Signal {
           "*** notice: value width mismatch for %s: width=%d bits, newVal=%s (%d bits)\n",
           info, info.getWidth(), v, v.getWidth());
     if (last != null && last.equals(v)) {
-      final var i = (firstIndex + curSize - 1) % curSize;
+      final int i = (firstIndex + curSize - 1) % curSize;
       dur[i / CHUNK][i % CHUNK] += duration;
       return;
     }
     last = v;
-    final var c = val.length;
-    final var cap = CHUNK * (c - 1) + val[c - 1].length;
+    final int c = val.length;
+    final int cap = CHUNK * (c - 1) + val[c - 1].length;
     if (curSize < cap) {
       // fits in an existing chunk
       val[curSize / CHUNK][curSize % CHUNK] = v;
@@ -88,8 +88,8 @@ public class Signal {
       curSize++;
     } else if (curSize < maxSize || maxSize <= 0) {
       // allocate another chunk
-      final var val2 = new Value[c + 1][];
-      final var dur2 = new long[c + 1][];
+      final com.cburch.logisim.data.Value[][] val2 = new Value[c + 1][];
+      final long[][] dur2 = new long[c + 1][];
       System.arraycopy(val, 0, val2, 0, c);
       System.arraycopy(dur, 0, dur2, 0, c);
       val2[c + 1] = new Value[maxSize == 0 || (maxSize - cap) > CHUNK ? CHUNK : (maxSize - cap)];
@@ -112,19 +112,19 @@ public class Signal {
   public void replaceRecent(Value v, long duration) {
     if (last == null || curSize == 0)
       throw new IllegalStateException("signal should have at least " + duration + " ns of data");
-    final var i = (firstIndex + curSize - 1) % curSize;
+    final int i = (firstIndex + curSize - 1) % curSize;
     if (dur[i / CHUNK][i % CHUNK] == duration) {
       val[i / CHUNK][i % CHUNK] = v;
       last = v;
-      final var j = (i + curSize - 1) % curSize;
+      final int j = (i + curSize - 1) % curSize;
       if (curSize > 1 && val[j / CHUNK][j % CHUNK].equals(v)) {
         dur[j / CHUNK][j % CHUNK] += duration;
         curSize--;
         // special case: last chunk is now entirely empty, must be removed
         if (i % CHUNK == 0) {
           int c = val.length - 1;
-          final var valueNew = new Value[c][];
-          final var durNew = new long[c][];
+          final com.cburch.logisim.data.Value[][] valueNew = new Value[c][];
+          final long[][] durNew = new long[c][];
           System.arraycopy(val, 0, valueNew, 0, c);
           System.arraycopy(dur, 0, durNew, 0, c);
           val = valueNew;
@@ -153,10 +153,10 @@ public class Signal {
   private void retainOnly(int offset, int amt, int cap) {
     // shift all values [from offset to offset+amt] left into new arrays
     // of size appropriate for eventual capacity cap
-    final var c = (amt + CHUNK - 1) / CHUNK;
-    final var last = cap == 0 ? CHUNK : Math.min(CHUNK, cap - (c - 1) * CHUNK);
-    final var v = new Value[c][];
-    final var d = new long[c][];
+    final int c = (amt + CHUNK - 1) / CHUNK;
+    final int last = cap == 0 ? CHUNK : Math.min(CHUNK, cap - (c - 1) * CHUNK);
+    final com.cburch.logisim.data.Value[][] v = new Value[c][];
+    final long[][] d = new long[c][];
     for (int i = 0; i < c; i++) {
       v[i] = new Value[i < c - 1 ? CHUNK : last];
       d[i] = new long[i < c - 1 ? CHUNK : last];
@@ -198,13 +198,13 @@ public class Signal {
         // chunk (if cap > newMaxSize).
         // In the nearly full case, cap > newMaxSize and we need to shrink the
         // last allocated chunk.
-        final var c = val.length;
-        final var cap = CHUNK * (c - 1) + val[c - 1].length;
+        final int c = val.length;
+        final int cap = CHUNK * (c - 1) + val[c - 1].length;
         if (cap > newMaxSize) {
           // Note: # of existing chunks (c) must be equal to # of new chunks
-          final var last = Math.min(CHUNK, newMaxSize - (c - 1) * CHUNK);
-          final var v = new Value[last];
-          final var d = new long[last];
+          final int last = Math.min(CHUNK, newMaxSize - (c - 1) * CHUNK);
+          final com.cburch.logisim.data.Value[] v = new Value[last];
+          final long[] d = new long[last];
           System.arraycopy(val[c - 1], 0, v, 0, last);
           System.arraycopy(dur[c - 1], 0, d, 0, last);
           val[c - 1] = v;
@@ -212,9 +212,9 @@ public class Signal {
         }
       } else { // curSize > newMaxSize
         // too much data, keep only most recent data and shift it left
-        final var discard = (maxSize - newMaxSize);
+        final int discard = (maxSize - newMaxSize);
         for (int p = 0; p < discard; p++) {
-          final var i = (firstIndex + p) % curSize;
+          final int i = (firstIndex + p) % curSize;
           timeStart += dur[i / CHUNK][i % CHUNK];
         }
         retainOnly(discard, newMaxSize, newMaxSize);
@@ -225,8 +225,8 @@ public class Signal {
 
   public void reset(Value v, long duration) {
     if (val.length > 1) {
-      final var val2 = new Value[1][];
-      final var dur2 = new long[1][];
+      final com.cburch.logisim.data.Value[][] val2 = new Value[1][];
+      final long[][] dur2 = new long[1][];
       val2[0] = val[0];
       dur2[0] = dur[0];
       val = val2;
@@ -248,8 +248,8 @@ public class Signal {
     public Iterator() {
       position = 0;
       time = timeStart;
-      final var i = firstIndex;
-      final var width = info.getWidth();
+      final short i = firstIndex;
+      final int width = info.getWidth();
       value = val[i / CHUNK][i % CHUNK].extendWidth(width, Value.FALSE);
       duration = dur[i / CHUNK][i % CHUNK];
     }
@@ -271,8 +271,8 @@ public class Signal {
       }
       position++;
       time += duration;
-      final var i = (firstIndex + position) % curSize;
-      final var width = info.getWidth();
+      final int i = (firstIndex + position) % curSize;
+      final int width = info.getWidth();
       value = val[i / CHUNK][i % CHUNK].extendWidth(width, Value.FALSE);
       duration = dur[i / CHUNK][i % CHUNK];
       return true;
@@ -281,7 +281,7 @@ public class Signal {
     public boolean advance(long timeFwd) {
       if (value == null) return false;
       if (timeFwd <= 0) return true;
-      final var t = time + timeFwd;
+      final long t = time + timeFwd;
       while (t >= time + duration) {
         if (!advance()) return false;
       }
@@ -296,11 +296,11 @@ public class Signal {
   // TODO: easily optimized
   public Value getValue(long t) { // always current width, even when width changes
     if (t < timeStart) return null;
-    final var width = info.getWidth();
+    final int width = info.getWidth();
     long tt = timeStart;
     for (int p = 0; p < curSize; p++) {
-      final var i = (firstIndex + p) % curSize;
-      final var d = dur[i / CHUNK][i % CHUNK];
+      final int i = (firstIndex + p) % curSize;
+      final long d = dur[i / CHUNK][i % CHUNK];
       if (t < tt + d) return val[i / CHUNK][i % CHUNK].extendWidth(width, Value.FALSE);
       tt += d;
     }
@@ -317,13 +317,13 @@ public class Signal {
   }
 
   public String getFormattedMaxValue() {
-    final var width = info.getWidth();
+    final int width = info.getWidth();
     // TODO: signed decimal should maybe use a large positive value?
     return format(Value.createKnown(BitWidth.create(width), -1));
   }
 
   public String getFormattedMinValue() {
-    final var width = info.getWidth();
+    final int width = info.getWidth();
     // TODO: signed decimal should maybe use a large negative value?
     return format(Value.createKnown(BitWidth.create(width), 0));
   }

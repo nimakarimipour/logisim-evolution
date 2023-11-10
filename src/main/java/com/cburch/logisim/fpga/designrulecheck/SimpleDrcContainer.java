@@ -130,7 +130,7 @@ public class SimpleDrcContainer {
 
   public void markComponents() {
     if (!isDrcInfoPresent()) return;
-    for (final var obj : drcComponents) {
+    for (final java.lang.Object obj : drcComponents) {
       if (obj instanceof Wire wire) {
         if ((markType & MARK_WIRE) != 0) {
           wire.setDrcHighlight(true);
@@ -149,7 +149,7 @@ public class SimpleDrcContainer {
 
   public void clearMarks() {
     if (!isDrcInfoPresent()) return;
-    for (final var obj : drcComponents) {
+    for (final java.lang.Object obj : drcComponents) {
       if (obj instanceof Wire wire) {
         if ((markType & MARK_WIRE) != 0) {
           wire.setDrcHighlight(false);

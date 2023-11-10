@@ -56,8 +56,8 @@ public abstract class AppearanceElement extends AbstractCanvasObject {
   }
 
   protected boolean isInCircle(Location loc, int radius) {
-    final var dx = loc.getX() - location.getX();
-    final var dy = loc.getY() - location.getY();
+    final int dx = loc.getX() - location.getX();
+    final int dy = loc.getY() - location.getY();
     return dx * dx + dy * dy < radius * radius;
   }
 

@@ -22,8 +22,8 @@ public class EventSourceWeakSupport<L> implements Iterable<L> {
   }
 
   public boolean isEmpty() {
-    for (final var it = listeners.iterator(); it.hasNext(); ) {
-      final var l = it.next().get();
+    for (final java.util.Iterator<java.lang.ref.WeakReference<L>> it = listeners.iterator(); it.hasNext(); ) {
+      final L l = it.next().get();
       if (l == null) {
         it.remove();
       } else {
@@ -37,9 +37,9 @@ public class EventSourceWeakSupport<L> implements Iterable<L> {
   public Iterator<L> iterator() {
     // copy elements into another list in case any event handlers
     // want to add a listener
-    final var ret = new ArrayList<L>(listeners.size());
-    for (final var it = listeners.iterator(); it.hasNext(); ) {
-      final var l = it.next().get();
+    final java.util.ArrayList<L> ret = new ArrayList<L>(listeners.size());
+    for (final java.util.Iterator<java.lang.ref.WeakReference<L>> it = listeners.iterator(); it.hasNext(); ) {
+      final L l = it.next().get();
       if (l == null) {
         it.remove();
       } else {
@@ -50,8 +50,8 @@ public class EventSourceWeakSupport<L> implements Iterable<L> {
   }
 
   public void remove(L listener) {
-    for (final var it = listeners.iterator(); it.hasNext(); ) {
-      final var l = it.next().get();
+    for (final java.util.Iterator<java.lang.ref.WeakReference<L>> it = listeners.iterator(); it.hasNext(); ) {
+      final L l = it.next().get();
       if (l == null || l == listener) it.remove();
     }
   }

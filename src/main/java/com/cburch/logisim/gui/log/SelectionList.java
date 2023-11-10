@@ -99,7 +99,7 @@ public class SelectionList extends JTable {
   private static class SignalInfoRenderer extends DefaultTableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-      final var ret = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+      final java.awt.Component ret = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
       if ((ret instanceof JLabel label) && value instanceof SignalInfo item) {
         label.setIcon(item.icon);
         label.setText(item + " [" + item.getRadix().toDisplayString() + "]");
@@ -123,9 +123,9 @@ public class SelectionList extends JTable {
       label.setFont(label.getFont().deriveFont(Font.PLAIN));
       button.setFont(button.getFont().deriveFont(9.0f));
 
-      final var g = new ButtonGroup();
-      for (final var r : RadixOption.OPTIONS) {
-        final var m = new JRadioButtonMenuItem(r.toDisplayString());
+      final javax.swing.ButtonGroup g = new ButtonGroup();
+      for (final com.cburch.logisim.circuit.RadixOption r : RadixOption.OPTIONS) {
+        final javax.swing.JRadioButtonMenuItem m = new JRadioButtonMenuItem(r.toDisplayString());
         radixMenuItems.put(r, m);
         popup.add(m);
         g.add(m);
@@ -139,7 +139,7 @@ public class SelectionList extends JTable {
       }
 
       popup.addSeparator();
-      final var m = new JMenuItem("Delete");
+      final javax.swing.JMenuItem m = new JMenuItem("Delete");
       popup.add(m);
       m.addActionListener(
           e -> {
@@ -169,10 +169,10 @@ public class SelectionList extends JTable {
 
     @Override
     public java.awt.Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-      final var margin = getColumnModel().getColumnMargin();
+      final int margin = getColumnModel().getColumnMargin();
       label.setBorder(BorderFactory.createEmptyBorder(0, margin, 0, margin));
 
-      final var d = new Dimension(getColumnModel().getTotalColumnWidth(), getRowHeight());
+      final java.awt.Dimension d = new Dimension(getColumnModel().getTotalColumnWidth(), getRowHeight());
       label.setMinimumSize(new Dimension(10, d.height));
       label.setPreferredSize(new Dimension(d.width - button.getWidth(), d.height));
       label.setMaximumSize(new Dimension(d.width - button.getWidth(), d.height));
@@ -223,9 +223,9 @@ public class SelectionList extends JTable {
     putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
     setTransferHandler(new SelectionTransferHandler());
 
-    final var inputMap = getInputMap();
+    final javax.swing.InputMap inputMap = getInputMap();
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "Delete");
-    final var actionMap = getActionMap();
+    final javax.swing.ActionMap actionMap = getActionMap();
     actionMap.put(
         "Delete",
         new AbstractAction() {
@@ -238,11 +238,11 @@ public class SelectionList extends JTable {
 
   void removeSelected() {
     int idx = 0;
-    final var items = getSelectedValuesList();
-    for (final var item : items) {
+    final com.cburch.logisim.gui.log.SignalInfo.List items = getSelectedValuesList();
+    for (final com.cburch.logisim.gui.log.SignalInfo item : items) {
       idx = Math.max(idx, logModel.indexOf(item));
     }
-    final var count = logModel.remove(items);
+    final int count = logModel.remove(items);
     if (count > 0 && logModel.getSignalCount() > 0) {
       idx = Math.min(idx + 1 - count, logModel.getSignalCount() - 1);
       setRowSelectionInterval(idx, idx);
@@ -256,7 +256,7 @@ public class SelectionList extends JTable {
 
   public void setLogModel(Model m) {
     if (logModel != m) {
-      final var listModel = (SelectionListModel) getModel();
+      final com.cburch.logisim.gui.log.SelectionList.SelectionListModel listModel = (SelectionListModel) getModel();
       if (logModel != null) logModel.removeModelListener(listModel);
       logModel = m;
       if (logModel != null) logModel.addModelListener(listModel);
@@ -265,9 +265,9 @@ public class SelectionList extends JTable {
   }
 
   SignalInfo.List getSelectedValuesList() {
-    final var items = new SignalInfo.List();
-    final var sel = getSelectedRows();
-    for (final var i : sel) items.add(logModel.getItem(i));
+    final com.cburch.logisim.gui.log.SignalInfo.List items = new SignalInfo.List();
+    final int[] sel = getSelectedRows();
+    for (final int i : sel) items.add(logModel.getItem(i));
     return items;
   }
 
@@ -282,7 +282,7 @@ public class SelectionList extends JTable {
     @Override
     public Transferable createTransferable(JComponent comp) {
       removing = true;
-      final var items = new SignalInfo.List();
+      final com.cburch.logisim.gui.log.SignalInfo.List items = new SignalInfo.List();
       items.addAll(getSelectedValuesList());
       return items.isEmpty() ? null : items;
     }
@@ -302,11 +302,11 @@ public class SelectionList extends JTable {
     public boolean importData(TransferHandler.TransferSupport support) {
       removing = false;
       try {
-        final var items = (SignalInfo.List) support.getTransferable().getTransferData(SignalInfo.List.dataFlavor);
+        final com.cburch.logisim.gui.log.SignalInfo.List items = (SignalInfo.List) support.getTransferable().getTransferData(SignalInfo.List.dataFlavor);
         int newIdx = logModel.getSignalCount();
         if (support.isDrop()) {
           try {
-            final var dl = (JTable.DropLocation) support.getDropLocation();
+            final javax.swing.JTable.DropLocation dl = (JTable.DropLocation) support.getDropLocation();
             newIdx = Math.min(dl.getRow(), logModel.getSignalCount());
           } catch (ClassCastException ignored) {
           }
@@ -324,8 +324,8 @@ public class SelectionList extends JTable {
     if (CollectionUtil.isNullOrEmpty(items)) return;
     logModel.addOrMove(items, idx);
     clearSelection();
-    for (final var item : items) {
-      final var i = logModel.indexOf(item);
+    for (final com.cburch.logisim.gui.log.SignalInfo item : items) {
+      final int i = logModel.indexOf(item);
       addRowSelectionInterval(i, i);
     }
   }
@@ -341,12 +341,12 @@ public class SelectionList extends JTable {
     super.paintComponent(g);
 
     /* Anti-aliasing changes from https://github.com/hausen/logisim-evolution */
-    final var g2 = (Graphics2D) g;
+    final java.awt.Graphics2D g2 = (Graphics2D) g;
     g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-    final var f = g.getFont();
-    final var c = g.getColor();
+    final java.awt.Font f = g.getFont();
+    final java.awt.Color c = g.getColor();
     g.setColor(Color.GRAY);
     g.setFont(MSG_FONT);
     g.drawString("drag here to add", 10, getRowHeight() * getRowCount() + 20);

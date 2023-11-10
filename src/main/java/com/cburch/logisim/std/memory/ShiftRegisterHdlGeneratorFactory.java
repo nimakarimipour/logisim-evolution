@@ -46,7 +46,7 @@ public class ShiftRegisterHdlGeneratorFactory extends AbstractHdlGeneratorFactor
 
   @Override
   public void getGenerationTimeWiresPorts(Netlist theNetlist, AttributeSet attrs) {
-    final var hasParallelLoad = attrs.getValue(ShiftRegister.ATTR_LOAD);
+    final java.lang.Boolean hasParallelLoad = attrs.getValue(ShiftRegister.ATTR_LOAD);
     myPorts
         .add(Port.CLOCK, HdlPorts.getClockName(1), 1, ShiftRegister.CK)
         .add(Port.INPUT, "reset", 1, ShiftRegister.CLR)
@@ -64,16 +64,16 @@ public class ShiftRegisterHdlGeneratorFactory extends AbstractHdlGeneratorFactor
 
   @Override
   public SortedMap<String, String> getPortMap(Netlist nets, Object mapInfo) {
-    final var map = new TreeMap<String, String>(super.getPortMap(nets, mapInfo));
+    final java.util.TreeMap<java.lang.String,java.lang.String> map = new TreeMap<String, String>(super.getPortMap(nets, mapInfo));
     if (mapInfo instanceof final netlistComponent comp) {
-      final var attrs = comp.getComponent().getAttributeSet();
-      final var nrOfBits = attrs.getValue(StdAttr.WIDTH).getWidth();
-      final var nrOfStages = attrs.getValue(ShiftRegister.ATTR_LENGTH);
-      final var hasParallelLoad = attrs.getValue(ShiftRegister.ATTR_LOAD);
-      final var vector = new StringBuilder();
+      final com.cburch.logisim.data.AttributeSet attrs = comp.getComponent().getAttributeSet();
+      final int nrOfBits = attrs.getValue(StdAttr.WIDTH).getWidth();
+      final java.lang.Integer nrOfStages = attrs.getValue(ShiftRegister.ATTR_LENGTH);
+      final java.lang.Boolean hasParallelLoad = attrs.getValue(ShiftRegister.ATTR_LOAD);
+      final java.lang.StringBuilder vector = new StringBuilder();
       if (Hdl.isVhdl() && nrOfBits == 1) {
-        final var shiftMap = map.get("shiftIn");
-        final var outMap = map.get("shiftOut");
+        final java.lang.String shiftMap = map.get("shiftIn");
+        final java.lang.String outMap = map.get("shiftOut");
         map.remove("shiftIn");
         map.remove("shiftOut");
         map.put("shiftIn(0)", shiftMap);
@@ -86,7 +86,7 @@ public class ShiftRegisterHdlGeneratorFactory extends AbstractHdlGeneratorFactor
           if (Hdl.isVhdl()) {
             for (int stage = 0; stage < nrOfStages; stage++)
               map.putAll(Hdl.getNetMap(String.format("d(%d)", stage), true, comp, 6 + (2 * stage), nets));
-            final var nrOfOutStages = attrs.getValue(StdAttr.APPEARANCE) == StdAttr.APPEAR_CLASSIC
+            final int nrOfOutStages = attrs.getValue(StdAttr.APPEARANCE) == StdAttr.APPEAR_CLASSIC
                 ? nrOfStages : nrOfStages - 1;
             for (int stage = 0; stage < nrOfOutStages; stage++)
               map.putAll(Hdl.getNetMap(String.format("q(%d)", stage), true, comp, 7 + (2 * stage), nets));
@@ -109,8 +109,8 @@ public class ShiftRegisterHdlGeneratorFactory extends AbstractHdlGeneratorFactor
           if (Hdl.isVhdl()) {
             for (int bit = 0; bit < nrOfBits; bit++) {
               for (int stage = 0; stage < nrOfStages; stage++) {
-                final var index = (bit * nrOfStages) + stage;
-                final var id = 6 + (2 * stage);
+                final int index = (bit * nrOfStages) + stage;
+                final int id = 6 + (2 * stage);
                 map.put(String.format("d(%d)", index), Hdl.getBusEntryName(comp, id, true, bit, nets));
                 if (stage == nrOfStages - 1) continue;
                 map.put(String.format("q(%d)", index), Hdl.getBusEntryName(comp, id + 1, true, bit, nets));
@@ -148,7 +148,7 @@ public class ShiftRegisterHdlGeneratorFactory extends AbstractHdlGeneratorFactor
 
   @Override
   public List<String> getArchitecture(Netlist nets, AttributeSet attrs, String componentName) {
-    final var contents = LineBuffer.getHdlBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer()
             .pair("clock", HdlPorts.getClockName(1))
             .pair("tick", HdlPorts.getTickName(1))
             .pair("nrOfStages", NR_OF_STAGES_STRING)
@@ -261,7 +261,7 @@ public class ShiftRegisterHdlGeneratorFactory extends AbstractHdlGeneratorFactor
 
   @Override
   public List<String> getEntity(Netlist nets, AttributeSet attrs, String componentName) {
-    final var contents = LineBuffer.getHdlBuffer();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
     if (Hdl.isVhdl()) {
       contents
           .add(super.getEntity(nets, attrs, componentName))
@@ -274,7 +274,7 @@ public class ShiftRegisterHdlGeneratorFactory extends AbstractHdlGeneratorFactor
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist nets, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer()
         .pair("clock", HdlPorts.getClockName(1))
         .pair("tick", HdlPorts.getTickName(1))
         .pair("nrOfStages", NR_OF_STAGES_STRING)

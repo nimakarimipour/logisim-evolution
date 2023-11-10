@@ -45,8 +45,8 @@ public abstract class AbstractAttributeSet implements Cloneable, AttributeSet {
 
   protected void fireAttributeListChanged() {
     if (listeners != null) {
-      final var event = new AttributeEvent(this);
-      for (final var l : new ArrayList<>(listeners)) {
+      final com.cburch.logisim.data.AttributeEvent event = new AttributeEvent(this);
+      for (final com.cburch.logisim.data.AttributeListener l : new ArrayList<>(listeners)) {
         l.attributeListChanged(event);
       }
     }
@@ -54,9 +54,9 @@ public abstract class AbstractAttributeSet implements Cloneable, AttributeSet {
 
   protected <V> void fireAttributeValueChanged(Attribute<? super V> attr, V value, V oldvalue) {
     if (listeners != null) {
-      final var event = new AttributeEvent(this, attr, value, oldvalue);
-      final var ls = new ArrayList<>(listeners);
-      for (final var l : ls) {
+      final com.cburch.logisim.data.AttributeEvent event = new AttributeEvent(this, attr, value, oldvalue);
+      final java.util.ArrayList<com.cburch.logisim.data.AttributeListener> ls = new ArrayList<>(listeners);
+      for (final com.cburch.logisim.data.AttributeListener l : ls) {
         l.attributeValueChanged(event);
       }
     }

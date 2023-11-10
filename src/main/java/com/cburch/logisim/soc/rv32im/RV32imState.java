@@ -86,7 +86,7 @@ public class RV32imState implements SocUpSimulationStateListener, SocProcessorIn
       visible = false;
       entryPoint = null;
       programLoaded = false;
-      final var atmf = (AbstractTokenMakerFactory) TokenMakerFactory.getDefaultInstance();
+      final org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory atmf = (AbstractTokenMakerFactory) TokenMakerFactory.getDefaultInstance();
       atmf.putMapping(
           ASSEMBLER.getHighlightStringIdentifier(),
           "com.cburch.logisim.soc.rv32im.RV32imSyntaxHighlighter");
@@ -203,7 +203,7 @@ public class RV32imState implements SocUpSimulationStateListener, SocProcessorIn
     public void execute(CircuitState cState) {
       /* check the simulation state */
       if (!simState.canExecute()) return;
-      final var breakPoints = bPanel.getBreakPoints();
+      final java.util.Map<java.lang.Integer,java.lang.Integer> breakPoints = bPanel.getBreakPoints();
       if (breakPoints.containsKey(pc)) {
         if (simState.breakPointReached()) {
           bPanel.gotoLine(breakPoints.get(pc) - 1);
@@ -217,7 +217,7 @@ public class RV32imState implements SocUpSimulationStateListener, SocProcessorIn
       }
       /* TODO: check interrupts */
       /* fetch an instruction */
-      final var trans =
+      final com.cburch.logisim.soc.data.SocBusTransaction trans =
           new SocBusTransaction(
               SocBusTransaction.READ_TRANSACTION,
               pc,
@@ -241,7 +241,7 @@ public class RV32imState implements SocUpSimulationStateListener, SocProcessorIn
       int instruction = trans.getReadData();
       ASSEMBLER.decode(instruction);
       /* execute instruction */
-      final var exe = ASSEMBLER.getExeUnit();
+      final com.cburch.logisim.soc.util.AssemblerExecutionInterface exe = ASSEMBLER.getExeUnit();
       lastRegisterWritten = -1;
       while (instrTrace.size() >= CpuDrawSupport.NR_OF_TRACES) instrTrace.removeLast();
       if (exe == null) {
@@ -257,9 +257,9 @@ public class RV32imState implements SocUpSimulationStateListener, SocProcessorIn
         if (visible) repaint();
         return;
       }
-      final var trace = new TraceInfo(pc, instruction, exe.getAsmInstruction(), false);
+      final com.cburch.logisim.soc.data.TraceInfo trace = new TraceInfo(pc, instruction, exe.getAsmInstruction(), false);
       if (!exe.execute(this, cState)) {
-        final var s = new StringBuilder();
+        final java.lang.StringBuilder s = new StringBuilder();
         s.append(S.get("RV32imFetchExecutionError"));
         if (exe.getErrorMessage() != null) s.append("\n").append(exe.getErrorMessage());
         OptionPane.showMessageDialog(
@@ -399,7 +399,7 @@ public class RV32imState implements SocUpSimulationStateListener, SocProcessorIn
   };
 
   public static int getRegisterIndex(String name) {
-    final var regName = name.toLowerCase();
+    final java.lang.String regName = name.toLowerCase();
     for (int i = 0; i < registerABINames.length; i++)
       if (registerABINames[i].equals(regName)) return i;
     if (regName.startsWith("x") && regName.length() < 4) {
@@ -433,7 +433,7 @@ public class RV32imState implements SocUpSimulationStateListener, SocProcessorIn
   public String getName() {
     java.lang.String name = label;
     if (StringUtil.isNullOrEmpty(name)) {
-      final var loc = attachedBus.getComponent().getLocation();
+      final com.cburch.logisim.data.Location loc = attachedBus.getComponent().getLocation();
       name =
           String.format(
               "%s@%d,%d",

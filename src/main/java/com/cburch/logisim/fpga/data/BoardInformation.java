@@ -53,7 +53,7 @@ public class BoardInformation {
   }
 
   public FpgaIoInformationContainer getComponent(BoardRectangle rect) {
-    for (final var comp : myComponents) {
+    for (final com.cburch.logisim.fpga.data.FpgaIoInformationContainer comp : myComponents) {
       if (comp.getRectangle().equals(rect)) {
         return comp;
       }
@@ -63,13 +63,13 @@ public class BoardInformation {
 
   @SuppressWarnings("unchecked")
   public Map<String, ArrayList<Integer>> getComponents() {
-    final var result = new HashMap<String, ArrayList<Integer>>();
-    final var list = new ArrayList<Integer>();
+    final java.util.HashMap<java.lang.String,java.util.ArrayList<java.lang.Integer>> result = new HashMap<String, ArrayList<Integer>>();
+    final java.util.ArrayList<java.lang.Integer> list = new ArrayList<Integer>();
 
     int count = 0;
-    for (final var type : IoComponentTypes.KNOWN_COMPONENT_SET) {
+    for (final com.cburch.logisim.fpga.data.IoComponentTypes type : IoComponentTypes.KNOWN_COMPONENT_SET) {
       count = 0;
-      for (final var comp : myComponents) {
+      for (final com.cburch.logisim.fpga.data.FpgaIoInformationContainer comp : myComponents) {
         if (comp.getType().equals(type)) {
           list.add(count, comp.getNrOfPins());
           count++;
@@ -85,7 +85,7 @@ public class BoardInformation {
   }
 
   public String getComponentType(BoardRectangle rect) {
-    for (final var comp : myComponents) {
+    for (final com.cburch.logisim.fpga.data.FpgaIoInformationContainer comp : myComponents) {
       if (comp.getRectangle().equals(rect)) {
         return comp.getType().toString();
       }
@@ -94,7 +94,7 @@ public class BoardInformation {
   }
 
   public String getDriveStrength(BoardRectangle rect) {
-    for (final var comp : myComponents) {
+    for (final com.cburch.logisim.fpga.data.FpgaIoInformationContainer comp : myComponents) {
       if (comp.getRectangle().equals(rect)) {
         return DriveStrength.getConstrainedDriveStrength(comp.getDrive());
       }
@@ -107,8 +107,8 @@ public class BoardInformation {
   }
 
   public List<BoardRectangle> getIoComponentsOfType(IoComponentTypes type, int nrOfPins) {
-    final var result = new ArrayList<BoardRectangle>();
-    for (final var comp : myComponents) {
+    final java.util.ArrayList<com.cburch.logisim.fpga.data.BoardRectangle> result = new ArrayList<BoardRectangle>();
+    for (final com.cburch.logisim.fpga.data.FpgaIoInformationContainer comp : myComponents) {
       if (comp.getType().equals(type)) {
         if (!type.equals(IoComponentTypes.DIPSwitch) || nrOfPins <= comp.getNrOfPins()) {
           if (!type.equals(IoComponentTypes.PortIo) || nrOfPins <= comp.getNrOfPins()) {
@@ -121,7 +121,7 @@ public class BoardInformation {
   }
 
   public String getIoStandard(BoardRectangle rect) {
-    for (final var comp : myComponents) {
+    for (final com.cburch.logisim.fpga.data.FpgaIoInformationContainer comp : myComponents) {
       if (comp.getRectangle().equals(rect)) {
         return IoStandards.getConstraintedIoStandard(comp.getIoStandard());
       }
@@ -134,7 +134,7 @@ public class BoardInformation {
   }
 
   public String getPullBehavior(BoardRectangle rect) {
-    for (final var comp : myComponents) {
+    for (final com.cburch.logisim.fpga.data.FpgaIoInformationContainer comp : myComponents) {
       if (comp.getRectangle().equals(rect)) {
         return PullBehaviors.getConstrainedPullString(comp.getPullBehavior());
       }

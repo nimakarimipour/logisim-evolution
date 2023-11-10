@@ -36,7 +36,7 @@ public class WithSelectHdlGenerator {
   private Long binairyStringToInt(String binairyValue) {
     long result = 0L;
     for (int charIndex = 0; charIndex < binairyValue.length(); charIndex++) {
-      final var character = binairyValue.charAt(charIndex) - '0';
+      final int character = binairyValue.charAt(charIndex) - '0';
       if ((character < 0) || (character > 1)) throw new NumberFormatException("Invalid binairy value in WithSelectHDLGenerator");
       result *= 2;
       result += character;
@@ -75,7 +75,7 @@ public class WithSelectHdlGenerator {
   }
 
   public List<String> getHdlCode() {
-    final var contents = LineBuffer.getHdlBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer()
         .pair("sourceName", sourceSignal)
         .pair("destName", destinationSignal)
         .pair("regName", regName)
@@ -90,8 +90,8 @@ public class WithSelectHdlGenerator {
                 case ({{sourceName}})
           """);
     }
-    for (final var thisCase : myCases.keySet()) {
-      final var value = myCases.get(thisCase);
+    for (final java.lang.Long thisCase : myCases.keySet()) {
+      final java.lang.Long value = myCases.get(thisCase);
       if (Hdl.isVhdl()) {
         contents.add("   {{1}} {{when}} {{2}},", Hdl.getConstantVector(value, nrOfDestinationBits), Hdl.getConstantVector(thisCase, nrOfSourceBits));
       } else {

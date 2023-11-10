@@ -42,18 +42,18 @@ public class CanvasPane extends JScrollPane {
   }
 
   public Dimension getViewportSize() {
-    final var size = new Dimension();
+    final java.awt.Dimension size = new Dimension();
     getViewport().getSize(size);
     return size;
   }
 
   public double getZoomFactor() {
-    final var model = zoomModel;
+    final com.cburch.logisim.gui.generic.ZoomModel model = zoomModel;
     return model == null ? 1.0 : model.getZoomFactor();
   }
 
   public void setZoomModel(ZoomModel model) {
-    final var oldModel = zoomModel;
+    final com.cburch.logisim.gui.generic.ZoomModel oldModel = zoomModel;
     if (oldModel != null) {
       oldModel.removePropertyChangeListener(ZoomModel.ZOOM, listener);
       oldModel.removePropertyChangeListener(ZoomModel.CENTER, listener);
@@ -66,12 +66,12 @@ public class CanvasPane extends JScrollPane {
   }
 
   public Dimension supportPreferredSize(int width, int height) {
-    final var zoom = getZoomFactor();
+    final double zoom = getZoomFactor();
     if (zoom != 1.0) {
       width = (int) Math.ceil(width * zoom);
       height = (int) Math.ceil(height * zoom);
     }
-    final var minSize = getViewportSize();
+    final java.awt.Dimension minSize = getViewportSize();
     if (minSize.width > width) width = minSize.width;
     if (minSize.height > height) height = minSize.height;
     return new Dimension(width, height);
@@ -79,7 +79,7 @@ public class CanvasPane extends JScrollPane {
 
   public int supportScrollableBlockIncrement(
       Rectangle visibleRect, int orientation, int direction) {
-    final var unit = supportScrollableUnitIncrement(visibleRect, orientation, direction);
+    final int unit = supportScrollableUnitIncrement(visibleRect, orientation, direction);
     return (direction == SwingConstants.VERTICAL)
         ? visibleRect.height / unit * unit
         : visibleRect.width / unit * unit;
@@ -111,17 +111,17 @@ public class CanvasPane extends JScrollPane {
 
     @Override
     public void propertyChange(PropertyChangeEvent e) {
-      final var prop = e.getPropertyName();
+      final java.lang.String prop = e.getPropertyName();
       if (prop.equals(ZoomModel.ZOOM)) {
-        final var oldZoom = (Double) e.getOldValue();
+        final java.lang.Double oldZoom = (Double) e.getOldValue();
         java.awt.Rectangle r = getViewport().getViewRect();
-        final var cx = (r.x + r.width / 2) / oldZoom;
-        final var cy = (r.y + r.height / 2) / oldZoom;
+        final double cx = (r.x + r.width / 2) / oldZoom;
+        final double cy = (r.y + r.height / 2) / oldZoom;
 
-        final var newZoom = (Double) e.getNewValue();
+        final java.lang.Double newZoom = (Double) e.getNewValue();
         r = getViewport().getViewRect();
-        final var hv = (int) (cx * newZoom) - r.width / 2;
-        final var vv = (int) (cy * newZoom) - r.height / 2;
+        final int hv = (int) (cx * newZoom) - r.width / 2;
+        final int vv = (int) (cy * newZoom) - r.height / 2;
         getHorizontalScrollBar().setValue(hv);
         getVerticalScrollBar().setValue(vv);
         contents.recomputeSize();
@@ -136,14 +136,14 @@ public class CanvasPane extends JScrollPane {
     public void mouseWheelMoved(MouseWheelEvent mwe) {
       if (mwe.isControlDown()) {
         double zoom = zoomModel.getZoomFactor();
-        final var opts = zoomModel.getZoomOptions();
+        final java.util.List<java.lang.Double> opts = zoomModel.getZoomOptions();
         if (mwe.getWheelRotation() < 0) { // ZOOM IN
           zoom += 0.1;
-          final var max = opts.get(opts.size() - 1) / 100.0;
+          final double max = opts.get(opts.size() - 1) / 100.0;
           zoomModel.setZoomFactor(Math.min(zoom, max), mwe);
         } else { // ZOOM OUT
           zoom -= 0.1;
-          final var min = opts.get(0) / 100.0;
+          final double min = opts.get(0) / 100.0;
           zoomModel.setZoomFactor(Math.max(zoom, min), mwe);
         }
       } else if (mwe.isShiftDown()) {

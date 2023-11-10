@@ -74,7 +74,7 @@ public class RamAttributes extends AbstractAttributeSet {
   }
 
   public boolean updateAttributes() {
-    final var newList = new ArrayList<Attribute<?>>();
+    final java.util.ArrayList<com.cburch.logisim.data.Attribute<?>> newList = new ArrayList<Attribute<?>>();
     boolean changes = false;
     newList.add(Mem.ADDR_ATTR);
     newList.add(Mem.DATA_ATTR);
@@ -119,7 +119,7 @@ public class RamAttributes extends AbstractAttributeSet {
 
   @Override
   protected void copyInto(AbstractAttributeSet dest) {
-    final var d = (RamAttributes) dest;
+    final com.cburch.logisim.std.memory.RamAttributes d = (RamAttributes) dest;
     d.addrBits = addrBits;
     d.dataBits = dataBits;
     d.trigger = trigger;
@@ -198,71 +198,71 @@ public class RamAttributes extends AbstractAttributeSet {
   @Override
   public <V> void setValue(Attribute<V> attr, V value) {
     if (attr == Mem.ADDR_ATTR) {
-      final var newAddr = (BitWidth) value;
+      final com.cburch.logisim.data.BitWidth newAddr = (BitWidth) value;
       if (addrBits == newAddr) return;
       addrBits = newAddr;
       fireAttributeValueChanged(attr, value, null);
     } else if (attr == Mem.DATA_ATTR) {
-      final var newData = (BitWidth) value;
+      final com.cburch.logisim.data.BitWidth newData = (BitWidth) value;
       if (dataBits == newData) return;
       dataBits = newData;
       if (typeOfEnables.equals(Mem.USEBYTEENABLES) && updateAttributes())
         fireAttributeListChanged();
       fireAttributeValueChanged(attr, value, null);
     } else if (attr == Mem.ENABLES_ATTR) {
-      final var val = (AttributeOption) value;
+      final com.cburch.logisim.data.AttributeOption val = (AttributeOption) value;
       if (!typeOfEnables.equals(val)) {
         typeOfEnables = val;
         if (updateAttributes()) fireAttributeListChanged();
         fireAttributeValueChanged(attr, value, null);
       }
     } else if (attr == ATTR_TYPE) {
-      final var val = (AttributeOption) value;
+      final com.cburch.logisim.data.AttributeOption val = (AttributeOption) value;
       if (!ramType.equals(val)) {
         ramType = val;
         fireAttributeValueChanged(attr, value, null);
       }
     } else if (attr == StdAttr.LABEL) {
-      final var newLabel = (String) value;
+      final java.lang.String newLabel = (String) value;
       if (label.equals(newLabel)) return;
       @SuppressWarnings("unchecked")
       V oldlabel = (V) label;
       label = newLabel;
       fireAttributeValueChanged(attr, value, oldlabel);
     } else if (attr == StdAttr.TRIGGER) {
-      final var newTrigger = (AttributeOption) value;
+      final com.cburch.logisim.data.AttributeOption newTrigger = (AttributeOption) value;
       if (trigger.equals(newTrigger)) return;
       trigger = newTrigger;
       if (typeOfEnables.equals(Mem.USEBYTEENABLES) && updateAttributes())
         fireAttributeListChanged();
       fireAttributeValueChanged(attr, value, null);
     } else if (attr == Mem.ASYNC_READ) {
-      final var val = (Boolean) value;
+      final java.lang.Boolean val = (Boolean) value;
       if (asynchronousRead != val) {
         asynchronousRead = val;
         if (updateAttributes()) fireAttributeListChanged();
         fireAttributeValueChanged(attr, value, null);
       }
     } else if (attr == Mem.READ_ATTR) {
-      final var val = (AttributeOption) value;
+      final com.cburch.logisim.data.AttributeOption val = (AttributeOption) value;
       if (!readWriteBehavior.equals(val)) {
         readWriteBehavior = val;
         fireAttributeValueChanged(attr, value, null);
       }
     } else if (attr == ATTR_DBUS) {
-      final var newStyle = (AttributeOption) value;
+      final com.cburch.logisim.data.AttributeOption newStyle = (AttributeOption) value;
       if (busStyle.equals(newStyle)) return;
       busStyle = newStyle;
       fireAttributeValueChanged(attr, value, null);
     } else if (attr == StdAttr.LABEL_FONT) {
-      final var newFont = (Font) value;
+      final java.awt.Font newFont = (Font) value;
       if (labelFont.equals(newFont)) {
         return;
       }
       labelFont = newFont;
       fireAttributeValueChanged(attr, value, null);
     } else if (attr == StdAttr.LABEL_VISIBILITY) {
-      final var newVis = (Boolean) value;
+      final java.lang.Boolean newVis = (Boolean) value;
       if (labelVisible.equals(newVis)) return;
       labelVisible = newVis;
       fireAttributeValueChanged(attr, value, null);
@@ -273,25 +273,25 @@ public class RamAttributes extends AbstractAttributeSet {
       byteEnables = newBE;
       fireAttributeValueChanged(attr, value, null);
     } else if (attr == CLEAR_PIN) {
-      final var val = (Boolean) value;
+      final java.lang.Boolean val = (Boolean) value;
       if (clearPin != val) {
         clearPin = val;
         fireAttributeValueChanged(attr, value, null);
       }
     } else if (attr == Mem.LINE_ATTR) {
-      final var val = (AttributeOption) value;
+      final com.cburch.logisim.data.AttributeOption val = (AttributeOption) value;
       if (!lineSize.equals(val)) {
         lineSize = val;
         fireAttributeValueChanged(attr, value, null);
       }
     } else if (attr == Mem.ALLOW_MISALIGNED) {
-      final var val = (Boolean) value;
+      final java.lang.Boolean val = (Boolean) value;
       if (allowMisaligned != val) {
         allowMisaligned = val;
         fireAttributeValueChanged(attr, value, null);
       }
     } else if (attr == StdAttr.APPEARANCE) {
-      final var option = (AttributeOption) value;
+      final com.cburch.logisim.data.AttributeOption option = (AttributeOption) value;
       if (appearance.equals(option)) return;
       appearance = option;
       fireAttributeValueChanged(attr, value, null);

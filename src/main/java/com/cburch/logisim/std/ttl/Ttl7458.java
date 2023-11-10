@@ -34,11 +34,11 @@ public class Ttl7458 extends AbstractTtlGate {
   @Override
   public void paintInternal(InstancePainter painter, int x, int y, int height, boolean up) {
     super.paintBase(painter, false, false);
-    final var gfx = painter.getGraphics();
+    final java.awt.Graphics gfx = painter.getGraphics();
     Drawgates.paintOr(gfx, x + 107, y + 39, 10, 10, false, false);
     Drawgates.paintAnd(gfx, x + 86, y + 34, 10, 10, false);
     Drawgates.paintAnd(gfx, x + 86, y + 44, 10, 10, false);
-    final var OrOffset =
+    final int OrOffset =
         (AppPreferences.GATE_SHAPE.get().equals(AppPreferences.SHAPE_RECTANGULAR)) ? 4 : 0;
     int[] posX = new int[] {x + 86, x + 90, x + 90, x + 93 + OrOffset};
     int[] posY = new int[] {y + 34, y + 34, y + 36, y + 36};

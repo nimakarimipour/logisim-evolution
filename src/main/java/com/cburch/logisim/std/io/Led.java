@@ -56,7 +56,7 @@ public class Led extends InstanceFactory implements DynamicElementProvider {
 
     @Override
     public Value getLogValue(InstanceState state, Object option) {
-      final var data = (InstanceDataSingleton) state.getData();
+      final com.cburch.logisim.instance.InstanceDataSingleton data = (InstanceDataSingleton) state.getData();
       if (data == null) return Value.FALSE;
       return data.getValue() == Value.TRUE ? Value.TRUE : Value.FALSE;
     }
@@ -125,24 +125,24 @@ public class Led extends InstanceFactory implements DynamicElementProvider {
 
   @Override
   public void paintGhost(InstancePainter painter) {
-    final var g = painter.getGraphics();
-    final var bds = painter.getBounds();
+    final java.awt.Graphics g = painter.getGraphics();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
     GraphicsUtil.switchToWidth(g, 2);
     g.drawOval(bds.getX() + 1, bds.getY() + 1, bds.getWidth() - 2, bds.getHeight() - 2);
   }
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var data = (InstanceDataSingleton) painter.getData();
-    final var val = data == null ? Value.FALSE : (Value) data.getValue();
-    final var bds = painter.getBounds().expand(-1);
+    final com.cburch.logisim.instance.InstanceDataSingleton data = (InstanceDataSingleton) painter.getData();
+    final com.cburch.logisim.data.Value val = data == null ? Value.FALSE : (Value) data.getValue();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds().expand(-1);
 
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     if (painter.getShowState()) {
-      final var onColor = painter.getAttributeValue(IoLibrary.ATTR_ON_COLOR);
-      final var offColor = painter.getAttributeValue(IoLibrary.ATTR_OFF_COLOR);
-      final var activ = painter.getAttributeValue(IoLibrary.ATTR_ACTIVE);
-      final var desired = activ ? Value.TRUE : Value.FALSE;
+      final java.awt.Color onColor = painter.getAttributeValue(IoLibrary.ATTR_ON_COLOR);
+      final java.awt.Color offColor = painter.getAttributeValue(IoLibrary.ATTR_OFF_COLOR);
+      final java.lang.Boolean activ = painter.getAttributeValue(IoLibrary.ATTR_ACTIVE);
+      final com.cburch.logisim.data.Value desired = activ ? Value.TRUE : Value.FALSE;
       g.setColor(val == desired ? onColor : offColor);
       g.fillOval(bds.getX(), bds.getY(), bds.getWidth(), bds.getHeight());
     }
@@ -156,8 +156,8 @@ public class Led extends InstanceFactory implements DynamicElementProvider {
 
   @Override
   public void propagate(InstanceState state) {
-    final var val = state.getPortValue(0);
-    final var data = (InstanceDataSingleton) state.getData();
+    final com.cburch.logisim.data.Value val = state.getPortValue(0);
+    final com.cburch.logisim.instance.InstanceDataSingleton data = (InstanceDataSingleton) state.getData();
     if (data == null) {
       state.setData(new InstanceDataSingleton(val));
     } else {

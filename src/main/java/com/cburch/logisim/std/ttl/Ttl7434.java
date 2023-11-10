@@ -59,10 +59,10 @@ public class Ttl7434 extends AbstractTtlGate {
   @Override
   public void paintInternal(
       InstancePainter painter, int x, int y, int height, boolean isUpOriented) {
-    final var g = painter.getGraphics();
-    final var portWidth = 16;
-    final var portHeight = 6;
-    final var yOutput = y + (isUpOriented ? 20 : 40);
+    final java.awt.Graphics g = painter.getGraphics();
+    final int portWidth = 16;
+    final int portHeight = 6;
+    final int yOutput = y + (isUpOriented ? 20 : 40);
     Drawgates.paintBuffer(g, x + 30, yOutput, portWidth, portHeight);
     Drawgates.paintOutputgate(g, x + 30, y, x + 26, yOutput, isUpOriented, height);
     Drawgates.paintSingleInputgate(g, x + 10, y, x + 30 - portWidth, yOutput, isUpOriented, height);

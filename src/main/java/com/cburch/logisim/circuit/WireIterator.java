@@ -34,11 +34,11 @@ class WireIterator implements Iterator<Location> {
     else if (curY > destY) deltaY = -10;
     else deltaY = 0;
 
-    final var offX = (destX - curX) % 10;
+    final int offX = (destX - curX) % 10;
     if (offX != 0) { // should not happen, but in case it does...
       destX = curX + deltaX * ((destX - curX) / 10);
     }
-    final var offY = (destY - curY) % 10;
+    final int offY = (destY - curY) % 10;
     if (offY != 0) { // should not happen, but in case it does...
       destY = curY + deltaY * ((destY - curY) / 10);
     }
@@ -51,7 +51,7 @@ class WireIterator implements Iterator<Location> {
 
   @Override
   public Location next() {
-    final var ret = Location.create(curX, curY, true);
+    final com.cburch.logisim.data.Location ret = Location.create(curX, curY, true);
     destReturned |= curX == destX && curY == destY;
     curX += deltaX;
     curY += deltaY;

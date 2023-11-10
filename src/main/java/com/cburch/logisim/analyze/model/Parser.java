@@ -71,10 +71,10 @@ public class Parser {
   }
 
   private static Expression parse(ArrayList<Token> tokens) throws ParserException {
-    final var stack = new ArrayList<Context>();
+    final java.util.ArrayList<com.cburch.logisim.analyze.model.Parser.Context> stack = new ArrayList<Context>();
     Expression current = null;
     for (int i = 0; i < tokens.size(); i++) {
-      final var t = tokens.get(i);
+      final com.cburch.logisim.analyze.model.Parser.Token t = tokens.get(i);
       if (t.type == TOKEN_IDENT || t.type == TOKEN_CONST) {
         Expression here;
         if (t.type == TOKEN_IDENT) {
@@ -160,12 +160,12 @@ public class Parser {
 
   private static Expression parse(String in, AnalyzerModel model, boolean allowOutputAssignment)
       throws ParserException {
-    final var tokens = toTokens(in, false);
+    final java.util.ArrayList<com.cburch.logisim.analyze.model.Parser.Token> tokens = toTokens(in, false);
 
     if (tokens.isEmpty()) return null;
 
     int i = -1;
-    for (final var token : tokens) {
+    for (final com.cburch.logisim.analyze.model.Parser.Token token : tokens) {
       i++;
       if (token.type == TOKEN_ERROR_BADCHAR) {
         throw token.error(S.getter("invalidCharacterError", token.text));
@@ -181,7 +181,7 @@ public class Parser {
         int index = model.getInputs().bits.indexOf(token.text);
         if (index < 0) {
           // ok; but maybe this is an  a python-like (spelled out) operator
-          final var opText = token.text.toUpperCase();
+          final java.lang.String opText = token.text.toUpperCase();
           if (opText.equals("NOT")) {
             token.type = TOKEN_NOT;
             token.precedence = Expression.Notation.NOT_PRECEDENCE;
@@ -220,7 +220,7 @@ public class Parser {
 
   private static int peekLevel(ArrayList<Context> stack) {
     if (stack.isEmpty()) return -3;
-    final var context = stack.get(stack.size() - 1);
+    final com.cburch.logisim.analyze.model.Parser.Context context = stack.get(stack.size() - 1);
     return context.level;
   }
 
@@ -231,7 +231,7 @@ public class Parser {
   private static Expression popTo(ArrayList<Context> stack, int level, Expression current)
       throws ParserException {
     while (!stack.isEmpty() && peekLevel(stack) >= level) {
-      final var top = pop(stack);
+      final com.cburch.logisim.analyze.model.Parser.Context top = pop(stack);
       if (current == null)
         throw top.cause.error(S.getter("missingRightOperandError", top.cause.text));
       else if (top.cause.type == TOKEN_AND) current = Expressions.and(top.current, current);
@@ -250,8 +250,8 @@ public class Parser {
 
   // Note: Doing this without "tokenizing then re-stringify" is tricky.
   static String replaceVariable(String in, String oldName, String newName) {
-    final var ret = new StringBuilder();
-    final var tokens = toTokens(in, true);
+    final java.lang.StringBuilder ret = new StringBuilder();
+    final java.util.ArrayList<com.cburch.logisim.analyze.model.Parser.Token> tokens = toTokens(in, true);
     for (Token token : tokens) {
       if (token.type == TOKEN_IDENT && token.text.equals(oldName)) {
         ret.append(newName);
@@ -290,7 +290,7 @@ public class Parser {
     }
 
     String readNumber() {
-      final var substart = pos;
+      final int substart = pos;
       skipWhile(this::isDigit);
       return in.substring(substart, pos);
     }
@@ -391,7 +391,7 @@ public class Parser {
           return new Token(TOKEN_ERROR_IDENT, start, in.substring(start, start + 1), 0);
         default:
           skipUntil(Parser::okCharacter);
-          final var errorText = in.substring(start, pos);
+          final java.lang.String errorText = in.substring(start, pos);
           return new Token(TOKEN_ERROR_BADCHAR, start, errorText, 0);
       }
     }
@@ -401,7 +401,7 @@ public class Parser {
 
       pos = 0;
       while (true) {
-        final var whiteStart = pos;
+        final int whiteStart = pos;
         skipSpaces();
 
         if (includeWhite && pos != whiteStart) {
@@ -411,11 +411,11 @@ public class Parser {
           return tokens;
         }
 
-        final var start = pos;
-        final var startChar = next();
+        final int start = pos;
+        final char startChar = next();
         if (Character.isJavaIdentifierStart(startChar)) {
           skipWhile(Character::isJavaIdentifierPart);
-          final var name = in.substring(start, pos);
+          final java.lang.String name = in.substring(start, pos);
           String subscript = null;
           if (in.charAt(pos) == ':' && isDigit(in.charAt(pos + 1))) {
             pos++;

@@ -24,7 +24,7 @@ public class AppearEditIcon extends BaseIcon {
 
   @Override
   protected void paintIcon(Graphics2D g2) {
-    final var g = (Graphics2D) g2.create();
+    final java.awt.Graphics2D g = (Graphics2D) g2.create();
     SubcircuitFactory.paintClasicIcon(g);
     g.dispose();
     g2.setColor(Color.MAGENTA);

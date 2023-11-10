@@ -138,8 +138,8 @@ public final class Wire implements Component, AttributeSet, CustomHandles, Itera
 
   @Override
   public void draw(ComponentDrawContext context) {
-    final var state = context.getCircuitState();
-    final var g = context.getGraphics();
+    final com.cburch.logisim.circuit.CircuitState state = context.getCircuitState();
+    final java.awt.Graphics g = context.getGraphics();
     GraphicsUtil.switchToWidth(g, WIDTH);
     g.setColor(state.getValue(e0).getColor());
     g.drawLine(e0.getX(), e0.getY(), e1.getX(), e1.getY());
@@ -168,8 +168,8 @@ public final class Wire implements Component, AttributeSet, CustomHandles, Itera
   @Override
   public void expose(ComponentDrawContext context) {
     java.awt.Component dest = context.getDestination();
-    final var x0 = e0.getX();
-    final var y0 = e0.getY();
+    final int x0 = e0.getX();
+    final int y0 = e0.getY();
     dest.repaint(x0 - 5, y0 - 5, e1.getX() - x0 + 10, e1.getY() - y0 + 10);
   }
 
@@ -193,8 +193,8 @@ public final class Wire implements Component, AttributeSet, CustomHandles, Itera
 
   @Override
   public Bounds getBounds() {
-    final var x0 = e0.getX();
-    final var y0 = e0.getY();
+    final int x0 = e0.getX();
+    final int y0 = e0.getY();
     return Bounds.create(x0 - 2, y0 - 2, e1.getX() - x0 + 5, e1.getY() - y0 + 5);
   }
 

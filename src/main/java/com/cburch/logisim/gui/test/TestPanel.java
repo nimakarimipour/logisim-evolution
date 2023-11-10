@@ -92,24 +92,24 @@ class TestPanel extends JPanel implements ValueTable.Model {
     TestException[] results = model.getResults();
     int numPass = model.getPass();
     int numFail = model.getFail();
-    final var vec = model.getVector();
+    final com.cburch.logisim.data.TestVector vec = model.getVector();
     int columns = vec.columnName.length;
-    final var msg = new String[columns];
-    final var altdata = new Value[columns];
-    final var passMsg = S.get("passStatus");
-    final var failMsg = S.get("failStatus");
+    final java.lang.String[] msg = new String[columns];
+    final com.cburch.logisim.data.Value[] altdata = new Value[columns];
+    final java.lang.String passMsg = S.get("passStatus");
+    final java.lang.String failMsg = S.get("failStatus");
 
     for (int i = firstRow; i < firstRow + numRows; i++) {
-      final var row = model.sortedIndex(i);
-      final var data = vec.data.get(row);
+      final int row = model.sortedIndex(i);
+      final com.cburch.logisim.data.Value[] data = vec.data.get(row);
       String rowmsg = null;
       String status = null;
       boolean failed = false;
       if (row < numPass + numFail) {
-        final var err = results[row];
+        final com.cburch.logisim.data.TestException err = results[row];
         if (err instanceof FailException failEx) {
           failed = true;
-          for (final var e : failEx.getAll()) {
+          for (final com.cburch.logisim.data.FailException e : failEx.getAll()) {
             int col = e.getColumn();
             msg[col] = S.get("expectedValueMessage", e.getExpected().toDisplayString(getColumnValueRadix(col + 1)));
             altdata[col] = e.getComputed();

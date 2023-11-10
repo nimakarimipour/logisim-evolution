@@ -91,8 +91,8 @@ public class GateAttributes extends AbstractAttributeSet {
     if (attr == ATTR_OUTPUT) return (V) out;
     if (attr == ATTR_XOR) return (V) xorBehave;
     if (attr instanceof NegateAttribute negAttr) {
-      final var index = negAttr.index;
-      final var bit = (int) (negated >> index) & 1;
+      final int index = negAttr.index;
+      final int bit = (int) (negated >> index) & 1;
       return (V) Boolean.valueOf(bit == 1);
     }
     return null;
@@ -125,7 +125,7 @@ public class GateAttributes extends AbstractAttributeSet {
     } else if (attr == ATTR_OUTPUT) {
       out = (AttributeOption) value;
     } else if (attr instanceof NegateAttribute negAttr) {
-      final var index = negAttr.index;
+      final int index = negAttr.index;
       if ((Boolean) value) {
         negated |= 1 << index;
       } else {

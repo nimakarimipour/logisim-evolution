@@ -68,34 +68,34 @@ public class XmlCircuitReader extends CircuitTransaction {
       throws XmlReaderException {
 
     // Determine the factory that creates this element
-    final var name = elt.getAttribute("name");
+    final java.lang.String name = elt.getAttribute("name");
     if (StringUtil.isNullOrEmpty(name)) {
       throw new XmlReaderException(S.get("compNameMissingError"));
     }
 
-    final var libName = elt.getAttribute("lib");
-    final var lib = reader.findLibrary(libName);
+    final java.lang.String libName = elt.getAttribute("lib");
+    final com.cburch.logisim.tools.Library lib = reader.findLibrary(libName);
     if (lib == null) {
       // FIXME: the "no-lib" thing may not be clear enough
       throw new XmlReaderException(S.get("compUnknownError", "no-lib"));
     }
 
-    final var tool = lib.getTool(name);
+    final com.cburch.logisim.tools.Tool tool = lib.getTool(name);
     if (!(tool instanceof AddTool)) {
-      final var msg =
+      final java.lang.String msg =
           StringUtil.isNullOrEmpty(libName)
               ? S.get("compUnknownError", name)
               : S.get("compAbsentError", name, libName);
       throw new XmlReaderException(msg);
     }
-    final var source = ((AddTool) tool).getFactory();
+    final com.cburch.logisim.comp.ComponentFactory source = ((AddTool) tool).getFactory();
 
     // Determine attributes
-    final var locStr = elt.getAttribute("loc");
-    final var attrs = source.createAttributeSet();
+    final java.lang.String locStr = elt.getAttribute("loc");
+    final com.cburch.logisim.data.AttributeSet attrs = source.createAttributeSet();
     com.cburch.logisim.comp.ComponentFactory defaults = source;
     if (isHolyCross && source instanceof Ram) {
-      final var ramAttrs = (RamAttributes) attrs;
+      final com.cburch.logisim.std.memory.RamAttributes ramAttrs = (RamAttributes) attrs;
       ramAttrs.setValue(Mem.ENABLES_ATTR, Mem.USELINEENABLES);
       ramAttrs.updateAttributes();
       defaults = null;
@@ -116,7 +116,7 @@ public class XmlCircuitReader extends CircuitTransaction {
   void addWire(Circuit dest, CircuitMutator mutator, Element elt) throws XmlReaderException {
     Location pt0;
     try {
-      final var str = elt.getAttribute("from");
+      final java.lang.String str = elt.getAttribute("from");
       if (str == null || "".equals(str)) {
         throw new XmlReaderException(S.get("wireStartMissingError"));
       }
@@ -127,7 +127,7 @@ public class XmlCircuitReader extends CircuitTransaction {
 
     Location pt1;
     try {
-      final var str = elt.getAttribute("to");
+      final java.lang.String str = elt.getAttribute("to");
       if (str == null || "".equals(str)) {
         throw new XmlReaderException(S.get("wireEndMissingError"));
       }
@@ -143,8 +143,8 @@ public class XmlCircuitReader extends CircuitTransaction {
   }
 
   private void buildCircuit(XmlReader.CircuitData circData, CircuitMutator mutator) {
-    final var element = circData.circuitElement;
-    final var dest = circData.circuit;
+    final org.w3c.dom.Element element = circData.circuitElement;
+    final com.cburch.logisim.circuit.Circuit dest = circData.circuit;
     java.util.Map<org.w3c.dom.Element,com.cburch.logisim.comp.Component> knownComponents = circData.knownComponents;
     if (knownComponents == null) knownComponents = Collections.emptyMap();
     try {
@@ -152,9 +152,9 @@ public class XmlCircuitReader extends CircuitTransaction {
       boolean hasNamedBox = false;
       boolean hasNamedBoxFixedSize = false;
       boolean hasAppearAttr = false;
-      for (final var attrElt : XmlIterator.forChildElements(circData.circuitElement, "a")) {
+      for (final org.w3c.dom.Element attrElt : XmlIterator.forChildElements(circData.circuitElement, "a")) {
         if (attrElt.hasAttribute("name")) {
-          final var name = attrElt.getAttribute("name");
+          final java.lang.String name = attrElt.getAttribute("name");
           hasNamedBox |= "circuitnamedbox".equals(name);
           hasAppearAttr |= "appearance".equals(name);
           hasNamedBoxFixedSize |= "circuitnamedboxfixedsize".equals(name);
@@ -165,7 +165,7 @@ public class XmlCircuitReader extends CircuitTransaction {
       if (circData.circuitElement.hasChildNodes()) {
         if (hasNamedBox) {
           // This situation is clear, it is an older logisim-evolution file
-          final var appear =
+          final com.cburch.logisim.data.AttributeOption appear =
               CollectionUtil.isNotEmpty(circData.appearance)
                   ? CircuitAttributes.APPEAR_CUSTOM
                   : CircuitAttributes.APPEAR_EVOLUTION;
@@ -192,10 +192,10 @@ public class XmlCircuitReader extends CircuitTransaction {
       reader.addErrors(e, circData.circuit.getName() + ".static");
     }
 
-    final var componentsAt = new HashMap<Bounds, Component>();
-    final var overlapComponents = new ArrayList<Component>();
-    for (final var subElement : XmlIterator.forChildElements(element)) {
-      final var subEltName = subElement.getTagName();
+    final java.util.HashMap<com.cburch.logisim.data.Bounds,com.cburch.logisim.comp.Component> componentsAt = new HashMap<Bounds, Component>();
+    final java.util.ArrayList<com.cburch.logisim.comp.Component> overlapComponents = new ArrayList<Component>();
+    for (final org.w3c.dom.Element subElement : XmlIterator.forChildElements(element)) {
+      final java.lang.String subEltName = subElement.getTagName();
       if ("comp".equals(subEltName)) {
         try {
           com.cburch.logisim.comp.Component comp = knownComponents.get(subElement);
@@ -207,10 +207,10 @@ public class XmlCircuitReader extends CircuitTransaction {
                 continue;
               }
             }
-            final var bds = comp.getBounds();
-            final var conflict = componentsAt.get(bds);
+            final com.cburch.logisim.data.Bounds bds = comp.getBounds();
+            final com.cburch.logisim.comp.Component conflict = componentsAt.get(bds);
             if (conflict != null) {
-              final var msg =
+              final java.lang.String msg =
                   S.get(
                       "fileComponentOverlapError",
                       conflict.getFactory().getName() + conflict.getLocation(),
@@ -223,7 +223,7 @@ public class XmlCircuitReader extends CircuitTransaction {
             }
           }
         } catch (XmlReaderException e) {
-          final var context =
+          final java.lang.String context =
               String.format(contextFmt, circData.circuit.getName(), toComponentString(subElement));
           reader.addErrors(e, context);
         }
@@ -231,14 +231,14 @@ public class XmlCircuitReader extends CircuitTransaction {
         try {
           addWire(dest, mutator, subElement);
         } catch (XmlReaderException e) {
-          final var context =
+          final java.lang.String context =
               String.format(contextFmt, circData.circuit.getName(), toWireString(subElement));
           reader.addErrors(e, context);
         }
       }
     }
     for (com.cburch.logisim.comp.Component comp : overlapComponents) {
-      final var bds = comp.getBounds();
+      final com.cburch.logisim.data.Bounds bds = comp.getBounds();
       if (bds.getHeight() == 0 || bds.getWidth() == 0) {
         // ignore empty boxes
         continue;
@@ -247,8 +247,8 @@ public class XmlCircuitReader extends CircuitTransaction {
       do {
         d += 10;
       } while ((componentsAt.get(bds.translate(d, d))) != null && (d < 100_000));
-      final var loc = comp.getLocation().translate(d, d);
-      final var attrs = (AttributeSet) comp.getAttributeSet().clone();
+      final com.cburch.logisim.data.Location loc = comp.getLocation().translate(d, d);
+      final com.cburch.logisim.data.AttributeSet attrs = (AttributeSet) comp.getAttributeSet().clone();
       comp = comp.getFactory().createComponent(loc, attrs);
       componentsAt.put(comp.getBounds(), comp);
       mutator.add(dest, comp);
@@ -256,23 +256,23 @@ public class XmlCircuitReader extends CircuitTransaction {
   }
 
   private void buildDynamicAppearance(XmlReader.CircuitData circData) {
-    final var dest = circData.circuit;
-    final var shapes = new ArrayList<AbstractCanvasObject>();
-    for (final var appearElt : XmlIterator.forChildElements(circData.circuitElement, "appear")) {
-      for (final var sub : XmlIterator.forChildElements(appearElt)) {
+    final com.cburch.logisim.circuit.Circuit dest = circData.circuit;
+    final java.util.ArrayList<com.cburch.draw.model.AbstractCanvasObject> shapes = new ArrayList<AbstractCanvasObject>();
+    for (final org.w3c.dom.Element appearElt : XmlIterator.forChildElements(circData.circuitElement, "appear")) {
+      for (final org.w3c.dom.Element sub : XmlIterator.forChildElements(appearElt)) {
         // Dynamic shapes are handled here. Static shapes are already done.
         if (!sub.getTagName().startsWith("visible-")) continue;
         try {
-          final var m = AppearanceSvgReader.createShape(sub, null, dest);
+          final com.cburch.draw.model.AbstractCanvasObject m = AppearanceSvgReader.createShape(sub, null, dest);
           if (m == null) {
-            final var context =
+            final java.lang.String context =
                 String.format(contextFmt, circData.circuit.getName(), sub.getTagName());
             reader.addError(S.get("fileAppearanceNotFound", sub.getTagName()), context);
           } else {
             shapes.add(m);
           }
         } catch (RuntimeException e) {
-          final var context =
+          final java.lang.String context =
               String.format(contextFmt, circData.circuit.getName(), sub.getTagName());
           reader.addError(S.get("fileAppearanceError", sub.getTagName()), context);
         }
@@ -292,8 +292,8 @@ public class XmlCircuitReader extends CircuitTransaction {
 
   @Override
   protected Map<Circuit, Integer> getAccessedCircuits() {
-    final var access = new HashMap<Circuit, Integer>();
-    for (final var data : circuitsData) {
+    final java.util.HashMap<com.cburch.logisim.circuit.Circuit,java.lang.Integer> access = new HashMap<Circuit, Integer>();
+    for (final com.cburch.logisim.file.XmlReader.CircuitData data : circuitsData) {
       access.put(data.circuit, READ_WRITE);
     }
     return access;
@@ -301,23 +301,23 @@ public class XmlCircuitReader extends CircuitTransaction {
 
   @Override
   protected void run(CircuitMutator mutator) {
-    for (final var circuitData : circuitsData) {
+    for (final com.cburch.logisim.file.XmlReader.CircuitData circuitData : circuitsData) {
       buildCircuit(circuitData, mutator);
     }
-    for (final var circuitData : circuitsData) {
+    for (final com.cburch.logisim.file.XmlReader.CircuitData circuitData : circuitsData) {
       buildDynamicAppearance(circuitData);
     }
   }
 
   private String toComponentString(Element elt) {
-    final var name = elt.getAttribute("name");
-    final var loc = elt.getAttribute("loc");
+    final java.lang.String name = elt.getAttribute("name");
+    final java.lang.String loc = elt.getAttribute("loc");
     return String.format("%s(%s)", name, loc);
   }
 
   private String toWireString(Element elt) {
-    final var from = elt.getAttribute("from");
-    final var to = elt.getAttribute("to");
+    final java.lang.String from = elt.getAttribute("from");
+    final java.lang.String to = elt.getAttribute("to");
     return String.format("w%s-%s", from, to);
   }
 }

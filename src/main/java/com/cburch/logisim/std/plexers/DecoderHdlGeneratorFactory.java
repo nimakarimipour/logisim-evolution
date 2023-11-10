@@ -25,8 +25,8 @@ public class DecoderHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public void getGenerationTimeWiresPorts(Netlist theNetlist, AttributeSet attrs) {
-    final var nrOfselectBits = attrs.getValue(PlexersLibrary.ATTR_SELECT).getWidth();
-    final var selectInputIndex = (1 << nrOfselectBits);
+    final int nrOfselectBits = attrs.getValue(PlexersLibrary.ATTR_SELECT).getWidth();
+    final int selectInputIndex = (1 << nrOfselectBits);
     for (int outp = 0; outp < selectInputIndex; outp++) {
       myPorts.add(Port.OUTPUT, String.format("decoderOut_%d", outp), 1, outp);
     }
@@ -37,9 +37,9 @@ public class DecoderHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist theNetList, AttributeSet attrs) {
-    final var contents = LineBuffer.getBuffer();
-    final var nrOfselectBits = attrs.getValue(PlexersLibrary.ATTR_SELECT).getWidth();
-    final var numOutputs = (1 << nrOfselectBits);
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getBuffer();
+    final int nrOfselectBits = attrs.getValue(PlexersLibrary.ATTR_SELECT).getWidth();
+    final int numOutputs = (1 << nrOfselectBits);
     java.lang.String space = " ";
     for (int i = 0; i < numOutputs; i++) {
       if (i == 10) space = "";

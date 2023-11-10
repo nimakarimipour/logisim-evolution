@@ -225,9 +225,9 @@ public class MapComponent {
     if (pin < 0 || pin >= maps.size()) return;
     if (myFactory instanceof RgbLed) {
       /* we have too look if we have a tripple map */
-      final var map1 = maps.get(0);
-      final var map2 = maps.get(1);
-      final var map3 = maps.get(2);
+      final com.cburch.logisim.fpga.data.MapComponent.MapClass map1 = maps.get(0);
+      final com.cburch.logisim.fpga.data.MapComponent.MapClass map2 = maps.get(1);
+      final com.cburch.logisim.fpga.data.MapComponent.MapClass map3 = maps.get(2);
       if (map1 != null
           && map2 != null
           && map3 != null
@@ -257,7 +257,7 @@ public class MapComponent {
 
   public void unmap() {
     for (int i = 0; i < nrOfPins; i++) {
-      final var map = maps.get(i);
+      final com.cburch.logisim.fpga.data.MapComponent.MapClass map = maps.get(i);
       if (map != null) {
         map.unmap();
       }
@@ -275,7 +275,7 @@ public class MapComponent {
     opens = comp.opens;
     constants = comp.constants;
     for (int i = 0; i < nrOfPins; i++) {
-      final var map = maps.get(i);
+      final com.cburch.logisim.fpga.data.MapComponent.MapClass map = maps.get(i);
       if (map != null) if (!map.update(this)) unmap(i);
     }
   }
@@ -283,7 +283,7 @@ public class MapComponent {
   public void tryMap(CircuitMapInfo cmap, List<FpgaIoInformationContainer> IOcomps) {
     if (cmap.isOpen()) {
       if (cmap.isSinglePin()) {
-        final var pin = cmap.getPinId();
+        final int pin = cmap.getPinId();
         if (pin < 0 || pin >= nrOfPins) return;
         unmap(pin);
         constants.set(pin, -1);
@@ -297,7 +297,7 @@ public class MapComponent {
       }
     } else if (cmap.isConst()) {
       if (cmap.isSinglePin()) {
-        final var pin = cmap.getPinId();
+        final int pin = cmap.getPinId();
         if (pin < 0 || pin >= nrOfPins) return;
         unmap(pin);
         opens.set(pin, false);
@@ -315,7 +315,7 @@ public class MapComponent {
       }
     }
     if (cmap.getPinMaps() == null) {
-      final var rect = cmap.getRectangle();
+      final com.cburch.logisim.fpga.data.BoardRectangle rect = cmap.getRectangle();
       if (rect == null) return;
       for (com.cburch.logisim.fpga.data.FpgaIoInformationContainer comp : IOcomps) {
         if (comp.getRectangle().isPointInside(rect.getXpos(), rect.getYpos())) {
@@ -328,7 +328,7 @@ public class MapComponent {
         }
       }
     } else {
-      final var pmaps = cmap.getPinMaps();
+      final java.util.List<com.cburch.logisim.circuit.CircuitMapInfo> pmaps = cmap.getPinMaps();
       if (pmaps.size() != nrOfPins) return;
       if (myFactory instanceof RgbLed) {
         /* let's see of the RGB-Led is triple mapped */
@@ -337,13 +337,13 @@ public class MapComponent {
           isPinMapped &= pmaps.get(i).isSinglePin();
         }
         if (isPinMapped) {
-          final var rect1 = pmaps.get(0).getRectangle();
-          final var rect2 = pmaps.get(1).getRectangle();
-          final var rect3 = pmaps.get(2).getRectangle();
+          final com.cburch.logisim.fpga.data.BoardRectangle rect1 = pmaps.get(0).getRectangle();
+          final com.cburch.logisim.fpga.data.BoardRectangle rect2 = pmaps.get(1).getRectangle();
+          final com.cburch.logisim.fpga.data.BoardRectangle rect3 = pmaps.get(2).getRectangle();
           if (rect1.equals(rect2) && rect2.equals(rect3)) {
-            final var iomap1 = pmaps.get(0).getIoId();
-            final var iomap2 = pmaps.get(1).getIoId();
-            final var iomap3 = pmaps.get(2).getIoId();
+            final int iomap1 = pmaps.get(0).getIoId();
+            final int iomap2 = pmaps.get(1).getIoId();
+            final int iomap3 = pmaps.get(2).getIoId();
             if (iomap1 == iomap2 && iomap2 == iomap3) {
               /* we have a triple map on a LEDArray, so do it */
               for (com.cburch.logisim.fpga.data.FpgaIoInformationContainer comp : IOcomps) {
@@ -416,7 +416,7 @@ public class MapComponent {
     }
     if (number != null) {
       try {
-        final var pinId = Integer.parseUnsignedInt(number);
+        final int pinId = Integer.parseUnsignedInt(number);
         for (com.cburch.logisim.fpga.data.FpgaIoInformationContainer comp : IOcomps) {
           if (comp.getRectangle()
               .isPointInside(cmap.getRectangle().getXpos(), cmap.getRectangle().getYpos())) {
@@ -698,7 +698,7 @@ public class MapComponent {
         }
         Map.setAttribute(CONSTANT_KEY, Long.toString(value));
       } else {
-        final var rect = maps.get(0).IOcomp.getRectangle();
+        final com.cburch.logisim.fpga.data.BoardRectangle rect = maps.get(0).IOcomp.getRectangle();
         Map.setAttribute(COMPLETE_MAP, rect.getXpos() + "," + rect.getYpos());
       }
     } else {
@@ -746,7 +746,7 @@ public class MapComponent {
       }
       Map.setAttribute(PIN_MAP, s.toString());
     } else {
-      final var br = cmap.getRectangle();
+      final com.cburch.logisim.fpga.data.BoardRectangle br = cmap.getRectangle();
       if (br == null) return;
       Map.setAttribute(COMPLETE_MAP, br.getXpos() + "," + br.getYpos());
     }
@@ -757,8 +757,8 @@ public class MapComponent {
       java.lang.String[] xy = map.getAttribute(COMPLETE_MAP).split(",");
       if (xy.length != 2) return null;
       try {
-        final var x = Integer.parseUnsignedInt(xy[0]);
-        final var y = Integer.parseUnsignedInt(xy[1]);
+        final int x = Integer.parseUnsignedInt(xy[0]);
+        final int y = Integer.parseUnsignedInt(xy[1]);
         return new CircuitMapInfo(x, y);
       } catch (NumberFormatException e) {
         return null;
@@ -776,16 +776,16 @@ public class MapComponent {
           java.lang.String[] parts = s.split("_");
           if (parts.length != 3) return null;
           try {
-            final var x = Integer.parseUnsignedInt(parts[0]);
-            final var y = Integer.parseUnsignedInt(parts[1]);
-            final var pin = Integer.parseUnsignedInt(parts[2]);
+            final int x = Integer.parseUnsignedInt(parts[0]);
+            final int y = Integer.parseUnsignedInt(parts[1]);
+            final int pin = Integer.parseUnsignedInt(parts[2]);
             complexI.addPinMap(x, y, pin);
           } catch (NumberFormatException e) {
             return null;
           }
         } else {
           try {
-            final var c = Long.parseUnsignedLong(s);
+            final long c = Long.parseUnsignedLong(s);
             complexI.addPinMap(new CircuitMapInfo(c));
           } catch (NumberFormatException e) {
             return null;

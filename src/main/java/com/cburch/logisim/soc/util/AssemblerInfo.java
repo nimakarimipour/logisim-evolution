@@ -77,7 +77,7 @@ public class AssemblerInfo {
     public long getEntryPoint() {
       if (instructions.isEmpty()) return -1;
       long result = -1L;
-      for (final var x : instructions.keySet()) {
+      for (final java.lang.Long x : instructions.keySet()) {
         if (result < 0 || x < result) result = x;
       }
       return result;
@@ -134,12 +134,12 @@ public class AssemblerInfo {
 
     public boolean replaceLabels(Map<String, Long> labels, Map<AssemblerToken, StringGetter> errors) {
       boolean hasError = false;
-      for (final var addr : instructions.keySet())
+      for (final java.lang.Long addr : instructions.keySet())
         hasError |= !instructions.get(addr).replaceLabels(labels, errors);
       for (String label : labels.keySet()) {
-        final var addr = labels.get(label);
+        final java.lang.Long addr = labels.get(label);
         if (addr >= sectionStart && addr < sectionEnd) {
-          final var st = new SymbolTable(label, SocSupport.convUnsignedLong(addr));
+          final com.cburch.logisim.soc.file.SymbolTable st = new SymbolTable(label, SocSupport.convUnsignedLong(addr));
           super.addSymbol(st);
         }
       }
@@ -148,16 +148,16 @@ public class AssemblerInfo {
 
     public boolean replaceDefines(Map<String, Integer> defines, Map<AssemblerToken, StringGetter> errors) {
       boolean errorsFound = false;
-      for (final var addr : instructions.keySet()) {
+      for (final java.lang.Long addr : instructions.keySet()) {
         errorsFound |= !instructions.get(addr).replaceDefines(defines, errors);
       }
       return !errorsFound;
     }
 
     public Map<AssemblerToken, StringGetter> replaceInstructions(AssemblerInterface assembler) {
-      final var errors = new HashMap<AssemblerToken, StringGetter>();
+      final java.util.HashMap<com.cburch.logisim.soc.util.AssemblerToken,com.cburch.logisim.util.StringGetter> errors = new HashMap<AssemblerToken, StringGetter>();
       for (long addr : instructions.keySet()) {
-        final var asm = instructions.get(addr);
+        final com.cburch.logisim.soc.util.AssemblerAsmInstruction asm = instructions.get(addr);
         asm.setProgramCounter(addr);
         if (!assembler.assemble(asm)) {
           errors.putAll(asm.getErrors());
@@ -172,8 +172,8 @@ public class AssemblerInfo {
 
     public boolean download(SocProcessorInterface cpu, CircuitState state) {
       for (long i = sectionStart; i < sectionEnd; i++) {
-        final var datab = data.containsKey(i) ? data.get(i) : 0;
-        final var trans =
+        final byte datab = data.containsKey(i) ? data.get(i) : 0;
+        final com.cburch.logisim.soc.data.SocBusTransaction trans =
             new SocBusTransaction(
                 SocBusTransaction.WRITE_TRANSACTION,
                 SocSupport.convUnsignedLong(i),
@@ -207,8 +207,8 @@ public class AssemblerInfo {
     }
 
     public ArrayList<AssemblerSectionInfo> getAll() {
-      final var ret = new ArrayList<AssemblerSectionInfo>();
-      for (final var hdr : super.getHeaders()) {
+      final java.util.ArrayList<com.cburch.logisim.soc.util.AssemblerInfo.AssemblerSectionInfo> ret = new ArrayList<AssemblerSectionInfo>();
+      for (final com.cburch.logisim.soc.file.SectionHeader hdr : super.getHeaders()) {
         if (hdr instanceof AssemblerSectionInfo sectionInfo)
           ret.add(sectionInfo);
       }
@@ -239,11 +239,11 @@ public class AssemblerInfo {
   public void assemble(List<AssemblerToken> tokens, Map<String, Long> labels, Map<String, AssemblerMacro> macros) {
     errors.clear();
     sections.clear();
-    final var defines = new HashMap<String, Integer>();
+    final java.util.HashMap<java.lang.String,java.lang.Integer> defines = new HashMap<String, Integer>();
     currentSection = -1;
     /* first pass: go through all tokens and mark the labels */
     for (int i = 0; i < tokens.size(); i++) {
-      final var asm = tokens.get(i);
+      final com.cburch.logisim.soc.util.AssemblerToken asm = tokens.get(i);
       switch (asm.getType()) {
         case AssemblerToken.ASM_INSTRUCTION -> i += handleAsmInstructions(tokens, i, asm, defines);
         case AssemblerToken.LABEL -> handleLabels(labels, asm);
@@ -254,7 +254,7 @@ public class AssemblerInfo {
     }
     if (!errors.isEmpty()) return;
     /* second pass: replace all parameter labels by a value */
-    for (final var label : labels.keySet()) {
+    for (final java.lang.String label : labels.keySet()) {
       if (labels.get(label) < 0) {
         /* this should never happen */
         OptionPane.showMessageDialog(null, "Severe bug in AssemblerInfo.java");
@@ -262,20 +262,20 @@ public class AssemblerInfo {
       }
     }
     boolean errorsFound = false;
-    for (final var section : sections.getAll()) {
+    for (final com.cburch.logisim.soc.util.AssemblerInfo.AssemblerSectionInfo section : sections.getAll()) {
       errorsFound |= !section.replaceLabels(labels, errors);
     }
     if (errorsFound) return;
     errorsFound = false;
-    for (final var section : sections.getAll()) {
+    for (final com.cburch.logisim.soc.util.AssemblerInfo.AssemblerSectionInfo section : sections.getAll()) {
       errorsFound |= !section.replaceDefines(defines, errors);
     }
     if (errorsFound) return;
     /* third pass: Check for overlapping sections and mark them */
     for (int i = 0; i < sections.size(); i++) {
-      final var section = sections.get(i);
+      final com.cburch.logisim.soc.util.AssemblerInfo.AssemblerSectionInfo section = sections.get(i);
       for (int j = i + 1; j < sections.size(); j++) {
-        final var check = sections.get(j);
+        final com.cburch.logisim.soc.util.AssemblerInfo.AssemblerSectionInfo check = sections.get(j);
         if ((section.sectionStart > check.sectionStart && section.sectionStart < check.sectionEnd)
             || (section.sectionEnd > check.sectionStart && section.sectionEnd < check.sectionEnd)) {
           errorsFound = true;
@@ -286,22 +286,22 @@ public class AssemblerInfo {
     }
     if (errorsFound) return;
     /* last pass: transform instructions to bytes */
-    for (final var section : sections.getAll()) {
+    for (final com.cburch.logisim.soc.util.AssemblerInfo.AssemblerSectionInfo section : sections.getAll()) {
       errors.putAll(section.replaceInstructions(assembler));
     }
   }
 
   public boolean download(SocProcessorInterface cpu, CircuitState state) {
-    for (final var section : sections.getAll())
+    for (final com.cburch.logisim.soc.util.AssemblerInfo.AssemblerSectionInfo section : sections.getAll())
       if (!section.download(cpu, state)) return false;
     return true;
   }
 
   public long getEntryPoint() {
     long entry = -1;
-    for (final var section : sections.getAll()) {
+    for (final com.cburch.logisim.soc.util.AssemblerInfo.AssemblerSectionInfo section : sections.getAll()) {
       if (section.hasInstructions()) {
-        final var sentry = section.getEntryPoint();
+        final long sentry = section.getEntryPoint();
         if (entry < 0 || sentry < entry) entry = sentry;
       }
     }
@@ -314,12 +314,12 @@ public class AssemblerInfo {
 
   private int handleMacros(List<AssemblerToken> tokens, int index, AssemblerToken current, Map<String, AssemblerMacro> macros) {
     if (!macros.containsKey(current.getValue())) return 0;
-    final var macro = macros.get(current.getValue());
+    final com.cburch.logisim.soc.util.AssemblerMacro macro = macros.get(current.getValue());
     macro.clearParameters();
-    final var acceptedParameters = assembler.getAcceptedParameterTypes();
+    final java.util.HashSet<java.lang.Integer> acceptedParameters = assembler.getAcceptedParameterTypes();
     int skip = 0;
     if (index + 1 < tokens.size()) {
-      final var params = new ArrayList<AssemblerToken>();
+      final java.util.ArrayList<com.cburch.logisim.soc.util.AssemblerToken> params = new ArrayList<AssemblerToken>();
       AssemblerToken next;
       do {
         next = tokens.get(index + skip + 1);
@@ -330,7 +330,7 @@ public class AssemblerInfo {
               errors.put(next, S.getter("AssemblerExpectedParameter"));
               return tokens.size();
             }
-            final var set = new AssemblerToken[params.size()];
+            final com.cburch.logisim.soc.util.AssemblerToken[] set = new AssemblerToken[params.size()];
             for (int i = 0; i < params.size(); i++) set[i] = params.get(i);
             params.clear();
             macro.addParameter(set);
@@ -340,7 +340,7 @@ public class AssemblerInfo {
         }
       } while (index + skip + 1 < tokens.size() && acceptedParameters.contains(next.getType()));
       if (!params.isEmpty()) {
-        final var set = new AssemblerToken[params.size()];
+        final com.cburch.logisim.soc.util.AssemblerToken[] set = new AssemblerToken[params.size()];
         for (int i = 0; i < params.size(); i++) {
           set[i] = params.get(i);
         }
@@ -352,9 +352,9 @@ public class AssemblerInfo {
       errors.put(current, S.getter("AssemblerMacroIncorrectNumberOfParameters"));
       return tokens.size();
     }
-    final var macroTokens = macro.getMacroTokens();
+    final java.util.LinkedList<com.cburch.logisim.soc.util.AssemblerToken> macroTokens = macro.getMacroTokens();
     for (int i = 0; i < macroTokens.size(); i++) {
-      final var asm = macroTokens.get(i);
+      final com.cburch.logisim.soc.util.AssemblerToken asm = macroTokens.get(i);
       switch (asm.getType()) {
         case AssemblerToken.INSTRUCTION -> i += handleInstruction(macroTokens, i, asm);
         case AssemblerToken.MACRO -> i += handleMacros(macroTokens, i, asm, macros);
@@ -365,11 +365,11 @@ public class AssemblerInfo {
   }
 
   private int handleInstruction(List<AssemblerToken> tokens, int index, AssemblerToken current) {
-    final var instruction = new AssemblerAsmInstruction(current, assembler.getInstructionSize(current.getValue()));
-    final var acceptedParameters = assembler.getAcceptedParameterTypes();
+    final com.cburch.logisim.soc.util.AssemblerAsmInstruction instruction = new AssemblerAsmInstruction(current, assembler.getInstructionSize(current.getValue()));
+    final java.util.HashSet<java.lang.Integer> acceptedParameters = assembler.getAcceptedParameterTypes();
     int skip = 0;
     if (index + 1 < tokens.size()) {
-      final var params = new ArrayList<AssemblerToken>();
+      final java.util.ArrayList<com.cburch.logisim.soc.util.AssemblerToken> params = new ArrayList<AssemblerToken>();
       AssemblerToken next;
       do {
         next = tokens.get(index + skip + 1);
@@ -380,7 +380,7 @@ public class AssemblerInfo {
               errors.put(next, S.getter("AssemblerExpectedParameter"));
               return tokens.size();
             }
-            final var set = new AssemblerToken[params.size()];
+            final com.cburch.logisim.soc.util.AssemblerToken[] set = new AssemblerToken[params.size()];
             for (int i = 0; i < params.size(); i++) set[i] = params.get(i);
             params.clear();
             instruction.addParameter(set);
@@ -390,7 +390,7 @@ public class AssemblerInfo {
         }
       } while (index + skip + 1 < tokens.size() && acceptedParameters.contains(next.getType()));
       if (!params.isEmpty()) {
-        final var set = new AssemblerToken[params.size()];
+        final com.cburch.logisim.soc.util.AssemblerToken[] set = new AssemblerToken[params.size()];
         for (int i = 0; i < params.size(); i++) set[i] = params.get(i);
         params.clear();
         instruction.addParameter(set);
@@ -488,7 +488,7 @@ public class AssemblerInfo {
         errors.put(current, S.getter("AssemblerExpectingString"));
         return 0;
       }
-      final var next = tokens.get(index + 1);
+      final com.cburch.logisim.soc.util.AssemblerToken next = tokens.get(index + 1);
       if (next.getType() != AssemblerToken.STRING) {
         errors.put(current, S.getter("AssemblerExpectingString"));
         return 0;
@@ -508,7 +508,7 @@ public class AssemblerInfo {
         errors.put(current, S.getter("AssemblerExpectingNumber"));
         return 0;
       }
-      final var maxRange = AssemblerHighlighter.BYTES.contains(current.getValue()) ? 8 :
+      final int maxRange = AssemblerHighlighter.BYTES.contains(current.getValue()) ? 8 :
                      AssemblerHighlighter.SHORTS.contains(current.getValue()) ? 16 :
                      AssemblerHighlighter.INTS.contains(current.getValue()) ? 32 : -1;
       int skip = 0;
@@ -526,7 +526,7 @@ public class AssemblerInfo {
           return skip;
         }
         checkIfActiveSection();
-        final var nrOfBytes = (maxRange < 0) ? 8 : maxRange >> 3;
+        final int nrOfBytes = (maxRange < 0) ? 8 : maxRange >> 3;
         for (int i = 0; i < nrOfBytes; i++) {
           sections.get(currentSection).addByte((byte) (value & 0xFF));
           value >>= 8;
@@ -556,8 +556,8 @@ public class AssemblerInfo {
         errors.put(tokens.get(index + 2), S.getter("AssemblerExpectedImmediateValue"));
         return 2;
       }
-      final var label = tokens.get(index + 1).getValue();
-      final var value = tokens.get(index + 2).getNumberValue();
+      final java.lang.String label = tokens.get(index + 1).getValue();
+      final int value = tokens.get(index + 2).getNumberValue();
       if (type == AssemblerToken.PARAMETER_LABEL) {
         errors.put(tokens.get(index + 1), S.getter("AssemblerDuplicatedName"));
         return 2;
@@ -578,7 +578,7 @@ public class AssemblerInfo {
 
   private boolean addSection(String name, AssemblerToken identifier) {
     /* first check if a section with this name exists */
-    for (final var section : sections.getAll()) {
+    for (final com.cburch.logisim.soc.util.AssemblerInfo.AssemblerSectionInfo section : sections.getAll()) {
       if (section.getSectionName().equals(name)) return false;
     }
     if (currentSection < 0) {
@@ -586,7 +586,7 @@ public class AssemblerInfo {
       currentSection = 0;
     } else {
       long start = sections.get(currentSection).getSectionEnd();
-      final var si = new AssemblerSectionInfo(start, name, identifier);
+      final com.cburch.logisim.soc.util.AssemblerInfo.AssemblerSectionInfo si = new AssemblerSectionInfo(start, name, identifier);
       sections.add(si);
       currentSection = sections.indexOf(si);
     }

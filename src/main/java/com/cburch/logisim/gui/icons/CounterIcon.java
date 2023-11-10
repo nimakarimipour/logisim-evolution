@@ -24,24 +24,24 @@ public class CounterIcon extends BaseIcon {
     g2.fillRect(scale(9), 0, scale(6), scale(16));
     g2.drawRect(scale(1), 0, scale(6), scale(16));
     g2.drawRect(scale(9), 0, scale(6), scale(16));
-    final var f = g2.getFont().deriveFont(scale((float) 6));
-    final var tens = state / 10;
-    final var ones = state % 10;
+    final java.awt.Font f = g2.getFont().deriveFont(scale((float) 6));
+    final int tens = state / 10;
+    final int ones = state % 10;
     g2.setColor(Color.WHITE);
     for (int i = -1; i < 2; i++) {
-      final var val = Math.abs((ones + i) % 10);
-      final var c = (char) ('0' + val);
-      final var t = new TextLayout(Character.toString(c), f, g2.getFontRenderContext());
-      final var x = scale((float) 11.5) - (float) t.getBounds().getCenterX();
-      final var y = scale((float) (8.5 + i * 7)) - (float) t.getBounds().getCenterY();
+      final int val = Math.abs((ones + i) % 10);
+      final char c = (char) ('0' + val);
+      final java.awt.font.TextLayout t = new TextLayout(Character.toString(c), f, g2.getFontRenderContext());
+      final float x = scale((float) 11.5) - (float) t.getBounds().getCenterX();
+      final float y = scale((float) (8.5 + i * 7)) - (float) t.getBounds().getCenterY();
       t.draw(g2, x, y);
     }
     for (int i = -1; i < 2; i++) {
-      final var val = Math.abs((tens + i) % 10);
-      final var c = (char) ('0' + val);
-      final var t = new TextLayout(Character.toString(c), f, g2.getFontRenderContext());
-      final var x = scale((float) 3.5) - (float) t.getBounds().getCenterX();
-      final var y = scale((float) (8.5 + i * 7)) - (float) t.getBounds().getCenterY();
+      final int val = Math.abs((tens + i) % 10);
+      final char c = (char) ('0' + val);
+      final java.awt.font.TextLayout t = new TextLayout(Character.toString(c), f, g2.getFontRenderContext());
+      final float x = scale((float) 3.5) - (float) t.getBounds().getCenterX();
+      final float y = scale((float) (8.5 + i * 7)) - (float) t.getBounds().getCenterY();
       t.draw(g2, x, y);
     }
   }

@@ -113,15 +113,15 @@ public class Netlist {
     myClockInformation.clean();
     myClockInformation.setSourceContainer(ClockSources);
     /* Second pass, we go down the hierarchy */
-    for (final var sub : mySubCircuits) {
-      final var subFact = (SubcircuitFactory) sub.getComponent().getFactory();
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent sub : mySubCircuits) {
+      final com.cburch.logisim.circuit.SubcircuitFactory subFact = (SubcircuitFactory) sub.getComponent().getFactory();
       subFact.getSubcircuit().getNetList().cleanClockTree(ClockSources);
     }
   }
 
   public void clear() {
-    for (final var subcirc : mySubCircuits) {
-      final var subFact = (SubcircuitFactory) subcirc.getComponent().getFactory();
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent subcirc : mySubCircuits) {
+      final com.cburch.logisim.circuit.SubcircuitFactory subFact = (SubcircuitFactory) subcirc.getComponent().getFactory();
       subFact.getSubcircuit().getNetList().clear();
     }
     drcStatus = DRC_REQUIRED;
@@ -168,22 +168,22 @@ public class Netlist {
     localNrOfInportBubbles = 0;
     localNrOfOutportBubbles = 0;
     localNrOfInOutBubbles = 0;
-    for (final var comp : mySubCircuits) {
-      final var subFactory = (SubcircuitFactory) comp.getComponent().getFactory();
-      final var names = new ArrayList<>(name);
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : mySubCircuits) {
+      final com.cburch.logisim.circuit.SubcircuitFactory subFactory = (SubcircuitFactory) comp.getComponent().getFactory();
+      final java.util.ArrayList<java.lang.String> names = new ArrayList<>(name);
       names.add(
           CorrectLabel.getCorrectLabel(
               comp.getComponent().getAttributeSet().getValue(StdAttr.LABEL)));
-      final var firstTime = !circuits.contains(subFactory.getName());
+      final boolean firstTime = !circuits.contains(subFactory.getName());
       if (firstTime) {
         circuits.add(subFactory.getName());
         subFactory.getSubcircuit()
             .getNetList()
             .constructHierarchyTree(circuits, names, gInputId, gOutputId, gInOutId);
       }
-      final var subInputBubbles = subFactory.getSubcircuit().getNetList().getNumberOfInputBubbles();
-      final var subInOutBubbles = subFactory.getSubcircuit().getNetList().numberOfInOutBubbles();
-      final var subOutputBubbles = subFactory.getSubcircuit().getNetList().numberOfOutputBubbles();
+      final int subInputBubbles = subFactory.getSubcircuit().getNetList().getNumberOfInputBubbles();
+      final int subInOutBubbles = subFactory.getSubcircuit().getNetList().numberOfInOutBubbles();
+      final int subOutputBubbles = subFactory.getSubcircuit().getNetList().numberOfOutputBubbles();
       comp.setLocalBubbleID(localNrOfInportBubbles, subInputBubbles, localNrOfOutportBubbles, subOutputBubbles, localNrOfInOutBubbles, subInOutBubbles);
       localNrOfInportBubbles += subInputBubbles;
       localNrOfInOutBubbles += subInOutBubbles;
@@ -202,15 +202,15 @@ public class Netlist {
      * Here we processed all sub-circuits of the local hierarchy level, now
      * we have to process the IO components
      */
-    for (final var comp : myComponents) {
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : myComponents) {
       if (comp.getMapInformationContainer() != null) {
-        final var myHierarchyName = new ArrayList<>(name);
+        final java.util.ArrayList<java.lang.String> myHierarchyName = new ArrayList<>(name);
         myHierarchyName.add(
             CorrectLabel.getCorrectLabel(
                 comp.getComponent().getAttributeSet().getValue(StdAttr.LABEL)));
-        final var subInputBubbles = comp.getMapInformationContainer().getNrOfInPorts();
-        final var subInOutBubbles = comp.getMapInformationContainer().getNrOfInOutPorts();
-        final var subOutputBubbles = comp.getMapInformationContainer().getNrOfOutPorts();
+        final int subInputBubbles = comp.getMapInformationContainer().getNrOfInPorts();
+        final int subInOutBubbles = comp.getMapInformationContainer().getNrOfInOutPorts();
+        final int subOutputBubbles = comp.getMapInformationContainer().getNrOfOutPorts();
         comp.setLocalBubbleID(localNrOfInportBubbles, subInputBubbles, localNrOfOutportBubbles, subOutputBubbles, localNrOfInOutBubbles, subInOutBubbles);
         localNrOfInportBubbles += subInputBubbles;
         localNrOfInOutBubbles += subInOutBubbles;
@@ -224,9 +224,9 @@ public class Netlist {
   }
 
   public int designRuleCheckResult(boolean isTopLevel, ArrayList<String> sheetNames) {
-    final var compNames = new ArrayList<String>();
-    final var labels = new HashMap<String, Component>();
-    final var drc = new ArrayList<SimpleDrcContainer>();
+    final java.util.ArrayList<java.lang.String> compNames = new ArrayList<String>();
+    final java.util.HashMap<java.lang.String,com.cburch.logisim.comp.Component> labels = new HashMap<String, Component>();
+    final java.util.ArrayList<com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer> drc = new ArrayList<SimpleDrcContainer>();
 
     // if we are the toplevel component we clear the complete netlist
     if (isTopLevel) clear();
@@ -254,10 +254,10 @@ public class Netlist {
       sheetNames.add(myCircuit.getName());
     }
     // we have to go down the tree to build first all subcircuits
-    final var handledCircuits = new ArrayList<Circuit>();
-    for (final var comp : myCircuit.getNonWires()) {
+    final java.util.ArrayList<com.cburch.logisim.circuit.Circuit> handledCircuits = new ArrayList<Circuit>();
+    for (final com.cburch.logisim.comp.Component comp : myCircuit.getNonWires()) {
       if (comp.getFactory() instanceof SubcircuitFactory factory) {
-        final var subCircuit = factory.getSubcircuit();
+        final com.cburch.logisim.circuit.Circuit subCircuit = factory.getSubcircuit();
         if (handledCircuits.contains(subCircuit)) continue;
         handledCircuits.add(subCircuit);
         if (subCircuit.getNetList().designRuleCheckResult(false, sheetNames) != DRC_PASSED) {
@@ -268,8 +268,8 @@ public class Netlist {
     }
 
     // Preparing stage
-    for (final var comp : myCircuit.getNonWires()) {
-      final var compName = comp.getFactory().getHDLName(comp.getAttributeSet());
+    for (final com.cburch.logisim.comp.Component comp : myCircuit.getNonWires()) {
+      final java.lang.String compName = comp.getFactory().getHDLName(comp.getAttributeSet());
       if (!compNames.contains(compName)) compNames.add(compName);
     }
 
@@ -310,7 +310,7 @@ public class Netlist {
             SimpleDrcContainer.LEVEL_FATAL,
             SimpleDrcContainer.MARK_INSTANCE));
 
-    for (final var comp : myCircuit.getNonWires()) {
+    for (final com.cburch.logisim.comp.Component comp : myCircuit.getNonWires()) {
       // Here we check if the components are supported for the HDL generation
       if (!comp.getFactory().isHDLSupportedComponent(comp.getAttributeSet())) {
         drc.get(5).addMarkComponent(comp);
@@ -318,8 +318,8 @@ public class Netlist {
       }
       // we check that all components that require a non zero label (annotation) have a label set
       if (comp.getFactory().requiresNonZeroLabel()) {
-        final var label = CorrectLabel.getCorrectLabel(comp.getAttributeSet().getValue(StdAttr.LABEL)).toUpperCase();
-        final var componentName = comp.getFactory().getHDLName(comp.getAttributeSet());
+        final java.lang.String label = CorrectLabel.getCorrectLabel(comp.getAttributeSet().getValue(StdAttr.LABEL)).toUpperCase();
+        final java.lang.String componentName = comp.getFactory().getHDLName(comp.getAttributeSet());
         if (label.isEmpty()) {
           drc.get(0).addMarkComponent(comp);
           drcStatus |= ANNOTATE_REQUIRED;
@@ -363,7 +363,7 @@ public class Netlist {
         drcStatus |= DRC_ERROR;
       }
     }
-    for (final var simpleDRCContainer : drc) {
+    for (final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer simpleDRCContainer : drc) {
       if (simpleDRCContainer.isDrcInfoPresent()) Reporter.report.addError(simpleDRCContainer);
     }
     drc.clear();
@@ -394,13 +394,13 @@ public class Netlist {
     /* Check for connections without a source */
     netlistHasSinksWithoutSource();
     /* Check for unconnected input pins on components and generate warnings */
-    for (final var comp : myComponents) {
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : myComponents) {
       boolean openInputs = false;
       for (int j = 0; j < comp.nrOfEnds(); j++) {
         if (comp.isEndInput(j) && !comp.isEndConnected(j)) openInputs = true;
       }
       if (openInputs && !AppPreferences.SupressOpenPinWarnings.get()) {
-        final var warn =
+        final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
             new SimpleDrcContainer(
                     myCircuit,
                     S.get("NetList_UnconnectedInputs"),
@@ -411,13 +411,13 @@ public class Netlist {
       }
     }
     /* Check for unconnected input pins on subcircuits and generate warnings */
-    for (final var comp : mySubCircuits) {
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : mySubCircuits) {
       boolean openInputs = false;
       for (int j = 0; j < comp.nrOfEnds(); j++) {
         if (comp.isEndInput(j) && !comp.isEndConnected(j)) openInputs = true;
       }
       if (openInputs && !AppPreferences.SupressOpenPinWarnings.get()) {
-        final var warn =
+        final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
             new SimpleDrcContainer(
                     myCircuit,
                     S.get("NetList_UnconnectedInputs"),
@@ -428,13 +428,13 @@ public class Netlist {
       }
     }
     /* Check for unconnected input pins in my circuit and generate warnings */
-    for (final var comp : myInputPorts) {
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : myInputPorts) {
       boolean openInputs = false;
       for (int j = 0; j < comp.nrOfEnds(); j++) {
         if (!comp.isEndConnected(j)) openInputs = true;
       }
       if (openInputs && !AppPreferences.SupressOpenPinWarnings.get()) {
-        final var warn =
+        final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
             new SimpleDrcContainer(
                     myCircuit,
                     S.get("NetList_UnconnectedInput"),
@@ -445,13 +445,13 @@ public class Netlist {
       }
     }
     /* Check for unconnected output pins in my circuit and generate warnings */
-    for (final var comp : myOutputPorts) {
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : myOutputPorts) {
       boolean openOutputs = false;
       for (int j = 0; j < comp.nrOfEnds(); j++) {
         if (!comp.isEndConnected(j)) openOutputs = true;
       }
       if (openOutputs && !AppPreferences.SupressOpenPinWarnings.get()) {
-        final var warn =
+        final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
             new SimpleDrcContainer(
                     myCircuit,
                     S.get("NetList_UnconnectedOutput"),
@@ -495,19 +495,19 @@ public class Netlist {
 
   private boolean detectClockTree() {
     // First pass, we remove all information of previously detected clock-trees.
-    final var clockSources = myClockInformation.getSourceContainer();
+    final com.cburch.logisim.fpga.designrulecheck.ClockSourceContainer clockSources = myClockInformation.getSourceContainer();
     cleanClockTree(clockSources);
     // Second pass, we build the clock tree
-    final var hierarchyNetlists = new ArrayList<Netlist>();
+    final java.util.ArrayList<com.cburch.logisim.fpga.designrulecheck.Netlist> hierarchyNetlists = new ArrayList<Netlist>();
     hierarchyNetlists.add(this);
     return markClockSourceComponents(new ArrayList<>(), hierarchyNetlists, clockSources);
   }
 
   /* Here all private handles are defined */
   private void enumerateGlobalBubbleTree(ArrayList<String> hierarchyname, int startInputID, int startOutputID, int startInOutID) {
-    for (final var comp : mySubCircuits) {
-      final var sub = (SubcircuitFactory) comp.getComponent().getFactory();
-      final var myHierarchyName = new ArrayList<>(hierarchyname);
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : mySubCircuits) {
+      final com.cburch.logisim.circuit.SubcircuitFactory sub = (SubcircuitFactory) comp.getComponent().getFactory();
+      final java.util.ArrayList<java.lang.String> myHierarchyName = new ArrayList<>(hierarchyname);
       myHierarchyName.add(
           CorrectLabel.getCorrectLabel(
               comp.getComponent().getAttributeSet().getValue(StdAttr.LABEL)));
@@ -519,9 +519,9 @@ public class Netlist {
               startOutputID + comp.getLocalBubbleOutputStartId(),
               startInOutID + comp.getLocalBubbleInOutStartId());
     }
-    for (final var comp : myComponents) {
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : myComponents) {
       if (comp.getMapInformationContainer() != null) {
-        final var myHierarchyName = new ArrayList<>(hierarchyname);
+        final java.util.ArrayList<java.lang.String> myHierarchyName = new ArrayList<>(hierarchyname);
         myHierarchyName.add(
             CorrectLabel.getCorrectLabel(
                 comp.getComponent().getAttributeSet().getValue(StdAttr.LABEL)));
@@ -541,17 +541,17 @@ public class Netlist {
   }
 
   private Net findConnectedNet(Location loc) {
-    for (final var current : myNets) {
+    for (final com.cburch.logisim.fpga.designrulecheck.Net current : myNets) {
       if (current.contains(loc)) return current;
     }
     return null;
   }
 
   private boolean generateNetlist() {
-    final var drc = new ArrayList<SimpleDrcContainer>();
+    final java.util.ArrayList<com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer> drc = new ArrayList<SimpleDrcContainer>();
     boolean errors = false;
     circuitName = myCircuit.getName();
-    final var progress = Reporter.report.getProgressBar();
+    final javax.swing.JProgressBar progress = Reporter.report.getProgressBar();
     int curMax = 0;
     int curVal = 0;
     java.lang.String curStr = "";
@@ -568,17 +568,17 @@ public class Netlist {
     // FIRST PASS: In this pass we take all wire segments and see if they
     // are connected to other segments. If they are connected we build a net.
     while (wires.size() != 0) {
-      final var newNet = new Net();
+      final com.cburch.logisim.fpga.designrulecheck.Net newNet = new Net();
       getNet(null, newNet);
       if (!newNet.isEmpty()) myNets.add(newNet);
     }
     // Here we start to detect direct input-output component connections, read we detect "hidden"
     // nets
-    final var components = myCircuit.getNonWires();
+    final java.util.Set<com.cburch.logisim.comp.Component> components = myCircuit.getNonWires();
     /* we Start with the creation of an outputs list */
-    final var outputsList = new HashSet<Location>();
-    final var inputsList = new HashSet<Location>();
-    final var tunnelList = new HashSet<Component>();
+    final java.util.HashSet<com.cburch.logisim.data.Location> outputsList = new HashSet<Location>();
+    final java.util.HashSet<com.cburch.logisim.data.Location> inputsList = new HashSet<Location>();
+    final java.util.HashSet<com.cburch.logisim.comp.Component> tunnelList = new HashSet<Component>();
     mySplitters.clear();
     drc.add(
         new SimpleDrcContainer(
@@ -593,7 +593,7 @@ public class Netlist {
             SimpleDrcContainer.LEVEL_FATAL,
             SimpleDrcContainer.MARK_WIRE));
 
-    for (final var comp : components) {
+    for (final com.cburch.logisim.comp.Component comp : components) {
       // We do not process the splitter and tunnel, they are processed later on
       boolean ignore = false;
 
@@ -615,8 +615,8 @@ public class Netlist {
         ignore = true;
       }
 
-      final var ends = comp.getEnds();
-      for (final var end : ends) {
+      final java.util.List<com.cburch.logisim.comp.EndData> ends = comp.getEnds();
+      for (final com.cburch.logisim.comp.EndData end : ends) {
         if (!ignore) {
           if (end.isInput() && end.isOutput()) {
             /* The IO Port can be either output or input */
@@ -630,14 +630,14 @@ public class Netlist {
           }
         }
         /* Here we are going to mark the bitwidths on the nets */
-        final var width = end.getWidth().getWidth();
-        final var loc = end.getLocation();
-        for (final var thisNet : myNets) {
+        final int width = end.getWidth().getWidth();
+        final com.cburch.logisim.data.Location loc = end.getLocation();
+        for (final com.cburch.logisim.fpga.designrulecheck.Net thisNet : myNets) {
           if (thisNet.contains(loc) && !thisNet.setWidth(width)) drc.get(1).addMarkComponents(thisNet.getWires());
         }
       }
     }
-    for (final var simpleDRCContainer : drc) {
+    for (final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer simpleDRCContainer : drc) {
       if (simpleDRCContainer.isDrcInfoPresent()) {
         errors = true;
         Reporter.report.addError(simpleDRCContainer);
@@ -656,18 +656,18 @@ public class Netlist {
             S.get("NetAdd_ComponentWidthMismatch"),
             SimpleDrcContainer.LEVEL_FATAL,
             SimpleDrcContainer.MARK_INSTANCE));
-    final var points = new HashMap<Location, Integer>();
-    for (final var comp : components) {
-      for (final var end : comp.getEnds()) {
-        final var loc = end.getLocation();
+    final java.util.HashMap<com.cburch.logisim.data.Location,java.lang.Integer> points = new HashMap<Location, Integer>();
+    for (final com.cburch.logisim.comp.Component comp : components) {
+      for (final com.cburch.logisim.comp.EndData end : comp.getEnds()) {
+        final com.cburch.logisim.data.Location loc = end.getLocation();
         if (points.containsKey(loc)) {
           /* Found a connection already used */
           boolean newNet = true;
-          for (final var net : myNets) {
+          for (final com.cburch.logisim.fpga.designrulecheck.Net net : myNets) {
             if (net.contains(loc)) newNet = false;
           }
           if (newNet) {
-            final var bitWidth = points.get(loc);
+            final java.lang.Integer bitWidth = points.get(loc);
             if (bitWidth == end.getWidth().getWidth()) {
               myNets.add(new Net(loc, bitWidth));
             } else {
@@ -693,10 +693,10 @@ public class Netlist {
      * tunneled nets
      */
     boolean areTunnelsPresent = false;
-    for (final var comp : tunnelList) {
-      final var ends = comp.getEnds();
-      for (final var end : ends) {
-        for (final var thisNet : myNets) {
+    for (final com.cburch.logisim.comp.Component comp : tunnelList) {
+      final java.util.List<com.cburch.logisim.comp.EndData> ends = comp.getEnds();
+      for (final com.cburch.logisim.comp.EndData end : ends) {
+        for (final com.cburch.logisim.fpga.designrulecheck.Net thisNet : myNets) {
           if (thisNet.contains(end.getLocation())) {
             thisNet.addTunnel(comp.getAttributeSet().getValue(StdAttr.LABEL));
             areTunnelsPresent = true;
@@ -707,15 +707,15 @@ public class Netlist {
     drc.clear();
     drc.add(new SimpleDrcContainer(myCircuit, S.get("NetMerge_BitWidthError"), SimpleDrcContainer.LEVEL_FATAL, SimpleDrcContainer.MARK_WIRE));
     if (areTunnelsPresent) {
-      final var netIterator = myNets.listIterator();
+      final java.util.ListIterator<com.cburch.logisim.fpga.designrulecheck.Net> netIterator = myNets.listIterator();
       while (netIterator.hasNext()) {
-        final var thisNet = netIterator.next();
+        final com.cburch.logisim.fpga.designrulecheck.Net thisNet = netIterator.next();
         if (thisNet.hasTunnel() && (myNets.indexOf(thisNet) < (myNets.size() - 1))) {
           boolean merged = false;
-          final var searchIterator = myNets.listIterator(myNets.indexOf(thisNet) + 1);
+          final java.util.ListIterator<com.cburch.logisim.fpga.designrulecheck.Net> searchIterator = myNets.listIterator(myNets.indexOf(thisNet) + 1);
           while (searchIterator.hasNext() && !merged) {
-            final var searchNet = searchIterator.next();
-            for (final var name : thisNet.getTunnelNames()) {
+            final com.cburch.logisim.fpga.designrulecheck.Net searchNet = searchIterator.next();
+            for (final java.lang.String name : thisNet.getTunnelNames()) {
               if (searchNet.containsTunnel(name) && !merged) {
                 merged = true;
                 if (!searchNet.merge(thisNet)) {
@@ -746,12 +746,12 @@ public class Netlist {
     /* First we are going to check on duplicated splitters and remove them */
     Iterator<Component> mySplitIter = mySplitters.listIterator();
     while (mySplitIter.hasNext()) {
-      final var thisSplitter = mySplitIter.next();
+      final com.cburch.logisim.comp.Component thisSplitter = mySplitIter.next();
       if (mySplitters.indexOf(thisSplitter) < (mySplitters.size() - 1)) {
         boolean dupeFound = false;
-        final var searchIter = mySplitters.listIterator(mySplitters.indexOf(thisSplitter) + 1);
+        final java.util.ListIterator<com.cburch.logisim.comp.Component> searchIter = mySplitters.listIterator(mySplitters.indexOf(thisSplitter) + 1);
         while (searchIter.hasNext() && !dupeFound) {
-          final var SearchSplitter = searchIter.next();
+          final com.cburch.logisim.comp.Component SearchSplitter = searchIter.next();
           if (SearchSplitter.getLocation().equals(thisSplitter.getLocation())) {
             dupeFound = true;
             for (int i = 0; i < SearchSplitter.getEnds().size(); i++) {
@@ -762,7 +762,7 @@ public class Netlist {
           }
         }
         if (dupeFound) {
-          final var warn =
+          final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
               new SimpleDrcContainer(
                       myCircuit,
                       S.get("NetList_duplicatedSplitter"),
@@ -786,7 +786,7 @@ public class Netlist {
                 SimpleDrcContainer.LEVEL_NORMAL,
                 SimpleDrcContainer.MARK_WIRE));
     while (netIterator.hasNext()) {
-      final var wire = netIterator.next();
+      final com.cburch.logisim.fpga.designrulecheck.Net wire = netIterator.next();
       if (wire.getBitWidth() == 0) {
         drc.get(0).addMarkComponents(wire.getWires());
         netIterator.remove();
@@ -807,9 +807,9 @@ public class Netlist {
                 SimpleDrcContainer.MARK_WIRE));
     errors = false;
     while (mySplitIter.hasNext()) {
-      final var mySplitter = mySplitIter.next();
+      final com.cburch.logisim.comp.Component mySplitter = mySplitIter.next();
       int busWidth = mySplitter.getEnd(0).getWidth().getWidth();
-      final var myEnds = mySplitter.getEnds();
+      final java.util.List<com.cburch.logisim.comp.EndData> myEnds = mySplitter.getEnds();
       int maxFanoutWidth = 0;
       int index = -1;
       for (int i = 1; i < myEnds.size(); i++) {
@@ -823,11 +823,11 @@ public class Netlist {
       if (busWidth == maxFanoutWidth) {
         Net busnet = null;
         Net connectedNet = null;
-        final var busLoc = mySplitter.getEnd(0).getLocation();
-        final var connectedLoc = mySplitter.getEnd(index).getLocation();
+        final com.cburch.logisim.data.Location busLoc = mySplitter.getEnd(0).getLocation();
+        final com.cburch.logisim.data.Location connectedLoc = mySplitter.getEnd(index).getLocation();
         boolean issueWarning = false;
         /* here we search for the nets */
-        for (final var currentNet : myNets) {
+        for (final com.cburch.logisim.fpga.designrulecheck.Net currentNet : myNets) {
           if (currentNet.contains(busLoc)) {
             if (busnet != null) {
               Reporter.report.addFatalErrorFmt(
@@ -870,7 +870,7 @@ public class Netlist {
           issueWarning = true;
         }
         if (issueWarning) {
-          final var warn =
+          final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
               new SimpleDrcContainer(
                       myCircuit,
                       S.get("NetList_NoSplitterConnection"),
@@ -893,10 +893,10 @@ public class Netlist {
     //
     // In this round we only process the evident splitters and remove them
     // from the list.
-    for (final var comp : mySplitters) {
+    for (final com.cburch.logisim.comp.Component comp : mySplitters) {
       // Currently by definition end(0) is the combined end of the splitter
-      final var ends = comp.getEnds();
-      final var combinedEnd = ends.get(0);
+      final java.util.List<com.cburch.logisim.comp.EndData> ends = comp.getEnds();
+      final com.cburch.logisim.comp.EndData combinedEnd = ends.get(0);
       int rootNet = -1;
       /* We search for the root net in the list of nets */
       for (int i = 0; i < myNets.size() && rootNet < 0; i++) {
@@ -915,9 +915,9 @@ public class Netlist {
       }
       // Now we process all the other ends to find the child busses/nets
       // of this root bus
-      final var connections = new ArrayList<Integer>();
+      final java.util.ArrayList<java.lang.Integer> connections = new ArrayList<Integer>();
       for (int i = 1; i < ends.size(); i++) {
-        final var thisEnd = ends.get(i);
+        final com.cburch.logisim.comp.EndData thisEnd = ends.get(i);
         /* Find the connected net */
         int connectedNet = -1;
         for (int j = 0; j < myNets.size() && connectedNet < 1; j++) {
@@ -929,7 +929,7 @@ public class Netlist {
       }
       boolean unconnectedEnds = false;
       boolean connectedUnknownEnds = false;
-      final var sattrs = (SplitterAttributes) comp.getAttributeSet();
+      final com.cburch.logisim.circuit.SplitterAttributes sattrs = (SplitterAttributes) comp.getAttributeSet();
       for (int i = 1; i < ends.size(); i++) {
         java.lang.Integer connectedNet = connections.get(i - 1);
         if (connectedNet >= 0) {
@@ -940,7 +940,7 @@ public class Netlist {
             myNets.get(connectedNet).forceRootNet();
           }
           /* Here we have to process the inherited bits of the parent */
-          final var busBitConnection = ((Splitter) comp).getEndpoints();
+          final byte[] busBitConnection = ((Splitter) comp).getEndpoints();
           for (byte b = 0; b < busBitConnection.length; b++) {
             if (busBitConnection[b] == i) {
               myNets.get(connectedNet).addParentBit(b);
@@ -951,7 +951,7 @@ public class Netlist {
         }
       }
       if (unconnectedEnds) {
-        final var warn =
+        final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
             new SimpleDrcContainer(
                     myCircuit,
                     S.get("NetList_NoSplitterEndConnections"),
@@ -961,7 +961,7 @@ public class Netlist {
         Reporter.report.addWarning(warn);
       }
       if (connectedUnknownEnds) {
-        final var warn =
+        final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
             new SimpleDrcContainer(
                     myCircuit,
                     S.get("NetList_NoEndSplitterConnections"),
@@ -981,7 +981,7 @@ public class Netlist {
      * more than 1 source we have a short circuit! We keep track of the
      * sources and sinks at the root nets/buses
      */
-    for (final var thisNet : myNets) {
+    for (final com.cburch.logisim.fpga.designrulecheck.Net thisNet : myNets) {
       if (thisNet.isRootNet()) {
         thisNet.initializeSourceSinks();
       }
@@ -993,7 +993,7 @@ public class Netlist {
      * already processed those
      */
 
-    for (final var comp : components) {
+    for (final com.cburch.logisim.comp.Component comp : components) {
       if (comp.getFactory() instanceof SubcircuitFactory) {
         if (!processSubcircuit(comp)) {
           this.clear();
@@ -1019,16 +1019,16 @@ public class Netlist {
      * complex splitter with a forcerootnet annotation; we are going to
      * cycle trough all these nets
      */
-    for (final var thisNet : myNets) {
+    for (final com.cburch.logisim.fpga.designrulecheck.Net thisNet : myNets) {
       if (thisNet.isForcedRootNet()) {
         /* Cycle through all the bits of this net */
         for (int bit = 0; bit < thisNet.getBitWidth(); bit++) {
-          for (final var comp : mySplitters) {
+          for (final com.cburch.logisim.comp.Component comp : mySplitters) {
             // Currently by definition end(0) is the combined end of the splitter
-            final var ends = comp.getEnds();
-            final var combinedEnd = ends.get(0);
+            final java.util.List<com.cburch.logisim.comp.EndData> ends = comp.getEnds();
+            final com.cburch.logisim.comp.EndData combinedEnd = ends.get(0);
             int connectedBus = -1;
-            final var sattrs = (SplitterAttributes) comp.getAttributeSet();
+            final com.cburch.logisim.circuit.SplitterAttributes sattrs = (SplitterAttributes) comp.getAttributeSet();
             /* We search for the root net in the list of nets */
             for (int i = 0; i < myNets.size() && connectedBus < 0; i++) {
               if (myNets.get(i).contains(combinedEnd.getLocation())) connectedBus = i;
@@ -1050,8 +1050,8 @@ public class Netlist {
               if (thisNet.contains(ends.get(endId).getLocation())) {
                 // first we have to get the bitindices of the rootbus
                 // Here we have to process the inherited bits of the parent
-                final var busBitConnection = ((Splitter) comp).getEndpoints();
-                final var indexBits = new ArrayList<Byte>();
+                final byte[] busBitConnection = ((Splitter) comp).getEndpoints();
+                final java.util.ArrayList<java.lang.Byte> indexBits = new ArrayList<Byte>();
                 for (byte b = 0; b < busBitConnection.length; b++) {
                   if (busBitConnection[b] == endId) indexBits.add(b);
                 }
@@ -1062,7 +1062,7 @@ public class Netlist {
                   connectedBusIndex = rootBus.getBit(connectedBusIndex);
                   rootBus = rootBus.getParent();
                 }
-                final var solderPoint = new ConnectionPoint(comp);
+                final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint solderPoint = new ConnectionPoint(comp);
                 solderPoint.setParentNet(rootBus, connectedBusIndex);
                 boolean isSink = true;
                 if (!thisNet.hasBitSource(bit)) {
@@ -1123,8 +1123,8 @@ public class Netlist {
   }
 
   public int getEndIndex(netlistComponent comp, String pinLabel, boolean isOutputPort) {
-    final var label = CorrectLabel.getCorrectLabel(pinLabel);
-    final var subFactory = (SubcircuitFactory) comp.getComponent().getFactory();
+    final java.lang.String label = CorrectLabel.getCorrectLabel(pinLabel);
+    final com.cburch.logisim.circuit.SubcircuitFactory subFactory = (SubcircuitFactory) comp.getComponent().getFactory();
     for (int end = 0; end < comp.nrOfEnds(); end++) {
       if ((comp.getEnd(end).isOutputEnd() == isOutputPort)
           && (comp.getEnd(end).get((byte) 0).getChildsPortIndex() == subFactory.getSubcircuit().getNetList().getPortInfo(label))) {
@@ -1135,9 +1135,9 @@ public class Netlist {
   }
 
   private List<ConnectionPoint> getHiddenSinks(Net thisNet, Byte bitIndex, List<Component> splitters, Set<String> handledNets, Boolean isSourceNet) {
-    final var result = new ArrayList<ConnectionPoint>();
+    final java.util.ArrayList<com.cburch.logisim.fpga.designrulecheck.ConnectionPoint> result = new ArrayList<ConnectionPoint>();
     // to prevent deadlock situations we check if we already looked at this net
-    final var netId = myNets.indexOf(thisNet) + "-" + bitIndex;
+    final java.lang.String netId = myNets.indexOf(thisNet) + "-" + bitIndex;
     if (handledNets.contains(netId)) return result;
     handledNets.add(netId);
 
@@ -1145,18 +1145,18 @@ public class Netlist {
       result.addAll(thisNet.getBitSinks(bitIndex));
     }
     // Check if we have a connection to another splitter
-    for (final var currentSplitter : splitters) {
-      final var ends = currentSplitter.getEnds();
-      final var splitterAttrs = (SplitterAttributes) currentSplitter.getAttributeSet();
+    for (final com.cburch.logisim.comp.Component currentSplitter : splitters) {
+      final java.util.List<com.cburch.logisim.comp.EndData> ends = currentSplitter.getEnds();
+      final com.cburch.logisim.circuit.SplitterAttributes splitterAttrs = (SplitterAttributes) currentSplitter.getAttributeSet();
       for (byte end = 0; end < ends.size(); end++) {
         /* prevent the search for ends that are not connected to the root bus */
         if (end > 0 && splitterAttrs.isNoConnect(end)) continue;
         if (thisNet.contains(ends.get(end).getLocation())) {
           // Here we have to process the inherited bits of the parent.
-          final var busBitConnection = ((Splitter) currentSplitter).getEndpoints();
+          final byte[] busBitConnection = ((Splitter) currentSplitter).getEndpoints();
           if (end == 0) {
             // This is a main net, find the connected end.
-            final var splitterEnd = busBitConnection[bitIndex];
+            final byte splitterEnd = busBitConnection[bitIndex];
             /* Find the corresponding Net index */
             Byte netIndex = 0;
             for (int index = 0; index < bitIndex; index++) {
@@ -1164,18 +1164,18 @@ public class Netlist {
             }
             // Find the connected Net
             Net slaveNet = null;
-            for (final var thisnet : myNets) {
+            for (final com.cburch.logisim.fpga.designrulecheck.Net thisnet : myNets) {
               if (thisnet.contains(ends.get(splitterEnd).getLocation())) slaveNet = thisnet;
             }
             if (slaveNet != null)
               result.addAll(getHiddenSinks(slaveNet, netIndex, splitters, handledNets, false));
           } else {
-            final var rootIndices = new ArrayList<Byte>();
+            final java.util.ArrayList<java.lang.Byte> rootIndices = new ArrayList<Byte>();
             for (byte b = 0; b < busBitConnection.length; b++) {
               if (busBitConnection[b] == end) rootIndices.add(b);
             }
             Net rootNet = null;
-            for (final var thisnet : myNets) {
+            for (final com.cburch.logisim.fpga.designrulecheck.Net thisnet : myNets) {
               if (thisnet.contains(currentSplitter.getEnd(0).getLocation())) rootNet = thisnet;
             }
             if (rootNet != null)
@@ -1204,11 +1204,11 @@ public class Netlist {
   }
 
   public Map<ArrayList<String>, netlistComponent> getMappableResources(List<String> hierarchy, boolean toplevel) {
-    final var components = new HashMap<ArrayList<String>, netlistComponent>();
+    final java.util.HashMap<java.util.ArrayList<java.lang.String>,com.cburch.logisim.fpga.designrulecheck.netlistComponent> components = new HashMap<ArrayList<String>, netlistComponent>();
     /* First we search through my sub-circuits and add those IO components */
-    for (final var comp : mySubCircuits) {
-      final var sub = (SubcircuitFactory) comp.getComponent().getFactory();
-      final var MyHierarchyName = new ArrayList<>(hierarchy);
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : mySubCircuits) {
+      final com.cburch.logisim.circuit.SubcircuitFactory sub = (SubcircuitFactory) comp.getComponent().getFactory();
+      final java.util.ArrayList<java.lang.String> MyHierarchyName = new ArrayList<>(hierarchy);
       MyHierarchyName.add(
           CorrectLabel.getCorrectLabel(
               comp.getComponent().getAttributeSet().getValue(StdAttr.LABEL)));
@@ -1216,9 +1216,9 @@ public class Netlist {
           sub.getSubcircuit().getNetList().getMappableResources(MyHierarchyName, false));
     }
     /* Now we search for all local IO components */
-    for (final var comp : myComponents) {
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : myComponents) {
       if (comp.getMapInformationContainer() != null) {
-        final var myHierarchyName = new ArrayList<>(hierarchy);
+        final java.util.ArrayList<java.lang.String> myHierarchyName = new ArrayList<>(hierarchy);
         myHierarchyName.add(
             CorrectLabel.getCorrectLabel(
                 comp.getComponent().getAttributeSet().getValue(StdAttr.LABEL)));
@@ -1227,22 +1227,22 @@ public class Netlist {
     }
     /* On the toplevel we have to add the pins */
     if (toplevel) {
-      for (final var comp : myInputPorts) {
-        final var myHierarchyName = new ArrayList<>(hierarchy);
+      for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : myInputPorts) {
+        final java.util.ArrayList<java.lang.String> myHierarchyName = new ArrayList<>(hierarchy);
         myHierarchyName.add(
             CorrectLabel.getCorrectLabel(
                 comp.getComponent().getAttributeSet().getValue(StdAttr.LABEL)));
         components.put(myHierarchyName, comp);
       }
-      for (final var comp : myInOutPorts) {
-        final var myHierarchyName = new ArrayList<>(hierarchy);
+      for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : myInOutPorts) {
+        final java.util.ArrayList<java.lang.String> myHierarchyName = new ArrayList<>(hierarchy);
         myHierarchyName.add(
             CorrectLabel.getCorrectLabel(
                 comp.getComponent().getAttributeSet().getValue(StdAttr.LABEL)));
         components.put(myHierarchyName, comp);
       }
-      for (final var comp : myOutputPorts) {
-        final var myHierarchyName = new ArrayList<>(hierarchy);
+      for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : myOutputPorts) {
+        final java.util.ArrayList<java.lang.String> myHierarchyName = new ArrayList<>(hierarchy);
         myHierarchyName.add(
             CorrectLabel.getCorrectLabel(
                 comp.getComponent().getAttributeSet().getValue(StdAttr.LABEL)));
@@ -1253,11 +1253,11 @@ public class Netlist {
   }
 
   private void getNet(Wire wire, Net thisNet) {
-    final var myIterator = wires.iterator();
-    final var matchedWires = new ArrayList<Wire>();
+    final java.util.Iterator<com.cburch.logisim.circuit.Wire> myIterator = wires.iterator();
+    final java.util.ArrayList<com.cburch.logisim.circuit.Wire> matchedWires = new ArrayList<Wire>();
     com.cburch.logisim.circuit.Wire compWire = wire;
     while (myIterator.hasNext()) {
-      final var thisWire = myIterator.next();
+      final com.cburch.logisim.circuit.Wire thisWire = myIterator.next();
       if (compWire == null) {
         compWire = thisWire;
         thisNet.add(thisWire);
@@ -1268,7 +1268,7 @@ public class Netlist {
         myIterator.remove();
       }
     }
-    for (final var matched : matchedWires) getNet(matched, thisNet);
+    for (final com.cburch.logisim.circuit.Wire matched : matchedWires) getNet(matched, thisNet);
     matchedWires.clear();
   }
 
@@ -1277,12 +1277,12 @@ public class Netlist {
   }
 
   public ConnectionPoint getNetlistConnectionForSubCircuit(String label, int PortIndex, byte bitindex) {
-    for (final var search : mySubCircuits) {
-      final var circuitLabel = CorrectLabel.getCorrectLabel(search.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent search : mySubCircuits) {
+      final java.lang.String circuitLabel = CorrectLabel.getCorrectLabel(search.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
       if (circuitLabel.equals(label)) {
         // Found the component, let's search the ends
         for (int i = 0; i < search.nrOfEnds(); i++) {
-          final var thisEnd = search.getEnd(i);
+          final com.cburch.logisim.fpga.designrulecheck.ConnectionEnd thisEnd = search.getEnd(i);
           if (thisEnd.isOutputEnd() && (bitindex < thisEnd.getNrOfBits())) {
             if (thisEnd.get(bitindex).getChildsPortIndex() == PortIndex)
               return thisEnd.get(bitindex);
@@ -1294,12 +1294,12 @@ public class Netlist {
   }
 
   public ConnectionPoint getNetlistConnectionForSubCircuitInput(String label, int portIndex, byte bitIndex) {
-    for (final var search : mySubCircuits) {
-      final var circuitLabel = CorrectLabel.getCorrectLabel(search.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent search : mySubCircuits) {
+      final java.lang.String circuitLabel = CorrectLabel.getCorrectLabel(search.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
       if (circuitLabel.equals(label)) {
         // Found the component, let's search the ends.
         for (int i = 0; i < search.nrOfEnds(); i++) {
-          final var thisEnd = search.getEnd(i);
+          final com.cburch.logisim.fpga.designrulecheck.ConnectionEnd thisEnd = search.getEnd(i);
           if (!thisEnd.isOutputEnd() && (bitIndex < thisEnd.getNrOfBits())) {
             if (thisEnd.get(bitIndex).getChildsPortIndex() == portIndex)
               return thisEnd.get(bitIndex);
@@ -1319,17 +1319,17 @@ public class Netlist {
   }
 
   public int getPortInfo(String label) {
-    final var source = CorrectLabel.getCorrectLabel(label);
-    for (final var inPort : myInputPorts) {
-      final var comp = CorrectLabel.getCorrectLabel(inPort.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
+    final java.lang.String source = CorrectLabel.getCorrectLabel(label);
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent inPort : myInputPorts) {
+      final java.lang.String comp = CorrectLabel.getCorrectLabel(inPort.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
       if (comp.equals(source)) return myInputPorts.indexOf(inPort);
     }
-    for (final var inOutPort : myInOutPorts) {
-      final var comp = CorrectLabel.getCorrectLabel(inOutPort.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent inOutPort : myInOutPorts) {
+      final java.lang.String comp = CorrectLabel.getCorrectLabel(inOutPort.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
       if (comp.equals(source)) return myInOutPorts.indexOf(inOutPort);
     }
-    for (final var outPort : myOutputPorts) {
-      final var comp = CorrectLabel.getCorrectLabel(outPort.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent outPort : myOutputPorts) {
+      final java.lang.String comp = CorrectLabel.getCorrectLabel(outPort.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
       if (comp.equals(source)) return myOutputPorts.indexOf(outPort);
     }
     return -1;
@@ -1357,8 +1357,8 @@ public class Netlist {
 
   public Set<Splitter> getSplitters() {
     /* This may be cause bugs due to dual splitter on same location situations */
-    final var splitters = new HashSet<Splitter>();
-    for (final var comp : myCircuit.getNonWires()) {
+    final java.util.HashSet<com.cburch.logisim.circuit.Splitter> splitters = new HashSet<Splitter>();
+    for (final com.cburch.logisim.comp.Component comp : myCircuit.getNonWires()) {
       if (comp.getFactory() instanceof SplitterFactory) splitters.add((Splitter) comp);
     }
     return splitters;
@@ -1380,12 +1380,12 @@ public class Netlist {
     // If the source net not is null add it to the set of visited nets to prevent back-search on
     // this net
     if (srcNet != null) {
-      final var netId = myNets.indexOf(srcNet) + "-" + srcBitIndex;
+      final java.lang.String netId = myNets.indexOf(srcNet) + "-" + srcBitIndex;
       if (handledNets.contains(netId)) return null;
       handledNets.add(netId);
     }
     // to prevent deadlock situations we check if we already looked at this net
-    final var netId = myNets.indexOf(thisNet) + "-" + bitIndex;
+    final java.lang.String netId = myNets.indexOf(thisNet) + "-" + bitIndex;
     if (handledNets.contains(netId)) return null;
     handledNets.add(netId);
     segments.addAll(thisNet.getWires());
@@ -1402,16 +1402,16 @@ public class Netlist {
       return new SourceInfo(sources.get(0), bitIndex);
     }
     /* Check if we have a connection to another splitter */
-    for (final var splitter : splitters) {
+    for (final com.cburch.logisim.comp.Component splitter : splitters) {
       if (splitter.equals(splitterToIgnore)) continue;
-      final var ends = splitter.getEnds();
+      final java.util.List<com.cburch.logisim.comp.EndData> ends = splitter.getEnds();
       for (int end = 0; end < ends.size(); end++) {
         if (thisNet.contains(ends.get(end).getLocation())) {
           /* Here we have to process the inherited bits of the parent */
-          final var busBitConnection = ((Splitter) splitter).getEndpoints();
+          final byte[] busBitConnection = ((Splitter) splitter).getEndpoints();
           if (end == 0) {
             /* this is a main net, find the connected end */
-            final var splitterEnd = busBitConnection[bitIndex];
+            final byte splitterEnd = busBitConnection[bitIndex];
             /* Find the corresponding Net index */
             Byte netIndex = 0;
             for (int index = 0; index < bitIndex; index++) {
@@ -1419,24 +1419,24 @@ public class Netlist {
             }
             /* Find the connected Net */
             Net slaveNet = null;
-            for (final var thisnet : myNets) {
+            for (final com.cburch.logisim.fpga.designrulecheck.Net thisnet : myNets) {
               if (thisnet.contains(ends.get(splitterEnd).getLocation())) slaveNet = thisnet;
             }
             if (slaveNet != null) {
-              final var ret = getHiddenSource(null, (byte) 0, slaveNet, netIndex, splitters, handledNets, segments, splitter);
+              final com.cburch.logisim.fpga.designrulecheck.Netlist.SourceInfo ret = getHiddenSource(null, (byte) 0, slaveNet, netIndex, splitters, handledNets, segments, splitter);
               if (ret != null) return ret;
             }
           } else {
-            final var rootIndices = new ArrayList<Byte>();
+            final java.util.ArrayList<java.lang.Byte> rootIndices = new ArrayList<Byte>();
             for (byte b = 0; b < busBitConnection.length; b++) {
               if (busBitConnection[b] == end) rootIndices.add(b);
             }
             Net rootNet = null;
-            for (final var thisnet : myNets) {
+            for (final com.cburch.logisim.fpga.designrulecheck.Net thisnet : myNets) {
               if (thisnet.contains(splitter.getEnd(0).getLocation())) rootNet = thisnet;
             }
             if (rootNet != null) {
-              final var ret = getHiddenSource(null, (byte) 0, rootNet, rootIndices.get(bitIndex), splitters, handledNets, segments, splitter);
+              final com.cburch.logisim.fpga.designrulecheck.Netlist.SourceInfo ret = getHiddenSource(null, (byte) 0, rootNet, rootIndices.get(bitIndex), splitters, handledNets, segments, splitter);
               if (ret != null) return ret;
             }
           }
@@ -1457,23 +1457,23 @@ public class Netlist {
     // If the fannout net not is null add it to the set of visited nets to prevent back-search on
     // this net
     if (fannoutNet != null) {
-      final var netId = myNets.indexOf(fannoutNet) + "-" + fannoutBitIndex;
+      final java.lang.String netId = myNets.indexOf(fannoutNet) + "-" + fannoutBitIndex;
       if (handledNets.contains(netId)) return false;
       handledNets.add(netId);
     }
     // to prevent deadlock situations we check if we already looked at this net
-    final var netId = myNets.indexOf(combinedNet) + "-" + combinedBitIndex;
+    final java.lang.String netId = myNets.indexOf(combinedNet) + "-" + combinedBitIndex;
     if (handledNets.contains(netId)) return false;
     handledNets.add(netId);
     if (combinedNet.hasBitSource(combinedBitIndex)) return true;
     /* Check if we have a connection to another splitter */
     for (com.cburch.logisim.comp.Component currentSplitter : splitterList) {
       if (currentSplitter.equals(ignoreSplitter)) continue;
-      final var ends = currentSplitter.getEnds();
+      final java.util.List<com.cburch.logisim.comp.EndData> ends = currentSplitter.getEnds();
       for (int end = 0; end < ends.size(); end++) {
         if (combinedNet.contains(ends.get(end).getLocation())) {
           /* Here we have to process the inherited bits of the parent */
-          final var busBitConnection = ((Splitter) currentSplitter).getEndpoints();
+          final byte[] busBitConnection = ((Splitter) currentSplitter).getEndpoints();
           if (end == 0) {
             // This is a main net, find the connected end.
             byte splitterEnd = busBitConnection[combinedBitIndex];
@@ -1484,18 +1484,18 @@ public class Netlist {
             }
             // Find the connected Net
             Net slaveNet = null;
-            for (final var thisnet : myNets) {
+            for (final com.cburch.logisim.fpga.designrulecheck.Net thisnet : myNets) {
               if (thisnet.contains(ends.get(splitterEnd).getLocation())) slaveNet = thisnet;
             }
             if (slaveNet != null && hasHiddenSource(null, (byte) 0, slaveNet, netIndex, splitterList, handledNets, currentSplitter))
               return true;
           } else {
-            final var rootIndices = new ArrayList<Byte>();
+            final java.util.ArrayList<java.lang.Byte> rootIndices = new ArrayList<Byte>();
             for (byte b = 0; b < busBitConnection.length; b++) {
               if (busBitConnection[b] == end) rootIndices.add(b);
             }
             Net rootNet = null;
-            for (final var thisnet : myNets) {
+            for (final com.cburch.logisim.fpga.designrulecheck.Net thisnet : myNets) {
               if (thisnet.contains(currentSplitter.getEnd(0).getLocation())) rootNet = thisnet;
             }
             if (rootNet != null
@@ -1514,10 +1514,10 @@ public class Netlist {
     boolean continuesBus = true;
     if ((endIndex < 0) || (endIndex >= comp.nrOfEnds())) return true;
 
-    final var connInfo = comp.getEnd(endIndex);
-    final var nrOfBits = connInfo.getNrOfBits();
+    final com.cburch.logisim.fpga.designrulecheck.ConnectionEnd connInfo = comp.getEnd(endIndex);
+    final int nrOfBits = connInfo.getNrOfBits();
     if (nrOfBits == 1) return true;
-    final var connectedNet = connInfo.get((byte) 0).getParentNet();
+    final com.cburch.logisim.fpga.designrulecheck.Net connectedNet = connInfo.get((byte) 0).getParentNet();
     java.lang.Byte connectedNetIndex = connInfo.get((byte) 0).getParentNetBitIndex();
     for (int i = 1; (i < nrOfBits) && continuesBus; i++) {
       if (connectedNet != connInfo.get((byte) i).getParentNet())
@@ -1541,13 +1541,13 @@ public class Netlist {
 
   public boolean markClockSourceComponents(List<String> hierarchyNames, List<Netlist> hierarchyNetlists, ClockSourceContainer clockSources) {
     //First pass: we go down the hierarchy till the leaves
-    for (final var sub : mySubCircuits) {
-      final var subFact = (SubcircuitFactory) sub.getComponent().getFactory();
-      final var newHierarchyNames = new ArrayList<>(hierarchyNames);
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent sub : mySubCircuits) {
+      final com.cburch.logisim.circuit.SubcircuitFactory subFact = (SubcircuitFactory) sub.getComponent().getFactory();
+      final java.util.ArrayList<java.lang.String> newHierarchyNames = new ArrayList<>(hierarchyNames);
       newHierarchyNames.add(
           CorrectLabel.getCorrectLabel(
               sub.getComponent().getAttributeSet().getValue(StdAttr.LABEL)));
-      final var newHierarchyNetlists = new ArrayList<>(hierarchyNetlists);
+      final java.util.ArrayList<com.cburch.logisim.fpga.designrulecheck.Netlist> newHierarchyNetlists = new ArrayList<>(hierarchyNetlists);
       newHierarchyNetlists.add(subFact.getSubcircuit().getNetList());
       if (!subFact.getSubcircuit()
           .getNetList()
@@ -1556,11 +1556,11 @@ public class Netlist {
       }
     }
     // We see if some components require the Global fast FPGA clock
-    for (final var comp : myCircuit.getNonWires()) {
+    for (final com.cburch.logisim.comp.Component comp : myCircuit.getNonWires()) {
       if (comp.getFactory().requiresGlobalClock()) clockSources.setRequiresFpgaGlobalClock();
     }
     /* Second pass: We mark all clock sources */
-    for (final var clockSource : myClockGenerators) {
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent clockSource : myClockGenerators) {
       if (clockSource.nrOfEnds() != 1) {
         Reporter.report.addFatalErrorFmt(
             "BUG: Found a clock source with more than 1 connection\n ==> %s:%d\n",
@@ -1568,7 +1568,7 @@ public class Netlist {
             Thread.currentThread().getStackTrace()[2].getLineNumber());
         return false;
       }
-      final var clockConnection = clockSource.getEnd(0);
+      final com.cburch.logisim.fpga.designrulecheck.ConnectionEnd clockConnection = clockSource.getEnd(0);
       if (clockConnection.getNrOfBits() != 1) {
         Reporter.report.addFatalErrorFmt(
             "BUG: Found a clock source with a bus as output\n ==> %s:%d\n",
@@ -1576,11 +1576,11 @@ public class Netlist {
             Thread.currentThread().getStackTrace()[2].getLineNumber());
         return false;
       }
-      final var solderPoint = clockConnection.get((byte) 0);
+      final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint solderPoint = clockConnection.get((byte) 0);
       /* Check if the clock source is connected */
       if (solderPoint.getParentNet() != null) {
         /* Third pass: add this clock to the list of ClockSources */
-        final var clockid = clockSources.getClockId(clockSource.getComponent());
+        final int clockid = clockSources.getClockId(clockSource.getComponent());
         /* Forth pass: Add this source as clock source to the tree */
         myClockInformation.addClockSource(hierarchyNames, clockid, solderPoint);
         /* Fifth pass: trace the clock net all the way */
@@ -1601,10 +1601,10 @@ public class Netlist {
 
   public boolean netlistHasShortCircuits() {
     boolean ret = false;
-    for (final var net : myNets) {
+    for (final com.cburch.logisim.fpga.designrulecheck.Net net : myNets) {
       if (net.isRootNet()) {
         if (net.hasShortCircuit()) {
-          final var error =
+          final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer error =
               new SimpleDrcContainer(
                   myCircuit,
                   S.get("NetList_ShortCircuit"),
@@ -1615,21 +1615,21 @@ public class Netlist {
           ret = true;
         } else if (net.getBitWidth() == 1 && net.getSourceNets(0).size() > 1) {
           // We have to check if the net is connected to multiple drivers
-          final var sourceNets = net.getSourceNets(0);
-          final var sourceConnections = new HashMap<Component, Integer>();
-          final var segments = new HashSet<>(net.getWires());
+          final java.util.List<com.cburch.logisim.fpga.designrulecheck.ConnectionPoint> sourceNets = net.getSourceNets(0);
+          final java.util.HashMap<com.cburch.logisim.comp.Component,java.lang.Integer> sourceConnections = new HashMap<Component, Integer>();
+          final java.util.HashSet<com.cburch.logisim.circuit.Wire> segments = new HashSet<>(net.getWires());
           boolean foundShortCrcuit = false;
-          final var error = new SimpleDrcContainer(myCircuit, S.get("NetList_ShortCircuit"), SimpleDrcContainer.LEVEL_FATAL, SimpleDrcContainer.MARK_WIRE | SimpleDrcContainer.MARK_INSTANCE);
+          final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer error = new SimpleDrcContainer(myCircuit, S.get("NetList_ShortCircuit"), SimpleDrcContainer.LEVEL_FATAL, SimpleDrcContainer.MARK_WIRE | SimpleDrcContainer.MARK_INSTANCE);
           for (ConnectionPoint sourceNet : sourceNets) {
-            final var connectedNet = sourceNet.getParentNet();
+            final com.cburch.logisim.fpga.designrulecheck.Net connectedNet = sourceNet.getParentNet();
             final byte bitIndex = sourceNet.getParentNetBitIndex();
             if (hasHiddenSource(net, (byte) 0, connectedNet, bitIndex, mySplitters, new HashSet<>(), null)) {
-              final var source = getHiddenSource(net, (byte) 0, connectedNet, bitIndex, mySplitters, new HashSet<>(), segments, null);
+              final com.cburch.logisim.fpga.designrulecheck.Netlist.SourceInfo source = getHiddenSource(net, (byte) 0, connectedNet, bitIndex, mySplitters, new HashSet<>(), segments, null);
               if (source == null) return true; // this should never happen
-              final var comp = source.getSource().getComp();
-              for (final var seg : segments) error.addMarkComponent(seg);
+              final com.cburch.logisim.comp.Component comp = source.getSource().getComp();
+              for (final com.cburch.logisim.circuit.Wire seg : segments) error.addMarkComponent(seg);
               error.addMarkComponent(comp);
-              final var index = source.getIndex();
+              final java.lang.Integer index = source.getIndex();
               foundShortCrcuit |= (sourceConnections.containsKey(comp) && sourceConnections.get(comp) != index) || (sourceConnections.keySet().size() > 0);
               sourceConnections.put(comp, index);
             }
@@ -1648,24 +1648,24 @@ public class Netlist {
 
   public boolean netlistHasSinksWithoutSource() {
     /* First pass: we make a set with all sinks */
-    final var mySinks = new HashSet<ConnectionPoint>();
-    for (final var thisNet : myNets) {
+    final java.util.HashSet<com.cburch.logisim.fpga.designrulecheck.ConnectionPoint> mySinks = new HashSet<ConnectionPoint>();
+    for (final com.cburch.logisim.fpga.designrulecheck.Net thisNet : myNets) {
       if (thisNet.isRootNet()) mySinks.addAll(thisNet.getSinks());
     }
     /* Second pass: we iterate along all the sources */
-    for (final var thisNet : myNets) {
+    for (final com.cburch.logisim.fpga.designrulecheck.Net thisNet : myNets) {
       if (thisNet.isRootNet()) {
         for (int i = 0; i < thisNet.getBitWidth(); i++) {
           if (thisNet.hasBitSource(i)) {
             boolean hasSink = false;
-            final var sinks = thisNet.getBitSinks(i);
+            final java.util.List<com.cburch.logisim.fpga.designrulecheck.ConnectionPoint> sinks = thisNet.getBitSinks(i);
             hasSink |= !sinks.isEmpty();
             sinks.forEach(mySinks::remove);
-            final var hiddenSinkNets = getHiddenSinks(thisNet, (byte) i, mySplitters, new HashSet<>(), true);
+            final java.util.List<com.cburch.logisim.fpga.designrulecheck.ConnectionPoint> hiddenSinkNets = getHiddenSinks(thisNet, (byte) i, mySplitters, new HashSet<>(), true);
             hasSink |= !hiddenSinkNets.isEmpty();
             hiddenSinkNets.forEach(mySinks::remove);
             if (!hasSink) {
-              final var warn =
+              final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
                   new SimpleDrcContainer(
                       myCircuit,
                       S.get("NetList_SourceWithoutSink"),
@@ -1679,8 +1679,8 @@ public class Netlist {
       }
     }
     if (mySinks.size() != 0) {
-      for (final var sink : mySinks) {
-        final var warn =
+      for (final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint sink : mySinks) {
+        final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
             new SimpleDrcContainer(
                     myCircuit,
                     S.get("NetList_UnsourcedSink"),
@@ -1696,7 +1696,7 @@ public class Netlist {
 
   public int numberOfBusses() {
     int nrOfBusses = 0;
-    for (final var thisNet : myNets) {
+    for (final com.cburch.logisim.fpga.designrulecheck.Net thisNet : myNets) {
       if (thisNet.isRootNet() && thisNet.isBus()) nrOfBusses++;
     }
     return nrOfBusses;
@@ -1712,7 +1712,7 @@ public class Netlist {
 
   public int numberOfInOutPortBits() {
     int count = 0;
-    for (final var inp : myInOutPorts) count += inp.getEnd(0).getNrOfBits();
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent inp : myInOutPorts) count += inp.getEnd(0).getNrOfBits();
     return count;
   }
 
@@ -1726,7 +1726,7 @@ public class Netlist {
 
   public int getNumberOfInputPortBits() {
     int count = 0;
-    for (final var inPort : myInputPorts) count += inPort.getEnd(0).getNrOfBits();
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent inPort : myInputPorts) count += inPort.getEnd(0).getNrOfBits();
     return count;
   }
 
@@ -1736,7 +1736,7 @@ public class Netlist {
 
   public int numberOfNets() {
     int nrOfNets = 0;
-    for (final var thisNet : myNets) {
+    for (final com.cburch.logisim.fpga.designrulecheck.Net thisNet : myNets) {
       if (thisNet.isRootNet() && !thisNet.isBus()) nrOfNets++;
     }
     return nrOfNets;
@@ -1748,7 +1748,7 @@ public class Netlist {
 
   public int numberOfOutputPortBits() {
     int count = 0;
-    for (final var outPort : myOutputPorts) count += outPort.getEnd(0).getNrOfBits();
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent outPort : myOutputPorts) count += outPort.getEnd(0).getNrOfBits();
     return count;
   }
 
@@ -1757,14 +1757,14 @@ public class Netlist {
   }
 
   private boolean processNormalComponent(Component comp) {
-    final var normalComponent = new netlistComponent(comp);
-    for (final var thisPin : comp.getEnds()) {
-      final var connection = findConnectedNet(thisPin.getLocation());
+    final com.cburch.logisim.fpga.designrulecheck.netlistComponent normalComponent = new netlistComponent(comp);
+    for (final com.cburch.logisim.comp.EndData thisPin : comp.getEnds()) {
+      final com.cburch.logisim.fpga.designrulecheck.Net connection = findConnectedNet(thisPin.getLocation());
       if (connection != null) {
-        final var pinId = comp.getEnds().indexOf(thisPin);
-        final var pinIsSink = thisPin.isInput();
-        final var thisEnd = normalComponent.getEnd(pinId);
-        final var rootNet = getRootNet(connection);
+        final int pinId = comp.getEnds().indexOf(thisPin);
+        final boolean pinIsSink = thisPin.isInput();
+        final com.cburch.logisim.fpga.designrulecheck.ConnectionEnd thisEnd = normalComponent.getEnd(pinId);
+        final com.cburch.logisim.fpga.designrulecheck.Net rootNet = getRootNet(connection);
         if (rootNet == null) {
           Reporter.report.addFatalErrorFmt(
               "BUG: Unable to find a root net for a normal component\n ==> %s:%d\n",
@@ -1773,7 +1773,7 @@ public class Netlist {
           return false;
         }
         for (int bitid = 0; bitid < thisPin.getWidth().getWidth(); bitid++) {
-          final var rootNetBitIndex = getRootNetIndex(connection, (byte) bitid);
+          final byte rootNetBitIndex = getRootNetIndex(connection, (byte) bitid);
           if (rootNetBitIndex < 0) {
             Reporter.report.addFatalErrorFmt(
                 // FIXME: Some "BUG:" have 2 spaces, other just 1. Is this intentional or all can have 1 (multiple places)?
@@ -1782,7 +1782,7 @@ public class Netlist {
                 Thread.currentThread().getStackTrace()[2].getLineNumber());
             return false;
           }
-          final var thisSolderPoint = thisEnd.get((byte) bitid);
+          final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint thisSolderPoint = thisEnd.get((byte) bitid);
           thisSolderPoint.setParentNet(rootNet, rootNetBitIndex);
           if (pinIsSink) {
             rootNet.addSink(rootNetBitIndex, thisSolderPoint);
@@ -1807,14 +1807,14 @@ public class Netlist {
   }
 
   private boolean processSubcircuit(Component comp) {
-    final var subCircuit = new netlistComponent(comp);
-    final var subFactory = (SubcircuitFactory) comp.getFactory();
-    final var subPins = ((CircuitAttributes) comp.getAttributeSet()).getPinInstances();
-    final var subNetlist = subFactory.getSubcircuit().getNetList();
-    for (final var thisPin : comp.getEnds()) {
-      final var connection = findConnectedNet(thisPin.getLocation());
-      final var pinId = comp.getEnds().indexOf(thisPin);
-      final var subPortIndex = subNetlist.getPortInfo(subPins[pinId].getAttributeValue(StdAttr.LABEL));
+    final com.cburch.logisim.fpga.designrulecheck.netlistComponent subCircuit = new netlistComponent(comp);
+    final com.cburch.logisim.circuit.SubcircuitFactory subFactory = (SubcircuitFactory) comp.getFactory();
+    final com.cburch.logisim.instance.Instance[] subPins = ((CircuitAttributes) comp.getAttributeSet()).getPinInstances();
+    final com.cburch.logisim.fpga.designrulecheck.Netlist subNetlist = subFactory.getSubcircuit().getNetList();
+    for (final com.cburch.logisim.comp.EndData thisPin : comp.getEnds()) {
+      final com.cburch.logisim.fpga.designrulecheck.Net connection = findConnectedNet(thisPin.getLocation());
+      final int pinId = comp.getEnds().indexOf(thisPin);
+      final int subPortIndex = subNetlist.getPortInfo(subPins[pinId].getAttributeValue(StdAttr.LABEL));
       if (subPortIndex < 0) {
         Reporter.report.addFatalErrorFmt(
             "BUG:  Unable to find pin in sub-circuit\n ==> %s:%d\n",
@@ -1824,7 +1824,7 @@ public class Netlist {
       }
       if (connection != null) {
         boolean pinIsSink = thisPin.isInput();
-        final var rootNet = getRootNet(connection);
+        final com.cburch.logisim.fpga.designrulecheck.Net rootNet = getRootNet(connection);
         if (rootNet == null) {
           Reporter.report.addFatalErrorFmt(
               "BUG:  Unable to find a root net for sub-circuit\n ==> %s:%d\n",
@@ -1833,7 +1833,7 @@ public class Netlist {
           return false;
         }
         for (byte bitid = 0; bitid < thisPin.getWidth().getWidth(); bitid++) {
-          final var rootNetBitIndex = getRootNetIndex(connection, bitid);
+          final byte rootNetBitIndex = getRootNetIndex(connection, bitid);
           if (rootNetBitIndex < 0) {
             Reporter.report.addFatalErrorFmt(
                 "BUG:  Unable to find a root-net bit-index for sub-circuit\n ==> %s:%d\n",
@@ -1882,8 +1882,8 @@ public class Netlist {
           Thread.currentThread().getStackTrace()[2].getLineNumber());
       return false;
     }
-    final var sub = (SubcircuitFactory) point.getComp().getFactory();
-    final var inputPort = sub.getSubcircuit().getNetList().getInputPin(point.getChildsPortIndex());
+    final com.cburch.logisim.circuit.SubcircuitFactory sub = (SubcircuitFactory) point.getComp().getFactory();
+    final com.cburch.logisim.fpga.designrulecheck.netlistComponent inputPort = sub.getSubcircuit().getNetList().getInputPin(point.getChildsPortIndex());
     if (inputPort == null) {
       Reporter.report.addFatalErrorFmt(
           "BUG: Unable to find Subcircuit input port!\n ==> %s:%d\n",
@@ -1891,7 +1891,7 @@ public class Netlist {
           Thread.currentThread().getStackTrace()[2].getLineNumber());
       return false;
     }
-    final var subCirc = getSubCirc(point.getComp());
+    final com.cburch.logisim.fpga.designrulecheck.netlistComponent subCirc = getSubCirc(point.getComp());
     if (subCirc == null) {
       Reporter.report.addFatalErrorFmt(
           "BUG: Unable to find Subcircuit!\n ==> %s:%d\n",
@@ -1899,7 +1899,7 @@ public class Netlist {
           Thread.currentThread().getStackTrace()[2].getLineNumber());
       return false;
     }
-    final var bitindex = subCirc.getConnectionBitIndex(point.getParentNet(), point.getParentNetBitIndex());
+    final byte bitindex = subCirc.getConnectionBitIndex(point.getParentNet(), point.getParentNetBitIndex());
     if (bitindex < 0) {
       Reporter.report.addFatalErrorFmt(
           "BUG: Unable to find the bit index of a Subcircuit input port!\n ==> %s:%d\n",
@@ -1907,15 +1907,15 @@ public class Netlist {
           Thread.currentThread().getStackTrace()[2].getLineNumber());
       return false;
     }
-    final var subClockNet = inputPort.getEnd(0).get(bitindex);
+    final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint subClockNet = inputPort.getEnd(0).get(bitindex);
     if (subClockNet.getParentNet() != null) {
       /* we have a connected pin */
-      final var newHierarchyNames = new ArrayList<>(hierarchyNames);
-      final var label =
+      final java.util.ArrayList<java.lang.String> newHierarchyNames = new ArrayList<>(hierarchyNames);
+      final java.lang.String label =
           CorrectLabel.getCorrectLabel(
               subCirc.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
       newHierarchyNames.add(label);
-      final var newHierarchyNetlists = new ArrayList<>(hierarchyNetlists);
+      final java.util.ArrayList<com.cburch.logisim.fpga.designrulecheck.Netlist> newHierarchyNetlists = new ArrayList<>(hierarchyNetlists);
       newHierarchyNetlists.add(sub.getSubcircuit().getNetList());
       sub.getSubcircuit()
           .getNetList()
@@ -1934,15 +1934,15 @@ public class Netlist {
   }
 
   public boolean traceClockNet(Net clockNet, byte clockNetBitIndex, int clockSourceId, boolean isPinSource, List<String> hierarchyNames, List<Netlist> hierarchyNetlists) {
-    final var hiddenComps = getHiddenSinks(clockNet, clockNetBitIndex, mySplitters, new HashSet<>(), false);
-    for (final var point : hiddenComps) {
+    final java.util.List<com.cburch.logisim.fpga.designrulecheck.ConnectionPoint> hiddenComps = getHiddenSinks(clockNet, clockNetBitIndex, mySplitters, new HashSet<>(), false);
+    for (final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint point : hiddenComps) {
       markClockNet(hierarchyNames, clockSourceId, point, isPinSource);
       if (point.getComp().getFactory() instanceof SubcircuitFactory)
         if (!traceDownSubcircuit(point, clockSourceId, hierarchyNames, hierarchyNetlists)) return false;
       /* On top level we do not have to go up */
       if (hierarchyNames.isEmpty()) continue;
       if (point.getComp().getFactory() instanceof Pin) {
-        final var outputPort = getOutPort(point.getComp());
+        final com.cburch.logisim.fpga.designrulecheck.netlistComponent outputPort = getOutPort(point.getComp());
         if (outputPort == null) {
           Reporter.report.addFatalErrorFmt(
               "BUG: Could not find an output port!\n ==> %s:%d\n",
@@ -1950,8 +1950,8 @@ public class Netlist {
               Thread.currentThread().getStackTrace()[2].getLineNumber());
           return false;
         }
-        final var bitIndex = outputPort.getConnectionBitIndex(point.getParentNet(), point.getParentNetBitIndex());
-        final var subClockNet =
+        final byte bitIndex = outputPort.getConnectionBitIndex(point.getParentNet(), point.getParentNetBitIndex());
+        final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint subClockNet =
             hierarchyNetlists.get(hierarchyNetlists.size() - 2)
                 .getNetlistConnectionForSubCircuit(
                     hierarchyNames.get(hierarchyNames.size() - 1),
@@ -1966,9 +1966,9 @@ public class Netlist {
         }
         if (subClockNet.getParentNet() == null) {
         } else {
-          final var newHierarchyNames = new ArrayList<>(hierarchyNames);
+          final java.util.ArrayList<java.lang.String> newHierarchyNames = new ArrayList<>(hierarchyNames);
           newHierarchyNames.remove(newHierarchyNames.size() - 1);
-          final var newHierarchyNetlists = new ArrayList<>(hierarchyNetlists);
+          final java.util.ArrayList<com.cburch.logisim.fpga.designrulecheck.Netlist> newHierarchyNetlists = new ArrayList<>(hierarchyNetlists);
           newHierarchyNetlists.remove(newHierarchyNetlists.size() - 1);
           hierarchyNetlists.get(hierarchyNetlists.size() - 2).markClockNet(newHierarchyNames, clockSourceId, subClockNet, true);
           if (!hierarchyNetlists.get(hierarchyNetlists.size() - 2)
@@ -1988,14 +1988,14 @@ public class Netlist {
   }
 
   private netlistComponent getSubCirc(Component comp) {
-    for (final var current : mySubCircuits) {
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent current : mySubCircuits) {
       if (current.getComponent().equals(comp)) return current;
     }
     return null;
   }
 
   private netlistComponent getOutPort(Component comp) {
-    for (final var current : myOutputPorts) {
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent current : myOutputPorts) {
       if (current.getComponent().equals(comp)) return current;
     }
     return null;
@@ -2005,21 +2005,21 @@ public class Netlist {
     // First Pass: We gather a complete information tree about components with clock inputs and
     // their connected nets in    case it is not a clock net. The moment we call this function the
     // clock tree has been marked already!
-    final var root = new ArrayList<Netlist>();
+    final java.util.ArrayList<com.cburch.logisim.fpga.designrulecheck.Netlist> root = new ArrayList<Netlist>();
     boolean suppress = AppPreferences.SupressGatedClockWarnings.getBoolean();
     root.add(this);
-    final var notGatedSet = new HashMap<String, Map<netlistComponent, Circuit>>();
-    final var gatedSet = new HashMap<String, Map<netlistComponent, Circuit>>();
+    final java.util.HashMap<java.lang.String,java.util.Map<com.cburch.logisim.fpga.designrulecheck.netlistComponent,com.cburch.logisim.circuit.Circuit>> notGatedSet = new HashMap<String, Map<netlistComponent, Circuit>>();
+    final java.util.HashMap<java.lang.String,java.util.Map<com.cburch.logisim.fpga.designrulecheck.netlistComponent,com.cburch.logisim.circuit.Circuit>> gatedSet = new HashMap<String, Map<netlistComponent, Circuit>>();
     setCurrentHierarchyLevel(new ArrayList<>());
     getGatedClockComponents(root, null, notGatedSet, gatedSet, new HashSet<>());
-    for (final var key : notGatedSet.keySet()) {
+    for (final java.lang.String key : notGatedSet.keySet()) {
       if (gatedSet.containsKey(key) && !suppress) {
         /* big Problem, we have a component that is used with and without gated clocks */
         Reporter.report.addSevereWarning(S.get("NetList_CircuitGatedNotGated"));
         Reporter.report.addWarningIncrement(S.get("NetList_TraceListBegin"));
         Map<netlistComponent, Circuit> instances = notGatedSet.get(key);
-        for (final var comp : instances.keySet()) {
-          final var warn =
+        for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : instances.keySet()) {
+          final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
               new SimpleDrcContainer(
                   instances.get(comp),
                   S.get("NetList_CircuitNotGated"),
@@ -2030,9 +2030,9 @@ public class Netlist {
           Reporter.report.addWarning(warn);
         }
         instances = gatedSet.get(key);
-        for (final var comp : instances.keySet()) {
+        for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : instances.keySet()) {
           comp.setIsGatedInstance();
-          final var warn =
+          final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
               new SimpleDrcContainer(
                       instances.get(comp),
                       S.get("NetList_CircuitGated"),
@@ -2055,13 +2055,13 @@ public class Netlist {
       Map<String, Map<netlistComponent, Circuit>> gatedSet,
       Set<netlistComponent> warnedComponents) {
     /* First pass: we go down the tree */
-    for (final var subCirc : mySubCircuits) {
-      final var sub = (SubcircuitFactory) subCirc.getComponent().getFactory();
-      final var newHierarchyNames = new ArrayList<>(getCurrentHierarchyLevel());
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent subCirc : mySubCircuits) {
+      final com.cburch.logisim.circuit.SubcircuitFactory sub = (SubcircuitFactory) subCirc.getComponent().getFactory();
+      final java.util.ArrayList<java.lang.String> newHierarchyNames = new ArrayList<>(getCurrentHierarchyLevel());
       newHierarchyNames.add(
           CorrectLabel.getCorrectLabel(
               subCirc.getComponent().getAttributeSet().getValue(StdAttr.LABEL)));
-      final var newHierarchyNetlists = new ArrayList<>(hierarchyNetlists);
+      final java.util.ArrayList<com.cburch.logisim.fpga.designrulecheck.Netlist> newHierarchyNetlists = new ArrayList<>(hierarchyNetlists);
       newHierarchyNetlists.add(sub.getSubcircuit().getNetList());
       sub.getSubcircuit().getNetList().setCurrentHierarchyLevel(newHierarchyNames);
       sub.getSubcircuit()
@@ -2071,17 +2071,17 @@ public class Netlist {
     // Second pass: we find all components with a clock input and see if they are
     // connected to a clock.
     boolean gatedClock = false;
-    final var pinSources = new ArrayList<SourceInfo>();
-    final var pinWires = new ArrayList<Set<Wire>>();
-    final var pinGatedComponents = new ArrayList<Set<netlistComponent>>();
-    final var nonPinSources = new ArrayList<SourceInfo>();
-    final var nonPinWires = new ArrayList<Set<Wire>>();
-    final var nonPinGatedComponents = new ArrayList<Set<netlistComponent>>();
-    for (final var comp : myComponents) {
-      final var fact = comp.getComponent().getFactory();
+    final java.util.ArrayList<com.cburch.logisim.fpga.designrulecheck.Netlist.SourceInfo> pinSources = new ArrayList<SourceInfo>();
+    final java.util.ArrayList<java.util.Set<com.cburch.logisim.circuit.Wire>> pinWires = new ArrayList<Set<Wire>>();
+    final java.util.ArrayList<java.util.Set<com.cburch.logisim.fpga.designrulecheck.netlistComponent>> pinGatedComponents = new ArrayList<Set<netlistComponent>>();
+    final java.util.ArrayList<com.cburch.logisim.fpga.designrulecheck.Netlist.SourceInfo> nonPinSources = new ArrayList<SourceInfo>();
+    final java.util.ArrayList<java.util.Set<com.cburch.logisim.circuit.Wire>> nonPinWires = new ArrayList<Set<Wire>>();
+    final java.util.ArrayList<java.util.Set<com.cburch.logisim.fpga.designrulecheck.netlistComponent>> nonPinGatedComponents = new ArrayList<Set<netlistComponent>>();
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : myComponents) {
+      final com.cburch.logisim.comp.ComponentFactory fact = comp.getComponent().getFactory();
       if (fact.checkForGatedClocks(comp)) {
-        final var clockPins = fact.clockPinIndex(comp);
-        for (final var clockPin : clockPins)
+        final int[] clockPins = fact.clockPinIndex(comp);
+        for (final int clockPin : clockPins)
           gatedClock |=
               hasGatedClock(
                   comp,
@@ -2105,7 +2105,7 @@ public class Netlist {
      *    processed later.
      */
 
-    final var myName = CorrectLabel.getCorrectLabel(circuitName);
+    final java.lang.String myName = CorrectLabel.getCorrectLabel(circuitName);
     if (hierarchyNetlists.size() > 1) {
       if (gatedClock && pinSources.isEmpty()) {
         gatedClock = false; // we have only non-pin driven gated clocks
@@ -2122,7 +2122,7 @@ public class Netlist {
         for (int i = 0; i < pinSources.size(); i++) {
           Reporter.report.addSevereWarning(S.get("NetList_GatedClock"));
           Reporter.report.addWarningIncrement(S.get("NetList_TraceListBegin"));
-          final var warn =
+          final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
               new SimpleDrcContainer(
                       myCircuit,
                       S.get("NetList_GatedClockSink"),
@@ -2130,7 +2130,7 @@ public class Netlist {
                       SimpleDrcContainer.MARK_INSTANCE | SimpleDrcContainer.MARK_WIRE,
                       true);
           warn.addMarkComponents(pinWires.get(i));
-          for (final var comp : pinGatedComponents.get(i)) warn.addMarkComponent(comp.getComponent());
+          for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : pinGatedComponents.get(i)) warn.addMarkComponent(comp.getComponent());
           Reporter.report.addWarning(warn);
           warningTraceForGatedClock(
               pinSources.get(i).getSource(),
@@ -2146,7 +2146,7 @@ public class Netlist {
         if (gatedSet.containsKey(myName))
           gatedSet.get(myName).put(subCircuit, hierarchyNetlists.get(hierarchyNetlists.size() - 2).getCircuit());
         else {
-          final var newList = new HashMap<netlistComponent, Circuit>();
+          final java.util.HashMap<com.cburch.logisim.fpga.designrulecheck.netlistComponent,com.cburch.logisim.circuit.Circuit> newList = new HashMap<netlistComponent, Circuit>();
           newList.put(subCircuit, hierarchyNetlists.get(hierarchyNetlists.size() - 2).getCircuit());
           gatedSet.put(myName, newList);
         }
@@ -2154,7 +2154,7 @@ public class Netlist {
         if (notGatedSet.containsKey(myName))
           notGatedSet.get(myName).put(subCircuit, hierarchyNetlists.get(hierarchyNetlists.size() - 2).getCircuit());
         else {
-          final var newList = new HashMap<netlistComponent, Circuit>();
+          final java.util.HashMap<com.cburch.logisim.fpga.designrulecheck.netlistComponent,com.cburch.logisim.circuit.Circuit> newList = new HashMap<netlistComponent, Circuit>();
           newList.put(subCircuit, hierarchyNetlists.get(hierarchyNetlists.size() - 2).getCircuit());
           notGatedSet.put(myName, newList);
         }
@@ -2177,26 +2177,26 @@ public class Netlist {
       List<Set<netlistComponent>> nonPinGatedComponents,
       Set<netlistComponent> warnedComponents) {
     boolean isGatedClock = false;
-    final var clockNetName = Hdl.getClockNetName(comp, clockPinIndex, this);
+    final java.lang.String clockNetName = Hdl.getClockNetName(comp, clockPinIndex, this);
     if (clockNetName.isEmpty()) {
       /* we search for the source in case it is connected otherwise we ignore */
-      final var connection = comp.getEnd(clockPinIndex).get((byte) 0);
-      final var connectedNet = connection.getParentNet();
-      final var connectedNetindex = connection.getParentNetBitIndex();
+      final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint connection = comp.getEnd(clockPinIndex).get((byte) 0);
+      final com.cburch.logisim.fpga.designrulecheck.Net connectedNet = connection.getParentNet();
+      final java.lang.Byte connectedNetindex = connection.getParentNetBitIndex();
       boolean hasSource = false;
       if (connectedNet != null) {
         isGatedClock = true;
-        final var segments = new HashSet<Wire>();
-        final var source = getHiddenSource(null, (byte) 0, connectedNet, connectedNetindex, mySplitters, new HashSet<>(), segments, null);
+        final java.util.HashSet<com.cburch.logisim.circuit.Wire> segments = new HashSet<Wire>();
+        final com.cburch.logisim.fpga.designrulecheck.Netlist.SourceInfo source = getHiddenSource(null, (byte) 0, connectedNet, connectedNetindex, mySplitters, new HashSet<>(), segments, null);
         hasSource = source != null;
         if (hasSource) {
-          final var sourceCon = source.getSource();
+          final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint sourceCon = source.getSource();
           if (sourceCon.getComp().getFactory() instanceof Pin) {
-            final var index = getEntryIndex(pinSources, sourceCon, (int) connectedNetindex);
+            final int index = getEntryIndex(pinSources, sourceCon, (int) connectedNetindex);
             if (index < 0) {
               pinSources.add(source);
               pinWires.add(segments);
-              final var comps = new HashSet<netlistComponent>();
+              final java.util.HashSet<com.cburch.logisim.fpga.designrulecheck.netlistComponent> comps = new HashSet<netlistComponent>();
               comps.add(comp);
               comps.add(new netlistComponent(sourceCon.getComp()));
               pinGatedComponents.add(comps);
@@ -2204,11 +2204,11 @@ public class Netlist {
               pinGatedComponents.get(index).add(comp);
             }
           } else {
-            final var index = getEntryIndex(nonPinSources, sourceCon, (int) connectedNetindex);
+            final int index = getEntryIndex(nonPinSources, sourceCon, (int) connectedNetindex);
             if (index < 0) {
               nonPinSources.add(source);
               nonPinWires.add(segments);
-              final var comps = new HashSet<netlistComponent>();
+              final java.util.HashSet<com.cburch.logisim.fpga.designrulecheck.netlistComponent> comps = new HashSet<netlistComponent>();
               comps.add(comp);
               nonPinGatedComponents.add(comps);
             } else {
@@ -2220,7 +2220,7 @@ public class Netlist {
       if (!hasSource) {
         /* Add severe warning, we found a sequential element with an unconnected clock input */
         if (!warnedComponents.contains(comp)) {
-          final var warn =
+          final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
               new SimpleDrcContainer(
                   myCircuit,
                   S.get("NetList_NoClockConnection"),
@@ -2238,7 +2238,7 @@ public class Netlist {
   private int getEntryIndex(List<SourceInfo> searchList, ConnectionPoint connection, Integer index) {
     int result = -1;
     for (int i = 0; i < searchList.size(); i++) {
-      final var thisEntry = searchList.get(i);
+      final com.cburch.logisim.fpga.designrulecheck.Netlist.SourceInfo thisEntry = searchList.get(i);
       if (thisEntry.getSource().equals(connection) && thisEntry.getIndex().equals(index))
         result = i;
     }
@@ -2246,7 +2246,7 @@ public class Netlist {
   }
 
   private void warningTraceForGatedClock(ConnectionPoint sourcePoint, int index, List<Netlist> hierarchyNetlists, List<String> hierarchyNames) {
-    final var comp = sourcePoint.getComp();
+    final com.cburch.logisim.comp.Component comp = sourcePoint.getComp();
     if (comp.getFactory() instanceof Pin) {
       if (hierarchyNames.isEmpty())
         /* we cannot go up at toplevel, so leave */
@@ -2262,7 +2262,7 @@ public class Netlist {
             Thread.currentThread().getStackTrace()[2].getLineNumber());
         return;
       }
-      final var subNet =
+      final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint subNet =
           hierarchyNetlists
               .get(hierarchyNetlists.size() - 2)
               .getNetlistConnectionForSubCircuitInput(
@@ -2275,15 +2275,15 @@ public class Netlist {
         return;
       }
       if (subNet.getParentNet() != null) {
-        final var newHierarchyNames = new ArrayList<>(hierarchyNames);
+        final java.util.ArrayList<java.lang.String> newHierarchyNames = new ArrayList<>(hierarchyNames);
         newHierarchyNames.remove(newHierarchyNames.size() - 1);
-        final var newHierarchyNetlists = new ArrayList<>(hierarchyNetlists);
+        final java.util.ArrayList<com.cburch.logisim.fpga.designrulecheck.Netlist> newHierarchyNetlists = new ArrayList<>(hierarchyNetlists);
         newHierarchyNetlists.remove(newHierarchyNetlists.size() - 1);
-        final var subNetList = hierarchyNetlists.get(hierarchyNetlists.size() - 2);
-        final var newNet = subNet.getParentNet();
-        final var newNetIndex = subNet.getParentNetBitIndex();
-        final var segments = new HashSet<Wire>();
-        final var source = subNetList.getHiddenSource(null, (byte) 0, newNet, newNetIndex, subNetList.mySplitters, new HashSet<>(), segments, null);
+        final com.cburch.logisim.fpga.designrulecheck.Netlist subNetList = hierarchyNetlists.get(hierarchyNetlists.size() - 2);
+        final com.cburch.logisim.fpga.designrulecheck.Net newNet = subNet.getParentNet();
+        final java.lang.Byte newNetIndex = subNet.getParentNetBitIndex();
+        final java.util.HashSet<com.cburch.logisim.circuit.Wire> segments = new HashSet<Wire>();
+        final com.cburch.logisim.fpga.designrulecheck.Netlist.SourceInfo source = subNetList.getHiddenSource(null, (byte) 0, newNet, newNetIndex, subNetList.mySplitters, new HashSet<>(), segments, null);
         if (source == null) {
           Reporter.report.addFatalErrorFmt(
               "BUG: Unable to find source in sub-circuit!\n ==> %s:%d\n",
@@ -2291,9 +2291,9 @@ public class Netlist {
               Thread.currentThread().getStackTrace()[2].getLineNumber());
           return;
         }
-        final var sfac = source.getSource().getComp().getFactory();
+        final com.cburch.logisim.comp.ComponentFactory sfac = source.getSource().getComp().getFactory();
         if (sfac instanceof Pin || sfac instanceof SubcircuitFactory) {
-          final var warn =
+          final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
               new SimpleDrcContainer(
                       subNetList.getCircuit(),
                       S.get("NetList_GatedClockInt"),
@@ -2308,7 +2308,7 @@ public class Netlist {
               newHierarchyNetlists,
               newHierarchyNames);
         } else {
-          final var warn =
+          final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
               new SimpleDrcContainer(
                       subNetList.getCircuit(),
                       S.get("NetList_GatedClockSource"),
@@ -2328,7 +2328,7 @@ public class Netlist {
             Thread.currentThread().getStackTrace()[2].getLineNumber());
         return;
       }
-      final var outputPort = sub.getSubcircuit().getNetList().getOutputPin(sourcePoint.getChildsPortIndex());
+      final com.cburch.logisim.fpga.designrulecheck.netlistComponent outputPort = sub.getSubcircuit().getNetList().getOutputPin(sourcePoint.getChildsPortIndex());
       if (outputPort == null) {
         Reporter.report.addFatalErrorFmt(
             "BUG: Unable to find Subcircuit output port!\n ==> %s:%d\n",
@@ -2336,10 +2336,10 @@ public class Netlist {
             Thread.currentThread().getStackTrace()[2].getLineNumber());
         return;
       }
-      final var connectedNet = sourcePoint.getParentNet();
+      final com.cburch.logisim.fpga.designrulecheck.Net connectedNet = sourcePoint.getParentNet();
       /* Find the correct subcircuit */
       netlistComponent subCirc = null;
-      for (final var circ : mySubCircuits) {
+      for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent circ : mySubCircuits) {
         if (circ.getComponent().equals(sourcePoint.getComp())) subCirc = circ;
       }
       if (subCirc == null) {
@@ -2350,7 +2350,7 @@ public class Netlist {
         return;
       }
 
-      final var bitIndex = subCirc.getConnectionBitIndex(connectedNet, (byte) index);
+      final byte bitIndex = subCirc.getConnectionBitIndex(connectedNet, (byte) index);
       if (bitIndex < 0) {
         Reporter.report.addFatalErrorFmt(
             "BUG: Unable to find the bit index of a Subcircuit output port!\n ==> %s:%d\n",
@@ -2358,20 +2358,20 @@ public class Netlist {
             Thread.currentThread().getStackTrace()[2].getLineNumber());
         return;
       }
-      final var subNet = outputPort.getEnd(0).get(bitIndex);
+      final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint subNet = outputPort.getEnd(0).get(bitIndex);
       if (subNet.getParentNet() != null) {
         /* we have a connected pin */
-        final var subNetList = sub.getSubcircuit().getNetList();
-        final var newHierarchyNames = new ArrayList<>(hierarchyNames);
+        final com.cburch.logisim.fpga.designrulecheck.Netlist subNetList = sub.getSubcircuit().getNetList();
+        final java.util.ArrayList<java.lang.String> newHierarchyNames = new ArrayList<>(hierarchyNames);
         newHierarchyNames.add(
             CorrectLabel.getCorrectLabel(
                 subCirc.getComponent().getAttributeSet().getValue(StdAttr.LABEL)));
-        final var newHierarchyNetlists = new ArrayList<>(hierarchyNetlists);
+        final java.util.ArrayList<com.cburch.logisim.fpga.designrulecheck.Netlist> newHierarchyNetlists = new ArrayList<>(hierarchyNetlists);
         newHierarchyNetlists.add(subNetList);
-        final var newNet = subNet.getParentNet();
-        final var newNetIndex = subNet.getParentNetBitIndex();
-        final var segments = new HashSet<Wire>();
-        final var source =
+        final com.cburch.logisim.fpga.designrulecheck.Net newNet = subNet.getParentNet();
+        final java.lang.Byte newNetIndex = subNet.getParentNetBitIndex();
+        final java.util.HashSet<com.cburch.logisim.circuit.Wire> segments = new HashSet<Wire>();
+        final com.cburch.logisim.fpga.designrulecheck.Netlist.SourceInfo source =
             subNetList.getHiddenSource(
                 null,
                 (byte) 0,
@@ -2388,9 +2388,9 @@ public class Netlist {
               Thread.currentThread().getStackTrace()[2].getLineNumber());
           return;
         }
-        final var sfac = source.getSource().getComp().getFactory();
+        final com.cburch.logisim.comp.ComponentFactory sfac = source.getSource().getComp().getFactory();
         if (sfac instanceof Pin || sfac instanceof SubcircuitFactory) {
-          final var warn =
+          final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
               new SimpleDrcContainer(
                       subNetList.getCircuit(),
                       S.get("NetList_GatedClockInt"),
@@ -2405,7 +2405,7 @@ public class Netlist {
               newHierarchyNetlists,
               newHierarchyNames);
         } else {
-          final var warn =
+          final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
               new SimpleDrcContainer(
                       subNetList.getCircuit(),
                       S.get("NetList_GatedClockSource"),
@@ -2429,13 +2429,13 @@ public class Netlist {
     if (AppPreferences.SupressGatedClockWarnings.getBoolean()) return;
     for (int i = 0; i < sources.size(); i++) {
       boolean alreadyWarned = false;
-      for (final var comp : components.get(i))
+      for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : components.get(i))
         alreadyWarned |= warnedComponents.contains(comp);
       if (!alreadyWarned) {
         if (sources.get(i).getSource().getComp().getFactory() instanceof SubcircuitFactory) {
           Reporter.report.addSevereWarning(S.get("NetList_GatedClock"));
           Reporter.report.addWarningIncrement(S.get("NetList_TraceListBegin"));
-          final var warn =
+          final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
               new SimpleDrcContainer(
                       myCircuit,
                       S.get("NetList_GatedClockSink"),
@@ -2443,7 +2443,7 @@ public class Netlist {
                       SimpleDrcContainer.MARK_INSTANCE | SimpleDrcContainer.MARK_WIRE,
                       true);
           warn.addMarkComponents(wires.get(i));
-          for (final var comp : components.get(i)) warn.addMarkComponent(comp.getComponent());
+          for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : components.get(i)) warn.addMarkComponent(comp.getComponent());
           Reporter.report.addWarning(warn);
           warningTraceForGatedClock(
               sources.get(i).getSource(),
@@ -2452,13 +2452,13 @@ public class Netlist {
               currentHierarchyLevel);
           Reporter.report.addWarningIncrement(S.get("NetList_TraceListEnd"));
         } else {
-          final var warn =
+          final com.cburch.logisim.fpga.designrulecheck.SimpleDrcContainer warn =
               new SimpleDrcContainer(
                   myCircuit,
                   warning,
                   SimpleDrcContainer.LEVEL_SEVERE,
                   SimpleDrcContainer.MARK_INSTANCE | SimpleDrcContainer.MARK_WIRE);
-          for (final var comp : components.get(i))
+          for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : components.get(i))
             warn.addMarkComponent(comp.getComponent());
           warn.addMarkComponents(wires.get(i));
           Reporter.report.addWarning(warn);

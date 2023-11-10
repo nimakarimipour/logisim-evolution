@@ -27,10 +27,10 @@ public class XmlIterator<E extends Node> implements Iterable<E>, Iterator<E>, Cl
   }
 
   public static Iterable<Element> forChildElements(Element node) {
-    final var nodes = node.getChildNodes();
-    final var ret = new ArrayList<Element>();
+    final org.w3c.dom.NodeList nodes = node.getChildNodes();
+    final java.util.ArrayList<org.w3c.dom.Element> ret = new ArrayList<Element>();
     for (int i = 0, n = nodes.getLength(); i < n; i++) {
-      final var sub = nodes.item(i);
+      final org.w3c.dom.Node sub = nodes.item(i);
       if (sub.getNodeType() == Node.ELEMENT_NODE) {
         ret.add((Element) sub);
       }
@@ -39,12 +39,12 @@ public class XmlIterator<E extends Node> implements Iterable<E>, Iterator<E>, Cl
   }
 
   public static Iterable<Element> forChildElements(Element node, String tagName) {
-    final var nodes = node.getChildNodes();
-    final var ret = new ArrayList<Element>();
+    final org.w3c.dom.NodeList nodes = node.getChildNodes();
+    final java.util.ArrayList<org.w3c.dom.Element> ret = new ArrayList<Element>();
     for (int i = 0, n = nodes.getLength(); i < n; i++) {
-      final var sub = nodes.item(i);
+      final org.w3c.dom.Node sub = nodes.item(i);
       if (sub.getNodeType() == Node.ELEMENT_NODE) {
-        final var elt = (Element) sub;
+        final org.w3c.dom.Element elt = (Element) sub;
         if (elt.getTagName().equals(tagName)) ret.add(elt);
       }
     }
@@ -63,7 +63,7 @@ public class XmlIterator<E extends Node> implements Iterable<E>, Iterator<E>, Cl
   public XmlIterator<E> clone() {
     try {
       @SuppressWarnings("unchecked")
-      final var ret = (XmlIterator<E>) super.clone();
+      final XmlIterator<E> ret = (XmlIterator<E>) super.clone();
       return ret;
     } catch (CloneNotSupportedException e) {
       return this;
@@ -77,7 +77,7 @@ public class XmlIterator<E extends Node> implements Iterable<E>, Iterator<E>, Cl
 
   @Override
   public Iterator<E> iterator() {
-    final var ret = this.clone();
+    final com.cburch.logisim.file.XmlIterator<E> ret = this.clone();
     ret.index = 0;
     return ret;
   }

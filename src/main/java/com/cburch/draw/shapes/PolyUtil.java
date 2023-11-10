@@ -18,20 +18,20 @@ public final class PolyUtil {
   }
 
   public static ClosestResult getClosestPoint(Location loc, boolean closed, Handle[] hs) {
-    final var xq = loc.getX();
-    final var yq = loc.getY();
-    final var ret = new ClosestResult();
+    final int xq = loc.getX();
+    final int yq = loc.getY();
+    final com.cburch.draw.shapes.PolyUtil.ClosestResult ret = new ClosestResult();
     ret.dist = Double.MAX_VALUE;
     if (hs.length > 0) {
       com.cburch.draw.model.Handle h0 = hs[0];
       int x0 = h0.getX();
       int y0 = h0.getY();
-      final var stop = closed ? hs.length : (hs.length - 1);
+      final int stop = closed ? hs.length : (hs.length - 1);
       for (int i = 0; i < stop; i++) {
-        final var h1 = hs[(i + 1) % hs.length];
-        final var x1 = h1.getX();
-        final var y1 = h1.getY();
-        final var d = LineUtil.ptDistSqSegment(x0, y0, x1, y1, xq, yq);
+        final com.cburch.draw.model.Handle h1 = hs[(i + 1) % hs.length];
+        final int x1 = h1.getX();
+        final int y1 = h1.getY();
+        final double d = LineUtil.ptDistSqSegment(x0, y0, x1, y1, xq, yq);
         if (d < ret.dist) {
           ret.dist = d;
           ret.prevHandle = h0;
@@ -45,9 +45,9 @@ public final class PolyUtil {
     if (ret.dist == Double.MAX_VALUE) {
       return null;
     } else {
-      final var h0 = ret.prevHandle;
-      final var h1 = ret.nextHandle;
-      final var p =
+      final com.cburch.draw.model.Handle h0 = ret.prevHandle;
+      final com.cburch.draw.model.Handle h1 = ret.nextHandle;
+      final double[] p =
           LineUtil.nearestPointSegment(xq, yq, h0.getX(), h0.getY(), h1.getX(), h1.getY());
       ret.loc = Location.create((int) Math.round(p[0]), (int) Math.round(p[1]), false);
       return ret;

@@ -237,13 +237,13 @@ public class HexDigit extends InstanceFactory implements DynamicElementProvider 
     if ((segs & SEG_F_MASK) != 0) summary |= 32; // vertical seg at top left
 
     if (state.getAttributeValue(SevenSegment.ATTR_DP)) {
-      final var dpVal = state.getPortValue(DP);
+      final com.cburch.logisim.data.Value dpVal = state.getPortValue(DP);
       if (dpVal != null && (int) dpVal.toLongValue() == 1)
         summary |= 128; // decimal point
     }
 
     Object value = summary;
-    final var data = (InstanceDataSingleton) state.getData();
+    final com.cburch.logisim.instance.InstanceDataSingleton data = (InstanceDataSingleton) state.getData();
     if (data == null) {
       state.setData(new InstanceDataSingleton(value));
     } else {

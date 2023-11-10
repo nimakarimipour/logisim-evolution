@@ -74,7 +74,7 @@ public class Rv32imRiscV extends SocInstanceFactory implements DynamicElementPro
 
   private void updatePorts(Instance instance) {
     int nrOfIrqs = instance.getAttributeValue(RV32imAttributes.RV32IM_STATE).getNrOfIrqs();
-    final var ps = new Port[nrOfIrqs + 2];
+    final com.cburch.logisim.instance.Port[] ps = new Port[nrOfIrqs + 2];
     ps[0] = new Port(0, 610, Port.INPUT, 1);
     ps[0].setToolTip(S.getter("Rv32imResetInput"));
     ps[1] = new Port(0, 630, Port.INPUT, 1);
@@ -90,7 +90,7 @@ public class Rv32imRiscV extends SocInstanceFactory implements DynamicElementPro
   protected void configureNewInstance(Instance instance) {
     instance.addAttributeListener();
     updatePorts(instance);
-    final var bds = instance.getBounds();
+    final com.cburch.logisim.data.Bounds bds = instance.getBounds();
     instance.setTextField(
         StdAttr.LABEL,
         StdAttr.LABEL_FONT,
@@ -113,8 +113,8 @@ public class Rv32imRiscV extends SocInstanceFactory implements DynamicElementPro
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var loc = painter.getLocation();
-    final var g2 = (Graphics2D) painter.getGraphics();
+    final com.cburch.logisim.data.Location loc = painter.getLocation();
+    final java.awt.Graphics2D g2 = (Graphics2D) painter.getGraphics();
     painter.drawBounds();
     painter.drawLabel();
     painter.drawClock(1, Direction.EAST);
@@ -124,7 +124,7 @@ public class Rv32imRiscV extends SocInstanceFactory implements DynamicElementPro
         i++) {
       painter.drawPort(i + 2, "IRQ" + i, Direction.EAST);
     }
-    final var f = g2.getFont();
+    final java.awt.Font f = g2.getFont();
     g2.setFont(StdAttr.DEFAULT_LABEL_FONT);
     GraphicsUtil.drawCenteredText(g2, "RISC V IM simulator", loc.getX() + 320, loc.getY() + 630);
     g2.setFont(f);
@@ -138,7 +138,7 @@ public class Rv32imRiscV extends SocInstanceFactory implements DynamicElementPro
                 loc.getY() + CpuDrawSupport.busConBounds.getY(),
                 CpuDrawSupport.busConBounds.getWidth(),
                 CpuDrawSupport.busConBounds.getHeight()));
-    final var state = painter.getAttributeValue(RV32imAttributes.RV32IM_STATE);
+    final com.cburch.logisim.soc.rv32im.RV32imState state = painter.getAttributeValue(RV32imAttributes.RV32IM_STATE);
     state.paint(
         loc.getX(),
         loc.getY(),

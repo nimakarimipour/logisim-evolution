@@ -21,17 +21,17 @@ public interface DynamicElementProvider {
 
   static void removeDynamicElements(Circuit circuit, Component comp) {
     if (!(comp instanceof InstanceComponent)) return;
-    final var allAffected = new HashSet<Circuit>();
-    final var todo = new LinkedList<Circuit>();
+    final java.util.HashSet<com.cburch.logisim.circuit.Circuit> allAffected = new HashSet<Circuit>();
+    final java.util.LinkedList<com.cburch.logisim.circuit.Circuit> todo = new LinkedList<Circuit>();
     todo.add(circuit);
     while (!todo.isEmpty()) {
-      final var circ = todo.remove();
+      final com.cburch.logisim.circuit.Circuit circ = todo.remove();
       if (allAffected.contains(circ)) continue;
       allAffected.add(circ);
-      for (final var other : circ.getCircuitsUsingThis())
+      for (final com.cburch.logisim.circuit.Circuit other : circ.getCircuitsUsingThis())
         if (!allAffected.contains(other)) todo.add(other);
     }
-    for (final var circ : allAffected)
+    for (final com.cburch.logisim.circuit.Circuit circ : allAffected)
       circ.getAppearance().removeDynamicElement((InstanceComponent) comp);
   }
 }

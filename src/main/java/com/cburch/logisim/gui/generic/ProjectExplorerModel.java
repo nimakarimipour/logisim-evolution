@@ -42,11 +42,11 @@ class ProjectExplorerModel extends DefaultTreeModel implements ProjectListener {
   }
 
   Node<Tool> findTool(Tool tool) {
-    final var root = (Node<?>) getRoot();
+    final com.cburch.logisim.gui.generic.ProjectExplorerModel.Node<?> root = (Node<?>) getRoot();
     if (root == null || tool == null) return null;
-    final var en = root.depthFirstEnumeration();
+    final java.util.Enumeration<javax.swing.tree.TreeNode> en = root.depthFirstEnumeration();
     while (en.hasMoreElements()) {
-      final var node = (Node<?>) en.nextElement();
+      final com.cburch.logisim.gui.generic.ProjectExplorerModel.Node<?> node = (Node<?>) en.nextElement();
       if (node.getValue() == tool) {
         @SuppressWarnings("unchecked")
         final Node<Tool> nodeTool = (Node<Tool>) node;
@@ -57,8 +57,8 @@ class ProjectExplorerModel extends DefaultTreeModel implements ProjectListener {
   }
 
   void fireStructureChanged() {
-    final var model = this;
-    final var root = (Node<?>) getRoot();
+    final com.cburch.logisim.gui.generic.ProjectExplorerModel model = this;
+    final com.cburch.logisim.gui.generic.ProjectExplorerModel.Node<?> root = (Node<?>) getRoot();
     SwingUtilities.invokeLater(
         () -> {
           if (root != null) {
@@ -74,7 +74,7 @@ class ProjectExplorerModel extends DefaultTreeModel implements ProjectListener {
   // ProjectListener methods
   @Override
   public void projectChanged(ProjectEvent event) {
-    final var act = event.getAction();
+    final int act = event.getAction();
     if (act == ProjectEvent.ACTION_SET_FILE) {
       setLogisimFile(proj.getLogisimFile());
       fireStructureChanged();
@@ -82,7 +82,7 @@ class ProjectExplorerModel extends DefaultTreeModel implements ProjectListener {
   }
 
   private void setLogisimFile(LogisimFile file) {
-    final var oldRoot = (Node<?>) getRoot();
+    final com.cburch.logisim.gui.generic.ProjectExplorerModel.Node<?> oldRoot = (Node<?>) getRoot();
     oldRoot.decommission();
     setRoot(
         (file == null)
@@ -92,7 +92,7 @@ class ProjectExplorerModel extends DefaultTreeModel implements ProjectListener {
   }
 
   public void setProject(Project value) {
-    final var old = proj;
+    final com.cburch.logisim.proj.Project old = proj;
 
     if (old != null) {
       old.removeProjectListener(this);
@@ -129,13 +129,13 @@ class ProjectExplorerModel extends DefaultTreeModel implements ProjectListener {
     abstract void decommission();
 
     public void fireNodeChanged() {
-      final var parent = (Node<?>) this.getParent();
+      final com.cburch.logisim.gui.generic.ProjectExplorerModel.Node<?> parent = (Node<?>) this.getParent();
 
       if (parent == null) {
         model.fireTreeNodesChanged(this, null, null, null);
       } else {
-        final var indices = new int[] {parent.getIndex(this)};
-        final var items = new Object[] {this.getUserObject()};
+        final int[] indices = new int[] {parent.getIndex(this)};
+        final java.lang.Object[] items = new Object[] {this.getUserObject()};
         model.fireTreeNodesChanged(this, parent.getPath(), indices, items);
       }
     }

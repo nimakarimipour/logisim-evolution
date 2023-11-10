@@ -21,7 +21,7 @@ public class DrawLineIcon extends BaseIcon {
   protected void paintIcon(Graphics2D gfx) {
     gfx.setColor(Color.GRAY);
     gfx.setStroke(new BasicStroke(AppPreferences.getScaled(1)));
-    final var wh = AppPreferences.getScaled(3);
+    final int wh = AppPreferences.getScaled(3);
 
     gfx.setStroke(new BasicStroke(scale(2)));
     gfx.setColor(Color.BLUE.darker());

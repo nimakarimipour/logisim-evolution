@@ -75,10 +75,10 @@ public class Ttl74138 extends AbstractTtlGate {
   public void paintInternal(InstancePainter painter, int x, int y, int height, boolean up) {
     // As tooltips can be longer than what can fit as pin name while painting IC internals,
     // we need to shorten it first to up to 4 characters to keep the diagram readable.
-    final var label_len_max = 4;
-    final var names = new ArrayList<String>();
-    for (final var name : portNames) {
-      final var tmp = name.split("\\s+");
+    final int label_len_max = 4;
+    final java.util.ArrayList<java.lang.String> names = new ArrayList<String>();
+    for (final java.lang.String name : portNames) {
+      final java.lang.String[] tmp = name.split("\\s+");
       names.add((tmp[0].length() <= label_len_max) ? tmp[0] : tmp[0].substring(0, label_len_max));
     }
     super.paintBase(painter, true, false);
@@ -92,13 +92,13 @@ public class Ttl74138 extends AbstractTtlGate {
   }
 
   protected void computeState(InstanceState state, byte inEn1, byte inEn2a, byte inEn2b, byte inA, byte inB, byte inC, byte[] outPorts) {
-    final var enabled =
+    final boolean enabled =
         state.getPortValue(mapPort(inEn1)) == Value.TRUE        // Active HIGH
         && state.getPortValue(mapPort(inEn2a)) == Value.FALSE   // Active LOW
         && state.getPortValue(mapPort(inEn2b)) == Value.FALSE;  // Active LOW
-    final var A = state.getPortValue(mapPort(inA)) == Value.TRUE ? (byte) 1 : 0;
-    final var B = state.getPortValue(mapPort(inB)) == Value.TRUE ? (byte) 2 : 0;
-    final var C = state.getPortValue(mapPort(inC)) == Value.TRUE ? (byte) 4 : 0;
+    final byte A = state.getPortValue(mapPort(inA)) == Value.TRUE ? (byte) 1 : 0;
+    final byte B = state.getPortValue(mapPort(inB)) == Value.TRUE ? (byte) 2 : 0;
+    final byte C = state.getPortValue(mapPort(inC)) == Value.TRUE ? (byte) 4 : 0;
 
     final int[][] outputPortStates = {
       {1, 0, 0, 0, 0, 0, 0, 0},
@@ -112,7 +112,7 @@ public class Ttl74138 extends AbstractTtlGate {
     };
 
     for (int i = 0; i < 8; i++) { // Active LOW
-      final var val = enabled ? (outputPortStates[A + B + C][i] == 0 ? Value.TRUE : Value.FALSE) : Value.TRUE;
+      final com.cburch.logisim.data.Value val = enabled ? (outputPortStates[A + B + C][i] == 0 ? Value.TRUE : Value.FALSE) : Value.TRUE;
       state.setPort(mapPort(outPorts[i]), val, DELAY);
     }
   }

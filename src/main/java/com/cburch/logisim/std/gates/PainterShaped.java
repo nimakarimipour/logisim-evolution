@@ -35,7 +35,7 @@ public class PainterShaped {
       int wingHeight = (height - width) / 2;
       int dx = Math.min(20, wingHeight / 4);
 
-      final var path = new GeneralPath();
+      final java.awt.geom.GeneralPath path = new GeneralPath();
       path.moveTo(-width, -height / 2);
       path.quadTo(-width + dx, -(width + height) / 4, -width, -width / 2);
       path.append(base, true);
@@ -45,31 +45,31 @@ public class PainterShaped {
   }
 
   private static int[] getInputLineLengths(GateAttributes attrs, AbstractGate factory) {
-    final var inputs = attrs.inputs;
-    final var mainHeight = (Integer) attrs.size.getValue();
+    final int inputs = attrs.inputs;
+    final java.lang.Integer mainHeight = (Integer) attrs.size.getValue();
     Integer key = inputs * 31 + mainHeight;
     Object ret = INPUT_LENGTHS.get(key);
     if (ret != null) {
       return (int[]) ret;
     }
 
-    final var facing = attrs.facing;
+    final com.cburch.logisim.data.Direction facing = attrs.facing;
     if (facing != Direction.EAST) {
       attrs = (GateAttributes) attrs.clone();
       attrs.facing = Direction.EAST;
     }
 
-    final var lengths = new int[inputs];
+    final int[] lengths = new int[inputs];
     INPUT_LENGTHS.put(key, lengths);
-    final var loc0 = OrGate.FACTORY.getInputOffset(attrs, 0);
-    final var locn = OrGate.FACTORY.getInputOffset(attrs, inputs - 1);
+    final com.cburch.logisim.data.Location loc0 = OrGate.FACTORY.getInputOffset(attrs, 0);
+    final com.cburch.logisim.data.Location locn = OrGate.FACTORY.getInputOffset(attrs, inputs - 1);
     int totalHeight = 10 + loc0.manhattanDistanceTo(locn);
     if (totalHeight < mainHeight) totalHeight = mainHeight;
 
-    final var path = computeShield(mainHeight, totalHeight);
+    final java.awt.geom.GeneralPath path = computeShield(mainHeight, totalHeight);
     for (int i = 0; i < inputs; i++) {
-      final var loci = OrGate.FACTORY.getInputOffset(attrs, i);
-      final var p = new Point2D.Float(loci.getX() + 1, loci.getY());
+      final com.cburch.logisim.data.Location loci = OrGate.FACTORY.getInputOffset(attrs, i);
+      final java.awt.geom.Point2D.Float p = new Point2D.Float(loci.getX() + 1, loci.getY());
       int iters = 0;
       while (path.contains(p) && iters < 15) {
         iters++;
@@ -82,7 +82,7 @@ public class PainterShaped {
   }
 
   static void paintAnd(InstancePainter painter, int width, int height) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     GraphicsUtil.switchToWidth(g, 2);
     int[] xp = new int[] {-width / 2, -width + 1, -width + 1, -width / 2};
     int[] yp = new int[] {-width / 2, -width / 2, width / 2, width / 2};
@@ -95,45 +95,45 @@ public class PainterShaped {
   }
 
   static void paintInputLines(InstancePainter painter, AbstractGate factory) {
-    final var loc = painter.getLocation();
-    final var printView = painter.isPrintView();
-    final var attrs = (GateAttributes) painter.getAttributeSet();
-    final var facing = attrs.facing;
-    final var inputs = attrs.inputs;
-    final var negated = attrs.negated;
+    final com.cburch.logisim.data.Location loc = painter.getLocation();
+    final boolean printView = painter.isPrintView();
+    final com.cburch.logisim.std.gates.GateAttributes attrs = (GateAttributes) painter.getAttributeSet();
+    final com.cburch.logisim.data.Direction facing = attrs.facing;
+    final int inputs = attrs.inputs;
+    final long negated = attrs.negated;
 
-    final var lengths = getInputLineLengths(attrs, factory);
+    final int[] lengths = getInputLineLengths(attrs, factory);
     if (painter.getInstance() == null) { // drawing ghost - negation bubbles
       // only
       for (int i = 0; i < inputs; i++) {
-        final var iNegated = ((negated >> i) & 1) == 1;
+        final boolean iNegated = ((negated >> i) & 1) == 1;
         if (iNegated) {
-          final var offs = factory.getInputOffset(attrs, i);
-          final var loci = loc.translate(offs.getX(), offs.getY());
-          final var cent = loci.translate(facing, lengths[i] + 5);
+          final com.cburch.logisim.data.Location offs = factory.getInputOffset(attrs, i);
+          final com.cburch.logisim.data.Location loci = loc.translate(offs.getX(), offs.getY());
+          final com.cburch.logisim.data.Location cent = loci.translate(facing, lengths[i] + 5);
           painter.drawDongle(cent.getX(), cent.getY());
         }
       }
     } else {
-      final var g = painter.getGraphics();
-      final var baseColor = g.getColor();
+      final java.awt.Graphics g = painter.getGraphics();
+      final java.awt.Color baseColor = g.getColor();
       GraphicsUtil.switchToWidth(g, 3);
       for (int i = 0; i < inputs; i++) {
-        final var offs = factory.getInputOffset(attrs, i);
-        final var src = loc.translate(offs.getX(), offs.getY());
-        final var len = lengths[i];
+        final com.cburch.logisim.data.Location offs = factory.getInputOffset(attrs, i);
+        final com.cburch.logisim.data.Location src = loc.translate(offs.getX(), offs.getY());
+        final int len = lengths[i];
         if (len != 0 && (!printView || painter.isPortConnected(i + 1))) {
           if (painter.getShowState()) {
-            final var val = painter.getPortValue(i + 1);
+            final com.cburch.logisim.data.Value val = painter.getPortValue(i + 1);
             g.setColor(val.getColor());
           } else {
             g.setColor(baseColor);
           }
-          final var dst = src.translate(facing, len);
+          final com.cburch.logisim.data.Location dst = src.translate(facing, len);
           g.drawLine(src.getX(), src.getY(), dst.getX(), dst.getY());
         }
         if (((negated >> i) & 1) == 1) {
-          final var cent = src.translate(facing, lengths[i] + 5);
+          final com.cburch.logisim.data.Location cent = src.translate(facing, lengths[i] + 5);
           g.setColor(baseColor);
           painter.drawDongle(cent.getX(), cent.getY());
           GraphicsUtil.switchToWidth(g, 3);
@@ -143,7 +143,7 @@ public class PainterShaped {
   }
 
   static void paintNot(InstancePainter painter) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     GraphicsUtil.switchToWidth(g, 2);
     if (painter.getAttributeValue(NotGate.ATTR_SIZE) == NotGate.SIZE_NARROW) {
       GraphicsUtil.switchToWidth(g, 2);
@@ -176,7 +176,7 @@ public class PainterShaped {
   }
 
   static void paintOr(InstancePainter painter, int width, int height) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     GraphicsUtil.switchToWidth(g, 2);
     GeneralPath path;
     if (width < 40) {
@@ -200,7 +200,7 @@ public class PainterShaped {
   }
 
   static void paintXor(InstancePainter painter, int width, int height) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     paintOr(painter, width - 10, width - 10);
     paintShield(g, -10, width - 10, height);
   }

@@ -30,7 +30,7 @@ public class CanvasActionAdapter extends com.cburch.logisim.proj.Action {
 
   private boolean affectsPorts() {
     if (canvasAction instanceof ModelAction action) {
-      for (final var obj : action.getObjects()) {
+      for (final com.cburch.draw.model.CanvasObject obj : action.getObjects()) {
         if (obj instanceof AppearanceElement) return true;
       }
     }
@@ -40,7 +40,7 @@ public class CanvasActionAdapter extends com.cburch.logisim.proj.Action {
   @Override
   public void doIt(Project proj) {
     if (affectsPorts()) {
-      final var xn = new ActionTransaction(true);
+      final com.cburch.logisim.gui.appear.CanvasActionAdapter.ActionTransaction xn = new ActionTransaction(true);
       xn.execute();
     } else {
       canvasAction.doIt();
@@ -55,7 +55,7 @@ public class CanvasActionAdapter extends com.cburch.logisim.proj.Action {
   @Override
   public void undo(Project proj) {
     if (affectsPorts()) {
-      final var xn = new ActionTransaction(false);
+      final com.cburch.logisim.gui.appear.CanvasActionAdapter.ActionTransaction xn = new ActionTransaction(false);
       xn.execute();
     } else {
       canvasAction.undo();
@@ -71,8 +71,8 @@ public class CanvasActionAdapter extends com.cburch.logisim.proj.Action {
 
     @Override
     protected Map<Circuit, Integer> getAccessedCircuits() {
-      final var accessMap = new HashMap<Circuit, Integer>();
-      for (final var supercirc : circuit.getCircuitsUsingThis()) {
+      final java.util.HashMap<com.cburch.logisim.circuit.Circuit,java.lang.Integer> accessMap = new HashMap<Circuit, Integer>();
+      for (final com.cburch.logisim.circuit.Circuit supercirc : circuit.getCircuitsUsingThis()) {
         accessMap.put(supercirc, READ_WRITE);
       }
       return accessMap;

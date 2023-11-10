@@ -23,26 +23,26 @@ public class DotMatrixHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
   @Override
   public LineBuffer getInlinedCode(
       Netlist netlist, Long componentId, netlistComponent componentInfo, String circuitName) {
-    final var contents = LineBuffer.getHdlBuffer();
-    final var colBased =
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
+    final boolean colBased =
         componentInfo.getComponent().getAttributeSet().getValue(DotMatrixBase.ATTR_INPUT_TYPE)
             == DotMatrixBase.INPUT_COLUMN;
-    final var rowBased =
+    final boolean rowBased =
         componentInfo.getComponent().getAttributeSet().getValue(DotMatrixBase.ATTR_INPUT_TYPE)
             == DotMatrixBase.INPUT_ROW;
-    final var rows =
+    final int rows =
         componentInfo
             .getComponent()
             .getAttributeSet()
             .getValue(DotMatrix.ATTR_MATRIX_ROWS)
             .getWidth();
-    final var cols =
+    final int cols =
         componentInfo
             .getComponent()
             .getAttributeSet()
             .getValue(DotMatrix.ATTR_MATRIX_COLS)
             .getWidth();
-    final var wires = new HashMap<String, String>();
+    final java.util.HashMap<java.lang.String,java.lang.String> wires = new HashMap<String, String>();
 
     if (colBased) {
       /* The simulator uses here following addressing scheme (2x2):
@@ -54,13 +54,13 @@ public class DotMatrixHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
        *  r1,c0 r1,c1
        */
       for (int dotMatrixRow = 0; dotMatrixRow < rows; dotMatrixRow++) {
-        final var ledMatrixRow = rows - dotMatrixRow - 1;
+        final int ledMatrixRow = rows - dotMatrixRow - 1;
         for (int ledMatrixCol = 0; ledMatrixCol < cols; ledMatrixCol++) {
-          final var wire =
+          final java.lang.String wire =
               (rows == 1)
                   ? Hdl.getNetName(componentInfo, ledMatrixCol, true, netlist)
                   : Hdl.getBusEntryName(componentInfo, ledMatrixCol, true, dotMatrixRow, netlist);
-          final var idx =
+          final int idx =
               (ledMatrixRow * cols) + ledMatrixCol + componentInfo.getLocalBubbleOutputStartId();
           wires.put(
               LineBuffer.formatHdl("{{1}}{{<}}{{2}}{{>}}", LOCAL_OUTPUT_BUBBLE_BUS_NAME, idx),
@@ -78,12 +78,12 @@ public class DotMatrixHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
        */
       for (int ledMatrixRow = 0; ledMatrixRow < rows; ledMatrixRow++) {
         for (int dotMatrixCol = 0; dotMatrixCol < cols; dotMatrixCol++) {
-          final var ledMatrixCol = cols - dotMatrixCol - 1;
-          final var wire =
+          final int ledMatrixCol = cols - dotMatrixCol - 1;
+          final java.lang.String wire =
               (cols == 1)
                   ? Hdl.getNetName(componentInfo, ledMatrixRow, true, netlist)
                   : Hdl.getBusEntryName(componentInfo, ledMatrixRow, true, ledMatrixCol, netlist);
-          final var idx =
+          final int idx =
               (ledMatrixRow * cols) + dotMatrixCol + componentInfo.getLocalBubbleOutputStartId();
           wires.put(
               LineBuffer.formatHdl("{{1}}{{<}}{{2}}{{>}}", LOCAL_OUTPUT_BUBBLE_BUS_NAME, idx),
@@ -100,17 +100,17 @@ public class DotMatrixHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
        *  r1,c0 r1,c1
        */
       for (int dotMatrixRow = 0; dotMatrixRow < rows; dotMatrixRow++) {
-        final var ledMatrixRow = rows - dotMatrixRow - 1;
+        final int ledMatrixRow = rows - dotMatrixRow - 1;
         for (int ledMatrixCol = 0; ledMatrixCol < cols; ledMatrixCol++) {
-          final var rowWire =
+          final java.lang.String rowWire =
               (rows == 1)
                   ? Hdl.getNetName(componentInfo, 1, true, netlist)
                   : Hdl.getBusEntryName(componentInfo, 1, true, dotMatrixRow, netlist);
-          final var colWire =
+          final java.lang.String colWire =
               (cols == 1)
                   ? Hdl.getNetName(componentInfo, 0, true, netlist)
                   : Hdl.getBusEntryName(componentInfo, 0, true, ledMatrixCol, netlist);
-          final var idx =
+          final int idx =
               (ledMatrixRow * cols) + ledMatrixCol + componentInfo.getLocalBubbleOutputStartId();
           wires.put(
               LineBuffer.formatHdl("{{1}}{{<}}{{2}}{{>}}", LOCAL_OUTPUT_BUBBLE_BUS_NAME, idx),

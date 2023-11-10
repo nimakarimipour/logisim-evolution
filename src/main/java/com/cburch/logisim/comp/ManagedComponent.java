@@ -44,7 +44,7 @@ public abstract class ManagedComponent extends AbstractComponent {
   // methods for altering data
   //
   public void clearManager() {
-    for (final var end : ends) {
+    for (final com.cburch.logisim.comp.EndData end : ends) {
       fireEndChanged(new ComponentEvent(this, end, null));
     }
     ends.clear();
@@ -56,22 +56,22 @@ public abstract class ManagedComponent extends AbstractComponent {
   //
   @Override
   public void expose(ComponentDrawContext context) {
-    final var bds = getBounds();
-    final var dest = context.getDestination();
+    final com.cburch.logisim.data.Bounds bds = getBounds();
+    final java.awt.Component dest = context.getDestination();
     if (bds != null) {
       dest.repaint(bds.getX() - 5, bds.getY() - 5, bds.getWidth() + 10, bds.getHeight() + 10);
     }
   }
 
   protected void fireComponentInvalidated(ComponentEvent e) {
-    for (final var l : listeners) {
+    for (final com.cburch.logisim.comp.ComponentListener l : listeners) {
       l.componentInvalidated(e);
     }
   }
 
   protected void fireEndChanged(ComponentEvent e) {
     ComponentEvent copy = null;
-    for (final var l : listeners) {
+    for (final com.cburch.logisim.comp.ComponentListener l : listeners) {
       if (copy == null) {
         copy =
             new ComponentEvent(
@@ -85,7 +85,7 @@ public abstract class ManagedComponent extends AbstractComponent {
 
   protected void fireEndsChanged(List<EndData> oldEnds, List<EndData> newEnds) {
     ComponentEvent e = null;
-    for (final var l : listeners) {
+    for (final com.cburch.logisim.comp.ComponentListener l : listeners) {
       if (e == null) e = new ComponentEvent(this, oldEnds, newEnds);
       l.endChanged(e);
     }
@@ -99,8 +99,8 @@ public abstract class ManagedComponent extends AbstractComponent {
   @Override
   public Bounds getBounds() {
     if (bounds == null) {
-      final var loc = getLocation();
-      final var offBounds = getFactory().getOffsetBounds(getAttributeSet());
+      final com.cburch.logisim.data.Location loc = getLocation();
+      final com.cburch.logisim.data.Bounds offBounds = getFactory().getOffsetBounds(getAttributeSet());
       bounds = offBounds.translate(loc.getX(), loc.getY());
     }
     return bounds;
@@ -163,7 +163,7 @@ public abstract class ManagedComponent extends AbstractComponent {
       ends.add(data);
       fireEndChanged(new ComponentEvent(this, null, data));
     } else {
-      final var old = ends.get(i);
+      final com.cburch.logisim.comp.EndData old = ends.get(i);
       if (old == null || !old.equals(data)) {
         ends.set(i, data);
         fireEndChanged(new ComponentEvent(this, old, data));
@@ -180,12 +180,12 @@ public abstract class ManagedComponent extends AbstractComponent {
   }
 
   public void setEnds(EndData[] newEnds) {
-    final var oldEnds = ends;
-    final var minLen = Math.min(oldEnds.size(), newEnds.length);
-    final var changesOld = new ArrayList<EndData>();
-    final var changesNew = new ArrayList<EndData>();
+    final java.util.ArrayList<com.cburch.logisim.comp.EndData> oldEnds = ends;
+    final int minLen = Math.min(oldEnds.size(), newEnds.length);
+    final java.util.ArrayList<com.cburch.logisim.comp.EndData> changesOld = new ArrayList<EndData>();
+    final java.util.ArrayList<com.cburch.logisim.comp.EndData> changesNew = new ArrayList<EndData>();
     for (int i = 0; i < minLen; i++) {
-      final var old = oldEnds.get(i);
+      final com.cburch.logisim.comp.EndData old = oldEnds.get(i);
       if (newEnds[i] != null && !newEnds[i].equals(old)) {
         changesOld.add(old);
         changesNew.add(newEnds[i]);

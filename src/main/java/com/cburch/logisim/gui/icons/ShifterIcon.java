@@ -20,7 +20,7 @@ public class ShifterIcon extends BaseIcon {
 
   @Override
   protected void paintIcon(Graphics2D g2) {
-    final var s = new StringBuilder();
+    final java.lang.StringBuilder s = new StringBuilder();
     if (state < 0) {
       s.append("\u25b6".repeat(3));
     } else {
@@ -30,12 +30,12 @@ public class ShifterIcon extends BaseIcon {
         mask >>= 1;
       }
     }
-    final var f = g2.getFont().deriveFont(scale((float) 6)).deriveFont(Font.BOLD);
+    final java.awt.Font f = g2.getFont().deriveFont(scale((float) 6)).deriveFont(Font.BOLD);
     g2.setColor(Color.BLACK);
     g2.drawRect(0, scale(4), scale(16), scale(8));
-    final var t = new TextLayout(s.toString(), f, g2.getFontRenderContext());
-    final var x = scale((float) 8) - (float) t.getBounds().getCenterX();
-    final var y = scale((float) 8) - (float) t.getBounds().getCenterY();
+    final java.awt.font.TextLayout t = new TextLayout(s.toString(), f, g2.getFontRenderContext());
+    final float x = scale((float) 8) - (float) t.getBounds().getCenterX();
+    final float y = scale((float) 8) - (float) t.getBounds().getCenterY();
     t.draw(g2, x, y);
   }
 }

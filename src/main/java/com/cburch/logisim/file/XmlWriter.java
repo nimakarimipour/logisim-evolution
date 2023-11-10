@@ -104,10 +104,10 @@ final class XmlWriter {
   }
 
   static String attrsToString(NamedNodeMap a) {
-    final var n = a.getLength();
+    final int n = a.getLength();
     if (n == 0) return "";
     else if (n == 1) return attrToString((Attr) a.item(0));
-    final var lst = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> lst = new ArrayList<String>();
     for (int i = 0; i < n; i++) {
       lst.add(attrToString((Attr) a.item(i)));
     }
@@ -131,9 +131,9 @@ final class XmlWriter {
       };
 
   static void sort(Node top) {
-    final var children = top.getChildNodes();
-    final var childrenCount = children.getLength();
-    final var name = top.getNodeName();
+    final org.w3c.dom.NodeList children = top.getChildNodes();
+    final int childrenCount = children.getLength();
+    final java.lang.String name = top.getNodeName();
     // project (contains ordered elements, do not sort)
     // - main
     // - toolbar (contains ordered elements, do not sort)
@@ -150,12 +150,12 @@ final class XmlWriter {
     //   - wire(s)
     if ("appear".equals(name)) {
       // the appearance section only has to sort the circuit ports, the rest is static.
-      final var circuitPortIndexes = new ArrayList<Integer>();
+      final java.util.ArrayList<java.lang.Integer> circuitPortIndexes = new ArrayList<Integer>();
       for (int nodeIndex = 0; nodeIndex < childrenCount; nodeIndex++)
         if ("circ-port".equals(children.item(nodeIndex).getNodeName())) circuitPortIndexes.add(nodeIndex);
       if (circuitPortIndexes.isEmpty()) return;
-      final var numberOfPorts = circuitPortIndexes.size();
-      final var nodeSet = new Node[numberOfPorts];
+      final int numberOfPorts = circuitPortIndexes.size();
+      final org.w3c.dom.Node[] nodeSet = new Node[numberOfPorts];
       for (int portIndex = 0; portIndex < numberOfPorts; portIndex++)
         nodeSet[portIndex] = children.item(circuitPortIndexes.get(portIndex));
       Arrays.sort(nodeSet, nodeComparator);
@@ -163,7 +163,7 @@ final class XmlWriter {
       return;
     }
     if (childrenCount > 1 && !name.equals("project") && !name.equals("lib") && !name.equals("toolbar")) {
-      final var nodeSet = new Node[childrenCount];
+      final org.w3c.dom.Node[] nodeSet = new Node[childrenCount];
       for (int nodeIndex = 0; nodeIndex < childrenCount; nodeIndex++) nodeSet[nodeIndex] = children.item(nodeIndex);
       Arrays.sort(nodeSet, nodeComparator);
       for (int nodeIndex = 0; nodeIndex < childrenCount; nodeIndex++) top.insertBefore(nodeSet[nodeIndex], null);
@@ -176,10 +176,10 @@ final class XmlWriter {
   static void write(LogisimFile file, OutputStream out, LibraryLoader loader, File destFile, String libraryHome)
       throws ParserConfigurationException, TransformerException {
 
-    final var docFactory = XmlUtil.getHardenedBuilderFactory();
-    final var docBuilder = docFactory.newDocumentBuilder();
+    final javax.xml.parsers.DocumentBuilderFactory docFactory = XmlUtil.getHardenedBuilderFactory();
+    final javax.xml.parsers.DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
-    final var doc = docBuilder.newDocument();
+    final org.w3c.dom.Document doc = docBuilder.newDocument();
     XmlWriter context;
     if (destFile != null) {
       java.lang.String dstFilePath = destFile.getAbsolutePath();
@@ -193,13 +193,13 @@ final class XmlWriter {
 
     context.fromLogisimFile();
 
-    final var tfFactory = TransformerFactory.newInstance();
+    final javax.xml.transform.TransformerFactory tfFactory = TransformerFactory.newInstance();
     try {
       tfFactory.setAttribute("indent-number", 2);
     } catch (IllegalArgumentException ignored) {
       // Do nothing
     }
-    final var tf = tfFactory.newTransformer();
+    final javax.xml.transform.Transformer tf = tfFactory.newTransformer();
     tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
     tf.setOutputProperty(OutputKeys.INDENT, "yes");
     try {
@@ -218,23 +218,23 @@ final class XmlWriter {
   void addAttributeSetContent(Element elt, AttributeSet attrs, AttributeDefaultProvider source, boolean userModifiedOnly) {
     if (attrs == null) return;
     if (source != null && source.isAllDefaultValues(attrs, BuildInfo.version)) return;
-    for (final var attrBase : attrs.getAttributes()) {
+    for (final com.cburch.logisim.data.Attribute<?> attrBase : attrs.getAttributes()) {
       @SuppressWarnings("unchecked")
-      final var attr = (Attribute<Object>) attrBase;
-      final var val = attrs.getValue(attr);
+      final Attribute<Object> attr = (Attribute<Object>) attrBase;
+      final java.lang.Object val = attrs.getValue(attr);
       if (userModifiedOnly && (attrs.isReadOnly(attr) || attr.isHidden())) continue;
       if (attrs.isToSave(attr) && val != null) {
-        final var dflt = source == null ? null : source.getDefaultAttributeValue(attr, BuildInfo.version);
-        final var defaultValue = dflt == null ? "" : attr.toStandardString(dflt);
+        final java.lang.Object dflt = source == null ? null : source.getDefaultAttributeValue(attr, BuildInfo.version);
+        final java.lang.String defaultValue = dflt == null ? "" : attr.toStandardString(dflt);
         java.lang.String newValue = attr.toStandardString(val);
         if (dflt == null || (!dflt.equals(val) && !defaultValue.equals(newValue))
             || (attr.equals(StdAttr.APPEARANCE) && !userModifiedOnly)
             || (attr.equals(ProbeAttributes.PROBEAPPEARANCE) && !userModifiedOnly && val.equals(ProbeAttributes.APPEAR_EVOLUTION_NEW))) {
-          final var a = doc.createElement("a");
+          final org.w3c.dom.Element a = doc.createElement("a");
           a.setAttribute("name", attr.getName());
           if ("filePath".equals(attr.getName()) && outFilePath != null) {
-            final var outFP = Paths.get(outFilePath);
-            final var attrValP = Paths.get(newValue);
+            final java.nio.file.Path outFP = Paths.get(outFilePath);
+            final java.nio.file.Path attrValP = Paths.get(newValue);
             newValue = (outFP.relativize(attrValP)).toString();
             a.setAttribute("val", newValue);
           } else {
@@ -252,7 +252,7 @@ final class XmlWriter {
 
   Library findLibrary(ComponentFactory source) {
     if (file.contains(source)) return file;
-    for (final var lib : file.getLibraries()) {
+    for (final com.cburch.logisim.tools.Library lib : file.getLibraries()) {
       if (lib.contains(source)) return lib;
     }
     return null;
@@ -260,21 +260,21 @@ final class XmlWriter {
 
   Library findLibrary(Tool tool) {
     if (libraryContains(file, tool)) return file;
-    for (final var lib : file.getLibraries()) {
+    for (final com.cburch.logisim.tools.Library lib : file.getLibraries()) {
       if (libraryContains(lib, tool)) return lib;
     }
     return null;
   }
 
   Element fromCircuit(Circuit circuit) {
-    final var ret = doc.createElement("circuit");
+    final org.w3c.dom.Element ret = doc.createElement("circuit");
     ret.setAttribute("name", circuit.getName());
     addAttributeSetContent(ret, circuit.getStaticAttributes(), CircuitAttributes.DEFAULT_STATIC_ATTRIBUTES, false);
     if (circuit.getAppearance().hasCustomAppearance()) {
-      final var appear = doc.createElement("appear");
+      final org.w3c.dom.Element appear = doc.createElement("appear");
       for (Object obj : circuit.getAppearance().getCustomObjectsFromBottom()) {
         if (obj instanceof AbstractCanvasObject canvasObject) {
-          final var elt = canvasObject.toSvgElement(doc);
+          final org.w3c.dom.Element elt = canvasObject.toSvgElement(doc);
           if (elt != null) {
             appear.appendChild(elt);
           }
@@ -282,15 +282,15 @@ final class XmlWriter {
       }
       ret.appendChild(appear);
     }
-    for (final var wire : circuit.getWires()) {
+    for (final com.cburch.logisim.circuit.Wire wire : circuit.getWires()) {
       ret.appendChild(fromWire(wire));
     }
-    for (final var comp : circuit.getNonWires()) {
-      final var elt = fromComponent(comp);
+    for (final com.cburch.logisim.comp.Component comp : circuit.getNonWires()) {
+      final org.w3c.dom.Element elt = fromComponent(comp);
       if (elt != null) ret.appendChild(elt);
     }
-    for (final var board : circuit.getBoardMapNamestoSave()) {
-      final var elt = fromMap(circuit, board);
+    for (final java.lang.String board : circuit.getBoardMapNamestoSave()) {
+      final org.w3c.dom.Element elt = fromMap(circuit, board);
       if (elt != null) ret.appendChild(elt);
     }
     return ret;
@@ -298,18 +298,18 @@ final class XmlWriter {
 
   Element fromVhdl(VhdlContent vhdl) {
     vhdl.aboutToSave();
-    final var ret = doc.createElement("vhdl");
+    final org.w3c.dom.Element ret = doc.createElement("vhdl");
     ret.setAttribute("name", vhdl.getName());
     ret.setTextContent(vhdl.getContent());
     return ret;
   }
 
   Element fromMap(Circuit circ, String boardName) {
-    final var ret = doc.createElement("boardmap");
+    final org.w3c.dom.Element ret = doc.createElement("boardmap");
     ret.setAttribute("boardname", boardName);
     for (String key : circ.getMapInfo(boardName).keySet()) {
-      final var map = doc.createElement("mc");
-      final var mapInfo = circ.getMapInfo(boardName).get(key);
+      final org.w3c.dom.Element map = doc.createElement("mc");
+      final com.cburch.logisim.circuit.CircuitMapInfo mapInfo = circ.getMapInfo(boardName).get(key);
       if (mapInfo.isOldFormat()) {
         map.setAttribute("key", key);
         if (mapInfo.isOpen()) {
@@ -317,14 +317,14 @@ final class XmlWriter {
         } else if (mapInfo.isConst()) {
           map.setAttribute(MapComponent.CONSTANT_KEY, Long.toString(mapInfo.getConstValue()));
         } else {
-          final var rect = mapInfo.getRectangle();
+          final com.cburch.logisim.fpga.data.BoardRectangle rect = mapInfo.getRectangle();
           map.setAttribute("valx", Integer.toString(rect.getXpos()));
           map.setAttribute("valy", Integer.toString(rect.getYpos()));
           map.setAttribute("valw", Integer.toString(rect.getWidth()));
           map.setAttribute("valh", Integer.toString(rect.getHeight()));
         }
       } else {
-        final var nmap = mapInfo.getMap();
+        final com.cburch.logisim.fpga.data.MapComponent nmap = mapInfo.getMap();
         if (nmap != null)
           nmap.getMapElement(map);
         else {
@@ -338,8 +338,8 @@ final class XmlWriter {
   }
 
   Element fromComponent(Component comp) {
-    final var source = comp.getFactory();
-    final var lib = findLibrary(source);
+    final com.cburch.logisim.comp.ComponentFactory source = comp.getFactory();
+    final com.cburch.logisim.tools.Library lib = findLibrary(source);
     String libName;
     if (lib == null) {
       loader.showError(source.getName() + " component not found");
@@ -355,11 +355,11 @@ final class XmlWriter {
     }
     if ("Text".equals(source.getName())) {
       /* check if the text element is empty, in this case we do not save */
-      final var value = comp.getAttributeSet().getValue(Text.ATTR_TEXT);
+      final java.lang.String value = comp.getAttributeSet().getValue(Text.ATTR_TEXT);
       if (value.isEmpty()) return null;
     }
 
-    final var ret = doc.createElement("comp");
+    final org.w3c.dom.Element ret = doc.createElement("comp");
     if (libName != null) ret.setAttribute("lib", libName);
     ret.setAttribute("name", source.getName());
     ret.setAttribute("loc", comp.getLocation().toString());
@@ -368,9 +368,9 @@ final class XmlWriter {
   }
 
   Element fromLibrary(Library lib) {
-    final var ret = doc.createElement("lib");
+    final org.w3c.dom.Element ret = doc.createElement("lib");
     if (libs.containsKey(lib)) return null;
-    final var name = Integer.toString(libs.size());
+    final java.lang.String name = Integer.toString(libs.size());
     java.lang.String desc = loader.getDescriptor(lib);
     if (desc == null) {
       loader.showError("library location unknown: " + lib.getName());
@@ -380,16 +380,16 @@ final class XmlWriter {
     if (isProjectExport || AppPreferences.REMOVE_UNUSED_LIBRARIES.getBoolean()) {
       // first we check if the library is used and if this is not the case we do not add it
       boolean isUsed = false;
-      final var tools = lib.getTools();
-      for (final var circuit : file.getCircuits()) {
-        for (final var tool : circuit.getNonWires()) {
+      final java.util.List<? extends com.cburch.logisim.tools.Tool> tools = lib.getTools();
+      for (final com.cburch.logisim.circuit.Circuit circuit : file.getCircuits()) {
+        for (final com.cburch.logisim.comp.Component tool : circuit.getNonWires()) {
           isUsed |= lib.contains(tool.getFactory());
         }
       }
-      for (final var tool : file.getOptions().getToolbarData().getContents()) {
+      for (final com.cburch.logisim.tools.Tool tool : file.getOptions().getToolbarData().getContents()) {
         isUsed |= tools.contains(tool);
       }
-      for (final var entry : file.getOptions().getMouseMappings().getMappings().entrySet()) {
+      for (final java.util.Map.Entry<java.lang.Integer,com.cburch.logisim.tools.Tool> entry : file.getOptions().getMouseMappings().getMappings().entrySet()) {
         isUsed |= tools.contains(entry.getValue());
       }
       if (!isUsed && !"#Base".equals(desc)) {
@@ -398,18 +398,18 @@ final class XmlWriter {
     }
     if (isProjectExport) {
       if (lib instanceof LoadedLibrary) {
-        final var origFile = LibraryManager.getLibraryFilePath(file.getLoader(), desc);
+        final java.lang.String origFile = LibraryManager.getLibraryFilePath(file.getLoader(), desc);
         if (origFile != null) {
-          final var names = origFile.split(Pattern.quote(File.separator));
-          final var filename = names[names.length - 1];
-          final var newFile = String.format("%s%s%s", librariesPath, File.separator, filename);
+          final java.lang.String[] names = origFile.split(Pattern.quote(File.separator));
+          final java.lang.String filename = names[names.length - 1];
+          final java.lang.String newFile = String.format("%s%s%s", librariesPath, File.separator, filename);
           try {
             Files.copy(Paths.get(origFile), Paths.get(newFile), StandardCopyOption.REPLACE_EXISTING);
           } catch (IOException e) {
             //TODO: error message to user
             return null;
           }
-          final var newFilePath = LineBuffer.format("..{{1}}{{2}}{{1}}{{3}}", File.separator, Loader.LOGISIM_LIBRARY_DIR, filename);
+          final java.lang.String newFilePath = LineBuffer.format("..{{1}}{{2}}{{1}}{{3}}", File.separator, Loader.LOGISIM_LIBRARY_DIR, filename);
           desc = LibraryManager.getReplacementDescriptor(file.getLoader(), desc, newFilePath);
         }
       }
@@ -417,9 +417,9 @@ final class XmlWriter {
     ret.setAttribute("name", name);
     ret.setAttribute("desc", desc);
     for (Tool t : lib.getTools()) {
-      final var attrs = t.getAttributeSet();
+      final com.cburch.logisim.data.AttributeSet attrs = t.getAttributeSet();
       if (attrs != null) {
-        final var toAdd = doc.createElement("tool");
+        final org.w3c.dom.Element toAdd = doc.createElement("tool");
         toAdd.setAttribute("name", t.getName());
         addAttributeSetContent(toAdd, attrs, t, true);
         if (toAdd.getChildNodes().getLength() > 0) {
@@ -431,7 +431,7 @@ final class XmlWriter {
   }
 
   Element fromLogisimFile() {
-    final var ret = doc.createElement("project");
+    final org.w3c.dom.Element ret = doc.createElement("project");
     doc.appendChild(ret);
     ret.appendChild(
         doc.createTextNode(
@@ -444,13 +444,13 @@ final class XmlWriter {
     ret.setAttribute("version", "1.0");
     ret.setAttribute("source", BuildInfo.version.toString());
 
-    for (final var lib : file.getLibraries()) {
-      final var elt = fromLibrary(lib);
+    for (final com.cburch.logisim.tools.Library lib : file.getLibraries()) {
+      final org.w3c.dom.Element elt = fromLibrary(lib);
       if (elt != null) ret.appendChild(elt);
     }
 
     if (file.getMainCircuit() != null) {
-      final var mainElt = doc.createElement("main");
+      final org.w3c.dom.Element mainElt = doc.createElement("main");
       mainElt.setAttribute("name", file.getMainCircuit().getName());
       ret.appendChild(mainElt);
     }
@@ -459,23 +459,23 @@ final class XmlWriter {
     ret.appendChild(fromMouseMappings());
     ret.appendChild(fromToolbarData());
 
-    for (final var circ : file.getCircuits()) {
+    for (final com.cburch.logisim.circuit.Circuit circ : file.getCircuits()) {
       ret.appendChild(fromCircuit(circ));
     }
-    for (final var vhdl : file.getVhdlContents()) {
+    for (final com.cburch.logisim.vhdl.base.VhdlContent vhdl : file.getVhdlContents()) {
       ret.appendChild(fromVhdl(vhdl));
     }
     return ret;
   }
 
   Element fromMouseMappings() {
-    final var elt = doc.createElement("mappings");
-    final var map = file.getOptions().getMouseMappings();
-    for (final var entry : map.getMappings().entrySet()) {
-      final var mods = entry.getKey();
-      final var tool = entry.getValue();
-      final var toolElt = fromTool(tool);
-      final var mapValue = InputEventUtil.toString(mods);
+    final org.w3c.dom.Element elt = doc.createElement("mappings");
+    final com.cburch.logisim.file.MouseMappings map = file.getOptions().getMouseMappings();
+    for (final java.util.Map.Entry<java.lang.Integer,com.cburch.logisim.tools.Tool> entry : map.getMappings().entrySet()) {
+      final java.lang.Integer mods = entry.getKey();
+      final com.cburch.logisim.tools.Tool tool = entry.getValue();
+      final org.w3c.dom.Element toolElt = fromTool(tool);
+      final java.lang.String mapValue = InputEventUtil.toString(mods);
       toolElt.setAttribute("map", mapValue);
       elt.appendChild(toolElt);
     }
@@ -483,13 +483,13 @@ final class XmlWriter {
   }
 
   Element fromOptions() {
-    final var elt = doc.createElement("options");
+    final org.w3c.dom.Element elt = doc.createElement("options");
     addAttributeSetContent(elt, file.getOptions().getAttributeSet(), null, false);
     return elt;
   }
 
   Element fromTool(Tool tool) {
-    final var lib = findLibrary(tool);
+    final com.cburch.logisim.tools.Library lib = findLibrary(tool);
     String libName;
     if (lib == null) {
       loader.showError(String.format("tool `%s' not found", tool.getDisplayName()));
@@ -504,7 +504,7 @@ final class XmlWriter {
       }
     }
 
-    final var elt = doc.createElement("tool");
+    final org.w3c.dom.Element elt = doc.createElement("tool");
     if (libName != null) elt.setAttribute("lib", libName);
     elt.setAttribute("name", tool.getName());
     addAttributeSetContent(elt, tool.getAttributeSet(), tool, true);
@@ -512,9 +512,9 @@ final class XmlWriter {
   }
 
   Element fromToolbarData() {
-    final var elt = doc.createElement("toolbar");
-    final var toolbar = file.getOptions().getToolbarData();
-    for (final var tool : toolbar.getContents()) {
+    final org.w3c.dom.Element elt = doc.createElement("toolbar");
+    final com.cburch.logisim.file.ToolbarData toolbar = file.getOptions().getToolbarData();
+    for (final com.cburch.logisim.tools.Tool tool : toolbar.getContents()) {
       if (tool == null) {
         elt.appendChild(doc.createElement("sep"));
       } else {
@@ -525,14 +525,14 @@ final class XmlWriter {
   }
 
   Element fromWire(Wire w) {
-    final var ret = doc.createElement("wire");
+    final org.w3c.dom.Element ret = doc.createElement("wire");
     ret.setAttribute("from", w.getEnd0().toString());
     ret.setAttribute("to", w.getEnd1().toString());
     return ret;
   }
 
   boolean libraryContains(Library lib, Tool query) {
-    for (final var tool : lib.getTools()) {
+    for (final com.cburch.logisim.tools.Tool tool : lib.getTools()) {
       if (tool.sharesSource(query)) return true;
     }
     return false;

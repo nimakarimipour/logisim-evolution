@@ -16,9 +16,9 @@ import javax.swing.JScrollPane;
 
 public class Test {
   public static void main(String[] args) {
-    final var frame = new JFrame();
-    final var model = new Model();
-    final var editor = new HexEditor(model);
+    final javax.swing.JFrame frame = new JFrame();
+    final com.cburch.hex.Test.Model model = new Model();
+    final com.cburch.hex.HexEditor editor = new HexEditor(model);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.getContentPane().add(new JScrollPane(editor));
     frame.pack();
@@ -36,10 +36,10 @@ public class Test {
 
     @Override
     public void fill(long start, long len, long value) {
-      final var oldValues = new long[(int) len];
+      final long[] oldValues = new long[(int) len];
       System.arraycopy(data, (int) (start - 11111), oldValues, 0, (int) len);
       Arrays.fill(data, (int) (start - 11111), (int) len, value);
-      for (final var listener : listeners) {
+      for (final com.cburch.hex.HexModelListener listener : listeners) {
         listener.bytesChanged(this, start, len, oldValues);
       }
     }
@@ -71,19 +71,19 @@ public class Test {
 
     @Override
     public void set(long address, long value) {
-      final var oldValues = new long[] {data[(int) (address - 11111)]};
+      final long[] oldValues = new long[] {data[(int) (address - 11111)]};
       data[(int) (address - 11111)] = value & 0x1FF;
-      for (final var listener : listeners) {
+      for (final com.cburch.hex.HexModelListener listener : listeners) {
         listener.bytesChanged(this, address, 1, oldValues);
       }
     }
 
     @Override
     public void set(long start, long[] values) {
-      final var oldValues = new long[values.length];
+      final long[] oldValues = new long[values.length];
       System.arraycopy(data, (int) (start - 11111), oldValues, 0, values.length);
       System.arraycopy(values, 0, data, (int) (start - 11111), values.length);
-      for (final var listener : listeners) {
+      for (final com.cburch.hex.HexModelListener listener : listeners) {
         listener.bytesChanged(this, start, values.length, oldValues);
       }
     }

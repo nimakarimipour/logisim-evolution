@@ -44,7 +44,7 @@ public class Text extends AbstractCanvasObject {
 
   @Override
   public Text clone() {
-    final var ret = (Text) super.clone();
+    final com.cburch.draw.shapes.Text ret = (Text) super.clone();
     ret.label = this.label.clone();
     return ret;
   }
@@ -70,11 +70,11 @@ public class Text extends AbstractCanvasObject {
   }
 
   public List<Handle> getHandles() {
-    final var bds = getBounds();
-    final var x = bds.getX();
-    final var y = bds.getY();
-    final var w = bds.getWidth();
-    final var h = bds.getHeight();
+    final com.cburch.logisim.data.Bounds bds = getBounds();
+    final int x = bds.getX();
+    final int y = bds.getY();
+    final int w = bds.getWidth();
+    final int h = bds.getHeight();
     return UnmodifiableList.create(
         new Handle[] {
           new Handle(this, x, y),

@@ -23,7 +23,7 @@ public class PrefOption {
 
   static void setSelected(JComboBox<PrefOption> combo, Object value) {
     for (int i = combo.getItemCount() - 1; i >= 0; i--) {
-      final var opt = combo.getItemAt(i);
+      final com.cburch.logisim.gui.prefs.PrefOption opt = combo.getItemAt(i);
       if (opt.getValue().equals(value)) {
         combo.setSelectedItem(opt);
         return;

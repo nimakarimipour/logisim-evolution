@@ -73,17 +73,17 @@ public class AttrTable extends JPanel implements LocaleListener {
     table.setTableHeader(null);
     table.setRowHeight(AppPreferences.getScaled(AppPreferences.BOX_SIZE));
 
-    final var baseFont = title.getFont();
-    final var titleSize = Math.round(baseFont.getSize() * 1.2f);
-    final var titleFont = baseFont.deriveFont(AppPreferences.getScaled((float) titleSize)).deriveFont(Font.BOLD);
+    final java.awt.Font baseFont = title.getFont();
+    final int titleSize = Math.round(baseFont.getSize() * 1.2f);
+    final java.awt.Font titleFont = baseFont.deriveFont(AppPreferences.getScaled((float) titleSize)).deriveFont(Font.BOLD);
     title.setFont(titleFont);
-    final var bgColor = new Color(240, 240, 240);
+    final java.awt.Color bgColor = new Color(240, 240, 240);
     setBackground(bgColor);
     table.setBackground(bgColor);
     table.setDefaultRenderer(String.class, new HdlColorRenderer());
 
-    final var propPanel = new JPanel(new BorderLayout(0, 0));
-    final var tableScroll = new JScrollPane(table);
+    final javax.swing.JPanel propPanel = new JPanel(new BorderLayout(0, 0));
+    final javax.swing.JScrollPane tableScroll = new JScrollPane(table);
 
     propPanel.add(title, BorderLayout.PAGE_START);
     propPanel.add(tableScroll, BorderLayout.CENTER);
@@ -99,7 +99,7 @@ public class AttrTable extends JPanel implements LocaleListener {
   }
 
   public void setAttrTableModel(AttrTableModel value) {
-    final var editor = table.getCellEditor();
+    final javax.swing.table.TableCellEditor editor = table.getCellEditor();
     if (editor != null) table.getCellEditor().cancelCellEditing();
     tableModel.setAttrTableModel(value == null ? NULL_ATTR_MODEL : value);
     updateTitle();
@@ -122,7 +122,7 @@ public class AttrTable extends JPanel implements LocaleListener {
 
   private void updateTitle() {
     if (titleEnabled) {
-      final var text = tableModel.attrModel.getTitle();
+      final java.lang.String text = tableModel.attrModel.getTitle();
       if (text == null) {
         title.setVisible(false);
       } else {
@@ -150,7 +150,7 @@ public class AttrTable extends JPanel implements LocaleListener {
       // Thanks to Christophe Jacquet, who contributed a fix to this
       // so that when the dialog is resized, the component within it
       // is resized as well. (Tracker #2024479)
-      final var p = new JPanel(new BorderLayout());
+      final javax.swing.JPanel p = new JPanel(new BorderLayout());
       p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
       // Hide the JFileChooser buttons, since we already have the
       // MyDialog ones
@@ -242,14 +242,14 @@ public class AttrTable extends JPanel implements LocaleListener {
     }
 
     public void fireEditingCanceled() {
-      final var col = table.getEditingColumn();
-      final var e = new ChangeEvent(AttrTable.this);
-      for (final var l : new ArrayList<>(listeners)) {
+      final int col = table.getEditingColumn();
+      final javax.swing.event.ChangeEvent e = new ChangeEvent(AttrTable.this);
+      for (final javax.swing.event.CellEditorListener l : new ArrayList<>(listeners)) {
         l.editingCanceled(e);
       }
       if (multiEditActive) {
-        final var value = getCellEditorValue();
-        for (final var r : currentRowIndexes) {
+        final java.lang.Object value = getCellEditorValue();
+        for (final int r : currentRowIndexes) {
           if (r == table.getEditingRow()) continue;
           table.setValueAt(value, r, col);
         }
@@ -257,8 +257,8 @@ public class AttrTable extends JPanel implements LocaleListener {
     }
 
     public void fireEditingStopped() {
-      final var e = new ChangeEvent(AttrTable.this);
-      for (final var l : new ArrayList<>(listeners)) {
+      final javax.swing.event.ChangeEvent e = new ChangeEvent(AttrTable.this);
+      for (final javax.swing.event.CellEditorListener l : new ArrayList<>(listeners)) {
         l.editingStopped(e);
       }
     }
@@ -271,7 +271,7 @@ public class AttrTable extends JPanel implements LocaleListener {
     //
     @Override
     public void focusLost(FocusEvent e) {
-      final var dst = e.getOppositeComponent();
+      final java.awt.Component dst = e.getOppositeComponent();
       if (dst != null) {
         java.awt.Component p = dst;
         while (p != null && !(p instanceof Window)) {
@@ -291,7 +291,7 @@ public class AttrTable extends JPanel implements LocaleListener {
     @Override
     public Object getCellEditorValue() {
       // Returns the value contained in the editor.
-      final var comp = currentEditor;
+      final java.awt.Component comp = currentEditor;
       if (comp instanceof JTextField field) {
         return field.getText();
       } else if (comp instanceof JComboBox box) {
@@ -304,8 +304,8 @@ public class AttrTable extends JPanel implements LocaleListener {
     @SuppressWarnings("rawtypes")
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int rowIndex, int columnIndex) {
-      final var attrModel = tableModel.attrModel;
-      final var row = attrModel.getRow(rowIndex);
+      final com.cburch.logisim.gui.generic.AttrTableModel attrModel = tableModel.attrModel;
+      final com.cburch.logisim.gui.generic.AttrTableModelRow row = attrModel.getRow(rowIndex);
       AttrTableModelRow[] rows = null;
       int[] rowIndexes = null;
       multiEditActive = false;
@@ -340,7 +340,7 @@ public class AttrTable extends JPanel implements LocaleListener {
         }
       } else if (editor instanceof JInputDialog dlog) {
         dlog.setVisible(true);
-        final var retVal = dlog.getValue();
+        final java.lang.Object retVal = dlog.getValue();
         try {
           row.setValue(parent, retVal);
         } catch (AttrTableSetException e) {
@@ -352,9 +352,9 @@ public class AttrTable extends JPanel implements LocaleListener {
         }
         editor = null;
       } else if (editor instanceof JInputComponent input) {
-        final var dialog = new MyDialog(input);
+        final com.cburch.logisim.gui.generic.AttrTable.MyDialog dialog = new MyDialog(input);
         dialog.setVisible(true);
-        final var retVal = dialog.getValue();
+        final java.lang.Object retVal = dialog.getValue();
         try {
           row.setValue(parent, retVal);
         } catch (AttrTableSetException e) {
@@ -434,7 +434,7 @@ public class AttrTable extends JPanel implements LocaleListener {
         attrModel.removeAttrTableModelListener(this);
         return;
       }
-      final var ed = table.getCellEditor();
+      final javax.swing.table.TableCellEditor ed = table.getCellEditor();
       if (ed != null) {
         ed.cancelCellEditing();
       }
@@ -461,7 +461,7 @@ public class AttrTable extends JPanel implements LocaleListener {
       }
       int row = e.getRowIndex();
 
-      final var ed = table.getCellEditor();
+      final javax.swing.table.TableCellEditor ed = table.getCellEditor();
       if (row >= 0
           && ed instanceof CellEditor cellEd
           && cellEd.isEditing(attrModel.getRow(row))) {
@@ -472,8 +472,8 @@ public class AttrTable extends JPanel implements LocaleListener {
     }
 
     void fireTableChanged() {
-      final var e = new TableModelEvent(this);
-      for (final var l : new ArrayList<>(listeners)) {
+      final javax.swing.event.TableModelEvent e = new TableModelEvent(this);
+      for (final javax.swing.event.TableModelListener l : new ArrayList<>(listeners)) {
         l.tableChanged(e);
       }
     }

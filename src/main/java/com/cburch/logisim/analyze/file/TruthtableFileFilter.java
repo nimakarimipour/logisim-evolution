@@ -26,8 +26,8 @@ public class TruthtableFileFilter extends FileFilter {
   @Override
   public boolean accept(File f) {
     if (!f.isFile()) return true;
-    final var name = f.getName();
-    final var i = name.lastIndexOf('.');
+    final java.lang.String name = f.getName();
+    final int i = name.lastIndexOf('.');
     return (i > 0 && name.substring(i).equalsIgnoreCase(extention));
   }
 

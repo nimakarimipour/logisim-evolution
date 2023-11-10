@@ -235,14 +235,14 @@ public class HexFile {
       Frame parent, // for window positioning
       Project proj,
       Instance instance) { // for recent file access
-    final var mem = (instance == null) ? null : (Mem) instance.getFactory();
-    final var recent = getRecent(proj, mem, instance);
+    final com.cburch.logisim.std.memory.Mem mem = (instance == null) ? null : (Mem) instance.getFactory();
+    final java.io.File recent = getRecent(proj, mem, instance);
 
-    final var chooser = createFileOpenChooser(recent);
+    final javax.swing.JFileChooser chooser = createFileOpenChooser(recent);
     chooser.setDialogTitle(S.get("ramLoadDialogTitle"));
-    final var choice = chooser.showOpenDialog(parent);
+    final int choice = chooser.showOpenDialog(parent);
     if (choice == JFileChooser.APPROVE_OPTION) {
-      final var f = chooser.getSelectedFile();
+      final java.io.File f = chooser.getSelectedFile();
       try {
         open(dst, f);
         mem.setCurrentImage(instance, f);
@@ -257,9 +257,9 @@ public class HexFile {
   }
 
   protected static boolean open(MemContents dst, File src, String desc) throws IOException {
-    final var in = BufferedLineReader.forFile(src);
+    final com.cburch.logisim.gui.hex.BufferedLineReader in = BufferedLineReader.forFile(src);
     try {
-      final var r = new HexReader(in, dst.getLogLength(), dst.getValueWidth());
+      final com.cburch.logisim.gui.hex.HexFile.HexReader r = new HexReader(in, dst.getLogLength(), dst.getValueWidth());
       MemContents loaded;
       if (desc == null) {
         loaded = r.detectFormatAndDecode();
@@ -288,11 +288,11 @@ public class HexFile {
   }
 
   private static ParseResult parse(boolean interactive, String src, String desc, int addrSize, int wordSize) throws IOException {
-    final var in = BufferedLineReader.forString(src);
+    final com.cburch.logisim.gui.hex.BufferedLineReader in = BufferedLineReader.forString(src);
     try {
-      final var r = new HexReader(in, addrSize, wordSize);
+      final com.cburch.logisim.gui.hex.HexFile.HexReader r = new HexReader(in, addrSize, wordSize);
       r.parseFormat(desc);
-      final var loaded = interactive ? r.decodeOrWarn() : r.decode();
+      final com.cburch.logisim.std.memory.MemContents loaded = interactive ? r.decodeOrWarn() : r.decode();
       if (loaded == null) throw new IOException("Could not parse memory image data.");
       return new ParseResult(loaded, (int) (r.memMaxAddr + 1));
     } finally {
@@ -309,17 +309,17 @@ public class HexFile {
       Frame parent, // for window positioning
       Project proj,
       Instance instance) { // for recent file access
-    final var S = com.cburch.logisim.std.Strings.S;
-    final var mem = instance == null ? null : (Mem) instance.getFactory();
-    final var recent = getRecent(proj, mem, instance);
+    final com.cburch.logisim.util.LocaleManager S = com.cburch.logisim.std.Strings.S;
+    final com.cburch.logisim.std.memory.Mem mem = instance == null ? null : (Mem) instance.getFactory();
+    final java.io.File recent = getRecent(proj, mem, instance);
 
-    final var chooser = createFileSaveChooser(recent, src);
+    final javax.swing.JFileChooser chooser = createFileSaveChooser(recent, src);
     chooser.setDialogTitle(S.get("ramSaveDialogTitle"));
-    final var choice = chooser.showSaveDialog(parent);
+    final int choice = chooser.showSaveDialog(parent);
     if (choice == JFileChooser.APPROVE_OPTION) {
-      final var f = chooser.getSelectedFile();
+      final java.io.File f = chooser.getSelectedFile();
       if (f.exists()) {
-        final var confirm =
+        final int confirm =
             OptionPane.showConfirmDialog(
                 parent,
                 S.get("confirmOverwriteMessage", f.getName()),
@@ -357,12 +357,12 @@ public class HexFile {
   // ascii will be output, with whitespace preserved.
   private static String saveToString(MemContents src, String desc, int limit) {
     try {
-      final var out = new StringWriter();
+      final java.io.StringWriter out = new StringWriter();
       OutputStream stream;
       if (desc == null) desc = "v2.0 raw";
       if (desc.startsWith("Binary")) stream = new OutputStreamBinarySanitizer(out);
       else stream = new OutputStreamEscaper(out, true, 0);
-      final var w = new HexWriter(stream, src, desc);
+      final com.cburch.logisim.gui.hex.HexFile.HexWriter w = new HexWriter(stream, src, desc);
       if (limit > 0 && limit - 1 < w.memEnd) w.memEnd = limit - 1;
       w.save();
       return out.toString();
@@ -396,15 +396,15 @@ public class HexFile {
   private static File getRecent(Project proj, Mem mem, Instance instance) {
     java.io.File recent = mem == null ? null : mem.getCurrentImage(instance);
     if (recent == null) {
-      final var lf = (proj == null ? null : proj.getLogisimFile());
-      final var ld = (lf == null ? null : lf.getLoader());
+      final com.cburch.logisim.file.LogisimFile lf = (proj == null ? null : proj.getLogisimFile());
+      final com.cburch.logisim.file.Loader ld = (lf == null ? null : lf.getLoader());
       recent = (ld == null ? null : ld.getCurrentDirectory());
     }
     return recent;
   }
 
   private static JFileChooser createFileSaveChooser(File lastFile, MemContents preview) {
-    final var chooser = createFileChooser(lastFile, false);
+    final javax.swing.JFileChooser chooser = createFileChooser(lastFile, false);
     chooser.setAccessory(new Preview(chooser, preview));
     return chooser;
   }
@@ -414,11 +414,11 @@ public class HexFile {
   }
 
   private static JFileChooser createFileChooser(File lastFile, boolean auto) {
-    final var chooser = JFileChoosers.createSelected(lastFile);
+    final javax.swing.JFileChooser chooser = JFileChoosers.createSelected(lastFile);
     if (auto) {
       chooser.addChoosableFileFilter(getFilter(autoFormat));
     } else {
-      for (final var desc : formatDescriptions) {
+      for (final java.lang.String desc : formatDescriptions) {
         chooser.addChoosableFileFilter(getFilter(desc));
       }
     }
@@ -467,9 +467,9 @@ public class HexFile {
     private void configure(String msg, HexReader reader) {
       this.reader = reader;
 
-      final var p = new JPanel();
+      final javax.swing.JPanel p = new JPanel();
       p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-      final var scaledTen = scaled(10);
+      final int scaledTen = scaled(10);
       p.setBorder(BorderFactory.createEmptyBorder(scaledTen, scaledTen, 0, scaledTen));
       javax.swing.JLabel m =
           new JLabel(
@@ -478,15 +478,15 @@ public class HexFile {
                   + "<br><br>"
                   + "Please select an appropriate file format to load"
                   + " this file into memory:</html>");
-      final var f = m.getFont();
+      final java.awt.Font f = m.getFont();
       m.setFont(f.deriveFont(f.getStyle() & ~Font.BOLD));
       m.setAlignmentX(CENTER_ALIGNMENT);
       m.setBorder(BorderFactory.createEmptyBorder(0, 0, scaledTen, 0));
       p.add(m);
 
-      final var grid = new GridBagLayout();
-      final var pos = new GridBagConstraints();
-      final var opts = new JPanel(grid);
+      final java.awt.GridBagLayout grid = new GridBagLayout();
+      final java.awt.GridBagConstraints pos = new GridBagConstraints();
+      final javax.swing.JPanel opts = new JPanel(grid);
 
       pos.gridheight = 1;
       pos.weighty = 0.0;
@@ -584,30 +584,30 @@ public class HexFile {
       grid.setConstraints(ascLittle, pos);
       opts.add(ascLittle);
 
-      final var radix = new ButtonGroup();
+      final javax.swing.ButtonGroup radix = new ButtonGroup();
       radix.add(raw);
       radix.add(hex);
       radix.add(bin);
       radix.add(asc);
 
-      final var hs = new ButtonGroup();
+      final javax.swing.ButtonGroup hs = new ButtonGroup();
       hs.add(hexWords);
       hs.add(hexBytes);
 
-      final var hy = new ButtonGroup();
+      final javax.swing.ButtonGroup hy = new ButtonGroup();
       hy.add(hexPlain);
       hy.add(hexAddr);
       hy.add(hexAuto);
 
-      final var he = new ButtonGroup();
+      final javax.swing.ButtonGroup he = new ButtonGroup();
       he.add(hexBig);
       he.add(hexLittle);
 
-      final var be = new ButtonGroup();
+      final javax.swing.ButtonGroup be = new ButtonGroup();
       be.add(binBig);
       be.add(binLittle);
 
-      final var ae = new ButtonGroup();
+      final javax.swing.ButtonGroup ae = new ButtonGroup();
       ae.add(ascBig);
       ae.add(ascLittle);
 
@@ -615,7 +615,7 @@ public class HexFile {
       previewMem = new JTextArea();
       previewMem.setEditable(false);
       previewMem.setFont(new Font("monospaced", Font.PLAIN, scaledTen));
-      final var preview = new JPanel();
+      final javax.swing.JPanel preview = new JPanel();
       preview.setLayout(new BoxLayout(preview, BoxLayout.Y_AXIS));
       preview.add(previewHdr);
       preview.add(new JScrollPane(previewMem));
@@ -624,22 +624,22 @@ public class HexFile {
       originalTxt = new JTextArea();
       originalTxt.setEditable(false);
       originalTxt.setFont(new Font("monospaced", Font.PLAIN, scaledTen));
-      final var original = new JPanel();
+      final javax.swing.JPanel original = new JPanel();
       original.setLayout(new BoxLayout(original, BoxLayout.Y_AXIS));
       original.add(originalHdr);
-      final var scroller = new JScrollPane(originalTxt);
+      final javax.swing.JScrollPane scroller = new JScrollPane(originalTxt);
       scroller.setRowHeaderView(new TextLineNumber(originalTxt));
       original.add(scroller);
 
       try {
-        final var buf = new char[1024];
+        final char[] buf = new char[1024];
         this.reader.in.reset();
         int n = this.reader.in.readUtf8(buf, 0, 1024);
         int count = 0;
         if (n < 0) {
           originalTxt.setText("(error reading data)");
         } else {
-          final var b = new StringWriter();
+          final java.io.StringWriter b = new StringWriter();
           do {
             b.write(buf, 0, n);
             count += n;
@@ -653,14 +653,14 @@ public class HexFile {
         }
       } catch (IOException e) {
         try {
-          final var buf = new byte[1024];
+          final byte[] buf = new byte[1024];
           this.reader.in.reset();
           int n = this.reader.in.readBytes(buf, 0, 1024);
           int count = 0;
           if (n < 0) {
             originalTxt.setText("(error reading data)");
           } else {
-            final var b = new StringWriter();
+            final java.io.StringWriter b = new StringWriter();
             OutputStreamBinarySanitizer sanitizer = new OutputStreamBinarySanitizer(b);
             do {
               sanitizer.write(buf, 0, n);
@@ -687,8 +687,8 @@ public class HexFile {
       tabs.addTab("Decoded", preview);
       tabs.addTab("Original", original);
 
-      final var split = new JPanel(new BorderLayout());
-      final var optp = new JPanel();
+      final javax.swing.JPanel split = new JPanel(new BorderLayout());
+      final javax.swing.JPanel optp = new JPanel();
       optp.setLayout(new BoxLayout(optp, BoxLayout.X_AXIS));
       opts.setAlignmentY(TOP_ALIGNMENT);
       optp.add(opts);
@@ -725,7 +725,7 @@ public class HexFile {
             }
           });
 
-      final var listener = new MyListener();
+      final com.cburch.logisim.gui.hex.HexFile.HexFormatDialog.MyListener listener = new MyListener();
       raw.addActionListener(listener);
       hex.addActionListener(listener);
       hexWords.addActionListener(listener);
@@ -751,7 +751,7 @@ public class HexFile {
     }
 
     void setWarnings() {
-      final var s = new StringWriter();
+      final java.io.StringWriter s = new StringWriter();
       if (reader.numWarnings == 0) {
         s.write("No errors encountered decoding with this format.");
       } else if (reader.numWarnings == 1) {
@@ -782,7 +782,7 @@ public class HexFile {
     }
 
     void setPreview() {
-      final var n = reader.decodedWordCount;
+      final int n = reader.decodedWordCount;
       previewHdr.setText(String.format("decoded %d of %d words, %d bits each", n, reader.memEnd + 1, reader.memWidth));
       if (n > 0) previewMem.setText(saveToString(reader.dst, "v3.0 hex words addressed", n));
       else previewMem.setText("");
@@ -882,7 +882,7 @@ public class HexFile {
 
     String parseHeader(String hdr) {
       tags.clear();
-      final var t = hdr.split("\\s+");
+      final java.lang.String[] t = hdr.split("\\s+");
       if (t.length < 1) return "File does not contain any header, and appears to contain only whitespace.";
       if (!t[0].equalsIgnoreCase("v2.0") && !t[0].equalsIgnoreCase("v3.0")) return "Hex file header not recognized";
 
@@ -891,9 +891,9 @@ public class HexFile {
 
       String err = null;
       for (int i = 1; i < t.length; i++) {
-        final var tag = t[i];
+        final java.lang.String tag = t[i];
 
-        final var key = switch (tag.toLowerCase()) {
+        final java.lang.String key = switch (tag.toLowerCase()) {
           case "hex", "raw" -> "radix";
           case "bytes", "words" -> "size";
           case "plain", "addressed" -> "style";
@@ -988,7 +988,7 @@ public class HexFile {
       long val = 0;
       int n = s.length();
       for (int i = 0; i < n; i++) {
-        final var d = hex2int(s.charAt(i));
+        final int d = hex2int(s.charAt(i));
         val = (val << 4) + d;
       }
       return val;
@@ -1007,7 +1007,7 @@ public class HexFile {
         System.out.println("Warnings:\n" + warnings.toString());
         return null;
       }
-      final var d = new HexFormatDialog(errmsg, this);
+      final com.cburch.logisim.gui.hex.HexFile.HexFormatDialog d = new HexFormatDialog(errmsg, this);
       d.setVisible(true);
       if (!d.ok()) return null;
       return dst;
@@ -1021,7 +1021,7 @@ public class HexFile {
 
       if (hdr == null) return warnAndAsk("File does not contain any header, and appears to contain only whitespace.");
 
-      final var err = parseHeader(hdr);
+      final java.lang.String err = parseHeader(hdr);
       if (err != null) return warnAndAsk(err);
 
       if (!tags.containsKey("radix")) return warnAndAsk("Incomplete file header.");
@@ -1179,7 +1179,7 @@ public class HexFile {
               word);
           continue;
         }
-        final var hexWord = star < 0 ? word : word.substring(star + 1);
+        final java.lang.String hexWord = star < 0 ? word : word.substring(star + 1);
         try {
           rleValue = Long.parseUnsignedLong(hexWord, 16);
         } catch (NumberFormatException e) {
@@ -1218,7 +1218,7 @@ public class HexFile {
      * or zero if addr is beyond the maximum address.
      */
     private BigInteger getBigInteger(long addr) {
-      final var value = get(addr);
+      final long value = get(addr);
       return BigInteger.valueOf(value >>> 1).shiftLeft(1).or(BigInteger.valueOf(value & 1L));
     }
 
@@ -1367,8 +1367,8 @@ public class HexFile {
       while (curWords != null) {
         // first word should be "addr:"
         java.lang.String addr = curWords[0];
-        final var foundColon = addr.endsWith(":");
-        final var stripOx = addr.startsWith("0x") || addr.startsWith("0X");
+        final boolean foundColon = addr.endsWith(":");
+        final boolean stripOx = addr.startsWith("0x") || addr.startsWith("0X");
         if (foundColon) addr = addr.substring(stripOx ? 2 : 0, addr.length() - 1);
         else if (stripOx) addr = addr.substring(2);
         bLen = 0;
@@ -1386,7 +1386,7 @@ public class HexFile {
         int n = curWords.length;
         if (!foundColon && n >= 2 && curWords[1].equals(":")) i++;
         for (; i < n; i++) {
-          final var word = curWords[i];
+          final java.lang.String word = curWords[i];
           boolean left = true;
           int j = 0;
           int m = word.length();
@@ -1460,7 +1460,7 @@ public class HexFile {
     }
 
     void decodeEscapedAscii() throws IOException {
-      final var buf = new byte[4096];
+      final byte[] buf = new byte[4096];
       bLen = 0;
       int n = in.readBytes(buf, 0, 4096);
       curLineNo = 1;
@@ -1563,7 +1563,7 @@ public class HexFile {
      * or zero if addr is beyond the maximum address.
      */
     private BigInteger getBigInteger(long addr) {
-      final var value = get(addr);
+      final long value = get(addr);
       return BigInteger.valueOf(value >>> 1).shiftLeft(1).or(BigInteger.valueOf(value & 1L));
     }
 

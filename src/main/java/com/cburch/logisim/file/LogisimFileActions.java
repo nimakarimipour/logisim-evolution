@@ -92,11 +92,11 @@ public final class LogisimFileActions {
     private final ArrayList<File> logiLibs = new ArrayList<>();
 
     MergeFile(LogisimFile mergelib, LogisimFile source) {
-      final var libNames = new HashMap<String, Library>();
-      final var toolList = new HashSet<String>();
-      final var errors = new HashMap<String, String>();
+      final java.util.HashMap<java.lang.String,com.cburch.logisim.tools.Library> libNames = new HashMap<String, Library>();
+      final java.util.HashSet<java.lang.String> toolList = new HashSet<String>();
+      final java.util.HashMap<java.lang.String,java.lang.String> errors = new HashMap<String, String>();
       boolean canContinue = true;
-      for (final var lib : source.getLibraries()) {
+      for (final com.cburch.logisim.tools.Library lib : source.getLibraries()) {
         LibraryTools.buildLibraryList(lib, libNames);
       }
       LibraryTools.buildToolList(source, toolList);
@@ -104,17 +104,17 @@ public final class LogisimFileActions {
       if (LibraryTools.isLibraryConform(
           mergelib, new HashSet<>(), new HashSet<>(), errors)) {
         /* Okay the library is now ready for merge */
-        for (final var lib : mergelib.getLibraries()) {
-          final var newToolList = new HashSet<String>();
+        for (final com.cburch.logisim.tools.Library lib : mergelib.getLibraries()) {
+          final java.util.HashSet<java.lang.String> newToolList = new HashSet<String>();
           LibraryTools.buildToolList(lib, newToolList);
-          final var ret = LibraryTools.libraryCanBeMerged(toolList, newToolList);
+          final java.util.List<java.lang.String> ret = LibraryTools.libraryCanBeMerged(toolList, newToolList);
           if (!ret.isEmpty()) {
-            final var Location = "";
-            final var toolNames = LibraryTools.getToolLocation(source, Location, ret);
-            for (final var key : toolNames.keySet()) {
+            final java.lang.String Location = "";
+            final java.util.Map<java.lang.String,java.lang.String> toolNames = LibraryTools.getToolLocation(source, Location, ret);
+            for (final java.lang.String key : toolNames.keySet()) {
               java.lang.String solStr = S.get("LibMergeFailure2") + " a) ";
-              final var errLoc = toolNames.get(key);
-              final var errParts = errLoc.split("->");
+              final java.lang.String errLoc = toolNames.get(key);
+              final java.lang.String[] errParts = errLoc.split("->");
               if (errParts.length > 1) {
                 solStr = solStr.concat(S.get("LibMergeFailure4", errParts[1]));
               } else {
@@ -126,8 +126,8 @@ public final class LogisimFileActions {
             }
             canContinue = false;
           }
-          final var splits = mergelib.getLoader().getDescriptor(lib).split("#");
-          final var theFile = mergelib.getLoader().getFileFor(splits[1], null);
+          final java.lang.String[] splits = mergelib.getLoader().getDescriptor(lib).split("#");
+          final java.io.File theFile = mergelib.getLoader().getFileFor(splits[1], null);
           if ("file".equals(splits[0]))
             logiLibs.add(theFile);
           else if ("jar".equals(splits[0]))
@@ -140,15 +140,15 @@ public final class LogisimFileActions {
           return;
         }
         /* Okay merged the missing libraries, now add the circuits */
-        for (final var circ : mergelib.getCircuits()) {
-          final var circName = circ.getName().toUpperCase();
+        for (final com.cburch.logisim.circuit.Circuit circ : mergelib.getCircuits()) {
+          final java.lang.String circName = circ.getName().toUpperCase();
           if (toolList.contains(circName)) {
-            final var ret = new ArrayList<String>();
+            final java.util.ArrayList<java.lang.String> ret = new ArrayList<String>();
             ret.add(circName);
-            final var toolNames = LibraryTools.getToolLocation(source, "", ret);
-            for (final var key : toolNames.keySet()) {
-              final var errLoc = toolNames.get(key);
-              final var errParts = errLoc.split("->");
+            final java.util.Map<java.lang.String,java.lang.String> toolNames = LibraryTools.getToolLocation(source, "", ret);
+            for (final java.lang.String key : toolNames.keySet()) {
+              final java.lang.String errLoc = toolNames.get(key);
+              final java.lang.String[] errParts = errLoc.split("->");
               if (errParts.length > 1) {
                 java.lang.String solStr = S.get("LibMergeFailure2") + " a) ";
                 solStr = solStr.concat(S.get("LibMergeFailure4", errParts[1]));
@@ -159,7 +159,7 @@ public final class LogisimFileActions {
               }
             }
             if (canContinue) {
-              final var circ1 = LibraryTools.getCircuitFromLibs(source, circName);
+              final com.cburch.logisim.circuit.Circuit circ1 = LibraryTools.getCircuitFromLibs(source, circName);
               if (circ1 == null) {
                 OptionPane.showMessageDialog(
                     null,
@@ -168,7 +168,7 @@ public final class LogisimFileActions {
                     OptionPane.ERROR_MESSAGE);
                 canContinue = false;
               } else if (!areCircuitsEqual(circ1, circ)) {
-                final var Reponse =
+                final int Reponse =
                     OptionPane.showConfirmDialog(
                         null,
                         S.get("FileMergeQuestion", circ.getName()),
@@ -194,30 +194,30 @@ public final class LogisimFileActions {
     }
 
     private boolean areCircuitsEqual(Circuit orig, Circuit newone) {
-      final var origComps = new HashMap<Location, Component>();
-      final var newComps = new HashMap<Location, Component>();
-      for (final var comp : orig.getWires()) {
+      final java.util.HashMap<com.cburch.logisim.data.Location,com.cburch.logisim.comp.Component> origComps = new HashMap<Location, Component>();
+      final java.util.HashMap<com.cburch.logisim.data.Location,com.cburch.logisim.comp.Component> newComps = new HashMap<Location, Component>();
+      for (final com.cburch.logisim.circuit.Wire comp : orig.getWires()) {
         origComps.put(comp.getLocation(), comp);
       }
-      for (final var comp : orig.getNonWires()) {
+      for (final com.cburch.logisim.comp.Component comp : orig.getNonWires()) {
         origComps.put(comp.getLocation(), comp);
       }
-      for (final var comp : newone.getWires()) {
+      for (final com.cburch.logisim.circuit.Wire comp : newone.getWires()) {
         newComps.put(comp.getLocation(), comp);
       }
-      for (final var comp : newone.getNonWires()) {
+      for (final com.cburch.logisim.comp.Component comp : newone.getNonWires()) {
         newComps.put(comp.getLocation(), comp);
       }
-      final var it = newComps.keySet().iterator();
+      final java.util.Iterator<com.cburch.logisim.data.Location> it = newComps.keySet().iterator();
       while (it.hasNext()) {
-        final var loc = it.next();
+        final com.cburch.logisim.data.Location loc = it.next();
         if (origComps.containsKey(loc)) {
-          final var comp1 = newComps.get(loc);
-          final var comp2 = newComps.get(loc);
+          final com.cburch.logisim.comp.Component comp1 = newComps.get(loc);
+          final com.cburch.logisim.comp.Component comp2 = newComps.get(loc);
           if (comp1.getFactory().getName().equals(comp2.getFactory().getName())) {
             if ("Wire".equals(comp1.getFactory().getName())) {
-              final var wire1 = (Wire) comp1;
-              final var wire2 = (Wire) comp2;
+              final com.cburch.logisim.circuit.Wire wire1 = (Wire) comp1;
+              final com.cburch.logisim.circuit.Wire wire2 = (Wire) comp2;
               if (wire1.overlaps(wire2, true)) {
                 it.remove();
                 origComps.remove(loc);
@@ -240,12 +240,12 @@ public final class LogisimFileActions {
 
     @Override
     public void doIt(Project proj) {
-      final var loader = proj.getLogisimFile().getLoader();
+      final com.cburch.logisim.file.Loader loader = proj.getLogisimFile().getLoader();
       /* first we are going to merge the jar libraries */
-      for (final var jarLib : jarLibs) {
+      for (final java.io.File jarLib : jarLibs) {
         String className = null;
-        try (final var jarFile = new JarFile(jarLib)) {
-          final var manifest = jarFile.getManifest();
+        try (final java.util.jar.JarFile jarFile = new JarFile(jarLib)) {
+          final java.util.jar.Manifest manifest = jarFile.getManifest();
           className = manifest.getMainAttributes().getValue("Library-Class");
         } catch (IOException e) {
           // if opening the JAR file failed, do nothing
@@ -262,15 +262,15 @@ public final class LogisimFileActions {
           if (className == null)
             continue;
         }
-        final var lib = loader.loadJarLibrary(jarLib, className);
+        final com.cburch.logisim.tools.Library lib = loader.loadJarLibrary(jarLib, className);
         if (lib != null) {
           proj.doAction(LogisimFileActions.loadLibrary(lib, proj.getLogisimFile()));
         }
       }
       jarLibs.clear();
       /* next we are going to load the logisimfile  libraries */
-      for (final var logiLib : logiLibs) {
-        final var put = loader.loadLogisimLibrary(logiLib);
+      for (final java.io.File logiLib : logiLibs) {
+        final com.cburch.logisim.tools.Library put = loader.loadLogisimLibrary(logiLib);
         if (put != null) {
           proj.doAction(LogisimFileActions.loadLibrary(put, proj.getLogisimFile()));
         }
@@ -278,10 +278,10 @@ public final class LogisimFileActions {
       logiLibs.clear();
       // this we are going to do in two steps, first add the circuits with inputs,
       // outputs and wires
-      for (final var circ : mergedCircuits) {
+      for (final com.cburch.logisim.circuit.Circuit circ : mergedCircuits) {
         Circuit newCircuit = null;
         boolean replace = false;
-        for (final var circs : proj.getLogisimFile().getCircuits()) {
+        for (final com.cburch.logisim.circuit.Circuit circs : proj.getLogisimFile().getCircuits()) {
           if (circs.getName().equalsIgnoreCase(circ.getName())) {
             newCircuit = circs;
             replace = true;
@@ -289,16 +289,16 @@ public final class LogisimFileActions {
         }
         if (newCircuit == null) newCircuit = new Circuit(circ.getName(), proj.getLogisimFile(), proj);
         CircuitAttributes.copyStaticAttributes(newCircuit.getStaticAttributes(), circ.getStaticAttributes());
-        final var result = new CircuitMutation(newCircuit);
+        final com.cburch.logisim.circuit.CircuitMutation result = new CircuitMutation(newCircuit);
         if (replace) {
           result.clear();
         }
-        for (final var comp : circ.getNonWires()) {
+        for (final com.cburch.logisim.comp.Component comp : circ.getNonWires()) {
           if (comp.getFactory() instanceof Pin) {
             result.add(Pin.FACTORY.createComponent(comp.getLocation(), (AttributeSet) comp.getAttributeSet().clone()));
           }
         }
-        for (final var wir : circ.getWires()) {
+        for (final com.cburch.logisim.circuit.Wire wir : circ.getWires()) {
           result.add(Wire.create(wir.getEnd0(), wir.getEnd1()));
         }
         if (!replace) {
@@ -308,20 +308,20 @@ public final class LogisimFileActions {
           proj.doAction(result.toAction(S.getter("replaceCircuitAction")));
         }
       }
-      final var availableTools = new HashMap<String, AddTool>();
+      final java.util.HashMap<java.lang.String,com.cburch.logisim.tools.AddTool> availableTools = new HashMap<String, AddTool>();
       LibraryTools.buildToolList(proj.getLogisimFile(), availableTools);
       // in the second step we are going to add the rest of the contents
-      for (final var circ : mergedCircuits) {
-        final var newCirc = proj.getLogisimFile().getCircuit(circ.getName());
+      for (final com.cburch.logisim.circuit.Circuit circ : mergedCircuits) {
+        final com.cburch.logisim.circuit.Circuit newCirc = proj.getLogisimFile().getCircuit(circ.getName());
         if (newCirc != null) {
-          final var result = new CircuitMutation(newCirc);
-          for (final var comp : circ.getNonWires()) {
+          final com.cburch.logisim.circuit.CircuitMutation result = new CircuitMutation(newCirc);
+          for (final com.cburch.logisim.comp.Component comp : circ.getNonWires()) {
             if (!(comp.getFactory() instanceof Pin)) {
-              final var current = availableTools.get(comp.getFactory().getName().toUpperCase());
+              final com.cburch.logisim.tools.AddTool current = availableTools.get(comp.getFactory().getName().toUpperCase());
               if (current != null) {
-                final var factory = current.getFactory();
+                final com.cburch.logisim.comp.ComponentFactory factory = current.getFactory();
                 if (factory instanceof SubcircuitFactory subcirc) {
-                  final var newAttrs = factory.createAttributeSet();
+                  final com.cburch.logisim.data.AttributeSet newAttrs = factory.createAttributeSet();
                   CircuitAttributes.copyInto(comp.getAttributeSet(), newAttrs);
                   result.add(factory.createComponent(comp.getLocation(), newAttrs));
                 } else {
@@ -336,9 +336,9 @@ public final class LogisimFileActions {
         }
       }
       // Last pass, restore the custom appearance
-      for (final var circ : mergedCircuits) {
+      for (final com.cburch.logisim.circuit.Circuit circ : mergedCircuits) {
         if (circ.getAppearance().hasCustomAppearance()) {
-          final var newCirc = proj.getLogisimFile().getCircuit(circ.getName());
+          final com.cburch.logisim.circuit.Circuit newCirc = proj.getLogisimFile().getCircuit(circ.getName());
           newCirc.getAppearance().repairCustomAppearance(circ.getAppearance().getCustomObjectsFromBottom(), proj, newCirc);
         }
       }
@@ -367,32 +367,32 @@ public final class LogisimFileActions {
     private final Set<String> baseLibsToEnable = new HashSet<>();
 
     LoadLibraries(Library[] libs, LogisimFile source) {
-      final var libNames = new HashMap<String, Library>();
-      final var toolList = new HashSet<String>();
-      final var errors = new HashMap<String, String>();
-      for (final var newLib : libs) {
+      final java.util.HashMap<java.lang.String,com.cburch.logisim.tools.Library> libNames = new HashMap<String, Library>();
+      final java.util.HashSet<java.lang.String> toolList = new HashSet<String>();
+      final java.util.HashMap<java.lang.String,java.lang.String> errors = new HashMap<String, String>();
+      for (final com.cburch.logisim.tools.Library newLib : libs) {
         // first cleanup step: remove unused libraries from loaded library
         LibraryManager.removeUnusedLibraries(newLib);
         // second cleanup step: promote base libraries
         baseLibsToEnable.addAll(LibraryManager.getUsedBaseLibraries(newLib));
       }
       // promote the none visible base libraries to toplevel
-      final var builtinLibraries = LibraryManager.getBuildinNames(source.getLoader());
-      for (final var lib : source.getLibraries()) {
-        final var libName = lib.getName();
+      final java.util.Set<java.lang.String> builtinLibraries = LibraryManager.getBuildinNames(source.getLoader());
+      for (final com.cburch.logisim.tools.Library lib : source.getLibraries()) {
+        final java.lang.String libName = lib.getName();
         if (baseLibsToEnable.contains(libName) || !builtinLibraries.contains(libName)) {
           baseLibsToEnable.remove(libName);
         }
       }
       // remove the promoted base libraries from the loaded library
-      for (final var newLib : libs) {
+      for (final com.cburch.logisim.tools.Library newLib : libs) {
         LibraryManager.removeBaseLibraries(newLib, baseLibsToEnable);
       }
-      for (final var lib : source.getLibraries()) {
+      for (final com.cburch.logisim.tools.Library lib : source.getLibraries()) {
         LibraryTools.buildLibraryList(lib, libNames);
       }
       LibraryTools.buildToolList(source, toolList);
-      for (final var lib : libs) {
+      for (final com.cburch.logisim.tools.Library lib : libs) {
         if (libNames.containsKey(lib.getName().toUpperCase())) {
           OptionPane.showMessageDialog(
               null,
@@ -402,9 +402,9 @@ public final class LogisimFileActions {
         } else {
           LibraryTools.removePresentLibraries(lib, libNames, false);
           if (LibraryTools.isLibraryConform(lib, new HashSet<>(), new HashSet<>(), errors)) {
-            final var addedToolList = new HashSet<String>();
+            final java.util.HashSet<java.lang.String> addedToolList = new HashSet<String>();
             LibraryTools.buildToolList(lib, addedToolList);
-            for (final var tool : addedToolList)
+            for (final java.lang.String tool : addedToolList)
               if (toolList.contains(tool))
                 errors.put(tool, S.get("LibraryMultipleToolError"));
             if (errors.keySet().isEmpty()) {
@@ -423,11 +423,11 @@ public final class LogisimFileActions {
 
     @Override
     public void doIt(Project proj) {
-      for (final var lib : baseLibsToEnable) {
-        final var logisimFile = proj.getLogisimFile();
+      for (final java.lang.String lib : baseLibsToEnable) {
+        final com.cburch.logisim.file.LogisimFile logisimFile = proj.getLogisimFile();
         logisimFile.addLibrary(logisimFile.getLoader().getBuiltin().getLibrary(lib));
       }
-      for (final var lib : mergedLibs) {
+      for (final com.cburch.logisim.tools.Library lib : mergedLibs) {
         if (lib instanceof LoadedLibrary lib1) {
           if (lib1.getBase() instanceof LogisimFile) {
             repair(proj, lib1.getBase());
@@ -440,17 +440,17 @@ public final class LogisimFileActions {
     }
 
     private void repair(Project proj, Library lib) {
-      final var availableTools = new HashMap<String, AddTool>();
+      final java.util.HashMap<java.lang.String,com.cburch.logisim.tools.AddTool> availableTools = new HashMap<String, AddTool>();
       LibraryTools.buildToolList(proj.getLogisimFile(), availableTools);
       if (lib instanceof LogisimFile thisLib) {
-        for (final var circ : thisLib.getCircuits()) {
-          for (final var tool : circ.getNonWires()) {
+        for (final com.cburch.logisim.circuit.Circuit circ : thisLib.getCircuits()) {
+          for (final com.cburch.logisim.comp.Component tool : circ.getNonWires()) {
             if (availableTools.containsKey(tool.getFactory().getName().toUpperCase())) {
-              final var current = availableTools.get(tool.getFactory().getName().toUpperCase());
+              final com.cburch.logisim.tools.AddTool current = availableTools.get(tool.getFactory().getName().toUpperCase());
               if (current != null) {
                 tool.setFactory(current.getFactory());
               } else if ("Text".equals(tool.getFactory().getName())) {
-                final var newComp = Text.FACTORY.createComponent(tool.getLocation(), (AttributeSet) tool.getAttributeSet().clone());
+                final com.cburch.logisim.comp.Component newComp = Text.FACTORY.createComponent(tool.getLocation(), (AttributeSet) tool.getAttributeSet().clone());
                 tool.setFactory(newComp.getFactory());
               } else
                 System.out.println("Not found:" + tool.getFactory().getName());
@@ -458,7 +458,7 @@ public final class LogisimFileActions {
           }
         }
       }
-      for (final var libs : lib.getLibraries()) {
+      for (final com.cburch.logisim.tools.Library libs : lib.getLibraries()) {
         repair(proj, libs);
       }
     }
@@ -475,8 +475,8 @@ public final class LogisimFileActions {
 
     @Override
     public void undo(Project proj) {
-      for (final var lib : mergedLibs) proj.getLogisimFile().removeLibrary(lib);
-      for (final var lib : baseLibsToEnable) proj.getLogisimFile().removeLibrary(lib);
+      for (final com.cburch.logisim.tools.Library lib : mergedLibs) proj.getLogisimFile().removeLibrary(lib);
+      for (final java.lang.String lib : baseLibsToEnable) proj.getLogisimFile().removeLibrary(lib);
     }
   }
 
@@ -492,7 +492,7 @@ public final class LogisimFileActions {
 
     @Override
     public Action append(Action other) {
-      final var ret = new MoveCircuit(tool, ((MoveCircuit) other).toIndex);
+      final com.cburch.logisim.file.LogisimFileActions.MoveCircuit ret = new MoveCircuit(tool, ((MoveCircuit) other).toIndex);
       ret.fromIndex = this.fromIndex;
       return ret.fromIndex == ret.toIndex ? null : ret;
     }
@@ -592,16 +592,16 @@ public final class LogisimFileActions {
     }
 
     private void copyToolAttributes(Library srcLib, Library dstLib) {
-      for (final var srcTool : srcLib.getTools()) {
-        final var srcAttrs = srcTool.getAttributeSet();
-        final var dstTool = dstLib.getTool(srcTool.getName());
+      for (final com.cburch.logisim.tools.Tool srcTool : srcLib.getTools()) {
+        final com.cburch.logisim.data.AttributeSet srcAttrs = srcTool.getAttributeSet();
+        final com.cburch.logisim.tools.Tool dstTool = dstLib.getTool(srcTool.getName());
         if (srcAttrs != null && dstTool != null) {
-          final var dstAttrs = dstTool.getAttributeSet();
+          final com.cburch.logisim.data.AttributeSet dstAttrs = dstTool.getAttributeSet();
           for (Attribute<?> attrBase : srcAttrs.getAttributes()) {
             @SuppressWarnings("unchecked")
-            final var attr = (Attribute<Object>) attrBase;
-            final var srcValue = srcAttrs.getValue(attr);
-            final var dstValue = dstAttrs.getValue(attr);
+            final Attribute<Object> attr = (Attribute<Object>) attrBase;
+            final java.lang.Object srcValue = srcAttrs.getValue(attr);
+            final java.lang.Object dstValue = dstAttrs.getValue(attr);
             if (!dstValue.equals(srcValue)) {
               dstAttrs.setValue(attr, srcValue);
               attrValues.add(new RevertAttributeValue(dstAttrs, attr, dstValue));
@@ -613,14 +613,14 @@ public final class LogisimFileActions {
 
     @Override
     public void doIt(Project proj) {
-      final var src = ProjectActions.createNewFile(proj);
-      final var dst = proj.getLogisimFile();
+      final com.cburch.logisim.file.LogisimFile src = ProjectActions.createNewFile(proj);
+      final com.cburch.logisim.file.LogisimFile dst = proj.getLogisimFile();
 
       copyToolAttributes(src, dst);
-      for (final var srcLib : src.getLibraries()) {
+      for (final com.cburch.logisim.tools.Library srcLib : src.getLibraries()) {
         com.cburch.logisim.tools.Library dstLib = dst.getLibrary(srcLib.getName());
         if (dstLib == null) {
-          final var desc = src.getLoader().getDescriptor(srcLib);
+          final java.lang.String desc = src.getLoader().getDescriptor(srcLib);
           dstLib = dst.getLoader().loadLibrary(desc);
           proj.getLogisimFile().addLibrary(dstLib);
           if (libraries == null) libraries = new ArrayList<>();
@@ -629,7 +629,7 @@ public final class LogisimFileActions {
         copyToolAttributes(srcLib, dstLib);
       }
 
-      final var newOpts = proj.getOptions();
+      final com.cburch.logisim.file.Options newOpts = proj.getOptions();
       oldOpts = new Options();
       oldOpts.copyFrom(newOpts, dst);
       newOpts.copyFrom(src.getOptions(), dst);
@@ -644,12 +644,12 @@ public final class LogisimFileActions {
     public void undo(Project proj) {
       proj.getOptions().copyFrom(oldOpts, proj.getLogisimFile());
 
-      for (final var attrValue : attrValues) {
+      for (final com.cburch.logisim.file.LogisimFileActions.RevertAttributeValue attrValue : attrValues) {
         attrValue.attrs.setValue(attrValue.attr, attrValue.value);
       }
 
       if (libraries != null) {
-        for (final var lib : libraries) {
+        for (final com.cburch.logisim.tools.Library lib : libraries) {
           proj.getLogisimFile().removeLibrary(lib);
         }
       }
@@ -702,7 +702,7 @@ public final class LogisimFileActions {
 
     @Override
     public void undo(Project proj) {
-      for (final var lib : libs) {
+      for (final com.cburch.logisim.tools.Library lib : libs) {
         proj.getLogisimFile().addLibrary(lib);
       }
     }

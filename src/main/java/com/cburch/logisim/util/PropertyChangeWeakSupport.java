@@ -45,9 +45,9 @@ public class PropertyChangeWeakSupport {
 
   public <T> void firePropertyChange(String property, T oldValue, T newValue) {
     PropertyChangeEvent e = null;
-    for (final var it = listeners.iterator(); it.hasNext(); ) {
-      final var data = it.next();
-      final var singleListener = data.listener.get();
+    for (final java.util.Iterator<com.cburch.logisim.util.PropertyChangeWeakSupport.ListenerData> it = listeners.iterator(); it.hasNext(); ) {
+      final com.cburch.logisim.util.PropertyChangeWeakSupport.ListenerData data = it.next();
+      final java.beans.PropertyChangeListener singleListener = data.listener.get();
       if (singleListener == null) {
         it.remove();
       } else if (data.property.equals(ALL_PROPERTIES) || data.property.equals(property)) {
@@ -64,9 +64,9 @@ public class PropertyChangeWeakSupport {
   }
 
   public void removePropertyChangeListener(String property, PropertyChangeListener listener) {
-    for (final var it = listeners.iterator(); it.hasNext(); ) {
-      final var data = it.next();
-      final var singleListener = data.listener.get();
+    for (final java.util.Iterator<com.cburch.logisim.util.PropertyChangeWeakSupport.ListenerData> it = listeners.iterator(); it.hasNext(); ) {
+      final com.cburch.logisim.util.PropertyChangeWeakSupport.ListenerData data = it.next();
+      final java.beans.PropertyChangeListener singleListener = data.listener.get();
       if (singleListener == null) {
         it.remove();
       } else if (data.property.equals(property) && singleListener == listener) {

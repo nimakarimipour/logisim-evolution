@@ -95,10 +95,10 @@ class SimulationTreeCircuitNode extends SimulationTreeNode
     newChildren.sort(new CompareByName());
     subcircs.sort(this);
     for (Component comp : subcircs) {
-      final var factory = (SubcircuitFactory) comp.getFactory();
-      final var state = factory.getSubstate(circuitState, comp);
+      final com.cburch.logisim.circuit.SubcircuitFactory factory = (SubcircuitFactory) comp.getFactory();
+      final com.cburch.logisim.circuit.CircuitState state = factory.getSubstate(circuitState, comp);
       SimulationTreeCircuitNode toAdd = null;
-      for (final var treeNode : children) {
+      for (final javax.swing.tree.TreeNode treeNode : children) {
         if (treeNode instanceof SimulationTreeCircuitNode node) {
           if (node.circuitState == state) {
             toAdd = node;

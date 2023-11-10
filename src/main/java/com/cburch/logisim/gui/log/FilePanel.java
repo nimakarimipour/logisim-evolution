@@ -45,7 +45,7 @@ class FilePanel extends LogPanel {
     chooser.addChoosableFileFilter(TestVector.FILE_FILTER);
     chooser.setFileFilter(TestVector.FILE_FILTER);
 
-    final var filePanel = new JPanel(new GridBagLayout());
+    final javax.swing.JPanel filePanel = new JPanel(new GridBagLayout());
     java.awt.GridBagLayout gb = (GridBagLayout) filePanel.getLayout();
     java.awt.GridBagConstraints gc = new GridBagConstraints();
     gc.fill = GridBagConstraints.HORIZONTAL;
@@ -134,13 +134,13 @@ class FilePanel extends LogPanel {
   private class Listener implements ActionListener, Model.Listener {
     @Override
     public void actionPerformed(ActionEvent event) {
-      final var src = event.getSource();
+      final java.lang.Object src = event.getSource();
       if (src == enableButton) {
         getModel().setFileEnabled(!getModel().isFileEnabled());
       } else if (src == selectButton) {
-        final var result = chooser.showSaveDialog(getLogFrame());
+        final int result = chooser.showSaveDialog(getLogFrame());
         if (result != JFileChooser.APPROVE_OPTION) return;
-        final var file = chooser.getSelectedFile();
+        final java.io.File file = chooser.getSelectedFile();
         if (file.exists() && (!file.canWrite() || file.isDirectory())) {
           OptionPane.showMessageDialog(
               getLogFrame(),
@@ -153,7 +153,7 @@ class FilePanel extends LogPanel {
           final String[] options = {
             S.get("fileOverwriteOption"), S.get("fileAppendOption"), S.get("fileCancelOption"),
           };
-          final var option =
+          final int option =
               OptionPane.showOptionDialog(
                   getLogFrame(),
                   S.get("fileExistsMessage", file.getName()),
@@ -193,10 +193,10 @@ class FilePanel extends LogPanel {
 
     @Override
     public void filePropertyChanged(Model.Event event) {
-      final var model = getModel();
+      final com.cburch.logisim.gui.log.Model model = getModel();
       computeEnableItems(model);
 
-      final var file = model.getFile();
+      final java.io.File file = model.getFile();
       fileField.setText(file == null ? "" : file.getPath());
       enableButton.setEnabled(file != null);
 

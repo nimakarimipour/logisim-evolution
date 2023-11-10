@@ -67,11 +67,11 @@ public class LedArrayRowScanningHdlGeneratorFactory extends AbstractHdlGenerator
   }
 
   public static LineBuffer getGenericMap(int nrOfRows, int nrOfColumns, long FpgaClockFrequency, boolean activeLow) {
-    final var nrRowAddrBits = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(nrOfRows);
-    final var scanningReload = (int) (FpgaClockFrequency / 1000);
-    final var nrOfScanningBits = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(scanningReload);
-    final var maxNrLeds = ((int) Math.pow(2.0, nrRowAddrBits)) * nrOfRows;
-    final var generics = new HashMap<String, String>();
+    final int nrRowAddrBits = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(nrOfRows);
+    final int scanningReload = (int) (FpgaClockFrequency / 1000);
+    final int nrOfScanningBits = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(scanningReload);
+    final int maxNrLeds = ((int) Math.pow(2.0, nrRowAddrBits)) * nrOfRows;
+    final java.util.HashMap<java.lang.String,java.lang.String> generics = new HashMap<String, String>();
     generics.put(NR_OF_LEDS_STRING, Integer.toString(nrOfRows * nrOfColumns));
     generics.put(NR_OF_ROWS_STRING, Integer.toString(nrOfRows));
     generics.put(NR_OF_COLUMS_STRING, Integer.toString(nrOfColumns));
@@ -84,7 +84,7 @@ public class LedArrayRowScanningHdlGeneratorFactory extends AbstractHdlGenerator
   }
 
   public static LineBuffer getPortMap(int id) {
-    final var ports = new HashMap<String, String>();
+    final java.util.HashMap<java.lang.String,java.lang.String> ports = new HashMap<String, String>();
     ports.put(LedArrayGenericHdlGeneratorFactory.LedArrayRowAddress, String.format("%s%d", LedArrayGenericHdlGeneratorFactory.LedArrayRowAddress, id));
     ports.put(LedArrayGenericHdlGeneratorFactory.LedArrayColumnOutputs, String.format("%s%d", LedArrayGenericHdlGeneratorFactory.LedArrayColumnOutputs, id));
     ports.put(TickComponentHdlGeneratorFactory.FPGA_CLOCK, TickComponentHdlGeneratorFactory.FPGA_CLOCK);
@@ -93,7 +93,7 @@ public class LedArrayRowScanningHdlGeneratorFactory extends AbstractHdlGenerator
   }
 
   public static List<String> getRowCounterCode() {
-    final var contents = LineBuffer.getHdlBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer()
         .pair("rowAddress", LedArrayGenericHdlGeneratorFactory.LedArrayRowAddress)
         .pair("bits", SCANNING_COUNTER_BITS_STRING)
         .pair("value", SCANNING_COUNTER_VALUE_STRING)
@@ -157,7 +157,7 @@ public class LedArrayRowScanningHdlGeneratorFactory extends AbstractHdlGenerator
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist TheNetlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer()
         .pair("ins", LedArrayGenericHdlGeneratorFactory.LedArrayInputs)
         .pair("outs", LedArrayGenericHdlGeneratorFactory.LedArrayColumnOutputs)
         .pair("activeLow", ACTIVE_LOW_STRING)

@@ -129,14 +129,14 @@ public class Loader implements LibraryLoader {
   }
 
   private static File determineBackupName(File base) {
-    final var dir = base.getParentFile();
+    final java.io.File dir = base.getParentFile();
     java.lang.String name = base.getName();
     if (name.endsWith(LOGISIM_EXTENSION)) {
       name = name.substring(0, name.length() - LOGISIM_EXTENSION.length());
     }
     for (int i = 1; i <= 20; i++) {
-      final var ext = i == 1 ? ".bak" : (".bak" + i);
-      final var candidate = new File(dir, name + ext);
+      final java.lang.String ext = i == 1 ? ".bak" : (".bak" + i);
+      final java.io.File candidate = new File(dir, name + ext);
       if (!candidate.exists()) return candidate;
     }
     return null;
@@ -169,7 +169,7 @@ public class Loader implements LibraryLoader {
 
   // used here and in LibraryManager only, also in MemMenu
   public File getCurrentDirectory() {
-    final var ref = (!filesOpening.empty()) ? filesOpening.peek() : mainFile;
+    final java.io.File ref = (!filesOpening.empty()) ? filesOpening.peek() : mainFile;
     return ref == null ? null : ref.getParentFile();
   }
 
@@ -185,14 +185,14 @@ public class Loader implements LibraryLoader {
     // Determine the actual file name.
     java.io.File file = new File(name);
     if (!file.isAbsolute()) {
-      final var currentDirectory = getCurrentDirectory();
+      final java.io.File currentDirectory = getCurrentDirectory();
       if (currentDirectory != null) file = new File(currentDirectory, name);
     }
     while (!file.canRead()) {
       // It doesn't exist. Figure it out from the user.
       OptionPane.showMessageDialog(
           parent, String.format(S.get("fileLibraryMissingError"), file.getName()));
-      final var chooser = createChooser();
+      final javax.swing.JFileChooser chooser = createChooser();
       chooser.setFileFilter(filter);
       chooser.setDialogTitle(S.get("fileLibraryMissingTitle", file.getName()));
       int action = chooser.showDialog(parent, S.get("fileLibraryMissingButton"));
@@ -212,15 +212,15 @@ public class Loader implements LibraryLoader {
   }
 
   private File getSubstitution(File source) {
-    final var ret = substitutions.get(source);
+    final java.io.File ret = substitutions.get(source);
     return ret == null ? source : ret;
   }
 
   Library loadJarFile(File request, String className) throws LoadFailedException {
-    final var actual = getSubstitution(request);
+    final java.io.File actual = getSubstitution(request);
 
     // Anyway, here's the line for this new version:
-    final var loader = new ZipClassLoader(actual);
+    final com.cburch.logisim.util.ZipClassLoader loader = new ZipClassLoader(actual);
 
     // load library class from loader
     Class<?> retClass;
@@ -244,7 +244,7 @@ public class Loader implements LibraryLoader {
   }
 
   public Library loadJarLibrary(File file, String className) {
-    final var actual = getSubstitution(file);
+    final java.io.File actual = getSubstitution(file);
     return LibraryManager.instance.loadJarLibrary(this, actual, className);
   }
 
@@ -260,8 +260,8 @@ public class Loader implements LibraryLoader {
   // methods for LibraryManager
   //
   LogisimFile loadLogisimFile(File request) throws LoadFailedException {
-    final var actual = getSubstitution(request);
-    for (final var fileOpening : filesOpening) {
+    final java.io.File actual = getSubstitution(request);
+    for (final java.io.File fileOpening : filesOpening) {
       if (fileOpening.equals(actual)) {
         throw new LoadFailedException(S.get("logisimCircularError", toProjectName(actual)));
       }
@@ -281,8 +281,8 @@ public class Loader implements LibraryLoader {
   }
 
   public Library loadLogisimLibrary(File file) {
-    final var actual = getSubstitution(file);
-    final var ret = LibraryManager.instance.loadLogisimLibrary(this, actual);
+    final java.io.File actual = getSubstitution(file);
+    final com.cburch.logisim.file.LoadedLibrary ret = LibraryManager.instance.loadLogisimLibrary(this, actual);
     if (ret != null) {
       LogisimFile retBase = (LogisimFile) ret.getBase();
       showMessages(retBase);
@@ -292,7 +292,7 @@ public class Loader implements LibraryLoader {
 
   public LogisimFile openLogisimFile(File file) throws LoadFailedException {
     try {
-      final var ret = loadLogisimFile(file);
+      final com.cburch.logisim.file.LogisimFile ret = loadLogisimFile(file);
       if (ret != null) setMainFile(file);
       else throw new LoadFailedException("File could not be opened");
       showMessages(ret);
@@ -329,13 +329,13 @@ public class Loader implements LibraryLoader {
 
   public boolean export(LogisimFile file, String homeDirectory) {
     try {
-      final var mainCircFile =
+      final java.lang.String mainCircFile =
           LineBuffer.format(
               "{{1}}{{2}}{{3}}{{2}}{{4}}",
               homeDirectory, File.separator, LOGISIM_CIRCUIT_DIR, getMainFile().getName());
-      final var libraryHome =
+      final java.lang.String libraryHome =
           String.format("%s%s%s", homeDirectory, File.separator, LOGISIM_LIBRARY_DIR);
-      final var fwrite = new FileOutputStream(mainCircFile);
+      final java.io.FileOutputStream fwrite = new FileOutputStream(mainCircFile);
       file.write(fwrite, this, libraryHome);
     } catch (IOException e) {
       // TODO: give an error message to the user #1136
@@ -346,7 +346,7 @@ public class Loader implements LibraryLoader {
   }
 
   public boolean save(LogisimFile file, File dest) {
-    final var reference = LibraryManager.instance.findReference(file, dest);
+    final com.cburch.logisim.tools.Library reference = LibraryManager.instance.findReference(file, dest);
     if (reference != null) {
       OptionPane.showMessageDialog(
           parent,
@@ -356,11 +356,11 @@ public class Loader implements LibraryLoader {
       return false;
     }
 
-    final var backup = determineBackupName(dest);
-    final var backupCreated = (backup != null) && dest.renameTo(backup);
+    final java.io.File backup = determineBackupName(dest);
+    final boolean backupCreated = (backup != null) && dest.renameTo(backup);
 
     FileOutputStream fwrite = null;
-    final var oldFile = getMainFile();
+    final java.io.File oldFile = getMainFile();
     try {
       setMainFile(dest);
       fwrite = new FileOutputStream(dest);
@@ -433,9 +433,9 @@ public class Loader implements LibraryLoader {
   @Override
   public void showError(String description) {
     if (!filesOpening.empty()) {
-      final var top = filesOpening.peek();
-      final var init = toProjectName(top) + ":";
-      final var sep = description.contains("\n") ? "\n" : " ";
+      final java.io.File top = filesOpening.peek();
+      final java.lang.String init = toProjectName(top) + ":";
+      final java.lang.String sep = description.contains("\n") ? "\n" : " ";
       description = init + sep + description;
     }
 
@@ -448,12 +448,12 @@ public class Loader implements LibraryLoader {
       }
       lines = Math.max(4, Math.min(lines, 7));
 
-      final var textArea = new JTextArea(lines, 60);
+      final javax.swing.JTextArea textArea = new JTextArea(lines, 60);
       textArea.setEditable(false);
       textArea.setText(description);
       textArea.setCaretPosition(0);
 
-      final var scrollPane = new JScrollPane(textArea);
+      final javax.swing.JScrollPane scrollPane = new JScrollPane(textArea);
       scrollPane.setPreferredSize(new Dimension(350, 150));
       OptionPane.showMessageDialog(
           parent, scrollPane, S.get("fileErrorTitle"), OptionPane.ERROR_MESSAGE);
@@ -474,7 +474,7 @@ public class Loader implements LibraryLoader {
   }
 
   private String toProjectName(File file) {
-    final var ret = file.getName();
+    final java.lang.String ret = file.getName();
 
     return (ret.endsWith(LOGISIM_EXTENSION))
         ? ret.substring(0, ret.length() - LOGISIM_EXTENSION.length())
@@ -482,12 +482,12 @@ public class Loader implements LibraryLoader {
   }
 
   public String vhdlImportChooser(Component window) {
-    final var chooser = createChooser();
+    final javax.swing.JFileChooser chooser = createChooser();
     chooser.setFileFilter(Loader.VHDL_FILTER);
     chooser.setDialogTitle(com.cburch.logisim.vhdl.Strings.S.get("hdlOpenDialog"));
-    final var returnVal = chooser.showOpenDialog(window);
+    final int returnVal = chooser.showOpenDialog(window);
     if (returnVal != JFileChooser.APPROVE_OPTION) return null;
-    final var selected = chooser.getSelectedFile();
+    final java.io.File selected = chooser.getSelectedFile();
     if (selected == null) return null;
     try {
       return HdlFile.load(selected);

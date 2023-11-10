@@ -70,9 +70,9 @@ public class VariableTab extends AnalyzerTab {
   private final JLabel outputsLabel;
 
   private JTable ioTable(VariableList data, LogisimMenuBar menubar) {
-    final var ed1 = new SingleClickVarEditor(data);
-    final var ed2 = new DoubleClickVarEditor(data);
-    final var table = new JTable(1, 1) {
+    final com.cburch.logisim.analyze.gui.VariableTab.SingleClickVarEditor ed1 = new SingleClickVarEditor(data);
+    final com.cburch.logisim.analyze.gui.VariableTab.DoubleClickVarEditor ed2 = new DoubleClickVarEditor(data);
+    final javax.swing.JTable table = new JTable(1, 1) {
       private static final long serialVersionUID = 1L;
 
       @Override
@@ -88,17 +88,17 @@ public class VariableTab extends AnalyzerTab {
     table.setDragEnabled(true);
     table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
     table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    final var ccp = new VarTransferHandler(table, data);
+    final com.cburch.logisim.analyze.gui.VariableTab.VarTransferHandler ccp = new VarTransferHandler(table, data);
     table.setTransferHandler(ccp);
     table.setDropMode(DropMode.INSERT_ROWS);
 
-    final var inputMap = table.getInputMap();
+    final javax.swing.InputMap inputMap = table.getInputMap();
     for (LogisimMenuItem item : LogisimMenuBar.EDIT_ITEMS) {
-      final var accel = menubar.getAccelerator(item);
+      final javax.swing.KeyStroke accel = menubar.getAccelerator(item);
       inputMap.put(accel, item);
     }
 
-    final var actionMap = table.getActionMap();
+    final javax.swing.ActionMap actionMap = table.getActionMap();
 
     actionMap.put(LogisimMenuBar.CUT, TransferHandler.getCutAction());
     actionMap.put(LogisimMenuBar.COPY, TransferHandler.getCopyAction());
@@ -124,7 +124,7 @@ public class VariableTab extends AnalyzerTab {
 
           @Override
           public void actionPerformed(ActionEvent e) {
-            final var idx = table.getSelectedRow();
+            final int idx = table.getSelectedRow();
             if (idx <= 0 || idx > data.vars.size() - 1) return;
             data.move(data.vars.get(idx), -1);
             table.changeSelection(idx - 1, 0, false, false);
@@ -137,7 +137,7 @@ public class VariableTab extends AnalyzerTab {
 
           @Override
           public void actionPerformed(ActionEvent e) {
-            final var idx = table.getSelectedRow();
+            final int idx = table.getSelectedRow();
             if (idx < 0 || idx >= data.vars.size() - 1) return;
             data.move(data.vars.get(idx), +1);
             table.changeSelection(idx + 1, 0, false, false);
@@ -150,7 +150,7 @@ public class VariableTab extends AnalyzerTab {
 
           @Override
           public void actionPerformed(ActionEvent e) {
-            final var idx = table.getSelectedRow();
+            final int idx = table.getSelectedRow();
             if (idx <= 0 || idx > data.vars.size() - 1) return;
             data.move(data.vars.get(idx), -idx);
             table.changeSelection(0, 0, false, false);
@@ -163,7 +163,7 @@ public class VariableTab extends AnalyzerTab {
 
           @Override
           public void actionPerformed(ActionEvent e) {
-            final var idx = table.getSelectedRow();
+            final int idx = table.getSelectedRow();
             int end = data.vars.size() - 1;
             if (idx < 0 || idx >= data.vars.size() - 1) return;
             data.move(data.vars.get(idx), end - idx);
@@ -176,7 +176,7 @@ public class VariableTab extends AnalyzerTab {
   private JTable focus;
 
   private JScrollPane wrap(JTable table) {
-    final var scroll = new JScrollPane(table, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+    final javax.swing.JScrollPane scroll = new JScrollPane(table, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                                   ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
     scroll.setPreferredSize(new Dimension(AppPreferences.getScaled(60), AppPreferences.getScaled(100)));
     scroll.addMouseListener(
@@ -215,11 +215,11 @@ public class VariableTab extends AnalyzerTab {
 
     inputsTable = ioTable(inputs, menubar);
     outputsTable = ioTable(outputs, menubar);
-    final var inputsTablePane = wrap(inputsTable);
-    final var outputsTablePane = wrap(outputsTable);
+    final javax.swing.JScrollPane inputsTablePane = wrap(inputsTable);
+    final javax.swing.JScrollPane outputsTablePane = wrap(outputsTable);
 
-    final var gb = new GridBagLayout();
-    final var gc = new GridBagConstraints();
+    final java.awt.GridBagLayout gb = new GridBagLayout();
+    final java.awt.GridBagConstraints gc = new GridBagConstraints();
     setLayout(gb);
 
     gc.insets = new Insets(10, 10, 2, 10);
@@ -288,9 +288,9 @@ public class VariableTab extends AnalyzerTab {
 
   @Override
   void updateTab() {
-    final var inputModel = (VariableTableModel) inputsTable.getModel();
+    final com.cburch.logisim.analyze.gui.VariableTab.VariableTableModel inputModel = (VariableTableModel) inputsTable.getModel();
     inputModel.update();
-    final var outputModel = (VariableTableModel) outputsTable.getModel();
+    final com.cburch.logisim.analyze.gui.VariableTab.VariableTableModel outputModel = (VariableTableModel) outputsTable.getModel();
     outputModel.update();
   }
 
@@ -310,13 +310,13 @@ public class VariableTab extends AnalyzerTab {
   public static final int INVALID_CHARS = -7;
 
   public static int checkindex(String index) {
-    final var length = index.length();
+    final int length = index.length();
     int pos = 0;
     if (length < 2) return 0;
     if (index.charAt(pos++) != '[') return NO_START_PAR;
     while ((pos < length) && ("0123456789".indexOf(index.charAt(pos)) >= 0)) pos++;
     if (pos == 1) return NO_VALID_MSB_INDEX;
-    final var msbIndex = Integer.parseInt(index.substring(1, pos));
+    final int msbIndex = Integer.parseInt(index.substring(1, pos));
     if (pos >= length) return NO_FINAL_PAR;
     if (index.charAt(pos) == ']') {
       pos++;
@@ -326,10 +326,10 @@ public class VariableTab extends AnalyzerTab {
     if (pos >= length - 2) return NO_VALID_INDEX_SEP;
     if (!index.startsWith("..", pos)) return NO_VALID_INDEX_SEP;
     pos += 2;
-    final var curpos = pos;
+    final int curpos = pos;
     while ((pos < length) && ("0123456789".indexOf(index.charAt(pos)) >= 0)) pos++;
     if (pos == curpos) return NO_VALID_LSB_INDEX;
-    final var lsbIndex = Integer.parseInt(index.substring(curpos, pos));
+    final int lsbIndex = Integer.parseInt(index.substring(curpos, pos));
     if (lsbIndex > msbIndex) return LSB_BIGGER_MSB;
     if (pos >= length) return NO_FINAL_PAR;
     if (index.charAt(pos++) != ']') return NO_FINAL_PAR;
@@ -346,7 +346,7 @@ public class VariableTab extends AnalyzerTab {
       err = BAD_NAME;
     } else {
       for (int i = 1; i < text.length() && err == OK; i++) {
-        final var c = text.charAt(i);
+        final char c = text.charAt(i);
         if (!Character.isJavaIdentifierPart(c)) {
           error.setText(S.get("variablePartError", "" + c));
           err = BAD_NAME;
@@ -354,7 +354,7 @@ public class VariableTab extends AnalyzerTab {
       }
     }
     if (err == OK) {
-      final var message = SyntaxChecker.getErrorMessage(text);
+      final java.lang.String message = SyntaxChecker.getErrorMessage(text);
       if (message != null) {
         err = BAD_NAME;
         error.setText(message);
@@ -394,8 +394,8 @@ public class VariableTab extends AnalyzerTab {
       new EditHandler() {
         @Override
         public void computeEnabled() {
-          final var n = (focus == null || focus.isEditing()) ? -1 : (focus.getRowCount() - 1);
-          final var i = (focus == null || focus.isEditing()) ? -1 : focus.getSelectedRow();
+          final int n = (focus == null || focus.isEditing()) ? -1 : (focus.getRowCount() - 1);
+          final int i = (focus == null || focus.isEditing()) ? -1 : focus.getSelectedRow();
           setEnabled(LogisimMenuBar.CUT, true);
           setEnabled(LogisimMenuBar.COPY, true);
           setEnabled(LogisimMenuBar.PASTE, true);
@@ -412,7 +412,7 @@ public class VariableTab extends AnalyzerTab {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-          final var action = e.getSource();
+          final java.lang.Object action = e.getSource();
           if (focus != null) focus.getActionMap().get(action).actionPerformed(null);
         }
       };
@@ -438,8 +438,8 @@ public class VariableTab extends AnalyzerTab {
 
     @Override
     public void setValueAt(Object obj, int row, int column) {
-      final var newVar = (Var) obj;
-      final var oldVar = (Var) getValueAt(row, column);
+      final com.cburch.logisim.analyze.model.Var newVar = (Var) obj;
+      final com.cburch.logisim.analyze.model.Var oldVar = (Var) getValueAt(row, column);
       if (newVar == null || newVar.name.equals("") || newVar.equals(oldVar)) return;
       if (row == listCopy.length) {
         list.add(newVar);
@@ -482,7 +482,7 @@ public class VariableTab extends AnalyzerTab {
 
     @Override
     public void listChanged(VariableListEvent event) {
-      final var oldSize = listCopy.length;
+      final int oldSize = listCopy.length;
       updateCopy();
       Integer idx = event.getIndex();
       switch (event.getType()) {
@@ -522,9 +522,9 @@ public class VariableTab extends AnalyzerTab {
     @Override
     public Component getTableCellRendererComponent(JTable table,
         Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-      final var empty = value.toString().equals("");
+      final boolean empty = value.toString().equals("");
       if (empty) value = S.get("variableClickToAdd");
-      final var c = (JComponent) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+      final javax.swing.JComponent c = (JComponent) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
       c.setFont(empty ? italic : plain);
       return c;
     }
@@ -540,7 +540,7 @@ public class VariableTab extends AnalyzerTab {
     @Override
     public Component getListCellRendererComponent(JList<?> list,
         Object w, int index, boolean isSelected, boolean cellHasFocus) {
-      final var s = ((Integer) w) == 1 ? ("1 bit") : (w + " bits");
+      final java.lang.String s = ((Integer) w) == 1 ? ("1 bit") : (w + " bits");
       return super.getListCellRendererComponent(list, s, index, isSelected, cellHasFocus);
     }
   }
@@ -557,8 +557,8 @@ public class VariableTab extends AnalyzerTab {
             field.getBorder(),
             BorderFactory.createEmptyBorder(1, 3, 1, 3)));
       this.data = data;
-      final var maxwidth = data.getMaximumSize();
-      final var widths = new Integer[Math.min(maxwidth, 32)];
+      final int maxwidth = data.getMaximumSize();
+      final java.lang.Integer[] widths = new Integer[Math.min(maxwidth, 32)];
       for (int i = 0; i < widths.length; i++) widths[i] = i + 1;
       width = new JComboBox<>(widths);
       width.setFocusable(false);
@@ -569,8 +569,8 @@ public class VariableTab extends AnalyzerTab {
 
     @Override
     public Object getCellEditorValue() {
-      final var name = field.getText().trim();
-      final var w = (Integer) width.getSelectedItem();
+      final java.lang.String name = field.getText().trim();
+      final java.lang.Integer w = (Integer) width.getSelectedItem();
       return new Var(name, w);
     }
 
@@ -593,9 +593,9 @@ public class VariableTab extends AnalyzerTab {
     }
 
     boolean ok() {
-      final var oldVar = editing;
+      final com.cburch.logisim.analyze.model.Var oldVar = editing;
       editing = null;
-      final var text = field.getText().trim();
+      final java.lang.String text = field.getText().trim();
       java.lang.String name = "";
       java.lang.String index = "";
       int w;
@@ -629,13 +629,13 @@ public class VariableTab extends AnalyzerTab {
       }
       if (oldVar == null || oldVar.name.equals("")) {
         // validate new name and width
-        final var err = validateInput(data, null, name, w);
+        final int err = validateInput(data, null, name, w);
         if (err == EMPTY) return true; // do nothing, empty Var will be ignored in setValueAt()
         if (err == BAD_NAME || err == DUP_NAME || err == TOO_WIDE) return false; // prevent loss of focus
         return err == OK; // new Var will be added in setValueAt()
       } else {
         // validate replacement name and width
-        final var err = validateInput(data, oldVar, name, w);
+        final int err = validateInput(data, oldVar, name, w);
         if (err == EMPTY || err == BAD_NAME || err == DUP_NAME || err == TOO_WIDE) return false; // prevent loss of focus
         if (err == UNCHANGED) return true; // do nothing, unchanged Var will be ignored in setValueAt()
         return err == OK || err == RESIZED; // modified Var will be created in setValueAt()
@@ -693,7 +693,7 @@ public class VariableTab extends AnalyzerTab {
         return false;
       }
 
-      final var newVar = parse(s);
+      final com.cburch.logisim.analyze.model.Var newVar = parse(s);
       if (newVar == null) return false;
       int newIdx = data.vars.size();
       if (info.isDrop()) {
@@ -707,14 +707,14 @@ public class VariableTab extends AnalyzerTab {
       Var oldVar = null;
       int oldIdx;
       for (oldIdx = 0; oldIdx < data.vars.size(); oldIdx++) {
-        final var v = data.vars.get(oldIdx);
+        final com.cburch.logisim.analyze.model.Var v = data.vars.get(oldIdx);
         if (v.name.equals(newVar.name)) {
           oldVar = v;
           break;
         }
       }
 
-      final var err = validateInput(data, oldVar, newVar.name, newVar.width);
+      final int err = validateInput(data, oldVar, newVar.name, newVar.width);
       if (err == UNCHANGED) {
         pendingDelete = null;
         if (newIdx > oldIdx)
@@ -746,7 +746,7 @@ public class VariableTab extends AnalyzerTab {
 
     @Override
     protected Transferable createTransferable(JComponent c) {
-      final var row = table.getSelectedRow();
+      final int row = table.getSelectedRow();
       if (row < 0 || row >= data.vars.size())
         return null;
       pendingDelete = data.vars.get(row);

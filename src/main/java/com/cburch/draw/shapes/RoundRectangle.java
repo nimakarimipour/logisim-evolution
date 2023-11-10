@@ -38,8 +38,8 @@ public class RoundRectangle extends Rectangular {
 
   @Override
   protected boolean contains(int x, int y, int w, int h, Location q) {
-    final var qx = q.getX();
-    final var qy = q.getY();
+    final int qx = q.getX();
+    final int qy = q.getY();
     int rx = radius;
     int ry = radius;
     if (2 * rx > w) rx = w / 2;
@@ -61,7 +61,7 @@ public class RoundRectangle extends Rectangular {
 
   @Override
   public void draw(Graphics g, int x, int y, int w, int h) {
-    final var diam = 2 * radius;
+    final int diam = 2 * radius;
     if (setForFill(g)) g.fillRoundRect(x, y, w, h, diam, diam);
     if (setForStroke(g)) g.drawRoundRect(x, y, w, h, diam, diam);
   }
@@ -82,12 +82,12 @@ public class RoundRectangle extends Rectangular {
       return super.getRandomPoint(bds, rand);
     }
 
-    final var w = getWidth();
-    final var h = getHeight();
-    final var r = radius;
-    final var horz = Math.max(0, w - 2 * r); // length of horizontal segment
-    final var vert = Math.max(0, h - 2 * r);
-    final var len = 2 * horz + 2 * vert + 2 * Math.PI * r;
+    final int w = getWidth();
+    final int h = getHeight();
+    final int r = radius;
+    final int horz = Math.max(0, w - 2 * r); // length of horizontal segment
+    final int vert = Math.max(0, h - 2 * r);
+    final double len = 2 * horz + 2 * vert + 2 * Math.PI * r;
     double u = len * rand.nextDouble();
     int x = getX();
     int y = getY();
@@ -108,13 +108,13 @@ public class RoundRectangle extends Rectangular {
       if (2 * rx > w) rx = w / 2;
       if (2 * ry > h) ry = h / 2;
       u = 2 * Math.PI * rand.nextDouble();
-      final var dx = (int) Math.round(rx * Math.cos(u));
-      final var dy = (int) Math.round(ry * Math.sin(u));
+      final int dx = (int) Math.round(rx * Math.cos(u));
+      final int dy = (int) Math.round(ry * Math.sin(u));
       x += (dx < 0) ? (r + dx) : (r + horz + dx);
       y += (dy < 0) ? (r + dy) : (r + vert + dy);
     }
 
-    final var d = getStrokeWidth();
+    final int d = getStrokeWidth();
     if (d > 1) {
       x += rand.nextInt(d) - d / 2;
       y += rand.nextInt(d) - d / 2;

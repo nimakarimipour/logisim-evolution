@@ -31,10 +31,10 @@ class AndGate extends AbstractGate {
 
     @Override
     public LineBuffer getLogicFunction(int nrOfInputs, int bitwidth, boolean isOneHot) {
-      final var contents = LineBuffer.getHdlBuffer();
+      final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
       java.lang.StringBuilder oneLine = new StringBuilder();
       oneLine.append(Hdl.assignPreamble()).append("result").append(Hdl.assignOperator());
-      final var tabWidth = oneLine.length();
+      final int tabWidth = oneLine.length();
       boolean first = true;
       for (int i = 0; i < nrOfInputs; i++) {
         if (!first) {
@@ -91,14 +91,14 @@ class AndGate extends AbstractGate {
 
   protected static void paintIconANSI(
       Graphics2D g, int iconSize, int borderSize, int negateSize, boolean inverted) {
-    final var ystart = negateSize >> 1;
-    final var yend = iconSize - ystart;
-    final var rad = (yend - ystart) >> 1;
-    final var xstart = 0;
-    final var xend = iconSize - negateSize - rad;
-    final var xp = new int[] {xend, xstart, xstart, xend};
-    final var yp = new int[] {ystart, ystart, yend, yend};
-    final var af = g.getTransform();
+    final int ystart = negateSize >> 1;
+    final int yend = iconSize - ystart;
+    final int rad = (yend - ystart) >> 1;
+    final int xstart = 0;
+    final int xend = iconSize - negateSize - rad;
+    final int[] xp = new int[] {xend, xstart, xstart, xend};
+    final int[] yp = new int[] {ystart, ystart, yend, yend};
+    final java.awt.geom.AffineTransform af = g.getTransform();
     g.translate(borderSize, borderSize);
     g.drawPolyline(xp, yp, 4);
     GraphicsUtil.drawCenteredArc(g, xend, iconSize >> 1, rad, -90, 180);

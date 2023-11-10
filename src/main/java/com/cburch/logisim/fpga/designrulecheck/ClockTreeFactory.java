@@ -28,7 +28,7 @@ public class ClockTreeFactory {
       ConnectionPoint connection,
       boolean isPinClock) {
     ClockTreeContainer destination = null;
-    for (final var search : sourceTrees) {
+    for (final com.cburch.logisim.fpga.designrulecheck.ClockTreeContainer search : sourceTrees) {
       if (search.equals(hierarchyNames, clocksourceid)) {
         destination = search;
       }
@@ -43,7 +43,7 @@ public class ClockTreeFactory {
   public void addClockSource(
       List<String> hierarchyNames, int clockSourceId, ConnectionPoint connection) {
     ClockTreeContainer destination = null;
-    for (final var search : sourceTrees) {
+    for (final com.cburch.logisim.fpga.designrulecheck.ClockTreeContainer search : sourceTrees) {
       if (search.equals(hierarchyNames, clockSourceId)) {
         destination = search;
       }
@@ -56,20 +56,20 @@ public class ClockTreeFactory {
   }
 
   public void clean() {
-    for (final var tree : sourceTrees) tree.clear();
+    for (final com.cburch.logisim.fpga.designrulecheck.ClockTreeContainer tree : sourceTrees) tree.clear();
     sourceTrees.clear();
     if (sources != null) sources.clear();
   }
 
   public int getClockSourceId(List<String> hierarchy, Net selectedNet, byte selectedNetBitIndex) {
     for (int i = 0; i < sources.getNrofSources(); i++) {
-      for (final var ThisClockNet : sourceTrees) {
+      for (final com.cburch.logisim.fpga.designrulecheck.ClockTreeContainer ThisClockNet : sourceTrees) {
         if (ThisClockNet.equals(hierarchy, i)) {
           /*
            * we found a clock net corresponding the Hierarchy and
            * clock source id
            */
-          for (final var clockEntry : ThisClockNet.getClockEntries(selectedNet)) {
+          for (final java.lang.Byte clockEntry : ThisClockNet.getClockEntries(selectedNet)) {
             if (clockEntry == selectedNetBitIndex) return i;
           }
         }

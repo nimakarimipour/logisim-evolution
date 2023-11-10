@@ -63,23 +63,23 @@ public class Ttl74165 extends AbstractTtlGate {
     boolean isPressed = true;
 
     private boolean isInside(InstanceState state, MouseEvent e) {
-      final var p = getTranslatedTtlXY(state, e);
+      final java.awt.Point p = getTranslatedTtlXY(state, e);
       boolean inside = false;
       for (int i = 0; i < 8; i++) {
-        final var dx = p.x - (40 + i * 10);
-        final var dy = p.y - 30;
-        final var d2 = dx * dx + dy * dy;
+        final int dx = p.x - (40 + i * 10);
+        final int dy = p.y - 30;
+        final int d2 = dx * dx + dy * dy;
         inside |= (d2 < 4 * 4);
       }
       return inside;
     }
 
     private int getIndex(InstanceState state, MouseEvent e) {
-      final var p = getTranslatedTtlXY(state, e);
+      final java.awt.Point p = getTranslatedTtlXY(state, e);
       for (int i = 0; i < 8; i++) {
-        final var dx = p.x - (40 + i * 10);
-        final var dy = p.y - 30;
-        final var d2 = dx * dx + dy * dy;
+        final int dx = p.x - (40 + i * 10);
+        final int dy = p.y - 30;
+        final int d2 = dx * dx + dy * dy;
         if (d2 < 4 * 4) return 7 - i;
       }
       return 0;
@@ -96,8 +96,8 @@ public class Ttl74165 extends AbstractTtlGate {
         return;
       }
       if (isPressed && isInside(state, e)) {
-        final var index = getIndex(state, e);
-        final var myState = (ShiftRegisterData) state.getData();
+        final int index = getIndex(state, e);
+        final com.cburch.logisim.std.ttl.ShiftRegisterData myState = (ShiftRegisterData) state.getData();
         if (myState == null) {
           return;
         }
@@ -123,7 +123,7 @@ public class Ttl74165 extends AbstractTtlGate {
 
   @Override
   public void paintInternal(InstancePainter painter, int x, int y, int height, boolean up) {
-    final var g = (Graphics2D) painter.getGraphics();
+    final java.awt.Graphics2D g = (Graphics2D) painter.getGraphics();
     super.paintBase(painter, false, false);
     Drawgates.paintPortNames(
         painter,
@@ -150,8 +150,8 @@ public class Ttl74165 extends AbstractTtlGate {
 
   @Override
   public void propagateTtl(InstanceState state) {
-    final var data = getData(state);
-    final var triggered = data.updateClock(state.getPortValue(1), StdAttr.TRIG_RISING);
+    final com.cburch.logisim.std.ttl.ShiftRegisterData data = getData(state);
+    final boolean triggered = data.updateClock(state.getPortValue(1), StdAttr.TRIG_RISING);
     if (state.getPortValue(0) == Value.FALSE) { // load
       data.clear();
       data.push(state.getPortValue(5));

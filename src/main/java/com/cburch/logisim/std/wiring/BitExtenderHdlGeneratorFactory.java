@@ -21,7 +21,7 @@ public class BitExtenderHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
   @Override
   public LineBuffer getInlinedCode(
       Netlist nets, Long componentId, netlistComponent componentInfo, String circuitName) {
-    final var contents = LineBuffer.getHdlBuffer();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
     int nrOfPins = componentInfo.nrOfEnds();
     for (int i = 1; i < nrOfPins; i++) {
       if (!componentInfo.isEndConnected(i)) {
@@ -36,7 +36,7 @@ public class BitExtenderHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
     }
     if (componentInfo.getComponent().getEnd(0).getWidth().getWidth() == 1) {
       /* Special case: Single bit output */
-      final var connectedNet = componentInfo.getComponent().getEnd(1).getWidth().getWidth() == 1 
+      final java.lang.String connectedNet = componentInfo.getComponent().getEnd(1).getWidth().getWidth() == 1 
           ?  Hdl.getNetName(componentInfo, 1, true, nets) 
           :  Hdl.getBusEntryName(componentInfo, 1, true, 0, nets);
       contents.add("{{assign}} {{1}} {{=}} {{2}};", Hdl.getNetName(componentInfo, 0, true, nets), connectedNet);
@@ -50,8 +50,8 @@ public class BitExtenderHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
        * We make ourselves life easy, we just enumerate through all the
        * bits
        */
-      final var replacement = new StringBuilder();
-      final var type =
+      final java.lang.StringBuilder replacement = new StringBuilder();
+      final java.lang.String type =
           (String)
               componentInfo
                   .getComponent()

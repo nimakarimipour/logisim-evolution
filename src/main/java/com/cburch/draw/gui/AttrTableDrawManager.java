@@ -42,14 +42,14 @@ public class AttrTableDrawManager implements PropertyChangeListener {
   //
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    final var prop = evt.getPropertyName();
+    final java.lang.String prop = evt.getPropertyName();
     if (prop.equals(Canvas.TOOL_PROPERTY)) {
       updateToolAttributes();
     }
   }
 
   private void updateToolAttributes() {
-    final var tool = canvas.getTool();
+    final com.cburch.draw.canvas.CanvasTool tool = canvas.getTool();
     if (tool instanceof SelectTool) {
       table.setAttrTableModel(selectionModel);
     } else if (tool instanceof AbstractTool absTool) {

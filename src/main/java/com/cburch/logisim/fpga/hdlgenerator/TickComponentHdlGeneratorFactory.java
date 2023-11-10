@@ -35,7 +35,7 @@ public class TickComponentHdlGeneratorFactory extends AbstractHdlGeneratorFactor
     super(HDL_DIRECTORY);
     fpgaClockFrequency = fpga_clock_frequency;
     tickFrequency = tick_frequency;
-    final var reloadValueAcc = ((double) fpgaClockFrequency) / tickFrequency;
+    final double reloadValueAcc = ((double) fpgaClockFrequency) / tickFrequency;
     long reloadValue = (long) reloadValueAcc;
     int nrOfBits = 0;
     if ((reloadValue > 0x7FFFFFFFL) | (reloadValue < 0)) reloadValue = 0x7FFFFFFFL;
@@ -59,7 +59,7 @@ public class TickComponentHdlGeneratorFactory extends AbstractHdlGeneratorFactor
 
   @Override
   public SortedMap<String, String> getPortMap(Netlist nets, Object mapInfo) {
-    final var res = new TreeMap<String, String>();
+    final java.util.TreeMap<java.lang.String,java.lang.String> res = new TreeMap<String, String>();
     for (java.lang.String port : myPorts.keySet())
       res.put(port, myPorts.getFixedMap(port));
     return res;
@@ -67,7 +67,7 @@ public class TickComponentHdlGeneratorFactory extends AbstractHdlGeneratorFactor
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist TheNetlist, AttributeSet attrs) {
-    final var contents =
+    final com.cburch.logisim.util.LineBuffer contents =
         LineBuffer.getHdlBuffer()
             .pair("nrOfCounterBits", NR_OF_COUNTER_BITS_STRING)
             .add("")

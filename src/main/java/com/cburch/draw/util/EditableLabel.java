@@ -79,13 +79,13 @@ public class EditableLabel implements Cloneable {
     }
     field.setFont(font);
 
-    final var dim = field.getPreferredSize();
+    final java.awt.Dimension dim = field.getPreferredSize();
     int w;
-    final var border = EditableLabelField.FIELD_BORDER;
+    final int border = EditableLabelField.FIELD_BORDER;
     if (dimsKnown) {
       w = width + 1 + 2 * border;
     } else {
-      final var tm = new TextMetrics(field, this.font, text);
+      final com.cburch.draw.util.TextMetrics tm = new TextMetrics(field, this.font, text);
       ascent = tm.ascent;
       descent = tm.descent;
       w = tm.width;

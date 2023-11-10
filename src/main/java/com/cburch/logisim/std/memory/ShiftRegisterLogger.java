@@ -38,8 +38,8 @@ public class ShiftRegisterLogger extends InstanceLogger {
 
   @Override
   public Object[] getLogOptions(InstanceState state) {
-    final var stages = state.getAttributeValue(ShiftRegister.ATTR_LENGTH);
-    final var ret = new Object[stages];
+    final java.lang.Integer stages = state.getAttributeValue(ShiftRegister.ATTR_LENGTH);
+    final java.lang.Object[] ret = new Object[stages];
     for (int i = 0; i < ret.length; i++) {
       ret[i] = i;
     }
@@ -50,7 +50,7 @@ public class ShiftRegisterLogger extends InstanceLogger {
   public Value getLogValue(InstanceState state, Object option) {
     com.cburch.logisim.data.BitWidth dataWidth = state.getAttributeValue(StdAttr.WIDTH);
     if (dataWidth == null) dataWidth = BitWidth.create(0);
-    final var data = (ShiftRegisterData) state.getData();
+    final com.cburch.logisim.std.memory.ShiftRegisterData data = (ShiftRegisterData) state.getData();
     if (data == null) {
       return Value.createKnown(dataWidth, 0);
     } else {

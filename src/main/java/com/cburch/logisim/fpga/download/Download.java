@@ -123,7 +123,7 @@ public class Download extends DownloadBase implements Runnable, BaseWindowListen
     this.topLevelSheet = topLevelSheet;
     this.tickFrequency = tickFrequency;
     this.mapFileName = mapFileName;
-    final var rootSheet = myProject.getLogisimFile().getCircuit(topLevelSheet);
+    final com.cburch.logisim.circuit.Circuit rootSheet = myProject.getLogisimFile().getCircuit(topLevelSheet);
     if (rootSheet == null) return;
     int steps = basicSteps;
     if (!this.generateHdlOnly && useGui) rootSheet.setDownloadBoard(myBoardInformation.getBoardName());
@@ -211,7 +211,7 @@ public class Download extends DownloadBase implements Runnable, BaseWindowListen
   }
 
   public boolean runTty() {
-    final var root = myProject.getLogisimFile().getCircuit(topLevelSheet);
+    final com.cburch.logisim.circuit.Circuit root = myProject.getLogisimFile().getCircuit(topLevelSheet);
     if (root != null) {
       root.annotate(myProject, false, false);
     } else {
@@ -243,9 +243,9 @@ public class Download extends DownloadBase implements Runnable, BaseWindowListen
     if (!downloadOnly || !downloader.readyForDownload()) {
       for (int stages = 0; stages < downloader.getNumberOfStages(); stages++) {
         if (stopRequested) return S.get("FPGAInterrupted");
-        final var currentStage = downloader.performStep(stages);
+        final java.lang.ProcessBuilder currentStage = downloader.performStep(stages);
         if (currentStage != null) {
-          final var result = execute(downloader.getStageMessage(stages), currentStage);
+          final java.lang.String result = execute(downloader.getStageMessage(stages), currentStage);
           if (result != null) return result;
         }
         if (useGui) progressBar.setValue(stages + basicSteps);
@@ -323,7 +323,7 @@ public class Download extends DownloadBase implements Runnable, BaseWindowListen
     if (!performDrc(topLevelSheet, AppPreferences.HdlType.get())) {
       return false;
     }
-    final var name = myProject.getLogisimFile().getName();
+    final java.lang.String name = myProject.getLogisimFile().getName();
     if (name.contains(" ")) {
       Reporter.report.addFatalError(S.get("FPGANameContainsSpaces", name));
       return false;
@@ -375,8 +375,8 @@ public class Download extends DownloadBase implements Runnable, BaseWindowListen
     if (!writeHDL(topLevelSheet, tickFrequency)) {
       return false;
     }
-    final var projectPath = getProjDir(topLevelSheet);
-    final var sourcePath = projectPath + AppPreferences.HdlType.get().toLowerCase() + File.separator;
+    final java.lang.String projectPath = getProjDir(topLevelSheet);
+    final java.lang.String sourcePath = projectPath + AppPreferences.HdlType.get().toLowerCase() + File.separator;
     getVhdlFiles(projectPath, sourcePath, entities, architectures, AppPreferences.HdlType.get());
     if (useGui) {
       progressBar.setValue(4);

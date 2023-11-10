@@ -243,7 +243,7 @@ public class SocBusStateInfo extends JDialog
   public String getName() {
     java.lang.String name = myComp.getAttributeSet().getValue(StdAttr.LABEL);
     if (StringUtil.isNullOrEmpty(name)) {
-      final var loc = myComp.getLocation();
+      final com.cburch.logisim.data.Location loc = myComp.getLocation();
       name = myComp.getFactory().getDisplayName() + "@" + loc.getX() + "," + loc.getY();
     }
     return name;
@@ -264,7 +264,7 @@ public class SocBusStateInfo extends JDialog
   public void initializeTransaction(SocBusTransaction trans, String busId) {
     int nrOfReponders = 0;
     int reponder = -1;
-    final var slaves = memMap.getSlaves();
+    final java.util.List<com.cburch.logisim.soc.data.SocBusSlaveInterface> slaves = memMap.getSlaves();
     if (slaves.isEmpty()) trans.setError(SocBusTransaction.NO_SLAVES_ERROR);
     else if (trans.isReadTransaction()
         && trans.isWriteTransaction()
@@ -285,7 +285,7 @@ public class SocBusStateInfo extends JDialog
       for (SocBusSnifferInterface sniffer : sniffers) sniffer.sniffTransaction(trans);
     }
     if (!trans.isHidden()) {
-      final var data = getRegPropagateState();
+      final com.cburch.logisim.soc.data.SocBusStateInfo.SocBusState data = getRegPropagateState();
       if (data != null) {
         data.addTransaction(trans);
         if (myComp.getAttributeSet().getValue(SocBusAttributes.SOC_TRACE_VISIBLE))

@@ -145,9 +145,9 @@ public class Net {
 
   public void cleanupSourceNets(int bitIndex) {
     if ((bitIndex < 0) || (bitIndex >= sourceNetsList.size())) return;
-    final var oldconns = sourceNetsList.get(bitIndex).getAll();
+    final java.util.List<com.cburch.logisim.fpga.designrulecheck.ConnectionPoint> oldconns = sourceNetsList.get(bitIndex).getAll();
     if (oldconns.size() > 1) {
-      final var point = oldconns.get(0);
+      final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint point = oldconns.get(0);
       sourceNetsList.get(bitIndex).clear();
       sourceNetsList.get(bitIndex).add(point);
     }
@@ -186,7 +186,7 @@ public class Net {
   }
 
   public Set<ConnectionPoint> getSinks() {
-    final var sinks = new HashSet<ConnectionPoint>();
+    final java.util.HashSet<com.cburch.logisim.fpga.designrulecheck.ConnectionPoint> sinks = new HashSet<ConnectionPoint>();
     for (int i = 0; i < nrOfBits; i++) sinks.addAll(sinkList.get(i).getAll());
     return sinks;
   }

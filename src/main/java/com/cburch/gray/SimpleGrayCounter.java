@@ -59,8 +59,8 @@ class SimpleGrayCounter extends InstanceFactory {
     // However, if the context says not to show state (as when generating
     // printer output), then skip this.
     if (painter.getShowState()) {
-      final var state = CounterData.get(painter, BIT_WIDTH);
-      final var bds = painter.getBounds();
+      final com.cburch.gray.CounterData state = CounterData.get(painter, BIT_WIDTH);
+      final com.cburch.logisim.data.Bounds bds = painter.getBounds();
       GraphicsUtil.drawCenteredText(
           painter.getGraphics(),
           StringUtil.toHexString(BIT_WIDTH.getWidth(), state.getValue().toLongValue()),
@@ -75,9 +75,9 @@ class SimpleGrayCounter extends InstanceFactory {
     // method. In this case, the state is in a CounterData object, which is
     // also where the helper method is defined. This helper method will end
     // up creating a CounterData object if one doesn't already exist.
-    final var cur = CounterData.get(state, BIT_WIDTH);
+    final com.cburch.gray.CounterData cur = CounterData.get(state, BIT_WIDTH);
 
-    final var trigger = cur.updateClock(state.getPortValue(0));
+    final boolean trigger = cur.updateClock(state.getPortValue(0));
     if (trigger) cur.setValue(GrayIncrementer.nextGray(cur.getValue()));
     state.setPort(1, cur.getValue(), 9);
 

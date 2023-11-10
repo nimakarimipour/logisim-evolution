@@ -77,7 +77,7 @@ public class TraceWindowTableModel extends AbstractTableModel
       for (int i = 0; i < getColumnCount(); i++) {
         table.getColumnModel().getColumn(i).setPreferredWidth(AppPreferences.getScaled(boxWidth));
       }
-      final var height = 2 * SocBusStateInfo.TRACE_HEIGHT + SocBusStateInfo.TRACE_HEIGHT / 2;
+      final int height = 2 * SocBusStateInfo.TRACE_HEIGHT + SocBusStateInfo.TRACE_HEIGHT / 2;
       table.setRowHeight(AppPreferences.getScaled(height));
       table
           .getTableHeader()
@@ -97,7 +97,7 @@ public class TraceWindowTableModel extends AbstractTableModel
   @Override
   public int getRowCount() {
     int max = 1;
-    for (final var i : myTraceList.keySet()) {
+    for (final com.cburch.logisim.soc.data.SocBusStateInfo.SocBusState i : myTraceList.keySet()) {
       if (myTraceList.get(i) != null) {
         if (i.getNrOfEntires() > max) {
           max = i.getNrOfEntires();
@@ -110,7 +110,7 @@ public class TraceWindowTableModel extends AbstractTableModel
   @Override
   public int getColumnCount() {
     int cols = 0;
-    for (final var i : myTraceList.keySet()) {
+    for (final com.cburch.logisim.soc.data.SocBusStateInfo.SocBusState i : myTraceList.keySet()) {
       if (myTraceList.get(i) != null) cols++;
     }
     return cols;
@@ -123,13 +123,13 @@ public class TraceWindowTableModel extends AbstractTableModel
 
   @Override
   public Object getValueAt(int rowIndex, int columnIndex) {
-    final var info = getInfoAtColumn(columnIndex);
+    final com.cburch.logisim.soc.data.SocBusStateInfo.SocBusState info = getInfoAtColumn(columnIndex);
     if (info == null) return null;
 
-    final var stateInfo = info.getEntry(rowIndex, this);
+    final com.cburch.logisim.soc.data.SocBusStateInfo.SocBusState.SocBusStateTrace stateInfo = info.getEntry(rowIndex, this);
     if (stateInfo != null && stateInfo.getTransaction() != null) {
-      final var trans = stateInfo.getTransaction();
-      final var master = trans.getTransactionInitiator();
+      final com.cburch.logisim.soc.data.SocBusTransaction trans = stateInfo.getTransaction();
+      final java.lang.Object master = trans.getTransactionInitiator();
       if (master instanceof Component masterComp) {
         masterComp.addComponentListener(this);
       }
@@ -141,15 +141,15 @@ public class TraceWindowTableModel extends AbstractTableModel
   }
 
   private SocBusStateInfo.SocBusState getInfoAtColumn(int column) {
-    final var sortedList = new ArrayList<SocBusStateInfo.SocBusState>();
-    for (final var info : myTraceList.keySet())
+    final java.util.ArrayList<com.cburch.logisim.soc.data.SocBusStateInfo.SocBusState> sortedList = new ArrayList<SocBusStateInfo.SocBusState>();
+    for (final com.cburch.logisim.soc.data.SocBusStateInfo.SocBusState info : myTraceList.keySet())
       if (myTraceList.get(info) != null) {
         if (sortedList.isEmpty()) {
           sortedList.add(info);
         } else {
           boolean inserted = false;
           for (int j = 0; j < sortedList.size(); j++) {
-            final var sortedKey = myTraceList.get(sortedList.get(j)).getName();
+            final java.lang.String sortedKey = myTraceList.get(sortedList.get(j)).getName();
             if (myTraceList.get(info).getName().compareTo(sortedKey) <= 0) {
               sortedList.add(j, info);
               inserted = true;
@@ -178,10 +178,10 @@ public class TraceWindowTableModel extends AbstractTableModel
   @Override
   public void mouseClicked(MouseEvent e) {
     if (e.getClickCount() > 1) {
-      final var point = e.getPoint();
-      final var index = table.getColumnModel().getColumnIndexAtX(point.x);
-      final var realIndex = table.getColumnModel().getColumn(index).getModelIndex();
-      final var info = getInfoAtColumn(realIndex);
+      final java.awt.Point point = e.getPoint();
+      final int index = table.getColumnModel().getColumnIndexAtX(point.x);
+      final int realIndex = table.getColumnModel().getColumn(index).getModelIndex();
+      final com.cburch.logisim.soc.data.SocBusStateInfo.SocBusState info = getInfoAtColumn(realIndex);
       if (info != null && myTraceList.get(info) != null) {
         myTraceList.get(info).deregisterCircuitListener(this);
         myTraceList.get(info).deregisterComponentListener(this);
@@ -208,7 +208,7 @@ public class TraceWindowTableModel extends AbstractTableModel
     @Override
     public java.awt.Component getTableCellRendererComponent(
             JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-      final var label = new JLabel(getColumnHeader(column));
+      final javax.swing.JLabel label = new JLabel(getColumnHeader(column));
       label.setBorder(BorderFactory.createEtchedBorder());
       return label;
     }

@@ -45,9 +45,9 @@ public class RegisterShape extends DynamicElement {
   }
 
   void calculateBounds() {
-    final var widthVal = path.leaf().getAttributeSet().getValue(StdAttr.WIDTH);
+    final com.cburch.logisim.data.BitWidth widthVal = path.leaf().getAttributeSet().getValue(StdAttr.WIDTH);
     int width = (widthVal == null ? 8 : widthVal.getWidth());
-    final var zeros = StringUtil.toHexString(width, 0);
+    final java.lang.String zeros = StringUtil.toHexString(width, 0);
     label.setText(zeros);
     int x = bounds.getX();
     int y = bounds.getY();
@@ -99,10 +99,10 @@ public class RegisterShape extends DynamicElement {
     g.setColor(Color.BLACK);
     g.drawRect(x, y, w, h);
     if (state != null) {
-      final var widthVal = path.leaf().getAttributeSet().getValue(StdAttr.WIDTH);
-      final var width = (widthVal == null ? 8 : widthVal.getWidth());
-      final var data = (RegisterData) getData(state);
-      final var val = data == null ? 0 : data.value.toLongValue();
+      final com.cburch.logisim.data.BitWidth widthVal = path.leaf().getAttributeSet().getValue(StdAttr.WIDTH);
+      final int width = (widthVal == null ? 8 : widthVal.getWidth());
+      final com.cburch.logisim.std.memory.RegisterData data = (RegisterData) getData(state);
+      final long val = data == null ? 0 : data.value.toLongValue();
       label.setText(StringUtil.toHexString(width, val));
     }
     label.paint(g);
@@ -117,7 +117,7 @@ public class RegisterShape extends DynamicElement {
   @Override
   public Element toSvgElement(Element ret) {
     ret = super.toSvgElement(ret);
-    final var font = label.getFont();
+    final java.awt.Font font = label.getFont();
     if (!font.equals(DEFAULT_FONT)) SvgCreator.setFontAttribute(ret, font, "value-");
     return ret;
   }

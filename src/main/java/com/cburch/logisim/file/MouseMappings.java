@@ -57,7 +57,7 @@ public class MouseMappings {
     cacheMods = -1;
     this.map.clear();
     for (Integer mods : other.map.keySet()) {
-      final var srcTool = other.map.get(mods);
+      final com.cburch.logisim.tools.Tool srcTool = other.map.get(mods);
       com.cburch.logisim.tools.Tool dstTool = file.findTool(srcTool);
       if (dstTool != null) {
         dstTool = dstTool.cloneTool();
@@ -120,10 +120,10 @@ public class MouseMappings {
   //
   void replaceAll(Map<Tool, Tool> toolMap) {
     boolean changed = false;
-    for (final var entry : map.entrySet()) {
-      final var key = entry.getKey();
-      final var tool = entry.getValue();
-      final var searchFor = (tool instanceof AddTool addTool) ? addTool.getFactory() : tool;
+    for (final java.util.Map.Entry<java.lang.Integer,com.cburch.logisim.tools.Tool> entry : map.entrySet()) {
+      final java.lang.Integer key = entry.getKey();
+      final com.cburch.logisim.tools.Tool tool = entry.getValue();
+      final com.cburch.logisim.data.AttributeDefaultProvider searchFor = (tool instanceof AddTool addTool) ? addTool.getFactory() : tool;
       changed |= replaceInMap(toolMap, tool, searchFor, key);
     }
     if (changed) fireMouseMappingsChanged();
@@ -133,11 +133,11 @@ public class MouseMappings {
     boolean changed = false;
     if (toolMap.containsKey(searchFor)) {
       changed = true;
-      final var newTool = toolMap.get(searchFor);
+      final com.cburch.logisim.tools.Tool newTool = toolMap.get(searchFor);
       if (newTool == null) {
         map.remove(searchFor);
       } else {
-        final var clone = newTool.cloneTool();
+        final com.cburch.logisim.tools.Tool clone = newTool.cloneTool();
         LoadedLibrary.copyAttributes(clone.getAttributeSet(), tool.getAttributeSet());
         map.put(key, clone);
       }
@@ -175,7 +175,7 @@ public class MouseMappings {
   }
 
   public boolean usesToolFromSource(Tool query) {
-    for (final var tool : map.values()) {
+    for (final com.cburch.logisim.tools.Tool tool : map.values()) {
       if (tool.sharesSource(query)) {
         return true;
       }

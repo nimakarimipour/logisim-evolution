@@ -106,7 +106,7 @@ public class SimOptions extends OptionsPanel {
     super(window);
     AppPreferences.getPrefs().addPreferenceChangeListener(new MyListener());
 
-    final var c = new GridBagConstraints();
+    final java.awt.GridBagConstraints c = new GridBagConstraints();
     setLayout(new GridBagLayout());
     c.insets = new Insets(2, 4, 4, 2);
     c.anchor = GridBagConstraints.CENTER;
@@ -448,7 +448,7 @@ public class SimOptions extends OptionsPanel {
     @Override
     public void preferenceChange(PreferenceChangeEvent evt) {
       boolean update = false;
-      final var key = evt.getKey();
+      final java.lang.String key = evt.getKey();
       if (key.equals(AppPreferences.TRUE_COLOR.getIdentifier())) {
         Value.trueColor = new Color(AppPreferences.TRUE_COLOR.get());
         update = true;
@@ -504,7 +504,7 @@ public class SimOptions extends OptionsPanel {
         update = true;
       }
       if (update) {
-        for (final var proj : Projects.getOpenProjects()) proj.getFrame().repaint();
+        for (final com.cburch.logisim.proj.Project proj : Projects.getOpenProjects()) proj.getFrame().repaint();
       }
     }
   }
@@ -543,7 +543,7 @@ public class SimOptions extends OptionsPanel {
       @Override
       public void actionPerformed(ActionEvent e) {
         @SuppressWarnings("unchecked")
-        final var me = (JComboBox<Character>) e.getSource();
+        final JComboBox<Character> me = (JComboBox<Character>) e.getSource();
         final Character s = (Character) me.getSelectedItem();
         if (s != myPref.get().charAt(0)) {
           myPref.set(Character.toString(s));

@@ -28,7 +28,7 @@ public class WireSet {
     } else {
       this.wires = wires;
       points = new HashSet<>();
-      for (final var wire : wires) {
+      for (final com.cburch.logisim.circuit.Wire wire : wires) {
         points.add(wire.e0);
         points.add(wire.e1);
       }

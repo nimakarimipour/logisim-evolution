@@ -25,12 +25,12 @@ class PortManager {
   private static Location computeDefaultLocation(CircuitAppearance appear, Instance pin, Map<Instance, AppearancePort> others) {
     // Determine which locations are being used in canvas, and look for
     // which instances facing the same way in layout
-    final var usedLocs = new HashSet<Location>();
-    final var sameWay = new ArrayList<Instance>();
-    final var facing = pin.getAttributeValue(StdAttr.FACING);
-    for (final var entry : others.entrySet()) {
-      final var pin2 = entry.getKey();
-      final var loc = entry.getValue().getLocation();
+    final java.util.HashSet<com.cburch.logisim.data.Location> usedLocs = new HashSet<Location>();
+    final java.util.ArrayList<com.cburch.logisim.instance.Instance> sameWay = new ArrayList<Instance>();
+    final com.cburch.logisim.data.Direction facing = pin.getAttributeValue(StdAttr.FACING);
+    for (final java.util.Map.Entry<com.cburch.logisim.instance.Instance,com.cburch.logisim.circuit.appear.AppearancePort> entry : others.entrySet()) {
+      final com.cburch.logisim.instance.Instance pin2 = entry.getKey();
+      final com.cburch.logisim.data.Location loc = entry.getValue().getLocation();
       usedLocs.add(loc);
       if (pin2.getAttributeValue(StdAttr.FACING) == facing) {
         sameWay.add(pin2);
@@ -43,7 +43,7 @@ class PortManager {
       DefaultAppearance.sortPinList(sameWay, facing);
       boolean isFirst = false;
       Instance neighbor = null; // (preferably previous in map)
-      for (final var p : sameWay) {
+      for (final com.cburch.logisim.instance.Instance p : sameWay) {
         if (p == pin) {
           break;
         } else {
@@ -76,7 +76,7 @@ class PortManager {
     }
 
     // otherwise place it on the boundary of the bounding rectangle
-    final var bds = appear.getAbsoluteBounds();
+    final com.cburch.logisim.data.Bounds bds = appear.getAbsoluteBounds();
     int x;
     int y;
     int dX = 0;
@@ -122,9 +122,9 @@ class PortManager {
       Map<Instance, Instance> replaces,
       Collection<Instance> allPins) {
     // Find the current objects corresponding to pins
-    final var oldObjects = new HashMap<Instance, AppearancePort>();
+    final java.util.HashMap<com.cburch.logisim.instance.Instance,com.cburch.logisim.circuit.appear.AppearancePort> oldObjects = new HashMap<Instance, AppearancePort>();
     AppearanceAnchor anchor = null;
-    for (final var obj : appearance.getCustomObjectsFromBottom()) {
+    for (final com.cburch.draw.model.CanvasObject obj : appearance.getCustomObjectsFromBottom()) {
       if (obj instanceof AppearancePort appPort) {
         oldObjects.put(appPort.getPin(), appPort);
       } else if (obj instanceof AppearanceAnchor appAnchor) {
@@ -134,7 +134,7 @@ class PortManager {
 
     // ensure we have the anchor in the circuit
     if (anchor == null) {
-      for (final var obj : DefaultCustomAppearance.build(allPins)) {
+      for (final com.cburch.draw.model.CanvasObject obj : DefaultCustomAppearance.build(allPins)) {
         if (obj instanceof AppearanceAnchor appAnchor) {
           anchor = appAnchor;
         }
@@ -142,25 +142,25 @@ class PortManager {
       if (anchor == null) {
         anchor = new AppearanceAnchor(Location.create(100, 100, true));
       }
-      final var dest = appearance.getCustomObjectsFromBottom().size();
+      final int dest = appearance.getCustomObjectsFromBottom().size();
       appearance.addObjects(dest, Collections.singleton(anchor));
     }
 
     // Compute how the ports should change
-    final var portRemoves = new ArrayList<AppearancePort>(removes.size());
-    final var portAdds = new ArrayList<AppearancePort>(adds.size());
+    final java.util.ArrayList<com.cburch.logisim.circuit.appear.AppearancePort> portRemoves = new ArrayList<AppearancePort>(removes.size());
+    final java.util.ArrayList<com.cburch.logisim.circuit.appear.AppearancePort> portAdds = new ArrayList<AppearancePort>(adds.size());
 
     // handle removals
-    for (final var pin : removes) {
-      final var port = oldObjects.remove(pin);
+    for (final com.cburch.logisim.instance.Instance pin : removes) {
+      final com.cburch.logisim.circuit.appear.AppearancePort port = oldObjects.remove(pin);
       if (port != null) {
         portRemoves.add(port);
       }
     }
     // handle replacements
-    final var addsCopy = new ArrayList<>(adds);
-    for (final var entry : replaces.entrySet()) {
-      final var port = oldObjects.remove(entry.getKey());
+    final java.util.ArrayList<com.cburch.logisim.instance.Instance> addsCopy = new ArrayList<>(adds);
+    for (final java.util.Map.Entry<com.cburch.logisim.instance.Instance,com.cburch.logisim.instance.Instance> entry : replaces.entrySet()) {
+      final com.cburch.logisim.circuit.appear.AppearancePort port = oldObjects.remove(entry.getKey());
       if (port != null) {
         port.setPin(entry.getValue());
         oldObjects.put(entry.getValue(), port);
@@ -172,10 +172,10 @@ class PortManager {
     DefaultAppearance.sortPinList(addsCopy, Direction.EAST);
     // They're probably not really all facing east.
     // I'm just sorting them so it works predictably.
-    for (final var pin : addsCopy) {
+    for (final com.cburch.logisim.instance.Instance pin : addsCopy) {
       if (!oldObjects.containsKey(pin)) {
-        final var loc = computeDefaultLocation(appearance, pin, oldObjects);
-        final var o = new AppearancePort(loc, pin);
+        final com.cburch.logisim.data.Location loc = computeDefaultLocation(appearance, pin, oldObjects);
+        final com.cburch.logisim.circuit.appear.AppearancePort o = new AppearancePort(loc, pin);
         portAdds.add(o);
         oldObjects.put(pin, o);
       }

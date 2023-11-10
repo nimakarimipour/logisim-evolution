@@ -65,7 +65,7 @@ public class Entry implements Comparable<Entry>, PreferenceChangeListener {
   }
 
   private void fireChange() {
-    for (final var l : listeners) l.entryDesriptionChanged();
+    for (final com.cburch.logisim.analyze.model.Entry.EntryChangedListener l : listeners) l.entryDesriptionChanged();
   }
 
   public String getErrorMessage() {

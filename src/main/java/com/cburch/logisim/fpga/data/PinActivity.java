@@ -16,7 +16,7 @@ import java.util.List;
 public class PinActivity {
   public static char getId(String identifier) {
     char result = 0;
-    final var thelist = PinActivity.getStrings();
+    final java.util.List<java.lang.String> thelist = PinActivity.getStrings();
     Iterator<String> iter = thelist.iterator();
     result = 0;
     while (iter.hasNext()) {

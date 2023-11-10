@@ -19,7 +19,7 @@ public class KeyConfigurationResult {
 
   public KeyConfigurationResult(KeyConfigurationEvent event, Attribute<?> attr, Object value) {
     this.event = event;
-    final var singleMap = new HashMap<Attribute<?>, Object>(1);
+    final java.util.HashMap<com.cburch.logisim.data.Attribute<?>,java.lang.Object> singleMap = new HashMap<Attribute<?>, Object>(1);
     singleMap.put(attr, value);
     this.attrValueMap = singleMap;
   }

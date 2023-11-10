@@ -26,10 +26,10 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
   public AbstractGateHdlGenerator(boolean isInverter) {
     super();
     this.isInverter = isInverter;
-    final var nrOfGates = (isInverter) ? 6 : 4;
+    final int nrOfGates = (isInverter) ? 6 : 4;
     for (int gate = 0; gate < nrOfGates; gate++) {
       int inindex1 = (gate < 2) ? gate * 3 : gate * 3 + 1;
-      final var inindex2 = inindex1 + 1;
+      final int inindex2 = inindex1 + 1;
       int outindex = (gate < 2) ? gate * 3 + 2 : gate * 3;
       if (isInverter) {
         inindex1 = (gate < 3) ? gate * 2 : gate * 2 + 1;
@@ -48,8 +48,8 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist theNetlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getBuffer();
-    final var nrOfGates = isInverter ? 6 : 4;
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getBuffer();
+    final int nrOfGates = isInverter ? 6 : 4;
     for (int i = 0; i < nrOfGates; i++) {
       contents.addRemarkBlock("Here gate %d is described", i).add(getLogicFunction(i));
     }

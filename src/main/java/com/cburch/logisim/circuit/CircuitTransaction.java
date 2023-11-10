@@ -16,8 +16,8 @@ public abstract class CircuitTransaction {
   public static final Integer READ_WRITE = 2;
 
   public final CircuitTransactionResult execute() {
-    final var mutator = new CircuitMutatorImpl();
-    final var locks = CircuitLocker.acquireLocks(this, mutator);
+    final com.cburch.logisim.circuit.CircuitMutatorImpl mutator = new CircuitMutatorImpl();
+    final java.util.Map<com.cburch.logisim.circuit.Circuit,java.util.concurrent.locks.Lock> locks = CircuitLocker.acquireLocks(this, mutator);
     CircuitTransactionResult result;
     try {
       try {
@@ -26,9 +26,9 @@ public abstract class CircuitTransaction {
         System.out.println("*** Circuit Lock Bug Diagnostics ***");
         System.out.println("This thread: " + Thread.currentThread());
         System.out.println("owns " + locks.size() + " locks, as follows:");
-        for (final var entry : locks.entrySet()) {
-          final var circuit = entry.getKey();
-          final var lock = entry.getValue();
+        for (final java.util.Map.Entry<com.cburch.logisim.circuit.Circuit,java.util.concurrent.locks.Lock> entry : locks.entrySet()) {
+          final com.cburch.logisim.circuit.Circuit circuit = entry.getKey();
+          final java.util.concurrent.locks.Lock lock = entry.getValue();
           System.out.printf(
               "  circuit \"%s\" [lock serial: %d] with lock %s\n",
               circuit.getName(), circuit.getLocker().getSerialNumber(), lock);
@@ -48,23 +48,23 @@ public abstract class CircuitTransaction {
       // updated to reflect the changes - this needs to happen before
       // wires are repaired because it could lead to some wires being
       // split
-      final var modified = mutator.getModifiedCircuits();
-      for (final var circuit : modified) {
-        final var circMutator = circuit.getLocker().getMutator();
+      final java.util.Collection<com.cburch.logisim.circuit.Circuit> modified = mutator.getModifiedCircuits();
+      for (final com.cburch.logisim.circuit.Circuit circuit : modified) {
+        final com.cburch.logisim.circuit.CircuitMutatorImpl circMutator = circuit.getLocker().getMutator();
         if (circMutator == mutator) {
-          final var repl = mutator.getReplacementMap(circuit);
+          final com.cburch.logisim.circuit.ReplacementMap repl = mutator.getReplacementMap(circuit);
           if (repl != null) {
-            final var pins = circuit.getAppearance().getCircuitPins();
+            final com.cburch.logisim.circuit.appear.CircuitPins pins = circuit.getAppearance().getCircuitPins();
             pins.transactionCompleted(repl);
           }
         }
       }
 
       // Now go through each affected circuit and repair its wires
-      for (final var circuit : modified) {
-        final var circMutator = circuit.getLocker().getMutator();
+      for (final com.cburch.logisim.circuit.Circuit circuit : modified) {
+        final com.cburch.logisim.circuit.CircuitMutatorImpl circMutator = circuit.getLocker().getMutator();
         if (circMutator == mutator) {
-          final var repair = new WireRepair(circuit);
+          final com.cburch.logisim.circuit.WireRepair repair = new WireRepair(circuit);
           repair.run(mutator);
         } else {
           // this is a transaction executed within a transaction -
@@ -74,7 +74,7 @@ public abstract class CircuitTransaction {
       }
 
       result = new CircuitTransactionResult(mutator);
-      for (final var circuit : result.getModifiedCircuits()) {
+      for (final com.cburch.logisim.circuit.Circuit circuit : result.getModifiedCircuits()) {
         circuit.fireEvent(CircuitEvent.TRANSACTION_DONE, result);
       }
     } finally {

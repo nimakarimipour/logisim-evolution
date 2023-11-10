@@ -29,7 +29,7 @@ class WireRepair extends CircuitTransaction {
     Collection<ArrayList<Wire>> getMergeSets() {
       IdentityHashMap<ArrayList<Wire>, Boolean> lists;
       lists = new IdentityHashMap<>();
-      for (final var list : map.values()) {
+      for (final java.util.ArrayList<com.cburch.logisim.circuit.Wire> list : map.values()) {
         lists.put(list, Boolean.TRUE);
       }
       return lists.keySet();
@@ -53,7 +53,7 @@ class WireRepair extends CircuitTransaction {
       } else if (set0 != set1) { // neither is null, and they are
         // different
         if (set0.size() > set1.size()) { // ensure set1 is the larger
-          final var temp = set0;
+          final java.util.ArrayList<com.cburch.logisim.circuit.Wire> temp = set0;
           set0 = set1;
           set1 = temp;
         }
@@ -72,8 +72,8 @@ class WireRepair extends CircuitTransaction {
   }
 
   private void doMerges(CircuitMutator mutator) {
-    final var sets = new MergeSets();
-    for (final var loc : circuit.wires.points.getSplitLocations()) {
+    final com.cburch.logisim.circuit.WireRepair.MergeSets sets = new MergeSets();
+    for (final com.cburch.logisim.data.Location loc : circuit.wires.points.getSplitLocations()) {
       Collection<?> at = circuit.getComponents(loc);
       if (at.size() == 2) {
         Iterator<?> atit = at.iterator();
@@ -87,21 +87,21 @@ class WireRepair extends CircuitTransaction {
       }
     }
 
-    final var repl = new ReplacementMap();
-    for (final var mergeSet : sets.getMergeSets()) {
+    final com.cburch.logisim.circuit.ReplacementMap repl = new ReplacementMap();
+    for (final java.util.ArrayList<com.cburch.logisim.circuit.Wire> mergeSet : sets.getMergeSets()) {
       if (mergeSet.size() > 1) {
-        final var locs = new ArrayList<Location>(2 * mergeSet.size());
-        for (final var w : mergeSet) {
+        final java.util.ArrayList<com.cburch.logisim.data.Location> locs = new ArrayList<Location>(2 * mergeSet.size());
+        for (final com.cburch.logisim.circuit.Wire w : mergeSet) {
           locs.add(w.getEnd0());
           locs.add(w.getEnd1());
         }
         Collections.sort(locs);
-        final var e0 = locs.get(0);
-        final var e1 = locs.get(locs.size() - 1);
-        final var wnew = Wire.create(e0, e1);
+        final com.cburch.logisim.data.Location e0 = locs.get(0);
+        final com.cburch.logisim.data.Location e1 = locs.get(locs.size() - 1);
+        final com.cburch.logisim.circuit.Wire wnew = Wire.create(e0, e1);
         Collection<Wire> wset = Collections.singleton(wnew);
 
-        for (final var w : mergeSet) {
+        for (final com.cburch.logisim.circuit.Wire w : mergeSet) {
           if (!w.equals(wnew)) {
             repl.put(w, wset);
           }
@@ -112,19 +112,19 @@ class WireRepair extends CircuitTransaction {
   }
 
   private void doMergeSet(ArrayList<Wire> mergeSet, ReplacementMap replacements, Set<Location> splitLocs) {
-    final var ends = new TreeSet<Location>();
-    for (final var w : mergeSet) {
+    final java.util.TreeSet<com.cburch.logisim.data.Location> ends = new TreeSet<Location>();
+    for (final com.cburch.logisim.circuit.Wire w : mergeSet) {
       ends.add(w.getEnd0());
       ends.add(w.getEnd1());
     }
-    final var whole = Wire.create(ends.first(), ends.last());
+    final com.cburch.logisim.circuit.Wire whole = Wire.create(ends.first(), ends.last());
 
-    final var mids = new TreeSet<Location>();
+    final java.util.TreeSet<com.cburch.logisim.data.Location> mids = new TreeSet<Location>();
     mids.add(whole.getEnd0());
     mids.add(whole.getEnd1());
-    for (final var loc : whole) {
+    for (final com.cburch.logisim.data.Location loc : whole) {
       if (splitLocs.contains(loc)) {
-        for (final var comp : circuit.getComponents(loc)) {
+        for (final com.cburch.logisim.comp.Component comp : circuit.getComponents(loc)) {
           if (!mergeSet.contains(comp)) {
             mids.add(loc);
             break;
@@ -138,7 +138,7 @@ class WireRepair extends CircuitTransaction {
       mergeResult.add(whole);
     } else {
       Location e0 = null;
-      for (final var e1 : mids) {
+      for (final com.cburch.logisim.data.Location e1 : mids) {
         if (e0 != null)
           mergeResult.add(Wire.create(e0, e1));
         e0 = e1;
@@ -146,8 +146,8 @@ class WireRepair extends CircuitTransaction {
     }
 
     for (Wire w : mergeSet) {
-      final var wRepl = new ArrayList<Component>(2);
-      for (final var w2 : mergeResult) {
+      final java.util.ArrayList<com.cburch.logisim.comp.Component> wRepl = new ArrayList<Component>(2);
+      for (final com.cburch.logisim.circuit.Wire w2 : mergeResult) {
         if (w2.overlaps(w, false)) {
           wRepl.add(w2);
         }
@@ -164,21 +164,21 @@ class WireRepair extends CircuitTransaction {
    */
 
   private void doOverlaps(CircuitMutator mutator) {
-    final var wirePoints = new HashMap<Location, ArrayList<Wire>>();
-    for (final var w : circuit.getWires()) {
-      for (final var loc : w) {
-        final var locWires = wirePoints.computeIfAbsent(loc, k -> new ArrayList<>(3));
+    final java.util.HashMap<com.cburch.logisim.data.Location,java.util.ArrayList<com.cburch.logisim.circuit.Wire>> wirePoints = new HashMap<Location, ArrayList<Wire>>();
+    for (final com.cburch.logisim.circuit.Wire w : circuit.getWires()) {
+      for (final com.cburch.logisim.data.Location loc : w) {
+        final java.util.ArrayList<com.cburch.logisim.circuit.Wire> locWires = wirePoints.computeIfAbsent(loc, k -> new ArrayList<>(3));
         locWires.add(w);
       }
     }
 
-    final var mergeSets = new MergeSets();
-    for (final var locWires : wirePoints.values()) {
+    final com.cburch.logisim.circuit.WireRepair.MergeSets mergeSets = new MergeSets();
+    for (final java.util.ArrayList<com.cburch.logisim.circuit.Wire> locWires : wirePoints.values()) {
       if (locWires.size() > 1) {
         for (int i = 0, n = locWires.size(); i < n; i++) {
-          final var w0 = locWires.get(i);
+          final com.cburch.logisim.circuit.Wire w0 = locWires.get(i);
           for (int j = i + 1; j < n; j++) {
-            final var w1 = locWires.get(j);
+            final com.cburch.logisim.circuit.Wire w1 = locWires.get(j);
             if (w0.overlaps(w1, false))
               mergeSets.merge(w0, w1);
           }
@@ -186,9 +186,9 @@ class WireRepair extends CircuitTransaction {
       }
     }
 
-    final var replacements = new ReplacementMap();
-    final var splitLocs = circuit.wires.points.getSplitLocations();
-    for (final var mergeSet : mergeSets.getMergeSets()) {
+    final com.cburch.logisim.circuit.ReplacementMap replacements = new ReplacementMap();
+    final java.util.Set<com.cburch.logisim.data.Location> splitLocs = circuit.wires.points.getSplitLocations();
+    for (final java.util.ArrayList<com.cburch.logisim.circuit.Wire> mergeSet : mergeSets.getMergeSets()) {
       if (mergeSet.size() > 1) {
         doMergeSet(mergeSet, replacements, splitLocs);
       }
@@ -197,13 +197,13 @@ class WireRepair extends CircuitTransaction {
   }
 
   private void doSplits(CircuitMutator mutator) {
-    final var splitLocs = circuit.wires.points.getSplitLocations();
-    final var repl = new ReplacementMap();
-    for (final var w : circuit.getWires()) {
-      final var w0 = w.getEnd0();
-      final var w1 = w.getEnd1();
+    final java.util.Set<com.cburch.logisim.data.Location> splitLocs = circuit.wires.points.getSplitLocations();
+    final com.cburch.logisim.circuit.ReplacementMap repl = new ReplacementMap();
+    for (final com.cburch.logisim.circuit.Wire w : circuit.getWires()) {
+      final com.cburch.logisim.data.Location w0 = w.getEnd0();
+      final com.cburch.logisim.data.Location w1 = w.getEnd1();
       ArrayList<Location> splits = null;
-      for (final var loc : splitLocs) {
+      for (final com.cburch.logisim.data.Location loc : splitLocs) {
         if (w.contains(loc) && !loc.equals(w0) && !loc.equals(w1)) {
           if (splits == null) splits = new ArrayList<>();
           splits.add(loc);
@@ -213,8 +213,8 @@ class WireRepair extends CircuitTransaction {
         splits.add(w1);
         Collections.sort(splits);
         com.cburch.logisim.data.Location e0 = w0;
-        final var subs = new ArrayList<Wire>(splits.size());
-        for (final var e1 : splits) {
+        final java.util.ArrayList<com.cburch.logisim.circuit.Wire> subs = new ArrayList<Wire>(splits.size());
+        for (final com.cburch.logisim.data.Location e1 : splits) {
           subs.add(Wire.create(e0, e1));
           e0 = e1;
         }

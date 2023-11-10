@@ -43,7 +43,7 @@ public class Ttl74175HdlGenerator extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist TheNetlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer()
         .pair("CLK", HdlPorts.CLOCK)
         .pair("tick", HdlPorts.TICK);
     if (Hdl.isVhdl()) {

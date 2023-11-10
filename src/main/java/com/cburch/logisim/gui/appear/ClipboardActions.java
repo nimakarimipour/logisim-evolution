@@ -36,11 +36,11 @@ public class ClipboardActions extends Action {
     this.canvas = canvas;
     this.canvasModel = canvas.getModel();
 
-    final var contents = new ArrayList<CanvasObject>();
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> contents = new ArrayList<CanvasObject>();
     Direction anchorFacing = null;
     Location anchorLocation = null;
-    final var aff = new ArrayList<CanvasObject>();
-    for (final var obj : canvas.getSelection().getSelected()) {
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> aff = new ArrayList<CanvasObject>();
+    for (final com.cburch.draw.model.CanvasObject obj : canvas.getSelection().getSelected()) {
       if (obj.canRemove()) {
         aff.add(obj);
         contents.add(obj.clone());

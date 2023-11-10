@@ -46,19 +46,19 @@ public class SevenSegment extends InstanceFactory implements DynamicElementProvi
 
   static void drawBase(InstancePainter painter, boolean drawPoint) {
     ensureSegments();
-    final var data = (InstanceDataSingleton) painter.getData();
+    final com.cburch.logisim.instance.InstanceDataSingleton data = (InstanceDataSingleton) painter.getData();
     int summ = (data == null ? 0 : (Integer) data.getValue());
-    final var active = painter.getAttributeValue(IoLibrary.ATTR_ACTIVE);
+    final java.lang.Boolean active = painter.getAttributeValue(IoLibrary.ATTR_ACTIVE);
     int desired = active == null || active ? 1 : 0;
 
-    final var bds = painter.getBounds();
-    final var x = bds.getX() + 5;
-    final var y = bds.getY();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+    final int x = bds.getX() + 5;
+    final int y = bds.getY();
 
-    final var g = painter.getGraphics();
-    final var onColor = painter.getAttributeValue(IoLibrary.ATTR_ON_COLOR);
-    final var offColor = painter.getAttributeValue(IoLibrary.ATTR_OFF_COLOR);
-    final var bgColor = painter.getAttributeValue(IoLibrary.ATTR_BACKGROUND);
+    final java.awt.Graphics g = painter.getGraphics();
+    final java.awt.Color onColor = painter.getAttributeValue(IoLibrary.ATTR_ON_COLOR);
+    final java.awt.Color offColor = painter.getAttributeValue(IoLibrary.ATTR_OFF_COLOR);
+    final java.awt.Color bgColor = painter.getAttributeValue(IoLibrary.ATTR_BACKGROUND);
     if (painter.shouldDrawColor() && bgColor.getAlpha() != 0) {
       g.setColor(bgColor);
       g.fillRect(bds.getX(), bds.getY(), bds.getWidth(), bds.getHeight());
@@ -98,7 +98,7 @@ public class SevenSegment extends InstanceFactory implements DynamicElementProvi
   }
 
   public static List<String> getLabels() {
-    final var labelNames = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> labelNames = new ArrayList<String>();
     for (int i = 0; i < 8; i++) labelNames.add("");
     labelNames.set(Segment_A, "Segment_A");
     labelNames.set(Segment_B, "Segment_B");
@@ -170,8 +170,8 @@ public class SevenSegment extends InstanceFactory implements DynamicElementProvi
   }
 
   private void updatePorts(Instance instance) {
-    final var hasDp = instance.getAttributeValue(ATTR_DP);
-    final var ps = new Port[hasDp ? 8 : 7];
+    final java.lang.Boolean hasDp = instance.getAttributeValue(ATTR_DP);
+    final com.cburch.logisim.instance.Port[] ps = new Port[hasDp ? 8 : 7];
     ps[Segment_A] = new Port(20, 0, Port.INPUT, 1);
     ps[Segment_B] = new Port(30, 0, Port.INPUT, 1);
     ps[Segment_C] = new Port(20, 60, Port.INPUT, 1);
@@ -200,10 +200,10 @@ public class SevenSegment extends InstanceFactory implements DynamicElementProvi
   }
 
   public static void computeTextField(Instance instance) {
-    final var facing = instance.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Direction facing = instance.getAttributeValue(StdAttr.FACING);
     Object labelLoc = instance.getAttributeValue(StdAttr.LABEL_LOC);
 
-    final var bds = instance.getBounds();
+    final com.cburch.logisim.data.Bounds bds = instance.getBounds();
     int x = bds.getX() + bds.getWidth() / 2;
     int y = bds.getY() + bds.getHeight() / 2;
     int halign = GraphicsUtil.H_CENTER;
@@ -266,13 +266,13 @@ public class SevenSegment extends InstanceFactory implements DynamicElementProvi
   @Override
   public void propagate(InstanceState state) {
     int summary = 0;
-    final var max = state.getAttributeValue(ATTR_DP) ? 8 : 7;
+    final int max = state.getAttributeValue(ATTR_DP) ? 8 : 7;
     for (int i = 0; i < max; i++) {
       Value val = state.getPortValue(i);
       if (val == Value.TRUE) summary |= 1 << i;
     }
     Object value = summary;
-    final var data = (InstanceDataSingleton) state.getData();
+    final com.cburch.logisim.instance.InstanceDataSingleton data = (InstanceDataSingleton) state.getData();
     if (data == null) {
       state.setData(new InstanceDataSingleton(value));
     } else {

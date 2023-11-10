@@ -81,7 +81,7 @@ public class Tty extends InstanceFactory implements DynamicElementProvider {
         new Object[] {8, 32, StdAttr.TRIG_RISING, Color.BLACK, DEFAULT_BACKGROUND});
     setIcon(new TtyIcon());
 
-    final var ps = new Port[4];
+    final com.cburch.logisim.instance.Port[] ps = new Port[4];
     ps[CLR] = new Port(20, 10, Port.INPUT, 1);
     ps[CK] = new Port(0, 0, Port.INPUT, 1);
     ps[WE] = new Port(10, 10, Port.INPUT, 1);
@@ -100,8 +100,8 @@ public class Tty extends InstanceFactory implements DynamicElementProvider {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    final var rows = getRowCount(attrs.getValue(ATTR_ROWS));
-    final var cols = getColumnCount(attrs.getValue(ATTR_COLUMNS));
+    final int rows = getRowCount(attrs.getValue(ATTR_ROWS));
+    final int cols = getColumnCount(attrs.getValue(ATTR_COLUMNS));
     int width = 2 * BORDER + cols * COL_WIDTH;
     if (width < 30) width = 30;
     int height = 2 * BORDER + rows * ROW_HEIGHT;
@@ -110,8 +110,8 @@ public class Tty extends InstanceFactory implements DynamicElementProvider {
   }
 
   private TtyState getTtyState(InstanceState state) {
-    final var rows = getRowCount(state.getAttributeValue(ATTR_ROWS));
-    final var cols = getColumnCount(state.getAttributeValue(ATTR_COLUMNS));
+    final int rows = getRowCount(state.getAttributeValue(ATTR_ROWS));
+    final int cols = getColumnCount(state.getAttributeValue(ATTR_COLUMNS));
     com.cburch.logisim.std.io.TtyState ret = (TtyState) state.getData();
     if (ret == null) {
       ret = new TtyState(rows, cols);
@@ -131,17 +131,17 @@ public class Tty extends InstanceFactory implements DynamicElementProvider {
 
   @Override
   public void paintGhost(InstancePainter painter) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     GraphicsUtil.switchToWidth(g, 2);
-    final var bds = painter.getBounds();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
     g.drawRoundRect(bds.getX(), bds.getY(), bds.getWidth(), bds.getHeight(), 10, 10);
   }
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var showState = painter.getShowState();
-    final var g = painter.getGraphics();
-    final var bds = painter.getBounds();
+    final boolean showState = painter.getShowState();
+    final java.awt.Graphics g = painter.getGraphics();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
     painter.drawClock(CK, Direction.EAST);
     if (painter.shouldDrawColor()) {
       g.setColor(painter.getAttributeValue(IoLibrary.ATTR_BACKGROUND));
@@ -156,14 +156,14 @@ public class Tty extends InstanceFactory implements DynamicElementProvider {
     painter.drawPort(WE);
     painter.drawPort(IN);
 
-    final var rows = getRowCount(painter.getAttributeValue(ATTR_ROWS));
-    final var cols = getColumnCount(painter.getAttributeValue(ATTR_COLUMNS));
+    final int rows = getRowCount(painter.getAttributeValue(ATTR_ROWS));
+    final int cols = getColumnCount(painter.getAttributeValue(ATTR_COLUMNS));
 
     if (showState) {
-      final var rowData = new String[rows];
+      final java.lang.String[] rowData = new String[rows];
       int curRow;
       int curCol;
-      final var state = getTtyState(painter);
+      final com.cburch.logisim.std.io.TtyState state = getTtyState(painter);
       synchronized (state) {
         for (int i = 0; i < rows; i++) {
           rowData[i] = state.getRowString(i);
@@ -174,13 +174,13 @@ public class Tty extends InstanceFactory implements DynamicElementProvider {
 
       g.setFont(DEFAULT_FONT);
       g.setColor(painter.getAttributeValue(IoLibrary.ATTR_COLOR));
-      final var fm = g.getFontMetrics();
+      final java.awt.FontMetrics fm = g.getFontMetrics();
       int x = bds.getX() + BORDER;
       int y = bds.getY() + BORDER + (ROW_HEIGHT + fm.getAscent()) / 2;
       for (int i = 0; i < rows; i++) {
         g.drawString(rowData[i], x, y);
         if (i == curRow) {
-          final var x0 = x + fm.stringWidth(rowData[i].substring(0, curCol));
+          final int x0 = x + fm.stringWidth(rowData[i].substring(0, curCol));
           g.drawLine(x0, y - fm.getAscent(), x0, y);
         }
         y += ROW_HEIGHT;
@@ -202,18 +202,18 @@ public class Tty extends InstanceFactory implements DynamicElementProvider {
   @Override
   public void propagate(InstanceState circState) {
     Object trigger = circState.getAttributeValue(StdAttr.EDGE_TRIGGER);
-    final var state = getTtyState(circState);
-    final var clear = circState.getPortValue(CLR);
-    final var clock = circState.getPortValue(CK);
-    final var enable = circState.getPortValue(WE);
-    final var in = circState.getPortValue(IN);
+    final com.cburch.logisim.std.io.TtyState state = getTtyState(circState);
+    final com.cburch.logisim.data.Value clear = circState.getPortValue(CLR);
+    final com.cburch.logisim.data.Value clock = circState.getPortValue(CK);
+    final com.cburch.logisim.data.Value enable = circState.getPortValue(WE);
+    final com.cburch.logisim.data.Value in = circState.getPortValue(IN);
 
     synchronized (state) {
-      final var lastClock = state.setLastClock(clock);
+      final com.cburch.logisim.data.Value lastClock = state.setLastClock(clock);
       if (clear == Value.TRUE) {
         state.clear();
       } else if (enable != Value.FALSE) {
-        final var go =
+        final boolean go =
             (trigger == StdAttr.TRIG_FALLING)
                 ? lastClock == Value.TRUE && clock == Value.FALSE
                 : lastClock == Value.FALSE && clock == Value.TRUE;
@@ -223,7 +223,7 @@ public class Tty extends InstanceFactory implements DynamicElementProvider {
   }
 
   public void sendToStdout(InstanceState state) {
-    final var tty = getTtyState(state);
+    final com.cburch.logisim.std.io.TtyState tty = getTtyState(state);
     tty.setSendStdout(true);
   }
 

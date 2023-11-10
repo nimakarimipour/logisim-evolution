@@ -49,8 +49,8 @@ class ToolbarOptions extends OptionsPanel {
 
     list = new ToolbarList(getOptions().getToolbarData());
 
-    final var middleLayout = new TableLayout(1);
-    final var middle = new JPanel(middleLayout);
+    final com.cburch.logisim.util.TableLayout middleLayout = new TableLayout(1);
+    final javax.swing.JPanel middle = new JPanel(middleLayout);
     middle.add(addTool);
     middle.add(addSeparator);
     middle.add(moveUp);
@@ -67,15 +67,15 @@ class ToolbarOptions extends OptionsPanel {
     list.addListSelectionListener(listener);
     listener.computeEnabled();
 
-    final var gridbag = new GridBagLayout();
-    final var gbc = new GridBagConstraints();
+    final java.awt.GridBagLayout gridbag = new GridBagLayout();
+    final java.awt.GridBagConstraints gbc = new GridBagConstraints();
     setLayout(gridbag);
-    final var explorerPane =
+    final javax.swing.JScrollPane explorerPane =
         new JScrollPane(
             explorer,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    final var listPane =
+    final javax.swing.JScrollPane listPane =
         new JScrollPane(
             list,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -119,7 +119,7 @@ class ToolbarOptions extends OptionsPanel {
   private class Listener implements ProjectExplorer.Listener, ActionListener, ListSelectionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
-      final var src = event.getSource();
+      final java.lang.Object src = event.getSource();
       if (src == addTool) {
         doAddTool(explorer.getSelectedTool().cloneTool());
       } else if (src == addSeparator) {
@@ -138,7 +138,7 @@ class ToolbarOptions extends OptionsPanel {
     }
 
     private void computeEnabled() {
-      final var index = list.getSelectedIndex();
+      final int index = list.getSelectedIndex();
       addTool.setEnabled(explorer.getSelectedTool() != null);
       moveUp.setEnabled(index > 0);
       moveDown.setEnabled(index >= 0 && index < list.getModel().getSize() - 1);
@@ -152,9 +152,9 @@ class ToolbarOptions extends OptionsPanel {
     }
 
     private void doMove(int delta) {
-      final var oldIndex = list.getSelectedIndex();
-      final var newIndex = oldIndex + delta;
-      final var data = getOptions().getToolbarData();
+      final int oldIndex = list.getSelectedIndex();
+      final int newIndex = oldIndex + delta;
+      final com.cburch.logisim.file.ToolbarData data = getOptions().getToolbarData();
       if (oldIndex >= 0 && newIndex >= 0 && newIndex < data.size()) {
         getProject().doAction(ToolbarActions.moveTool(data, oldIndex, newIndex));
         list.setSelectedIndex(newIndex);
@@ -163,7 +163,7 @@ class ToolbarOptions extends OptionsPanel {
 
     @Override
     public void doubleClicked(ProjectExplorer.Event event) {
-      final var target = event.getTarget();
+      final java.lang.Object target = event.getTarget();
       if (target instanceof ProjectExplorerToolNode toolNode) {
         doAddTool(toolNode.getValue());
       }

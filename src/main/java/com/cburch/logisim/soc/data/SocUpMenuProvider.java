@@ -117,11 +117,11 @@ public class SocUpMenuProvider implements ActionListener {
       setParentFrame(instance, proj.getFrame());
       java.lang.String instName = instance.getAttributeValue(StdAttr.LABEL);
       if (StringUtil.isNullOrEmpty(instName)) {
-        final var loc = instance.getLocation();
+        final com.cburch.logisim.data.Location loc = instance.getLocation();
         instName = instance.getFactory().getHDLName(instance.getAttributeSet()) + "@" + loc.getX() + "," + loc.getY();
       }
       java.lang.String name = circuitState != null ? instName + " : " + S.get("SocUpMenuAsmWindow") : S.get("SocUpMenuAsmWindow");
-      final var state = circuitState == null ? proj.getCircuitState() : circuitState;
+      final com.cburch.logisim.circuit.CircuitState state = circuitState == null ? proj.getCircuitState() : circuitState;
       menu.addSeparator();
       HierarchyInfo hinfo;
       if (circuitState == null) {
@@ -130,17 +130,17 @@ public class SocUpMenuProvider implements ActionListener {
       } else {
         hinfo = hierarchy;
       }
-      final var asm = new InstanceMenuItem(instance, name, SHOW_ASM, instance.getData(state), state, hinfo);
+      final com.cburch.logisim.soc.data.SocUpMenuProvider.InstanceMenuItem asm = new InstanceMenuItem(instance, name, SHOW_ASM, instance.getData(state), state, hinfo);
       asm.addActionListener(parent);
       asm.setEnabled(true);
       menu.add(asm);
       name = circuitState != null ? instName + " : " + S.get("SocUpMenuReadElf") : S.get("SocUpMenuReadElf");
-      final var readElf = new InstanceMenuItem(instance, name, LOAD_ELF_FUNCTION, state);
+      final com.cburch.logisim.soc.data.SocUpMenuProvider.InstanceMenuItem readElf = new InstanceMenuItem(instance, name, LOAD_ELF_FUNCTION, state);
       readElf.addActionListener(parent);
       readElf.setEnabled(true);
       menu.add(readElf);
       if (circuitState != null) {
-        final var showState = new InstanceMenuItem(instance,
+        final com.cburch.logisim.soc.data.SocUpMenuProvider.InstanceMenuItem showState = new InstanceMenuItem(instance,
             instName + " : " + S.get("SocUpMenuShowState"),
             SHOW_STATE_FUNCTION, data, hierarchy);
         showState.addActionListener(parent);
@@ -150,7 +150,7 @@ public class SocUpMenuProvider implements ActionListener {
       name = circuitState != null ? instName + " : " + S.get("SocUpMenuShowProgram") : S.get("SocUpMenuShowProgram");
       if (state != null)
         if (((SocUpStateInterface) instance.getData(state)).programLoaded()) {
-          final var showProg = new InstanceMenuItem(instance, name, SHOW_PROGRAM, instance.getData(state), state, hinfo);
+          final com.cburch.logisim.soc.data.SocUpMenuProvider.InstanceMenuItem showProg = new InstanceMenuItem(instance, name, SHOW_PROGRAM, instance.getData(state), state, hinfo);
           showProg.addActionListener(parent);
           showProg.setEnabled(true);
           menu.add(showProg);
@@ -185,12 +185,12 @@ public class SocUpMenuProvider implements ActionListener {
     }
 
     public void readElf(Instance instance, CircuitState circuitState) {
-      final var fc = new JFileChooser();
+      final javax.swing.JFileChooser fc = new JFileChooser();
       fc.setDialogTitle(S.get("SocUpMenuSelectElfFile"));
       int retVal = fc.showOpenDialog(parentFrame);
       if (retVal != JFileChooser.APPROVE_OPTION) return;
-      final var data = (SocUpStateInterface) circuitState.getData(instance.getComponent());
-      final var reader = new ProcessorReadElf(fc.getSelectedFile(), instance, data.getElfType(), true);
+      final com.cburch.logisim.soc.data.SocUpStateInterface data = (SocUpStateInterface) circuitState.getData(instance.getComponent());
+      final com.cburch.logisim.soc.file.ProcessorReadElf reader = new ProcessorReadElf(fc.getSelectedFile(), instance, data.getElfType(), true);
       if (!reader.canExecute() || !reader.execute(circuitState)) {
         OptionPane.showMessageDialog(parentFrame, reader.getErrorMessage(), S.get("SocUpMenuErrorReadingElfTitle"), OptionPane.ERROR_MESSAGE);
         return;
@@ -234,15 +234,15 @@ public class SocUpMenuProvider implements ActionListener {
       if (parentFrame == null || data == null) return;
       if (myStates.containsKey(data))
         if (myStates.get(data) != null) {
-          final var frame = myStates.get(data);
+          final com.cburch.logisim.soc.gui.ListeningFrame frame = myStates.get(data);
           frame.setVisible(true);
           int state = frame.getExtendedState();
           state &= ~Frame.ICONIFIED;
           frame.setExtendedState(state);
           return;
         }
-      final var frame = new ListeningFrame(data.getProcessorType(), S.getter("SocUpMenuCpuStateWindowTitle"), csh);
-      final var statePanel = data.getStatePanel();
+      final com.cburch.logisim.soc.gui.ListeningFrame frame = new ListeningFrame(data.getProcessorType(), S.getter("SocUpMenuCpuStateWindowTitle"), csh);
+      final javax.swing.JPanel statePanel = data.getStatePanel();
       frame.setSize(statePanel.getSize());
       frame.setResizable(false);
       parentFrame.addWindowListener(frame);
@@ -256,16 +256,16 @@ public class SocUpMenuProvider implements ActionListener {
       if (parentFrame == null || data == null) return;
       if (myPrograms.containsKey(data))
         if (myPrograms.get(data) != null) {
-          final var frame = myPrograms.get(data);
+          final com.cburch.logisim.soc.gui.ListeningFrame frame = myPrograms.get(data);
           frame.setVisible(true);
           int frameState = frame.getExtendedState();
           frameState &= ~Frame.ICONIFIED;
           frame.setExtendedState(frameState);
           return;
         }
-      final var frame = new ListeningFrame(data.getProcessorType(), S.getter("SocUpMenuCpuProgramWindowTitle"), csh);
+      final com.cburch.logisim.soc.gui.ListeningFrame frame = new ListeningFrame(data.getProcessorType(), S.getter("SocUpMenuCpuProgramWindowTitle"), csh);
       parentFrame.addWindowListener(frame);
-      final var pan = data.getAsmWindow();
+      final javax.swing.JPanel pan = data.getAsmWindow();
       frame.add(pan);
       frame.setVisible(true);
       frame.pack();
@@ -277,17 +277,17 @@ public class SocUpMenuProvider implements ActionListener {
       if (parentFrame == null || data == null) return;
       if (myAsmWindows.containsKey(data))
         if (myAsmWindows.get(data) != null) {
-          final var frame = myAsmWindows.get(data);
+          final com.cburch.logisim.soc.gui.ListeningFrame frame = myAsmWindows.get(data);
           frame.setVisible(true);
           int fstate = frame.getExtendedState();
           fstate &= ~Frame.ICONIFIED;
           frame.setExtendedState(fstate);
           return;
         }
-      final var frame = new ListeningFrame(data.getProcessorType(), S.getter("SocUpMenuCpuAsmWindowTitle"), csh);
+      final com.cburch.logisim.soc.gui.ListeningFrame frame = new ListeningFrame(data.getProcessorType(), S.getter("SocUpMenuCpuAsmWindowTitle"), csh);
       parentFrame.addWindowListener(frame);
-      final var assembler = data.getAssembler();
-      final var pan = new AssemblerPanel(frame, assembler.getHighlightStringIdentifier(), assembler, data.getProcessorInterface(), state);
+      final com.cburch.logisim.soc.util.AssemblerInterface assembler = data.getAssembler();
+      final com.cburch.logisim.soc.gui.AssemblerPanel pan = new AssemblerPanel(frame, assembler.getHighlightStringIdentifier(), assembler, data.getProcessorInterface(), state);
       frame.add(pan);
       frame.setVisible(true);
       frame.pack();
@@ -313,7 +313,7 @@ public class SocUpMenuProvider implements ActionListener {
 
   public MenuExtender getMenu(Instance inst) {
     if (!myInfo.containsKey(inst)) {
-      final var instInfo = new InstanceInformation(inst, this);
+      final com.cburch.logisim.soc.data.SocUpMenuProvider.InstanceInformation instInfo = new InstanceInformation(inst, this);
       myInfo.put(inst, instInfo);
     }
     return new MenuProvider(inst, this);
@@ -321,9 +321,9 @@ public class SocUpMenuProvider implements ActionListener {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    final var source = e.getSource();
+    final java.lang.Object source = e.getSource();
     if (source instanceof InstanceMenuItem info) {
-      final var inst = info.getInstance();
+      final com.cburch.logisim.instance.Instance inst = info.getInstance();
       if (myInfo.containsKey(inst)) {
         switch (info.getFunction()) {
           case LOAD_ELF_FUNCTION -> {

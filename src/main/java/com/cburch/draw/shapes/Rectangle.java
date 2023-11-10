@@ -53,9 +53,9 @@ public class Rectangle extends Rectangular {
       return super.getRandomPoint(bds, rand);
     }
 
-    final var w = getWidth();
-    final var h = getHeight();
-    final var u = rand.nextInt(2 * w + 2 * h);
+    final int w = getWidth();
+    final int h = getHeight();
+    final int u = rand.nextInt(2 * w + 2 * h);
     int x = getX();
     int y = getY();
     if (u < w) {
@@ -69,7 +69,7 @@ public class Rectangle extends Rectangular {
       x += w;
       y += (u - 2 * w - h);
     }
-    final var d = getStrokeWidth();
+    final int d = getStrokeWidth();
     if (d > 1) {
       x += rand.nextInt(d) - d / 2;
       y += rand.nextInt(d) - d / 2;

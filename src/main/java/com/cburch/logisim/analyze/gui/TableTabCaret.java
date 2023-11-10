@@ -62,13 +62,13 @@ class TableTabCaret {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-      final var action = event.getActionCommand();
+      final java.lang.String action = event.getActionCommand();
       switch (action) {
         case "1" -> doKey('1');
         case "0" -> doKey('0');
         case "x" -> doKey('-');
         case "compact" -> {
-          final var tt = table.getTruthTable();
+          final com.cburch.logisim.analyze.model.TruthTable tt = table.getTruthTable();
           if (tt.getRowCount() > 4096) {
             (new Analyzer.PleaseWait<Void>(S.get("tabcaretCompactRows"), table) {
               private static final long serialVersionUID = 1L;
@@ -97,11 +97,11 @@ class TableTabCaret {
     @Override
     public void keyPressed(KeyEvent e) {
       int rows = table.getRowCount();
-      final var inputs = table.getInputColumnCount();
-      final var outputs = table.getOutputColumnCount();
-      final var cols = inputs + outputs;
-      final var shift = (e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) != 0;
-      final var p = (shift ? markB.isValid() ? markB : markA : cursor);
+      final int inputs = table.getInputColumnCount();
+      final int outputs = table.getOutputColumnCount();
+      final int cols = inputs + outputs;
+      final boolean shift = (e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) != 0;
+      final com.cburch.logisim.analyze.gui.TableTabCaret.Pt p = (shift ? markB.isValid() ? markB : markA : cursor);
       switch (e.getKeyCode()) {
         case KeyEvent.VK_UP:
           move(p.row - 1, p.col, shift);
@@ -141,32 +141,32 @@ class TableTabCaret {
 
     @Override
     public void keyTyped(KeyEvent e) {
-      final var mask = e.getModifiersEx();
+      final int mask = e.getModifiersEx();
       if ((mask & ~InputEvent.SHIFT_DOWN_MASK) != 0) return;
       doKey(e.getKeyChar());
     }
 
     private int[] allRowsContaining(List<Integer> indexes) {
-      final var model = table.getTruthTable();
+      final com.cburch.logisim.analyze.model.TruthTable model = table.getTruthTable();
       int n = (indexes == null ? 0 : indexes.size());
       if (n == 0) return null;
-      final var rows = new int[n];
+      final int[] rows = new int[n];
       for (int i = 0; i < n; i++) rows[i] = model.findVisibleRowContaining(indexes.get(i));
       Arrays.sort(rows);
       return rows;
     }
 
     private List<Integer> allIndexesForRowRange(int r1, int r2) {
-      final var model = table.getTruthTable();
+      final com.cburch.logisim.analyze.model.TruthTable model = table.getTruthTable();
       if (r1 < 0 || r2 < 0) return null;
       if (r1 > r2) {
-        final var t = r1;
+        final int t = r1;
         r1 = r2;
         r2 = t;
       }
-      final var indexes = new ArrayList<Integer>();
+      final java.util.ArrayList<java.lang.Integer> indexes = new ArrayList<Integer>();
       for (int r = r1; r <= r2; r++) {
-        for (final var idx : model.getVisibleRowIndexes(r)) indexes.add(idx);
+        for (final java.lang.Integer idx : model.getVisibleRowIndexes(r)) indexes.add(idx);
       }
       Collections.sort(indexes);
       return indexes;
@@ -177,23 +177,23 @@ class TableTabCaret {
       table.requestFocus();
       if (!cursor.isValid()) {
         if (!marked()) return;
-        final var s = getSelection();
+        final java.awt.Rectangle s = getSelection();
         cursor = new Pt(s.y, s.x);
         repaint(cursor);
         scrollTo(cursor);
       }
-      final var model = table.getTruthTable();
-      final var inputs = table.getInputColumnCount();
+      final com.cburch.logisim.analyze.model.TruthTable model = table.getTruthTable();
+      final int inputs = table.getInputColumnCount();
       Entry newEntry = null;
       int dx = 1;
       int dy = 0;
       switch (c) {
         case ' ':
           if (cursor.col < inputs) {
-            final var cur = model.getVisibleInputEntry(cursor.row, cursor.col);
+            final com.cburch.logisim.analyze.model.Entry cur = model.getVisibleInputEntry(cursor.row, cursor.col);
             newEntry = (cur == Entry.DONT_CARE ? Entry.ZERO : Entry.ONE);
           } else {
-            final var cur = model.getVisibleOutputEntry(cursor.row, cursor.col - inputs);
+            final com.cburch.logisim.analyze.model.Entry cur = model.getVisibleOutputEntry(cursor.row, cursor.col - inputs);
             if (cur == Entry.ZERO) newEntry = Entry.ONE;
             else if (cur == Entry.ONE) newEntry = Entry.DONT_CARE;
             else newEntry = Entry.ZERO;
@@ -262,7 +262,7 @@ class TableTabCaret {
           if (marks != null) {
             int n = marks.length;
             if (isContiguous(marks)) {
-              final var fwd = oldMarkA.row <= oldMarkB.row;
+              final boolean fwd = oldMarkA.row <= oldMarkB.row;
               markA = new Pt(marks[fwd ? 0 : n - 1], oldMarkA.col);
               markB = new Pt(marks[fwd ? n - 1 : 0], oldMarkB.col);
             }
@@ -274,7 +274,7 @@ class TableTabCaret {
         model.setVisibleOutputEntry(cursor.row, cursor.col - inputs, newEntry);
       }
       if (!markA.isValid() || !markB.isValid()) return;
-      final var selection = getSelection();
+      final java.awt.Rectangle selection = getSelection();
       int row = cursor.row;
       int col = cursor.col;
       if (dy > 0) { // advance down
@@ -293,7 +293,7 @@ class TableTabCaret {
           if (--row < selection.y) row = selection.y + selection.height - 1;
         }
       }
-      final var oldCursor = cursor;
+      final com.cburch.logisim.analyze.gui.TableTabCaret.Pt oldCursor = cursor;
       cursor = new Pt(row, col);
       repaint(oldCursor, cursor, markA, markB);
       scrollTo(cursor);
@@ -313,28 +313,28 @@ class TableTabCaret {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-      final var oldMarkB = markB;
+      final com.cburch.logisim.analyze.gui.TableTabCaret.Pt oldMarkB = markB;
       markB = pointNear(e);
       repaint(oldMarkB, cursor, markA, markB);
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-      final var oldHover = hover;
+      final com.cburch.logisim.analyze.gui.TableTabCaret.Pt oldHover = hover;
       hover = pointAt(e);
       repaint(oldHover, hover);
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-      final var oldHover = hover;
+      final com.cburch.logisim.analyze.gui.TableTabCaret.Pt oldHover = hover;
       hover = pointAt(e);
       repaint(oldHover, hover);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-      final var oldHover = hover;
+      final com.cburch.logisim.analyze.gui.TableTabCaret.Pt oldHover = hover;
       hover = invalid;
       repaint(oldHover, hover);
     }
@@ -455,9 +455,9 @@ class TableTabCaret {
     table.addKeyListener(listener);
     table.addFocusListener(listener);
 
-    final var imap = table.getInputMap();
-    final var amap = table.getActionMap();
-    final var nullAction =
+    final javax.swing.InputMap imap = table.getInputMap();
+    final javax.swing.ActionMap amap = table.getActionMap();
+    final javax.swing.AbstractAction nullAction =
         new AbstractAction() {
           private static final long serialVersionUID = 1L;
 
@@ -466,7 +466,7 @@ class TableTabCaret {
             // dummy
           }
         };
-    final var nullKey = "null";
+    final java.lang.String nullKey = "null";
     amap.put(nullKey, nullAction);
     imap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), nullKey);
     imap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), nullKey);
@@ -485,10 +485,10 @@ class TableTabCaret {
 
   Rectangle getSelection() {
     if (marked()) {
-      final var r0 = Math.min(markA.row, markB.row);
-      final var c0 = Math.min(markA.col, markB.col);
-      final var r1 = Math.max(markA.row, markB.row);
-      final var c1 = Math.max(markA.col, markB.col);
+      final int r0 = Math.min(markA.row, markB.row);
+      final int c0 = Math.min(markA.col, markB.col);
+      final int r1 = Math.max(markA.row, markB.row);
+      final int c1 = Math.max(markA.col, markB.col);
       return new Rectangle(c0, r0, (c1 - c0) + 1, (r1 - r0) + 1);
     } else if (cursor.isValid()) {
       return new Rectangle(cursor.col, cursor.row, 1, 1);
@@ -504,7 +504,7 @@ class TableTabCaret {
   boolean hadSelection = false;
 
   void updateMenus() {
-    final var sel = hasSelection();
+    final boolean sel = hasSelection();
     if (hadSelection != sel) {
       hadSelection = sel;
       table.updateTab();
@@ -514,23 +514,23 @@ class TableTabCaret {
   void paintBackground(Graphics g) {
     if (hilightRows != null) {
       g.setColor(HIGHLIGHT_COLOR);
-      final var inputs = table.getInputColumnCount();
-      final var outputs = table.getOutputColumnCount();
-      final var x0 = table.getXLeft(0);
-      final var x1 = table.getXRight(inputs + outputs - 1);
-      for (final var rowId : hilightRows) {
-        final var y = table.getY(rowId);
-        final var h = table.getCellHeight();
+      final int inputs = table.getInputColumnCount();
+      final int outputs = table.getOutputColumnCount();
+      final int x0 = table.getXLeft(0);
+      final int x1 = table.getXRight(inputs + outputs - 1);
+      for (final int rowId : hilightRows) {
+        final int y = table.getY(rowId);
+        final int h = table.getCellHeight();
         g.fillRect(x0, y, x1 - x0, h);
       }
     }
     if (marked() && !markA.equals(markB)) {
-      final var r = region(markA, markB);
+      final java.awt.Rectangle r = region(markA, markB);
       g.setColor(SELECT_COLOR);
       g.fillRect(r.x, r.y, r.width, r.height);
     }
     if (table.isFocusOwner() && cursor.isValid()) {
-      final var r = region(cursor);
+      final java.awt.Rectangle r = region(cursor);
       g.setColor(Color.WHITE);
       g.fillRect(r.x, r.y + 1, r.width - 1, r.height - 3);
     }
@@ -548,10 +548,10 @@ class TableTabCaret {
     } else {
       return;
     }
-    final var x = table.getXLeft(p.col);
-    final var y = table.getY(p.row);
-    final var w = table.getCellWidth(p.row);
-    final var h = table.getCellHeight();
+    final int x = table.getXLeft(p.col);
+    final int y = table.getY(p.row);
+    final int w = table.getCellWidth(p.row);
+    final int h = table.getCellHeight();
     GraphicsUtil.switchToWidth(g, 2);
     g.drawRect(x - 1, y, w + 1, h - 2);
     GraphicsUtil.switchToWidth(g, 1);
@@ -567,19 +567,19 @@ class TableTabCaret {
   }
 
   private Pt pointNear(int row, int col) {
-    final var inputs = table.getInputColumnCount();
-    final var outputs = table.getOutputColumnCount();
-    final var rows = table.getRowCount();
-    final var cols = inputs + outputs;
+    final int inputs = table.getInputColumnCount();
+    final int outputs = table.getOutputColumnCount();
+    final int rows = table.getRowCount();
+    final int cols = inputs + outputs;
     row = row < 0 ? 0 : row >= rows ? rows - 1 : row;
     col = col < 0 ? 0 : col >= cols ? cols - 1 : col;
     return new Pt(row, col);
   }
 
   private void move(int row, int col, boolean shift) {
-    final var p = pointNear(row, col);
+    final com.cburch.logisim.analyze.gui.TableTabCaret.Pt p = pointNear(row, col);
     if (shift) {
-      final var oldMarkB = markB;
+      final com.cburch.logisim.analyze.gui.TableTabCaret.Pt oldMarkB = markB;
       markB = p;
       repaint(oldMarkB, cursor, markA, markB);
       scrollTo(markB);
@@ -589,9 +589,9 @@ class TableTabCaret {
   }
 
   private void setCursor(Pt p, Pt m) {
-    final var oldCursor = cursor;
-    final var oldMarkA = markA;
-    final var oldMarkB = markB;
+    final com.cburch.logisim.analyze.gui.TableTabCaret.Pt oldCursor = cursor;
+    final com.cburch.logisim.analyze.gui.TableTabCaret.Pt oldMarkA = markA;
+    final com.cburch.logisim.analyze.gui.TableTabCaret.Pt oldMarkB = markB;
     clearHilight();
     cursor = p;
     markA = m;
@@ -602,10 +602,10 @@ class TableTabCaret {
 
   private void scrollTo(Pt p) {
     if (!p.isValid()) return;
-    final var cx = table.getXLeft(p.col);
-    final var cy = table.getY(p.row);
-    final var cw = table.getCellWidth(p.col);
-    final var ch = table.getCellHeight();
+    final int cx = table.getXLeft(p.col);
+    final int cy = table.getY(p.row);
+    final int cw = table.getCellWidth(p.col);
+    final int ch = table.getCellHeight();
     table.getBody().scrollRectToVisible(new Rectangle(cx, cy, cw, ch));
   }
 
@@ -616,7 +616,7 @@ class TableTabCaret {
       table.repaint();
       return;
     }
-    final var r = region(pts);
+    final java.awt.Rectangle r = region(pts);
     if (r.isEmpty()) return;
     r.grow(2, 2);
     table.getBody().repaint(r);

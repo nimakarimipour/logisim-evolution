@@ -45,8 +45,8 @@ public class SubtractorHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist TheNetlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getBuffer();
-    final var nrOfBits = attrs.getValue(StdAttr.WIDTH).getWidth();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getBuffer();
+    final int nrOfBits = attrs.getValue(StdAttr.WIDTH).getWidth();
     if (Hdl.isVhdl()) {
       contents.empty().addVhdlKeywords().add("""
           s_extendeddataA <= "0"&dataA;

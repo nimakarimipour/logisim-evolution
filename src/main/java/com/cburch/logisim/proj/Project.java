@@ -57,7 +57,7 @@ public class Project {
     public void libraryChanged(LibraryEvent event) {
       int action = event.getAction();
       if (action == LibraryEvent.REMOVE_LIBRARY) {
-        final var unloaded = (Library) event.getData();
+        final com.cburch.logisim.tools.Library unloaded = (Library) event.getData();
         if (tool != null && unloaded.containsFromSource(tool)) {
           setTool(null);
         }
@@ -118,7 +118,7 @@ public class Project {
 
   public void addCircuitListener(CircuitListener value) {
     circuitListeners.add(value);
-    final var current = getCurrentCircuit();
+    final com.cburch.logisim.circuit.Circuit current = getCurrentCircuit();
     if (current != null) current.addCircuitListener(value);
   }
 
@@ -140,7 +140,7 @@ public class Project {
 
   public JFileChooser createChooser() {
     if (file == null) return JFileChoosers.create();
-    final var loader = file.getLoader();
+    final com.cburch.logisim.file.Loader loader = file.getLoader();
     return loader == null ? JFileChoosers.create() : loader.createChooser();
   }
 
@@ -153,8 +153,8 @@ public class Project {
     redoLog.clear();
 
     if (!undoLog.isEmpty() && act.shouldAppendTo(getLastAction())) {
-      final var firstData = undoLog.removeLast();
-      final var first = firstData.action;
+      final com.cburch.logisim.proj.Project.ActionData firstData = undoLog.removeLast();
+      final com.cburch.logisim.proj.Action first = firstData.action;
       if (first.isModification()) {
         --undoMods;
       }
@@ -212,7 +212,7 @@ public class Project {
   }
 
   public int doTestVector(String vectorname, String name) {
-    final var circuit = (name == null ? file.getMainCircuit() : file.getCircuit(name));
+    final com.cburch.logisim.circuit.Circuit circuit = (name == null ? file.getMainCircuit() : file.getCircuit(name));
     if (circuit == null) {
       System.err.println("Circuit '" + name + "' not found.");
       return -1;
@@ -230,7 +230,7 @@ public class Project {
   }
 
   private void fireEvent(ProjectEvent event) {
-    for (final var l : projectListeners) {
+    for (final com.cburch.logisim.proj.ProjectListener l : projectListeners) {
       l.projectChanged(event);
     }
   }
@@ -280,11 +280,11 @@ public class Project {
   public void setCurrentHdlModel(HdlModel hdl) {
     if (hdlModel == hdl) return;
     setTool(null);
-    final var old = circuitState;
-    final var oldHdl = hdlModel;
-    final var oldCircuit = (old == null) ? null : old.getCircuit();
+    final com.cburch.logisim.circuit.CircuitState old = circuitState;
+    final com.cburch.logisim.vhdl.base.HdlModel oldHdl = hdlModel;
+    final com.cburch.logisim.circuit.Circuit oldCircuit = (old == null) ? null : old.getCircuit();
     if (oldCircuit != null) {
-      for (final var l : circuitListeners) {
+      for (final com.cburch.logisim.circuit.CircuitListener l : circuitListeners) {
         oldCircuit.removeCircuitListener(l);
       }
     }
@@ -348,7 +348,7 @@ public class Project {
 
   public Selection getSelection() {
     if (frame == null) return null;
-    final var canvas = frame.getCanvas();
+    final com.cburch.logisim.gui.main.Canvas canvas = frame.getCanvas();
     if (canvas == null) return null;
     return canvas.getSelection();
   }
@@ -398,14 +398,14 @@ public class Project {
       ++undoMods;
 
       // Remove the last item in the redo log, but keep the data
-      final var data = redoLog.removeLast();
+      final com.cburch.logisim.proj.Project.ActionData data = redoLog.removeLast();
 
       // Restore the circuit state to the redo's state
       if (data.circuitState != null) setCircuitState(data.circuitState);
       else if (data.hdlModel != null) setCurrentHdlModel(data.hdlModel);
 
       // Get the actions required to make that state change happen
-      final var action = data.action;
+      final com.cburch.logisim.proj.Action action = data.action;
 
       // Call the event
       fireEvent(new ProjectEvent(ProjectEvent.REDO_START, this, action));
@@ -420,7 +420,7 @@ public class Project {
 
   public void removeCircuitListener(CircuitListener value) {
     circuitListeners.remove(value);
-    final var current = getCurrentCircuit();
+    final com.cburch.logisim.circuit.Circuit current = getCurrentCircuit();
     if (current != null) current.removeCircuitListener(value);
   }
 
@@ -443,20 +443,20 @@ public class Project {
   public void setCircuitState(CircuitState value) {
     if (value == null || circuitState == value) return;
 
-    final var old = circuitState;
-    final var oldHdl = hdlModel;
+    final com.cburch.logisim.circuit.CircuitState old = circuitState;
+    final com.cburch.logisim.vhdl.base.HdlModel oldHdl = hdlModel;
     Object oldActive = old;
     if (oldHdl != null) oldActive = oldHdl;
-    final var oldCircuit = old == null ? null : old.getCircuit();
-    final var newCircuit = value.getCircuit();
+    final com.cburch.logisim.circuit.Circuit oldCircuit = old == null ? null : old.getCircuit();
+    final com.cburch.logisim.circuit.Circuit newCircuit = value.getCircuit();
     boolean circuitChanged = old == null || oldCircuit != newCircuit;
     if (circuitChanged) {
-      final var canvas = frame == null ? null : frame.getCanvas();
+      final com.cburch.logisim.gui.main.Canvas canvas = frame == null ? null : frame.getCanvas();
       if (canvas != null) {
         if (tool != null) tool.deselect(canvas);
-        final var selection = canvas.getSelection();
+        final com.cburch.logisim.gui.main.Selection selection = canvas.getSelection();
         if (selection != null) {
-          final var act = SelectionActions.dropAll(selection);
+          final com.cburch.logisim.proj.Action act = SelectionActions.dropAll(selection);
           if (act != null) {
             doAction(act);
           }
@@ -464,7 +464,7 @@ public class Project {
         if (tool != null) tool.select(canvas);
       }
       if (oldCircuit != null) {
-        for (final var l : circuitListeners) {
+        for (final com.cburch.logisim.circuit.CircuitListener l : circuitListeners) {
           oldCircuit.removeCircuitListener(l);
         }
       }
@@ -478,11 +478,11 @@ public class Project {
     if (circuitChanged) {
       fireEvent(ProjectEvent.ACTION_SET_CURRENT, oldActive, newCircuit);
       if (newCircuit != null) {
-        for (final var l : circuitListeners) {
+        for (final com.cburch.logisim.circuit.CircuitListener l : circuitListeners) {
           newCircuit.addCircuitListener(l);
         }
-        final var circTickFrequency = newCircuit.getTickFrequency();
-        final var simTickFrequency = simulator.getTickFrequency();
+        final double circTickFrequency = newCircuit.getTickFrequency();
+        final double simTickFrequency = simulator.getTickFrequency();
         if (circTickFrequency < 0) {
           newCircuit.setTickFrequency(simTickFrequency);
         } else if (circTickFrequency != simTickFrequency) {
@@ -518,16 +518,16 @@ public class Project {
 
   public void setFrame(Frame value) {
     if (frame == value) return;
-    final var oldValue = frame;
+    final com.cburch.logisim.gui.main.Frame oldValue = frame;
     frame = value;
     Projects.windowCreated(this, oldValue, value);
     value.getCanvas().getSelection().addListener(myListener);
   }
 
   public void setLogisimFile(LogisimFile value) {
-    final var old = this.file;
+    final com.cburch.logisim.file.LogisimFile old = this.file;
     if (old != null) {
-      for (final var l : fileListeners) {
+      for (final com.cburch.logisim.file.LibraryListener l : fileListeners) {
         old.removeLibraryListener(l);
       }
     }
@@ -545,7 +545,7 @@ public class Project {
     fireEvent(ProjectEvent.ACTION_SET_FILE, old, file);
     setCurrentCircuit(file.getMainCircuit());
     if (file != null) {
-      for (final var l : fileListeners) {
+      for (final com.cburch.logisim.file.LibraryListener l : fileListeners) {
         file.addLibraryListener(l);
       }
     }
@@ -562,13 +562,13 @@ public class Project {
 
   public void setTool(Tool value) {
     if (tool == value) return;
-    final var old = tool;
-    final var canvas = frame.getCanvas();
+    final com.cburch.logisim.tools.Tool old = tool;
+    final com.cburch.logisim.gui.main.Canvas canvas = frame.getCanvas();
     if (old != null) old.deselect(canvas);
-    final var selection = canvas.getSelection();
+    final com.cburch.logisim.gui.main.Selection selection = canvas.getSelection();
     if (selection != null && !selection.isEmpty()) {
       if (value == null || !getOptions().getMouseMappings().containsSelectTool()) {
-        final var act = SelectionActions.anchorAll(selection);
+        final com.cburch.logisim.proj.Action act = SelectionActions.anchorAll(selection);
         /*
          * Circuit circuit = canvas.getCircuit(); CircuitMutation xn =
          * new CircuitMutation(circuit); if (value == null) { Action act
@@ -594,10 +594,10 @@ public class Project {
   public void undoAction() {
     if (CollectionUtil.isNotEmpty(undoLog)) {
       redoLog.addLast(undoLog.getLast());
-      final var data = undoLog.removeLast();
+      final com.cburch.logisim.proj.Project.ActionData data = undoLog.removeLast();
       if (data.circuitState != null) setCircuitState(data.circuitState);
       else if (data.hdlModel != null) setCurrentHdlModel(data.hdlModel);
-      final var action = data.action;
+      final com.cburch.logisim.proj.Action action = data.action;
       if (action.isModification()) {
         --undoMods;
       }

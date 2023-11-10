@@ -70,7 +70,7 @@ public class Attributes {
 
     @Override
     public java.awt.Component getCellEditor(Color value) {
-      final var init = (value == null) ? Color.WHITE : value;
+      final java.awt.Color init = (value == null) ? Color.WHITE : value;
       return new ColorChooser(init);
     }
 
@@ -99,7 +99,7 @@ public class Attributes {
 
     @Override
     public String toStandardString(Color c) {
-      final var ret = "#" + hex(c.getRed()) + hex(c.getGreen()) + hex(c.getBlue());
+      final java.lang.String ret = "#" + hex(c.getRed()) + hex(c.getGreen()) + hex(c.getBlue());
       return c.getAlpha() == 255 ? ret : ret + hex(c.getAlpha());
     }
   }
@@ -236,7 +236,7 @@ public class Attributes {
 
     @Override
     public String toDisplayString(Integer value) {
-      final var val = value;
+      final java.lang.Integer val = value;
       return "0x" + Integer.toHexString(val);
     }
 
@@ -329,7 +329,7 @@ public class Attributes {
             options[i - start] = i;
           }
         }
-        final var combo = new ComboBox<>(options);
+        final com.cburch.logisim.gui.generic.ComboBox<java.lang.Integer> combo = new ComboBox<>(options);
         if (value == null) combo.setSelectedIndex(-1);
         else combo.setSelectedItem(value);
         return combo;
@@ -366,7 +366,7 @@ public class Attributes {
 
     @Override
     public Component getCellEditor(Object value) {
-      final var combo = new ComboBox<>(vals);
+      final com.cburch.logisim.gui.generic.ComboBox<V> combo = new ComboBox<>(vals);
       combo.setRenderer(new OptionComboRenderer<>(this));
       if (value == null) combo.setSelectedIndex(-1);
       else combo.setSelectedItem(value);
@@ -402,7 +402,7 @@ public class Attributes {
     @Override
     public Component getListCellRendererComponent(
         JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-      final var ret =
+      final java.awt.Component ret =
           super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
       if (ret instanceof JLabel) {
         @SuppressWarnings("unchecked")

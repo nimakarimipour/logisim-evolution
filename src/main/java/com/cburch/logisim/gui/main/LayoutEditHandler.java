@@ -43,13 +43,13 @@ public class LayoutEditHandler extends EditHandler
 
   @Override
   public void computeEnabled() {
-    final var proj = frame.getProject();
-    final var sel = proj == null ? null : proj.getSelection();
-    final var selEmpty = (sel == null || sel.isEmpty());
-    final var canChange = proj != null && proj.getLogisimFile().contains(proj.getCurrentCircuit());
+    final com.cburch.logisim.proj.Project proj = frame.getProject();
+    final com.cburch.logisim.gui.main.Selection sel = proj == null ? null : proj.getSelection();
+    final boolean selEmpty = (sel == null || sel.isEmpty());
+    final boolean canChange = proj != null && proj.getLogisimFile().contains(proj.getCurrentCircuit());
 
     boolean selectAvailable = false;
-    for (final var lib : proj.getLogisimFile().getLibraries()) {
+    for (final com.cburch.logisim.tools.Library lib : proj.getLogisimFile().getLibraries()) {
       if (lib instanceof BaseLibrary) {
         selectAvailable = true;
         break;
@@ -175,9 +175,9 @@ public class LayoutEditHandler extends EditHandler
   }
 
   private void selectSelectTool(Project proj) {
-    for (final var sub : proj.getLogisimFile().getLibraries()) {
+    for (final com.cburch.logisim.tools.Library sub : proj.getLogisimFile().getLibraries()) {
       if (sub instanceof BaseLibrary baseLibrary) {
-        final var tool = baseLibrary.getTool(EditTool._ID);
+        final com.cburch.logisim.tools.Tool tool = baseLibrary.getTool(EditTool._ID);
         if (tool != null) proj.setTool(tool);
       }
     }

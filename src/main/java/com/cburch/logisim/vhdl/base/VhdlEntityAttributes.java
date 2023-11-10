@@ -69,8 +69,8 @@ public class VhdlEntityAttributes extends AbstractAttributeSet {
   }
 
   public static Attribute<Integer> forGeneric(VhdlContent.Generic generic) {
-    final var name = generic.getName();
-    final var disp = StringUtil.constantGetter(name);
+    final java.lang.String name = generic.getName();
+    final com.cburch.logisim.util.StringGetter disp = StringUtil.constantGetter(name);
     if (generic.getType().equals("positive"))
       return new VhdlGenericAttribute("vhdl_" + name, disp, 1, Integer.MAX_VALUE, generic);
     else if (generic.getType().equals("natural"))
@@ -90,10 +90,10 @@ public class VhdlEntityAttributes extends AbstractAttributeSet {
           VhdlSimConstants.SIM_NAME_ATTR);
 
   static AttributeSet createBaseAttrs(VhdlContent content) {
-    final var generic = content.getGenerics();
-    final var genericAttr = content.getGenericAttributes();
-    final var attrs = new Attribute<?>[7 + generic.length];
-    final var value = new Object[7 + generic.length];
+    final com.cburch.logisim.vhdl.base.VhdlContent.Generic[] generic = content.getGenerics();
+    final java.util.List<com.cburch.logisim.data.Attribute<java.lang.Integer>> genericAttr = content.getGenericAttributes();
+    final com.cburch.logisim.data.Attribute<?>[] attrs = new Attribute<?>[7 + generic.length];
+    final java.lang.Object[] value = new Object[7 + generic.length];
     attrs[0] = VhdlEntity.nameAttr;
     value[0] = content.getName();
     attrs[1] = StdAttr.LABEL;
@@ -226,14 +226,14 @@ public class VhdlEntityAttributes extends AbstractAttributeSet {
   @Override
   public <V> void setValue(Attribute<V> attr, V value) {
     if (attr == VhdlEntity.nameAttr) {
-      final var newValue = (String) value;
+      final java.lang.String newValue = (String) value;
       if (content.getName().equals(newValue)) return;
       if (!content.setName(newValue)) return;
       fireAttributeValueChanged(attr, value, null);
       return;
     }
     if (attr == StdAttr.LABEL && value instanceof String newLabel) {
-      final var oldlabel = label;
+      final java.lang.String oldlabel = label;
       if (label.equals(newLabel)) return;
       label = newLabel;
       fireAttributeValueChanged(attr, value, (V) oldlabel);
@@ -246,21 +246,21 @@ public class VhdlEntityAttributes extends AbstractAttributeSet {
       return;
     }
     if (attr == StdAttr.LABEL_VISIBILITY) {
-      final var newVisibility = (Boolean) value;
+      final java.lang.Boolean newVisibility = (Boolean) value;
       if (labelVisible.equals(newVisibility)) return;
       labelVisible = newVisibility;
       fireAttributeValueChanged(attr, value, null);
       return;
     }
     if (attr == StdAttr.FACING) {
-      final var direction = (Direction) value;
+      final com.cburch.logisim.data.Direction direction = (Direction) value;
       if (facing.equals(direction)) return;
       facing = direction;
       fireAttributeValueChanged(attr, value, null);
       return;
     }
     if (attr == VhdlSimConstants.SIM_NAME_ATTR) {
-      final var name = (String) value;
+      final java.lang.String name = (String) value;
       if (name.equals(simName)) return;
       simName = name;
       fireAttributeValueChanged(attr, value, null);
@@ -270,7 +270,7 @@ public class VhdlEntityAttributes extends AbstractAttributeSet {
         && (value == StdAttr.APPEAR_FPGA
             || value == StdAttr.APPEAR_CLASSIC
             || value == StdAttr.APPEAR_EVOLUTION)) {
-      final var attrOpt = (AttributeOption) value;
+      final com.cburch.logisim.data.AttributeOption attrOpt = (AttributeOption) value;
       if (content.getAppearance().equals(attrOpt)) return;
       content.setAppearance(attrOpt);
       fireAttributeValueChanged(attr, value, null);

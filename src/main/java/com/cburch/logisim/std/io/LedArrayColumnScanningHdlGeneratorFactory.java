@@ -67,11 +67,11 @@ public class LedArrayColumnScanningHdlGeneratorFactory extends AbstractHdlGenera
   }
 
   public static LineBuffer getGenericMap(int nrOfRows, int nrOfColumns, long fpgaClockFrequency, boolean activeLow) {
-    final var nrColAddrBits = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(nrOfColumns);
-    final var scanningReload = (int) (fpgaClockFrequency / 1000);
-    final var nrOfScanningBitsCount = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(scanningReload);
-    final var maxNrLeds = ((int) Math.pow(2.0, nrColAddrBits)) * nrOfRows;
-    final var generics = new HashMap<String, String>();
+    final int nrColAddrBits = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(nrOfColumns);
+    final int scanningReload = (int) (fpgaClockFrequency / 1000);
+    final int nrOfScanningBitsCount = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(scanningReload);
+    final int maxNrLeds = ((int) Math.pow(2.0, nrColAddrBits)) * nrOfRows;
+    final java.util.HashMap<java.lang.String,java.lang.String> generics = new HashMap<String, String>();
     generics.put(NR_OF_LEDS_STRING, Integer.toString(nrOfRows * nrOfColumns));
     generics.put(MAX_NR_LEDS_STRING, Integer.toString(maxNrLeds));
     generics.put(NR_OF_ROWS_STRING, Integer.toString(nrOfRows));
@@ -84,7 +84,7 @@ public class LedArrayColumnScanningHdlGeneratorFactory extends AbstractHdlGenera
   }
   
   public static LineBuffer getPortMap(int id) {
-    final var ports = new HashMap<String, String>();
+    final java.util.HashMap<java.lang.String,java.lang.String> ports = new HashMap<String, String>();
     ports.put(LedArrayGenericHdlGeneratorFactory.LedArrayColumnAddress, String.format("%s%d", LedArrayGenericHdlGeneratorFactory.LedArrayColumnAddress, id));
     ports.put(LedArrayGenericHdlGeneratorFactory.LedArrayRowOutputs, String.format("%s%d", LedArrayGenericHdlGeneratorFactory.LedArrayRowOutputs, id));
     ports.put(TickComponentHdlGeneratorFactory.FPGA_CLOCK, TickComponentHdlGeneratorFactory.FPGA_CLOCK);
@@ -93,7 +93,7 @@ public class LedArrayColumnScanningHdlGeneratorFactory extends AbstractHdlGenera
   }
 
   public static List<String> getColumnCounterCode() {
-    final var contents =
+    final com.cburch.logisim.util.LineBuffer contents =
         LineBuffer.getHdlBuffer()
             .pair("columnAddress", LedArrayGenericHdlGeneratorFactory.LedArrayColumnAddress)
             .pair("clock", TickComponentHdlGeneratorFactory.FPGA_CLOCK)
@@ -161,7 +161,7 @@ public class LedArrayColumnScanningHdlGeneratorFactory extends AbstractHdlGenera
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist TheNetlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer()
         .pair("ins", LedArrayGenericHdlGeneratorFactory.LedArrayInputs)
         .pair("outs", LedArrayGenericHdlGeneratorFactory.LedArrayRowOutputs)
         .pair("nrOfLeds", NR_OF_LEDS_STRING)

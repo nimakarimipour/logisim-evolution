@@ -21,8 +21,8 @@ public class JoinedAction extends Action {
 
   @Override
   public Action append(Action other) {
-    final var oldLen = todo.length;
-    final var newToDo = new Action[oldLen + 1];
+    final int oldLen = todo.length;
+    final com.cburch.logisim.proj.Action[] newToDo = new Action[oldLen + 1];
     System.arraycopy(todo, 0, newToDo, 0, oldLen);
     newToDo[oldLen] = other;
     todo = newToDo;
@@ -31,7 +31,7 @@ public class JoinedAction extends Action {
 
   @Override
   public void doIt(Project proj) {
-    for (final var act : todo) {
+    for (final com.cburch.logisim.proj.Action act : todo) {
       act.doIt(proj);
     }
   }
@@ -55,7 +55,7 @@ public class JoinedAction extends Action {
 
   @Override
   public boolean isModification() {
-    for (final var act : todo) {
+    for (final com.cburch.logisim.proj.Action act : todo) {
       if (act.isModification()) return true;
     }
     return false;

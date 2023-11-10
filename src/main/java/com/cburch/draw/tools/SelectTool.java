@@ -62,8 +62,8 @@ public class SelectTool extends AbstractTool {
   }
 
   private static CanvasObject getObjectAt(CanvasModel model, int x, int y, boolean assumeFilled) {
-    final var loc = Location.create(x, y, false);
-    for (final var o : model.getObjectsFromTop()) {
+    final com.cburch.logisim.data.Location loc = Location.create(x, y, false);
+    for (final com.cburch.draw.model.CanvasObject o : model.getObjectsFromTop()) {
       if (o.contains(loc, assumeFilled)) return o;
     }
     return null;
@@ -71,13 +71,13 @@ public class SelectTool extends AbstractTool {
 
   @Override
   public void cancelMousePress(Canvas canvas) {
-    final var before = beforePressSelection;
-    final var handle = beforePressHandle;
+    final java.util.List<com.cburch.draw.model.CanvasObject> before = beforePressSelection;
+    final com.cburch.draw.model.Handle handle = beforePressHandle;
     beforePressSelection = null;
     beforePressHandle = null;
     if (before != null) {
       curAction = IDLE;
-      final var sel = canvas.getSelection();
+      final com.cburch.draw.canvas.Selection sel = canvas.getSelection();
       sel.clearDrawsSuppressed();
       sel.setMovingShapes(Collections.emptySet(), 0, 0);
       sel.clearSelected();
@@ -89,11 +89,11 @@ public class SelectTool extends AbstractTool {
 
   @Override
   public void draw(Canvas canvas, Graphics gfx) {
-    final var selection = canvas.getSelection();
-    final var action = curAction;
+    final com.cburch.draw.canvas.Selection selection = canvas.getSelection();
+    final int action = curAction;
 
-    final var start = dragStart;
-    final var end = dragEnd;
+    final com.cburch.logisim.data.Location start = dragStart;
+    final com.cburch.logisim.data.Location end = dragEnd;
     HandleGesture gesture = null;
     boolean drawHandles;
     switch (action) {
@@ -113,7 +113,7 @@ public class SelectTool extends AbstractTool {
     if (drawHandles) {
       // unscale the coordinate system so that the stroke width isn't scaled
       double zoom = 1.0;
-      final var gfxCopy = gfx.create();
+      final java.awt.Graphics gfxCopy = gfx.create();
       if (gfxCopy instanceof Graphics2D g2d) {
         zoom = canvas.getZoomFactor();
         if (zoom != 1.0) {
@@ -122,19 +122,19 @@ public class SelectTool extends AbstractTool {
       }
       GraphicsUtil.switchToWidth(gfxCopy, 1);
 
-      final var size = (int) Math.ceil(HANDLE_SIZE * Math.sqrt(zoom));
-      final var offs = size / 2;
-      for (final var obj : selection.getSelected()) {
-        final var handles =
+      final int size = (int) Math.ceil(HANDLE_SIZE * Math.sqrt(zoom));
+      final int offs = size / 2;
+      for (final com.cburch.draw.model.CanvasObject obj : selection.getSelected()) {
+        final java.util.List<com.cburch.draw.model.Handle> handles =
             (action == MOVE_HANDLE && obj == moveHandleObj)
                 ? obj.getHandles(gesture)
                 : obj.getHandles(null);
 
-        for (final var han : handles) {
+        for (final com.cburch.draw.model.Handle han : handles) {
           int x = han.getX();
           int y = han.getY();
           if (action == MOVE_ALL && dragEffective) {
-            final var delta = selection.getMovingDelta();
+            final com.cburch.logisim.data.Location delta = selection.getMovingDelta();
             x += delta.getX();
             y += delta.getY();
           }
@@ -144,12 +144,12 @@ public class SelectTool extends AbstractTool {
           gfxCopy.drawRect(x - offs, y - offs, size, size);
         }
       }
-      final var selHandle = selection.getSelectedHandle();
+      final com.cburch.draw.model.Handle selHandle = selection.getSelectedHandle();
       if (selHandle != null) {
         int x = selHandle.getX();
         int y = selHandle.getY();
         if (action == MOVE_ALL && dragEffective) {
-          final var delta = selection.getMovingDelta();
+          final com.cburch.logisim.data.Location delta = selection.getMovingDelta();
           x += delta.getX();
           y += delta.getY();
         }
@@ -174,19 +174,19 @@ public class SelectTool extends AbstractTool {
           int x1 = end.getX();
           int y1 = end.getY();
           if (x1 < x0) {
-            final var t = x0;
+            final int t = x0;
             x0 = x1;
             x1 = t;
           }
           if (y1 < y0) {
-            final var t = y0;
+            final int t = y0;
             y0 = y1;
             y1 = t;
           }
 
           // make the region that's not being selected darker
-          final var w = canvas.getWidth();
-          final var h = canvas.getHeight();
+          final int w = canvas.getWidth();
+          final int h = canvas.getHeight();
           gfx.setColor(RECT_SELECT_BACKGROUND);
           gfx.fillRect(0, 0, w, y0);
           gfx.fillRect(0, y0, x0, y1 - y0);
@@ -214,7 +214,7 @@ public class SelectTool extends AbstractTool {
   }
 
   private int getHandleSize(Canvas canvas) {
-    final var zoom = canvas.getZoomFactor();
+    final double zoom = canvas.getZoomFactor();
     return (int) Math.ceil(HANDLE_SIZE / Math.sqrt(zoom));
   }
 
@@ -225,7 +225,7 @@ public class SelectTool extends AbstractTool {
 
   @Override
   public void keyPressed(Canvas canvas, KeyEvent e) {
-    final var code = e.getKeyCode();
+    final int code = e.getKeyCode();
     if ((code == KeyEvent.VK_SHIFT || code == KeyEvent.VK_CONTROL || code == KeyEvent.VK_ALT)
         && curAction != IDLE) {
       setMouse(canvas, lastMouseX, lastMouseY, e.getModifiersEx());
@@ -239,18 +239,18 @@ public class SelectTool extends AbstractTool {
 
   @Override
   public void keyTyped(Canvas canvas, KeyEvent e) {
-    final var ch = e.getKeyChar();
-    final var selected = canvas.getSelection();
+    final char ch = e.getKeyChar();
+    final com.cburch.draw.canvas.Selection selected = canvas.getSelection();
     if ((ch == '\u0008' || ch == '\u007F') && !selected.isEmpty()) {
-      final var toRemove = new ArrayList<CanvasObject>();
-      for (final var shape : selected.getSelected()) {
+      final java.util.ArrayList<com.cburch.draw.model.CanvasObject> toRemove = new ArrayList<CanvasObject>();
+      for (final com.cburch.draw.model.CanvasObject shape : selected.getSelected()) {
         if (shape.canRemove()) {
           toRemove.add(shape);
         }
       }
       if (!toRemove.isEmpty()) {
         e.consume();
-        final var model = canvas.getModel();
+        final com.cburch.draw.model.CanvasModel model = canvas.getModel();
         canvas.doAction(new ModelRemoveAction(model, toRemove));
         selected.clearSelected();
         repaintArea(canvas);
@@ -270,24 +270,24 @@ public class SelectTool extends AbstractTool {
   public void mousePressed(Canvas canvas, MouseEvent e) {
     beforePressSelection = new ArrayList<>(canvas.getSelection().getSelected());
     beforePressHandle = canvas.getSelection().getSelectedHandle();
-    final var mx = e.getX();
-    final var my = e.getY();
+    final int mx = e.getX();
+    final int my = e.getY();
     dragStart = Location.create(mx, my, false);
     dragEffective = false;
     dragEnd = dragStart;
     lastMouseX = mx;
     lastMouseY = my;
-    final var selection = canvas.getSelection();
+    final com.cburch.draw.canvas.Selection selection = canvas.getSelection();
     selection.setHandleSelected(null);
 
     // see whether user is pressing within an existing handle
-    final var halfSize = getHandleSize(canvas) / 2;
+    final int halfSize = getHandleSize(canvas) / 2;
     CanvasObject clicked = null;
-    for (final var shape : selection.getSelected()) {
-      final var handles = shape.getHandles(null);
-      for (final var han : handles) {
-        final var dx = han.getX() - mx;
-        final var dy = han.getY() - my;
+    for (final com.cburch.draw.model.CanvasObject shape : selection.getSelected()) {
+      final java.util.List<com.cburch.draw.model.Handle> handles = shape.getHandles(null);
+      for (final com.cburch.draw.model.Handle han : handles) {
+        final int dx = han.getX() - mx;
+        final int dy = han.getY() - my;
         if (dx >= -halfSize && dx <= halfSize && dy >= -halfSize && dy <= halfSize) {
           if (shape.canMoveHandle(han)) {
             curAction = MOVE_HANDLE;
@@ -305,7 +305,7 @@ public class SelectTool extends AbstractTool {
     if (clicked == null) {
       clicked = getObjectAt(canvas.getModel(), e.getX(), e.getY(), false);
     }
-    final var shiftPressed = (e.getModifiersEx() & MouseEvent.SHIFT_DOWN_MASK) != 0;
+    final boolean shiftPressed = (e.getModifiersEx() & MouseEvent.SHIFT_DOWN_MASK) != 0;
     if (clicked != null) {
       if (shiftPressed && selection.isSelected(clicked)) {
         selection.setSelected(clicked, false);
@@ -350,15 +350,15 @@ public class SelectTool extends AbstractTool {
     beforePressHandle = null;
     setMouse(canvas, e.getX(), e.getY(), e.getModifiersEx());
 
-    final var model = canvas.getModel();
-    final var selection = canvas.getSelection();
-    final var selected = selection.getSelected();
-    final var action = curAction;
+    final com.cburch.draw.model.CanvasModel model = canvas.getModel();
+    final com.cburch.draw.canvas.Selection selection = canvas.getSelection();
+    final java.util.Set<com.cburch.draw.model.CanvasObject> selected = selection.getSelected();
+    final int action = curAction;
     curAction = IDLE;
 
     if (!dragEffective) {
-      final var loc = dragEnd;
-      final var o = getObjectAt(model, loc.getX(), loc.getY(), false);
+      final com.cburch.logisim.data.Location loc = dragEnd;
+      final com.cburch.draw.model.CanvasObject o = getObjectAt(model, loc.getX(), loc.getY(), false);
       if (o != null) {
         com.cburch.draw.model.Handle han = o.canDeleteHandle(loc);
         if (han != null) {
@@ -372,24 +372,24 @@ public class SelectTool extends AbstractTool {
       }
     }
 
-    final var start = dragStart;
-    final var x1 = e.getX();
-    final var y1 = e.getY();
+    final com.cburch.logisim.data.Location start = dragStart;
+    final int x1 = e.getX();
+    final int y1 = e.getY();
     switch (action) {
       case MOVE_ALL:
-        final var moveDelta = selection.getMovingDelta();
+        final com.cburch.logisim.data.Location moveDelta = selection.getMovingDelta();
         if (dragEffective && !moveDelta.equals(Location.create(0, 0, false))) {
           canvas.doAction(
               new ModelTranslateAction(model, selected, moveDelta.getX(), moveDelta.getY()));
         }
         break;
       case MOVE_HANDLE:
-        final var gesture = curGesture;
+        final com.cburch.draw.model.HandleGesture gesture = curGesture;
         curGesture = null;
         if (dragEffective && gesture != null) {
-          final var act = new ModelMoveHandleAction(model, gesture);
+          final com.cburch.draw.actions.ModelMoveHandleAction act = new ModelMoveHandleAction(model, gesture);
           canvas.doAction(act);
-          final var result = act.getNewHandle();
+          final com.cburch.draw.model.Handle result = act.getNewHandle();
           if (result != null) {
             selection.setHandleSelected(result.getObject().canDeleteHandle(result.getLocation()));
           }
@@ -397,10 +397,10 @@ public class SelectTool extends AbstractTool {
         break;
       case RECT_SELECT:
         if (dragEffective) {
-          final var bds = Bounds.create(start).add(x1, y1);
+          final com.cburch.logisim.data.Bounds bds = Bounds.create(start).add(x1, y1);
           selection.setSelected(canvas.getModel().getObjectsIn(bds), true);
         } else {
-          final var clicked = getObjectAt(model, start.getX(), start.getY(), true);
+          final com.cburch.draw.model.CanvasObject clicked = getObjectAt(model, start.getX(), start.getY(), true);
           if (clicked != null) {
             selection.clearSelected();
             selection.setSelected(clicked, true);
@@ -409,10 +409,10 @@ public class SelectTool extends AbstractTool {
         break;
       case RECT_TOGGLE:
         if (dragEffective) {
-          final var bds = Bounds.create(start).add(x1, y1);
+          final com.cburch.logisim.data.Bounds bds = Bounds.create(start).add(x1, y1);
           selection.toggleSelected(canvas.getModel().getObjectsIn(bds));
         } else {
-          final var clicked = getObjectAt(model, start.getX(), start.getY(), true);
+          final com.cburch.draw.model.CanvasObject clicked = getObjectAt(model, start.getX(), start.getY(), true);
           if (clicked != null) selection.setSelected(clicked, !selected.contains(clicked));
         }
         break;
@@ -430,10 +430,10 @@ public class SelectTool extends AbstractTool {
   private void setMouse(Canvas canvas, int mx, int my, int mods) {
     lastMouseX = mx;
     lastMouseY = my;
-    final var newEnd = Location.create(mx, my, false);
+    final com.cburch.logisim.data.Location newEnd = Location.create(mx, my, false);
     dragEnd = newEnd;
 
-    final var start = dragStart;
+    final com.cburch.logisim.data.Location start = dragStart;
     int dx = newEnd.getX() - start.getX();
     int dy = newEnd.getY() - start.getY();
     if (!dragEffective) {
@@ -444,14 +444,14 @@ public class SelectTool extends AbstractTool {
       }
     }
 
-    final var shiftPressed = (mods & MouseEvent.SHIFT_DOWN_MASK) != 0;
-    final var ctrlPressed = (mods & InputEvent.CTRL_DOWN_MASK) != 0;
+    final boolean shiftPressed = (mods & MouseEvent.SHIFT_DOWN_MASK) != 0;
+    final boolean ctrlPressed = (mods & InputEvent.CTRL_DOWN_MASK) != 0;
 
     switch (curAction) {
       case MOVE_HANDLE -> {
-        final var gesture = curGesture;
+        final com.cburch.draw.model.HandleGesture gesture = curGesture;
         if (ctrlPressed) {
-          final var h = gesture.getHandle();
+          final com.cburch.draw.model.Handle h = gesture.getHandle();
           dx = canvas.snapX(h.getX() + dx) - h.getX();
           dy = canvas.snapY(h.getY() + dy) - h.getY();
         }
@@ -462,10 +462,10 @@ public class SelectTool extends AbstractTool {
         if (ctrlPressed) {
           int minX = Integer.MAX_VALUE;
           int minY = Integer.MAX_VALUE;
-          for (final var o : canvas.getSelection().getSelected()) {
-            for (final var handle : o.getHandles(null)) {
-              final var x = handle.getX();
-              final var y = handle.getY();
+          for (final com.cburch.draw.model.CanvasObject o : canvas.getSelection().getSelected()) {
+            for (final com.cburch.draw.model.Handle handle : o.getHandles(null)) {
+              final int x = handle.getX();
+              final int y = handle.getY();
               if (x < minX)
                 minX = x;
               if (y < minY)

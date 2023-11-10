@@ -56,7 +56,7 @@ public class VhdlSimulatorTclBinder {
   }
 
   private void init(int serverPort) {
-    final var command = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> command = new ArrayList<String>();
 
     command.add(
         FileUtil.correctPath(Softwares.getQuestaPath()) + Softwares.QUESTA_BIN[Softwares.VSIM]);
@@ -103,11 +103,11 @@ public class VhdlSimulatorTclBinder {
               String line;
               try {
                 // FIXME: hardcoded string
-                final var errorMessage =
+                final java.lang.StringBuilder errorMessage =
                     new StringBuilder(
                         "You may disable VHDL simulation in the simulation menu if this occurs again\n\n");
 
-                final var msgCheckOnError =
+                final java.lang.String msgCheckOnError =
                     String.format(
                         "\"%s%s",
                         VhdlSimConstants.VHDL_COMPILE_COMMAND,

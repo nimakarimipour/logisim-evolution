@@ -52,10 +52,10 @@ public class DipSwitch extends InstanceFactory {
 
     @Override
     public void mousePressed(InstanceState state, MouseEvent e) {
-      final var val = (State) state.getData();
-      final var loc = state.getInstance().getLocation();
-      final var facing = state.getInstance().getAttributeValue(StdAttr.FACING);
-      final var n = state.getInstance().getAttributeValue(ATTR_SIZE).getWidth();
+      final com.cburch.logisim.std.io.DipSwitch.State val = (State) state.getData();
+      final com.cburch.logisim.data.Location loc = state.getInstance().getLocation();
+      final com.cburch.logisim.data.Direction facing = state.getInstance().getAttributeValue(StdAttr.FACING);
+      final int n = state.getInstance().getAttributeValue(ATTR_SIZE).getWidth();
       int i;
       if (facing == Direction.SOUTH) {
         i = n + (e.getX() - loc.getX() - 5) / 10;
@@ -108,7 +108,7 @@ public class DipSwitch extends InstanceFactory {
   }
 
   public static ArrayList<String> getLabels(int size) {
-    final var labelNames = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> labelNames = new ArrayList<String>();
     for (int i = 0; i < size; i++) {
       labelNames.add(getInputLabel(i));
     }
@@ -172,8 +172,8 @@ public class DipSwitch extends InstanceFactory {
   }
 
   private void updatePorts(Instance instance) {
-    final var facing = instance.getAttributeValue(StdAttr.FACING);
-    final var n = instance.getAttributeValue(ATTR_SIZE).getWidth();
+    final com.cburch.logisim.data.Direction facing = instance.getAttributeValue(StdAttr.FACING);
+    final int n = instance.getAttributeValue(ATTR_SIZE).getWidth();
     int cx = 0, cy = 0, dx = 0, dy = 0;
     if (facing == Direction.WEST) {
       // cy = -10*(n+1); dy = 10;
@@ -187,7 +187,7 @@ public class DipSwitch extends InstanceFactory {
     } else {
       dx = 10;
     }
-    final var ps = new Port[n];
+    final com.cburch.logisim.instance.Port[] ps = new Port[n];
     for (int i = 0; i < ps.length; i++) {
       ps[i] = new Port(cx + (i + 1) * dx, cy + (i + 1) * dy, Port.OUTPUT, 1);
       ps[i].setToolTip(S.getter("DIP" + (i + 1)));
@@ -197,8 +197,8 @@ public class DipSwitch extends InstanceFactory {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    final var facing = attrs.getValue(StdAttr.FACING);
-    final var n = attrs.getValue(ATTR_SIZE).getWidth();
+    final com.cburch.logisim.data.Direction facing = attrs.getValue(StdAttr.FACING);
+    final int n = attrs.getValue(ATTR_SIZE).getWidth();
     return Bounds.create(0, 0, (n + 1) * 10, 40).rotate(Direction.NORTH, facing, 0, 0);
   }
 
@@ -225,25 +225,25 @@ public class DipSwitch extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var segmentWidth = 10;
+    final int segmentWidth = 10;
 
     com.cburch.logisim.std.io.DipSwitch.State state = (State) painter.getData();
     if (state == null || state.size != painter.getAttributeValue(ATTR_SIZE).getWidth()) {
-      final var val = (state == null) ? 0 : state.Value;
+      final int val = (state == null) ? 0 : state.Value;
       state = new State(val, painter.getAttributeValue(ATTR_SIZE).getWidth());
       painter.setData(state);
     }
     int n = painter.getAttributeValue(ATTR_SIZE).getWidth();
 
-    final var facing = painter.getAttributeValue(StdAttr.FACING);
-    final var loc = painter.getLocation();
+    final com.cburch.logisim.data.Direction facing = painter.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Location loc = painter.getLocation();
     int x = loc.getX();
     int y = loc.getY();
     if (facing == Direction.SOUTH) {
       x -= segmentWidth * (n + 1);
       y -= 40;
     }
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     g.translate(x, y);
     double rotate = 0.0;
     if (facing != Direction.NORTH && facing != Direction.SOUTH && g instanceof Graphics2D) {
@@ -265,7 +265,7 @@ public class DipSwitch extends InstanceFactory {
       g.fillRect(7 + (i * segmentWidth), 16, 6, 20);
 
       g.setColor(Color.white);
-      final var s = Integer.toString(i + 1);
+      final java.lang.String s = Integer.toString(i + 1);
       GraphicsUtil.drawCenteredText(g, s, 9 + (i * segmentWidth), 8);
     }
 

@@ -125,7 +125,7 @@ public abstract class AbstractTtlGate extends InstanceFactory {
     this(name, pins, outputPorts, generator);
     portNames = ttlPortNames;
     if (notUsedPins == null) return;
-    for (final var notUsedPin : notUsedPins) unusedPins.add(notUsedPin);
+    for (final byte notUsedPin : notUsedPins) unusedPins.add(notUsedPin);
   }
 
   protected AbstractTtlGate(
@@ -144,8 +144,8 @@ public abstract class AbstractTtlGate extends InstanceFactory {
   }
 
   private void computeTextField(Instance instance) {
-    final var bds = instance.getBounds();
-    final var dir = instance.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Bounds bds = instance.getBounds();
+    final com.cburch.logisim.data.Direction dir = instance.getAttributeValue(StdAttr.FACING);
     if (dir == Direction.EAST || dir == Direction.WEST)
       instance.setTextField(
           StdAttr.LABEL,
@@ -173,7 +173,7 @@ public abstract class AbstractTtlGate extends InstanceFactory {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    final var dir = attrs.getValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Direction dir = attrs.getValue(StdAttr.FACING);
     return Bounds.create(0, -30, this.pinNumber * 10, height).rotate(Direction.EAST, dir, 0, 0);
   }
 
@@ -191,10 +191,10 @@ public abstract class AbstractTtlGate extends InstanceFactory {
   static Point getTranslatedTtlXY(InstanceState state, MouseEvent e) {
     int x = 0;
     int y = 0;
-    final var loc = state.getInstance().getLocation();
-    final var height = state.getInstance().getBounds().getHeight();
-    final var width = state.getInstance().getBounds().getWidth();
-    final var dir = state.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Location loc = state.getInstance().getLocation();
+    final int height = state.getInstance().getBounds().getHeight();
+    final int width = state.getInstance().getBounds().getWidth();
+    final com.cburch.logisim.data.Direction dir = state.getAttributeValue(StdAttr.FACING);
     if (dir.equals(Direction.EAST)) {
       x = e.getX() - loc.getX();
       y = e.getY() + 30 - loc.getY();
@@ -212,11 +212,11 @@ public abstract class AbstractTtlGate extends InstanceFactory {
   }
 
   protected void paintBase(InstancePainter painter, boolean drawname, boolean ghost) {
-    final var dir = painter.getAttributeValue(StdAttr.FACING);
-    final var g = (Graphics2D) painter.getGraphics();
-    final var bds = painter.getBounds();
-    final var x = bds.getX();
-    final var y = bds.getY();
+    final com.cburch.logisim.data.Direction dir = painter.getAttributeValue(StdAttr.FACING);
+    final java.awt.Graphics2D g = (Graphics2D) painter.getGraphics();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+    final int x = bds.getX();
+    final int y = bds.getY();
     int xp = x;
     int yp = y;
     int width = bds.getWidth();
@@ -287,17 +287,17 @@ public abstract class AbstractTtlGate extends InstanceFactory {
   @Override
   public void paintInstance(InstancePainter painter) {
     painter.drawPorts();
-    final var g = (Graphics2D) painter.getGraphics();
+    final java.awt.Graphics2D g = (Graphics2D) painter.getGraphics();
     painter.drawLabel();
     if (!painter.getAttributeValue(TtlLibrary.DRAW_INTERNAL_STRUCTURE)) {
-      final var dir = painter.getAttributeValue(StdAttr.FACING);
-      final var bds = painter.getBounds();
-      final var x = bds.getX();
-      final var y = bds.getY();
+      final com.cburch.logisim.data.Direction dir = painter.getAttributeValue(StdAttr.FACING);
+      final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+      final int x = bds.getX();
+      final int y = bds.getY();
       int xp = x;
       int yp = y;
-      final var width = bds.getWidth();
-      final var height = bds.getHeight();
+      final int width = bds.getWidth();
+      final int height = bds.getHeight();
       for (byte i = 0; i < this.pinNumber; i++) {
         if (i == this.pinNumber / 2) {
           xp = x;
@@ -396,8 +396,8 @@ public abstract class AbstractTtlGate extends InstanceFactory {
   public abstract void paintInternal(InstancePainter painter, int x, int y, int height, boolean up);
 
   private void paintInternalBase(InstancePainter painter) {
-    final var dir = painter.getAttributeValue(StdAttr.FACING);
-    final var bds = painter.getBounds();
+    final com.cburch.logisim.data.Direction dir = painter.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
     int x = bds.getX();
     int y = bds.getY();
     int width = bds.getWidth();
@@ -429,7 +429,7 @@ public abstract class AbstractTtlGate extends InstanceFactory {
   /** Here you have to write the logic of your component */
   @Override
   public void propagate(InstanceState state) {
-    final var NrOfUnusedPins = unusedPins.size();
+    final int NrOfUnusedPins = unusedPins.size();
     if (state.getAttributeValue(TtlLibrary.VCC_GND)
         && (state.getPortValue(this.pinNumber - 2 - NrOfUnusedPins) != Value.FALSE
             || state.getPortValue(this.pinNumber - 1 - NrOfUnusedPins) != Value.TRUE)) {
@@ -446,22 +446,22 @@ public abstract class AbstractTtlGate extends InstanceFactory {
   public abstract void propagateTtl(InstanceState state);
 
   private void updatePorts(Instance instance) {
-    final var bds = instance.getBounds();
-    final var dir = instance.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.Bounds bds = instance.getBounds();
+    final com.cburch.logisim.data.Direction dir = instance.getAttributeValue(StdAttr.FACING);
     int dx = 0;
     int dy = 0;
-    final var width = bds.getWidth();
-    final var height = bds.getHeight();
+    final int width = bds.getWidth();
+    final int height = bds.getHeight();
     byte portindex = 0;
     boolean isoutput = false;
     java.lang.Boolean hasvccgnd = instance.getAttributeValue(TtlLibrary.VCC_GND);
     boolean skip = false;
-    final var NrOfUnusedPins = unusedPins.size();
+    final int NrOfUnusedPins = unusedPins.size();
     /*
      * array port is composed in this order: lower ports less GND, upper ports less
      * Vcc, GND, Vcc
      */
-    final var ps =
+    final com.cburch.logisim.instance.Port[] ps =
         new Port[hasvccgnd ? this.pinNumber - NrOfUnusedPins : this.pinNumber - 2 - NrOfUnusedPins];
 
     for (byte i = 0; i < this.pinNumber; i++) {
@@ -533,7 +533,7 @@ public abstract class AbstractTtlGate extends InstanceFactory {
 
   @Override
   public final void paintIcon(InstancePainter painter) {
-    final var g = (Graphics2D) painter.getGraphics().create();
+    final java.awt.Graphics2D g = (Graphics2D) painter.getGraphics().create();
     g.setColor(Color.DARK_GRAY.brighter());
     GraphicsUtil.switchToWidth(g, AppPreferences.getScaled(1));
     g.fillRoundRect(
@@ -551,8 +551,8 @@ public abstract class AbstractTtlGate extends InstanceFactory {
         AppPreferences.getScaled(16),
         AppPreferences.getScaled(3),
         AppPreferences.getScaled(3));
-    final var wh1 = AppPreferences.getScaled(3);
-    final var wh2 = AppPreferences.getScaled(2);
+    final int wh1 = AppPreferences.getScaled(3);
+    final int wh2 = AppPreferences.getScaled(2);
     for (int y = 0; y < 3; y++) {
       g.setColor(Color.LIGHT_GRAY);
       g.fillRect(wh2, AppPreferences.getScaled(y * 5 + 1), wh1, wh1);

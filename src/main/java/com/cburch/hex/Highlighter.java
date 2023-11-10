@@ -23,7 +23,7 @@ class Highlighter {
   }
 
   public synchronized Object add(long start, long end, Color color) {
-    final var model = hex.getModel();
+    final com.cburch.hex.HexModel model = hex.getModel();
     if (model == null) return null;
     if (start > end) {
       long t = start;
@@ -34,7 +34,7 @@ class Highlighter {
     if (end > model.getLastOffset()) end = model.getLastOffset();
     if (start >= end) return null;
 
-    final var entry = new Entry(start, end, color);
+    final com.cburch.hex.Highlighter.Entry entry = new Entry(start, end, color);
     entries.add(entry);
     expose(entry);
     return entry;
@@ -49,18 +49,18 @@ class Highlighter {
   }
 
   private void expose(Entry entry) {
-    final var m = hex.getMeasures();
-    final var y0 = m.toY(entry.start);
-    final var y1 = m.toY(entry.end);
-    final var h = m.getCellHeight();
-    final var cellWidth = m.getCellWidth();
+    final com.cburch.hex.Measures m = hex.getMeasures();
+    final int y0 = m.toY(entry.start);
+    final int y1 = m.toY(entry.end);
+    final int h = m.getCellHeight();
+    final int cellWidth = m.getCellWidth();
     if (y0 == y1) {
-      final var x0 = m.toX(entry.start);
-      final var x1 = m.toX(entry.end) + cellWidth;
+      final int x0 = m.toX(entry.start);
+      final int x1 = m.toX(entry.end) + cellWidth;
       hex.repaint(x0, y0, x1 - x0, h);
     } else {
-      final var lineStart = m.getValuesX();
-      final var lineWidth = m.getValuesWidth();
+      final int lineStart = m.getValuesX();
+      final int lineWidth = m.getValuesWidth();
       hex.repaint(lineStart, y0, lineWidth, y1 - y0 + h);
     }
   }
@@ -68,17 +68,17 @@ class Highlighter {
   synchronized void paint(Graphics g, long start, long end) {
     int size = entries.size();
     if (size == 0) return;
-    final var m = hex.getMeasures();
-    final var lineStart = m.getValuesX();
-    final var lineWidth = m.getValuesWidth();
-    final var cellWidth = m.getCellWidth();
-    final var cellHeight = m.getCellHeight();
-    for (final var e : entries) {
+    final com.cburch.hex.Measures m = hex.getMeasures();
+    final int lineStart = m.getValuesX();
+    final int lineWidth = m.getValuesWidth();
+    final int cellWidth = m.getCellWidth();
+    final int cellHeight = m.getCellHeight();
+    for (final com.cburch.hex.Highlighter.Entry e : entries) {
       if (e.start <= end && e.end >= start) {
-        final var y0 = m.toY(e.start);
-        final var y1 = m.toY(e.end);
-        final var x0 = m.toX(e.start);
-        final var x1 = m.toX(e.end);
+        final int y0 = m.toY(e.start);
+        final int y1 = m.toY(e.end);
+        final int x0 = m.toX(e.start);
+        final int x1 = m.toX(e.end);
         g.setColor(e.color);
         if (y0 == y1) {
           g.fillRect(x0, y0, x1 - x0 + cellWidth, cellHeight);
@@ -94,7 +94,7 @@ class Highlighter {
 
   public synchronized void remove(Object tag) {
     if (entries.remove(tag)) {
-      final var entry = (Entry) tag;
+      final com.cburch.hex.Highlighter.Entry entry = (Entry) tag;
       expose(entry);
     }
   }

@@ -61,13 +61,13 @@ public class HdlWires {
   }
 
   public List<String> wireKeySet() {
-    final var keys = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> keys = new ArrayList<String>();
     for (com.cburch.logisim.fpga.hdlgenerator.HdlWires.Wire wire : myWires) if (wire.isWire()) keys.add(wire.getName());
     return keys;
   }
 
   public List<String> registerKeySet() {
-    final var keys = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.String> keys = new ArrayList<String>();
     for (com.cburch.logisim.fpga.hdlgenerator.HdlWires.Wire wire : myWires) if (!wire.isWire()) keys.add(wire.getName());
     return keys;
   }

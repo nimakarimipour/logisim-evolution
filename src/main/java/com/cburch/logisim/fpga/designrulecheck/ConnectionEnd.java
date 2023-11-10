@@ -42,7 +42,7 @@ public class ConnectionEnd {
 
   public boolean setChildPortIndex(Net connectedNet, Byte bitIndex, int portIndex) {
     if ((bitIndex < 0) || (bitIndex >= nrOfBits)) return false;
-    final var Connection = myConnections.get(bitIndex);
+    final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint Connection = myConnections.get(bitIndex);
     if (Connection == null) return false;
     Connection.setChildsPortIndex(portIndex);
     return true;

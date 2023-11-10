@@ -73,14 +73,14 @@ public class DefaultHolyCrossAppearance {
   };
 
   public static void calculateTextDimensions(float fontsize) {
-    final var label = new Text(0, 0, "a");
-    final var f = label.getLabel().getFont().deriveFont(fontsize);
-    final var canvas = new Canvas();
-    final var fm = canvas.getFontMetrics(f);
+    final com.cburch.draw.shapes.Text label = new Text(0, 0, "a");
+    final java.awt.Font f = label.getLabel().getFont().deriveFont(fontsize);
+    final java.awt.Canvas canvas = new Canvas();
+    final java.awt.FontMetrics fm = canvas.getFontMetrics(f);
     System.out.println("private static int[] asciiWidths = {");
     for (char row = ' '; row <= '~'; row += 8) {
-      final var comment = new StringBuilder("//");
-      final var chars = new StringBuilder("    ");
+      final java.lang.StringBuilder comment = new StringBuilder("//");
+      final java.lang.StringBuilder chars = new StringBuilder("    ");
       for (char c = row; c < row + 8; c++) {
         if (c >= '~') {
           chars.append("    ");
@@ -89,7 +89,7 @@ public class DefaultHolyCrossAppearance {
           // label = new Text(0, 0, "" + c);
           // label.getLabel().setFont(f);
           // int w = label.getLabel().getWidth();
-          final var w = fm.stringWidth("" + c);
+          final int w = fm.stringWidth("" + c);
           chars.append(String.format(" %2d,", w));
         }
       }
@@ -113,15 +113,15 @@ public class DefaultHolyCrossAppearance {
   }
 
   public static List<CanvasObject> build(Collection<Instance> pins, String name) {
-    final var edge = new HashMap<Direction, List<Instance>>();
+    final java.util.HashMap<com.cburch.logisim.data.Direction,java.util.List<com.cburch.logisim.instance.Instance>> edge = new HashMap<Direction, List<Instance>>();
     edge.put(Direction.EAST, new ArrayList<>());
     edge.put(Direction.WEST, new ArrayList<>());
     int maxLeftLabelLength = 0;
     int maxRightLabelLength = 0;
-    for (final var pin : pins) {
+    for (final com.cburch.logisim.instance.Instance pin : pins) {
       Direction pinEdge;
-      final var labelString = pin.getAttributeValue(StdAttr.LABEL);
-      final var labelWidth = textWidth(labelString);
+      final java.lang.String labelString = pin.getAttributeValue(StdAttr.LABEL);
+      final int labelWidth = textWidth(labelString);
       if (pin.getAttributeValue(Pin.ATTR_TYPE)) {
         pinEdge = Direction.EAST;
         if (labelWidth > maxRightLabelLength) {
@@ -133,19 +133,19 @@ public class DefaultHolyCrossAppearance {
           maxLeftLabelLength = labelWidth;
         }
       }
-      final var e = edge.get(pinEdge);
+      final java.util.List<com.cburch.logisim.instance.Instance> e = edge.get(pinEdge);
       e.add(pin);
     }
-    for (final var entry : edge.entrySet()) {
+    for (final java.util.Map.Entry<com.cburch.logisim.data.Direction,java.util.List<com.cburch.logisim.instance.Instance>> entry : edge.entrySet()) {
       DefaultAppearance.sortPinList(entry.getValue(), entry.getKey());
     }
 
-    final var numEast = edge.get(Direction.EAST).size();
-    final var numWest = edge.get(Direction.WEST).size();
-    final var maxHorz = Math.max(numEast, numWest);
+    final int numEast = edge.get(Direction.EAST).size();
+    final int numWest = edge.get(Direction.WEST).size();
+    final int maxHorz = Math.max(numEast, numWest);
 
-    final var offsEast = computeOffset(numEast, numWest);
-    final var offsWest = computeOffset(numWest, numEast);
+    final int offsEast = computeOffset(numEast, numWest);
+    final int offsWest = computeOffset(numWest, numEast);
 
     int width = 2 * LABEL_OUTSIDE + maxLeftLabelLength + maxRightLabelLength + LABEL_GAP;
     width = Math.max(MIN_WIDTH, (width + 9) / 10 * 10);
@@ -171,16 +171,16 @@ public class DefaultHolyCrossAppearance {
     int rx = OFFS + (9 - (aX + 9) % 10);
     int ry = OFFS + (9 - (aY + 9) % 10);
 
-    final var rect = new Rectangle(rx, ry, width, height);
+    final com.cburch.draw.shapes.Rectangle rect = new Rectangle(rx, ry, width, height);
     rect.setValue(DrawAttr.STROKE_WIDTH, 2);
-    final var ret = new ArrayList<CanvasObject>();
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> ret = new ArrayList<CanvasObject>();
     ret.add(rect);
 
     placePins(ret, edge.get(Direction.WEST), rx, ry + offsWest, 0, PORT_GAP, true);
     placePins(ret, edge.get(Direction.EAST), rx + width, ry + offsEast, 0, PORT_GAP, false);
 
     if (name != null && name.length() > 0) {
-      final var label = new Text(rx + width / 2, ry + TOP_TEXT_MARGIN, name);
+      final com.cburch.draw.shapes.Text label = new Text(rx + width / 2, ry + TOP_TEXT_MARGIN, name);
       label.getLabel().setHorizontalAlignment(EditableLabel.CENTER);
       label.getLabel().setVerticalAlignment(EditableLabel.TOP);
       label.getLabel().setColor(Color.BLACK);
@@ -204,9 +204,9 @@ public class DefaultHolyCrossAppearance {
       int dy,
       boolean isLeftSide) {
     int hAlign;
-    final var color = Color.DARK_GRAY; // maybe GRAY instead?
+    final java.awt.Color color = Color.DARK_GRAY; // maybe GRAY instead?
     int ldx;
-    for (final var pin : pins) {
+    for (final com.cburch.logisim.instance.Instance pin : pins) {
       dest.add(new AppearancePort(Location.create(x, y, true), pin));
       if (isLeftSide) {
         ldx = LABEL_OUTSIDE;
@@ -216,13 +216,13 @@ public class DefaultHolyCrossAppearance {
         hAlign = EditableLabel.RIGHT;
       }
       if (pin.getAttributeSet().containsAttribute(StdAttr.LABEL)) {
-        final var text = pin.getAttributeValue(StdAttr.LABEL);
+        final java.lang.String text = pin.getAttributeValue(StdAttr.LABEL);
         if (text != null && text.length() > 0) {
-          final var label = new Text(x + ldx, y, text);
+          final com.cburch.draw.shapes.Text label = new Text(x + ldx, y, text);
           label.getLabel().setHorizontalAlignment(hAlign);
           label.getLabel().setVerticalAlignment(EditableLabel.MIDDLE);
           label.getLabel().setColor(color);
-          final var pinFont = label.getLabel().getFont().deriveFont((float) 10);
+          final java.awt.Font pinFont = label.getLabel().getFont().deriveFont((float) 10);
           label.getLabel().setFont(pinFont);
           dest.add(label);
         }

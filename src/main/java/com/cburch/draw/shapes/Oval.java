@@ -28,11 +28,11 @@ public class Oval extends Rectangular {
 
   @Override
   protected boolean contains(int x, int y, int w, int h, Location q) {
-    final var qx = q.getX();
-    final var qy = q.getY();
-    final var dx = qx - (x + 0.5 * w);
-    final var dy = qy - (y + 0.5 * h);
-    final var sum = (dx * dx) / (w * w) + (dy * dy) / (h * h);
+    final int qx = q.getX();
+    final int qy = q.getY();
+    final double dx = qx - (x + 0.5 * w);
+    final double dy = qy - (y + 0.5 * h);
+    final double sum = (dx * dx) / (w * w) + (dy * dy) / (h * h);
     return sum <= 0.25;
   }
 
@@ -58,9 +58,9 @@ public class Oval extends Rectangular {
       return super.getRandomPoint(bds, rand);
     }
 
-    final var rx = getWidth() / 2.0;
-    final var ry = getHeight() / 2.0;
-    final var u = 2 * Math.PI * rand.nextDouble();
+    final double rx = getWidth() / 2.0;
+    final double ry = getHeight() / 2.0;
+    final double u = 2 * Math.PI * rand.nextDouble();
     int x = (int) Math.round(getX() + rx + rx * Math.cos(u));
     int y = (int) Math.round(getY() + ry + ry * Math.sin(u));
     int d = getStrokeWidth();

@@ -95,17 +95,17 @@ class CounterAttributes extends AbstractAttributeSet {
     V newValue = value;
 
     if (attr == StdAttr.WIDTH) {
-      final var oldWidth = (BitWidth) oldValue;
-      final var newWidth = (BitWidth) newValue;
-      final var mask = newWidth.getMask();
-      final var oldMax = base.getValue(Counter.ATTR_MAX);
-      final var newMax = (newWidth.getWidth() < oldWidth.getWidth()) ? (mask & oldMax) : mask;
+      final com.cburch.logisim.data.BitWidth oldWidth = (BitWidth) oldValue;
+      final com.cburch.logisim.data.BitWidth newWidth = (BitWidth) newValue;
+      final long mask = newWidth.getMask();
+      final java.lang.Long oldMax = base.getValue(Counter.ATTR_MAX);
+      final long newMax = (newWidth.getWidth() < oldWidth.getWidth()) ? (mask & oldMax) : mask;
       if (oldMax != newMax) {
         base.setValue(Counter.ATTR_MAX, newMax);
         fireAttributeValueChanged(Counter.ATTR_MAX, newMax, oldMax);
       }
     } else if (attr == Counter.ATTR_MAX) {
-      final var width = base.getValue(StdAttr.WIDTH);
+      final com.cburch.logisim.data.BitWidth width = base.getValue(StdAttr.WIDTH);
       newValue = (V) Long.valueOf(width.getMask() & (Long) newValue);
       if (Objects.equals(oldValue, newValue)) {
         return;

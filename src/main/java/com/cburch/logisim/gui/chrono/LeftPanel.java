@@ -86,7 +86,7 @@ public class LeftPanel extends JTable {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
       if (!(value instanceof SignalInfo)) return null;
-      final var ret = super.getTableCellRendererComponent(table, value, false, false, row, col);
+      final java.awt.Component ret = super.getTableCellRendererComponent(table, value, false, false, row, col);
       if (ret instanceof final JLabel label && value instanceof final SignalInfo item) {
         label.setBorder(rowInsets);
         label.setBackground(chronoPanel.rowColors(item, isSelected)[0]);
@@ -102,8 +102,8 @@ public class LeftPanel extends JTable {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
       if (!(value instanceof Signal s)) return null;
-      final var txt = s.getFormattedValue(chronoPanel.getRightPanel().getCurrentTime());
-      final var ret = super.getTableCellRendererComponent(table, txt, false, false, row, col);
+      final java.lang.String txt = s.getFormattedValue(chronoPanel.getRightPanel().getCurrentTime());
+      final java.awt.Component ret = super.getTableCellRendererComponent(table, txt, false, false, row, col);
       if (ret instanceof JLabel label) {
         label.setBorder(rowInsets);
         label.setIcon(null);
@@ -176,8 +176,8 @@ public class LeftPanel extends JTable {
     setDropMode(DropMode.INSERT_ROWS);
     setTransferHandler(new SignalTransferHandler());
 
-    final var inputMap = getInputMap();
-    final var actionMap = getActionMap();
+    final javax.swing.InputMap inputMap = getInputMap();
+    final javax.swing.ActionMap actionMap = getActionMap();
     actionMap.put("ClearSelection", new AbstractAction() {
           private static final long serialVersionUID = 1L;
 
@@ -233,8 +233,8 @@ public class LeftPanel extends JTable {
     // calculate default sizes
     int nameWidth = 0;
     int valueWidth = 0;
-    final var render = getDefaultRenderer(String.class);
-    final var n = model.getSignalCount();
+    final javax.swing.table.TableCellRenderer render = getDefaultRenderer(String.class);
+    final int n = model.getSignalCount();
     for (int i = -1; i < n; i++) {
       String name;
       String val;
@@ -242,7 +242,7 @@ public class LeftPanel extends JTable {
         name = tableModel.getColumnName(0);
         val = tableModel.getColumnName(1);
       } else {
-        final var s = model.getSignal(i);
+        final com.cburch.logisim.gui.log.Signal s = model.getSignal(i);
         name = s.getName();
         val = s.getFormattedMaxValue();
       }
@@ -265,8 +265,8 @@ public class LeftPanel extends JTable {
     setFillsViewportHeight(true);
     setPreferredScrollableViewportSize(getPreferredSize());
 
-    final var header = getTableHeader();
-    final var d = header.getPreferredSize();
+    final javax.swing.table.JTableHeader header = getTableHeader();
+    final java.awt.Dimension d = header.getPreferredSize();
     d.height = ChronoPanel.HEADER_HEIGHT;
     header.setPreferredSize(d);
     requestFocusInWindow();
@@ -292,24 +292,24 @@ public class LeftPanel extends JTable {
 
   Signal.List getSelectedValuesList() {
     Signal.List signals = new Signal.List();
-    final var sel = getSelectedRows();
-    for (final var i : sel) signals.add(model.getSignal(i));
+    final int[] sel = getSelectedRows();
+    for (final int i : sel) signals.add(model.getSignal(i));
     return signals;
   }
 
   void setSelectedRows(Signal.List signals) {
     clearSelection();
-    for (final var s : signals) {
-      final var i = model.indexOf(s.info);
+    for (final com.cburch.logisim.gui.log.Signal s : signals) {
+      final int i = model.indexOf(s.info);
       if (i >= 0) addRowSelectionInterval(i, i);
     }
   }
 
   void raiseOrLower(int d) {
-    final var sel = getSelectedValuesList();
+    final com.cburch.logisim.gui.log.Signal.List sel = getSelectedValuesList();
     int first = Integer.MAX_VALUE;
     int last = -1;
-    for (final var s : sel) {
+    for (final com.cburch.logisim.gui.log.Signal s : sel) {
       first = Math.min(first, s.idx);
       last = Math.max(last, s.idx);
     }
@@ -327,13 +327,13 @@ public class LeftPanel extends JTable {
 
   void removeSelected() {
     int idx = 0;
-    final var signals = getSelectedValuesList();
-    final var items = new SignalInfo.List();
-    for (final var s : signals) {
+    final com.cburch.logisim.gui.log.Signal.List signals = getSelectedValuesList();
+    final com.cburch.logisim.gui.log.SignalInfo.List items = new SignalInfo.List();
+    for (final com.cburch.logisim.gui.log.Signal s : signals) {
       items.add(s.info);
       idx = Math.max(idx, s.idx);
     }
-    final var count = model.remove(items);
+    final int count = model.remove(items);
     if (count > 0 && model.getSignalCount() > 0) {
       idx = Math.min(idx + 1 - count, model.getSignalCount() - 1);
       setRowSelectionInterval(idx, idx);
@@ -361,8 +361,8 @@ public class LeftPanel extends JTable {
     @Override
     public void exportDone(JComponent comp, Transferable trans, int action) {
       if (removing == null) return;
-      final var items = new ArrayList<SignalInfo>();
-      for (final var s : removing) items.add(s.info);
+      final java.util.ArrayList<com.cburch.logisim.gui.log.SignalInfo> items = new ArrayList<SignalInfo>();
+      for (final com.cburch.logisim.gui.log.Signal s : removing) items.add(s.info);
       removing = null;
       model.remove(items);
     }
@@ -376,25 +376,25 @@ public class LeftPanel extends JTable {
     public boolean importData(TransferHandler.TransferSupport support) {
       removing = null;
       try {
-        final var incoming = (Signal.List) support.getTransferable().getTransferData(Signal.List.dataFlavor);
+        final com.cburch.logisim.gui.log.Signal.List incoming = (Signal.List) support.getTransferable().getTransferData(Signal.List.dataFlavor);
         int newIdx = model.getSignalCount();
         if (support.isDrop()) {
           try {
-            final var dl = (JTable.DropLocation) support.getDropLocation();
+            final javax.swing.JTable.DropLocation dl = (JTable.DropLocation) support.getDropLocation();
             newIdx = Math.min(newIdx, dl.getRow());
           } catch (ClassCastException ignored) {
             // Do nothing
           }
         } else {
-          final var sel = getSelectedRows();
+          final int[] sel = getSelectedRows();
           if (sel != null && sel.length > 0) {
             newIdx = 0;
-            for (final var i : sel) {
+            for (final int i : sel) {
               newIdx = Math.max(newIdx, i + 1);
             }
           }
         }
-        final var change = model.addOrMoveSignals(incoming, newIdx);
+        final boolean change = model.addOrMoveSignals(incoming, newIdx);
         if (change) setSelectedRows(incoming);
         return change;
       } catch (UnsupportedFlavorException | IOException e) {

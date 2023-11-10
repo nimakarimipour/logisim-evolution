@@ -29,7 +29,7 @@ class ExpressionView extends JPanel {
 
     @Override
     public void componentResized(ComponentEvent arg0) {
-      final var width = getWidth();
+      final int width = getWidth();
       if (renderData != null && Math.abs(renderData.getParentWidth() - width) > 2) {
         renderData = new ExpressionRenderData(expr, width, notation);
         setPreferredSize(renderData.getPreferredSize());
@@ -73,7 +73,7 @@ class ExpressionView extends JPanel {
     addComponentListener(myListener);
     setExpression((Expression) null);
     width = -1;
-    final var f =
+    final java.awt.event.FocusListener f =
         new FocusListener() {
           @Override
           public void focusGained(FocusEvent e) {
@@ -108,14 +108,14 @@ class ExpressionView extends JPanel {
   @Override
   public void paintComponent(Graphics g) {
     if (AppPreferences.AntiAliassing.getBoolean()) {
-      final var g2 = (Graphics2D) g;
+      final java.awt.Graphics2D g2 = (Graphics2D) g;
       g2.setRenderingHint(
           RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
     super.paintComponent(g);
     if (renderData != null) {
-      final var bds = renderData.getPreferredSize();
+      final java.awt.Dimension bds = renderData.getPreferredSize();
       int x = Math.max(0, (width < 0) ? (getWidth() - (int) bds.getWidth()) / 2 : 0);
       int y = Math.max(0, (width < 0) ? (getHeight() - (int) bds.getHeight()) / 2 : 0);
       renderData.paint(g, x, y);
@@ -123,7 +123,7 @@ class ExpressionView extends JPanel {
   }
 
   public int getExpressionHeight() {
-    final var defaultHeight = 25;
+    final int defaultHeight = 25;
     if (renderData == null) return defaultHeight;
     return (int) renderData.getPreferredSize().getHeight();
   }

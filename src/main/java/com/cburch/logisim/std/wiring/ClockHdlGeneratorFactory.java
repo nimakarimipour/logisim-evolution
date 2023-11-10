@@ -62,7 +62,7 @@ public class ClockHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public SortedMap<String, String> getPortMap(Netlist nets, Object mapInfo) {
-    final var map = new TreeMap<String, String>();
+    final java.util.TreeMap<java.lang.String,java.lang.String> map = new TreeMap<String, String>();
     if (!(mapInfo instanceof final netlistComponent componentInfo)) return map;
     map.put("globalClock", TickComponentHdlGeneratorFactory.FPGA_CLOCK);
     map.put("clockTick", TickComponentHdlGeneratorFactory.FPGA_TICK);
@@ -71,7 +71,7 @@ public class ClockHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
   }
 
   private static String getClockNetName(Component comp, Netlist theNets) {
-    final var contents = new StringBuilder();
+    final java.lang.StringBuilder contents = new StringBuilder();
     int clockNetId = theNets.getClockSourceId(comp);
     if (clockNetId >= 0) {
       contents.append("s_").append(HdlGeneratorFactory.CLOCK_TREE_NAME).append(clockNetId);
@@ -81,7 +81,7 @@ public class ClockHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist theNetlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer()
             .pair("phase", PHASE_STR)
             .pair("nrOfBits", NR_OF_BITS_STR)
             .pair("lowTick", LOW_TICK_STR)

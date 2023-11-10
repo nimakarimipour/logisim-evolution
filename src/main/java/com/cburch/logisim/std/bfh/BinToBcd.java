@@ -51,9 +51,9 @@ public class BinToBcd extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var gfx = painter.getGraphics();
-    final var nrOfBits = painter.getAttributeValue(BinToBcd.ATTR_BinBits);
-    final var nrOfPorts = (int) (Math.log10(Math.pow(2.0, nrOfBits.getWidth())) + 1.0);
+    final java.awt.Graphics gfx = painter.getGraphics();
+    final com.cburch.logisim.data.BitWidth nrOfBits = painter.getAttributeValue(BinToBcd.ATTR_BinBits);
+    final int nrOfPorts = (int) (Math.log10(Math.pow(2.0, nrOfBits.getWidth())) + 1.0);
 
     gfx.setColor(Color.GRAY);
     painter.drawBounds();
@@ -81,8 +81,8 @@ public class BinToBcd extends InstanceFactory {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    final var nrOfBits = attrs.getValue(BinToBcd.ATTR_BinBits);
-    final var nrOfPorts = (int) (Math.log10(1 << nrOfBits.getWidth()) + 1.0);
+    final com.cburch.logisim.data.BitWidth nrOfBits = attrs.getValue(BinToBcd.ATTR_BinBits);
+    final int nrOfPorts = (int) (Math.log10(1 << nrOfBits.getWidth()) + 1.0);
     return Bounds.create((int) (-0.5 * InnerDistance), -20, nrOfPorts * InnerDistance, 40);
   }
 
@@ -94,25 +94,25 @@ public class BinToBcd extends InstanceFactory {
                 & !state.getPortValue(BINin).isErrorValue()
             ? (int) state.getPortValue(BINin).toLongValue()
             : -1);
-    final var nrOfBits = state.getAttributeValue(BinToBcd.ATTR_BinBits);
-    final var nrOfPorts = (int) (Math.log10(Math.pow(2.0, nrOfBits.getWidth())) + 1.0);
+    final com.cburch.logisim.data.BitWidth nrOfBits = state.getAttributeValue(BinToBcd.ATTR_BinBits);
+    final int nrOfPorts = (int) (Math.log10(Math.pow(2.0, nrOfBits.getWidth())) + 1.0);
     for (int i = nrOfPorts; i > 0; i--) {
-      final var value = (int) (Math.pow(10, i - 1));
-      final var number = binValue / value;
+      final int value = (int) (Math.pow(10, i - 1));
+      final int number = binValue / value;
       state.setPort(i, Value.createKnown(BitWidth.create(4), number), PER_DELAY);
       binValue -= number * value;
     }
   }
 
   private void updatePorts(Instance instance) {
-    final var nrOfbits = instance.getAttributeValue(BinToBcd.ATTR_BinBits);
-    final var nrOfPorts = (int) (Math.log10(1 << nrOfbits.getWidth()) + 1.0);
-    final var ps = new Port[nrOfPorts + 1];
+    final com.cburch.logisim.data.BitWidth nrOfbits = instance.getAttributeValue(BinToBcd.ATTR_BinBits);
+    final int nrOfPorts = (int) (Math.log10(1 << nrOfbits.getWidth()) + 1.0);
+    final com.cburch.logisim.instance.Port[] ps = new Port[nrOfPorts + 1];
     ps[BINin] = new Port((int) (-0.5 * InnerDistance), 0, Port.INPUT, BinToBcd.ATTR_BinBits);
     ps[BINin].setToolTip(S.getter("BinaryInputTip"));
     for (int i = nrOfPorts; i > 0; i--) {
       ps[i] = new Port((nrOfPorts - i) * InnerDistance, -20, Port.OUTPUT, 4);
-      final var value = (int) Math.pow(10.0, i - 1);
+      final int value = (int) Math.pow(10.0, i - 1);
       ps[i].setToolTip(S.getter(Integer.toString(value)));
     }
     instance.setPorts(ps);
@@ -120,9 +120,9 @@ public class BinToBcd extends InstanceFactory {
 
   @Override
   public String getHDLName(AttributeSet attrs) {
-    final var completeName = new StringBuilder();
-    final var nrofbits = attrs.getValue(BinToBcd.ATTR_BinBits);
-    final var nrOfPorts = (int) (Math.log10(1 << nrofbits.getWidth()) + 1.0);
+    final java.lang.StringBuilder completeName = new StringBuilder();
+    final com.cburch.logisim.data.BitWidth nrofbits = attrs.getValue(BinToBcd.ATTR_BinBits);
+    final int nrOfPorts = (int) (Math.log10(1 << nrofbits.getWidth()) + 1.0);
     completeName.append(CorrectLabel.getCorrectLabel(this.getName()));
     completeName.append("_").append(nrOfPorts).append("_bcd_ports");
     return completeName.toString();

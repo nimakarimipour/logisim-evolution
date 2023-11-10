@@ -81,10 +81,10 @@ public class AssemblyWindow
     curCircuit = proj.getCurrentCircuit();
     curCircuitState = proj.getCircuitState();
     winMenuBar = new JMenuBar();
-    final var windowMenu = new JMenu("Window");
-    final var fileMenu = new JMenu("File");
-    final var main = new JPanel(new BorderLayout());
-    final var north = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
+    final javax.swing.JMenu windowMenu = new JMenu("Window");
+    final javax.swing.JMenu fileMenu = new JMenu("File");
+    final javax.swing.JPanel main = new JPanel(new BorderLayout());
+    final javax.swing.JPanel north = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
     /* LinePainter painter = new LinePainter(document); */
 
     windowMenu.setMnemonic('W');
@@ -145,13 +145,13 @@ public class AssemblyWindow
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    final var src = e.getSource();
+    final java.lang.Object src = e.getSource();
     if (src == ontopItem) {
       e.paramString();
       windows.setAlwaysOnTop(ontopItem.getState());
     } else if (src == openFileItem) {
-      final var fileChooser = proj.createChooser();
-      final var ff =
+      final javax.swing.JFileChooser fileChooser = proj.createChooser();
+      final javax.swing.filechooser.FileFilter ff =
           new FileFilter() {
             @Override
             public boolean accept(File f) {
@@ -209,11 +209,11 @@ public class AssemblyWindow
 
   @SuppressWarnings("unchecked")
   private void fillCombo() {
-    final var comps = curCircuit.getNonWires();
-    final var iter = comps.iterator();
+    final java.util.Set<com.cburch.logisim.comp.Component> comps = curCircuit.getNonWires();
+    final java.util.Iterator<com.cburch.logisim.comp.Component> iter = comps.iterator();
     entry.clear();
     while (iter.hasNext()) {
-      final var comp = iter.next();
+      final com.cburch.logisim.comp.Component comp = iter.next();
       if (comp.getFactory().getName().equals("Register")) {
         if (!comp.getAttributeSet().getValue(StdAttr.LABEL).equals("")) {
           entry.put(comp.getAttributeSet().getValue(StdAttr.LABEL), comp);
@@ -229,9 +229,9 @@ public class AssemblyWindow
     } else {
       status.setText("");
       combo.setEnabled(true);
-      final var objArr = entry.keySet().toArray();
+      final java.lang.Object[] objArr = entry.keySet().toArray();
       Arrays.sort(objArr);
-      for (final var obj : objArr) {
+      for (final java.lang.Object obj : objArr) {
         combo.addItem(obj);
       }
     }
@@ -305,15 +305,15 @@ public class AssemblyWindow
     String where;
     if (combo.getSelectedItem() != null) {
       selReg = entry.get(combo.getSelectedItem().toString());
-      final var val = curCircuitState.getInstanceState(selReg).getPortValue(Register.OUT);
+      final com.cburch.logisim.data.Value val = curCircuitState.getInstanceState(selReg).getPortValue(Register.OUT);
       if (val.isFullyDefined()) {
         where = val.toHexString().replaceAll("^0*", "");
         if (where.isEmpty()) {
           where = "0";
         }
-        final var pattern =
+        final java.util.regex.Pattern pattern =
             Pattern.compile("^ +" + where + ":", Pattern.MULTILINE + Pattern.CASE_INSENSITIVE);
-        final var m = pattern.matcher(document.getText().replaceAll("\r", ""));
+        final java.util.regex.Matcher m = pattern.matcher(document.getText().replaceAll("\r", ""));
         if (m.find()) {
           document.setCaretPosition(m.start());
           status.setText("");

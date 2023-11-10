@@ -57,7 +57,7 @@ public class BaseLibrary extends Library {
 
   @Override
   public Tool getTool(String name) {
-    final var t = super.getTool(name);
+    final com.cburch.logisim.tools.Tool t = super.getTool(name);
     if (t == null && name.equals(Text._ID)) {
       return textAdder; // needed by XmlCircuitReader
     }

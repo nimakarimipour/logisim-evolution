@@ -33,7 +33,7 @@ public abstract class JDialogOk extends JDialog {
   private class MyListener extends WindowAdapter implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-      final var src = e.getSource();
+      final java.lang.Object src = e.getSource();
       if (src == ok) {
         okClicked();
         dispose();
@@ -74,12 +74,12 @@ public abstract class JDialogOk extends JDialog {
   public void cancelClicked() {}
 
   private void configure(boolean withCancel) {
-    final var listener = new MyListener();
+    final com.cburch.logisim.util.JDialogOk.MyListener listener = new MyListener();
     this.addWindowListener(listener);
     ok.addActionListener(listener);
     cancel.addActionListener(listener);
 
-    final var buttons = Box.createHorizontalBox();
+    final javax.swing.Box buttons = Box.createHorizontalBox();
     buttons.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     buttons.add(Box.createHorizontalGlue());
     buttons.add(ok);
@@ -89,7 +89,7 @@ public abstract class JDialogOk extends JDialog {
     }
     buttons.add(Box.createHorizontalGlue());
 
-    final var pane = super.getContentPane();
+    final java.awt.Container pane = super.getContentPane();
     pane.add(contents, BorderLayout.CENTER);
     pane.add(buttons, BorderLayout.SOUTH);
 

@@ -66,8 +66,8 @@ public class FpgaIoInformationContainer implements Cloneable {
   }
 
   public static List<String> getComponentTypes() {
-    final var result = new LinkedList<String>();
-    for (final var comp : IoComponentTypes.KNOWN_COMPONENT_SET) {
+    final java.util.LinkedList<java.lang.String> result = new LinkedList<String>();
+    for (final com.cburch.logisim.fpga.data.IoComponentTypes comp : IoComponentTypes.KNOWN_COMPONENT_SET) {
       result.add(comp.toString());
     }
     return result;
@@ -172,7 +172,7 @@ public class FpgaIoInformationContainer implements Cloneable {
     org.w3c.dom.NamedNodeMap attrs = DocumentInfo.getAttributes();
     int x = -1, y = -1, width = -1, height = -1;
     for (int attributeIndex = 0; attributeIndex < attrs.getLength(); attributeIndex++) {
-      final var thisAttr = attrs.item(attributeIndex);
+      final org.w3c.dom.Node thisAttr = attrs.item(attributeIndex);
       if (thisAttr.getNodeName().equals(BoardWriterClass.MAP_ROTATION)) {
         myRotation = Integer.parseInt(thisAttr.getNodeValue());
       }
@@ -189,7 +189,7 @@ public class FpgaIoInformationContainer implements Cloneable {
         height = Integer.parseInt(thisAttr.getNodeValue());
       }
       if (thisAttr.getNodeName().equals(BoardWriterClass.RECT_SET_STRING)) {
-        final var vals = thisAttr.getNodeValue().split(",");
+        final java.lang.String[] vals = thisAttr.getNodeValue().split(",");
         if (vals.length == 4) {
           try {
             x = Integer.parseUnsignedInt(vals[0]);
@@ -202,7 +202,7 @@ public class FpgaIoInformationContainer implements Cloneable {
         }
       }
       if (thisAttr.getNodeName().equals(BoardWriterClass.LED_ARRAY_INFO_STRING)) {
-        final var vals = thisAttr.getNodeValue().split(",");
+        final java.lang.String[] vals = thisAttr.getNodeValue().split(",");
         if (vals.length == 3) {
           try {
             nrOfRows = Integer.parseUnsignedInt(vals[0]);
@@ -496,8 +496,8 @@ public class FpgaIoInformationContainer implements Cloneable {
         }
       }
       if (CollectionUtil.isNotEmpty(myInputPins)) {
-        final var attrSet = doc.createAttribute(BoardWriterClass.INPUT_SET_STRING);
-        final var sb = new StringBuilder();
+        final org.w3c.dom.Attr attrSet = doc.createAttribute(BoardWriterClass.INPUT_SET_STRING);
+        final java.lang.StringBuilder sb = new StringBuilder();
         boolean first = true;
         for (int i = 0; i < nrOfPins; i++)
           if (myInputPins.contains(i)) {
@@ -509,8 +509,8 @@ public class FpgaIoInformationContainer implements Cloneable {
         result.setAttributeNode(attrSet);
       }
       if (CollectionUtil.isNotEmpty(myOutputPins)) {
-        final var attrSet = doc.createAttribute(BoardWriterClass.OUTPUT_SET_STRING);
-        final var sb = new StringBuilder();
+        final org.w3c.dom.Attr attrSet = doc.createAttribute(BoardWriterClass.OUTPUT_SET_STRING);
+        final java.lang.StringBuilder sb = new StringBuilder();
         boolean first = true;
         for (int i = 0; i < nrOfPins; i++)
           if (myOutputPins.contains(i)) {
@@ -522,8 +522,8 @@ public class FpgaIoInformationContainer implements Cloneable {
         result.setAttributeNode(attrSet);
       }
       if (CollectionUtil.isNotEmpty(myIoPins)) {
-        final var attrSet = doc.createAttribute(BoardWriterClass.IO_SET_STRING);
-        final var sb = new StringBuilder();
+        final org.w3c.dom.Attr attrSet = doc.createAttribute(BoardWriterClass.IO_SET_STRING);
+        final java.lang.StringBuilder sb = new StringBuilder();
         boolean first = true;
         for (int i = 0; i < nrOfPins; i++)
           if (myIoPins.contains(i)) {
@@ -535,22 +535,22 @@ public class FpgaIoInformationContainer implements Cloneable {
         result.setAttributeNode(attrSet);
       }
       if (myDriveStrength != DriveStrength.UNKNOWN && myDriveStrength != DriveStrength.DEFAULT_STENGTH) {
-        final var drive = doc.createAttribute(DriveStrength.DRIVE_ATTRIBUTE_STRING);
+        final org.w3c.dom.Attr drive = doc.createAttribute(DriveStrength.DRIVE_ATTRIBUTE_STRING);
         drive.setValue(DriveStrength.BEHAVIOR_STRINGS[myDriveStrength]);
         result.setAttributeNode(drive);
       }
       if (myPullBehavior != PullBehaviors.UNKNOWN && myPullBehavior != PullBehaviors.FLOAT) {
-        final var pull = doc.createAttribute(PullBehaviors.PULL_ATTRIBUTE_STRING);
+        final org.w3c.dom.Attr pull = doc.createAttribute(PullBehaviors.PULL_ATTRIBUTE_STRING);
         pull.setValue(PullBehaviors.BEHAVIOR_STRINGS[myPullBehavior]);
         result.setAttributeNode(pull);
       }
       if (myIoStandard != IoStandards.UNKNOWN && myIoStandard != IoStandards.DEFAULT_STANDARD) {
-        final var stand = doc.createAttribute(IoStandards.IO_ATTRIBUTE_STRING);
+        final org.w3c.dom.Attr stand = doc.createAttribute(IoStandards.IO_ATTRIBUTE_STRING);
         stand.setValue(IoStandards.BEHAVIOR_STRINGS[myIoStandard]);
         result.setAttributeNode(stand);
       }
       if (myActivityLevel != PinActivity.Unknown && myActivityLevel != PinActivity.ACTIVE_HIGH) {
-        final var act = doc.createAttribute(PinActivity.ACTIVITY_ATTRIBUTE_STRING);
+        final org.w3c.dom.Attr act = doc.createAttribute(PinActivity.ACTIVITY_ATTRIBUTE_STRING);
         act.setValue(PinActivity.BEHAVIOR_STRINGS[myActivityLevel]);
         result.setAttributeNode(act);
       }
@@ -1043,12 +1043,12 @@ public class FpgaIoInformationContainer implements Cloneable {
   }
 
   private void paintMapped(Graphics2D g, float scale, int nrOfMaps) {
-    final var x = AppPreferences.getScaled(myRectangle.getXpos(), scale);
-    final var y = AppPreferences.getScaled(myRectangle.getYpos(), scale);
-    final var width = AppPreferences.getScaled(myRectangle.getWidth(), scale);
-    final var height = AppPreferences.getScaled(myRectangle.getHeight(), scale);
+    final int x = AppPreferences.getScaled(myRectangle.getXpos(), scale);
+    final int y = AppPreferences.getScaled(myRectangle.getYpos(), scale);
+    final int width = AppPreferences.getScaled(myRectangle.getWidth(), scale);
+    final int height = AppPreferences.getScaled(myRectangle.getHeight(), scale);
     int alpha = highlighted && selectable ? 200 : 100;
-    final var color = containsMap() ? BoardManipulator.SELECTED_MAPPED_COLOR_ID :
+    final int color = containsMap() ? BoardManipulator.SELECTED_MAPPED_COLOR_ID :
         selectable ? BoardManipulator.SELECTABLE_MAPPED_COLOR_ID :
         BoardManipulator.MAPPED_COLOR_ID;
     java.awt.Color col = BoardManipulator.getColor(color);
@@ -1070,10 +1070,10 @@ public class FpgaIoInformationContainer implements Cloneable {
 
   protected void paintSelected(Graphics2D g, float scale) {
     if (!selectable) return;
-    final var x = AppPreferences.getScaled(myRectangle.getXpos(), scale);
-    final var y = AppPreferences.getScaled(myRectangle.getYpos(), scale);
-    final var width = AppPreferences.getScaled(myRectangle.getWidth(), scale);
-    final var height = AppPreferences.getScaled(myRectangle.getHeight(), scale);
+    final int x = AppPreferences.getScaled(myRectangle.getXpos(), scale);
+    final int y = AppPreferences.getScaled(myRectangle.getYpos(), scale);
+    final int width = AppPreferences.getScaled(myRectangle.getWidth(), scale);
+    final int height = AppPreferences.getScaled(myRectangle.getHeight(), scale);
     int alpha = 150;
     java.awt.Color col = BoardManipulator.getColor(BoardManipulator.SELECTABLE_COLOR_ID);
     if (col == null) return;

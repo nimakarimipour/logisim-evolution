@@ -39,7 +39,7 @@ public class TickCounter implements Simulator.Listener {
     // If we know the requested frequency, let's initialize the counts to this frequency.
     // It provides a nicer effect at low frequencies, and doesn't hurt at high frequencies.
     if (simulator != null) {
-      final var tickPeriodNanoseconds = NANOSECONDS_PER_SECONDS / simulator.getTickFrequency();
+      final double tickPeriodNanoseconds = NANOSECONDS_PER_SECONDS / simulator.getTickFrequency();
       tickCount = 12; // We'll set the frequency as if it happened during 12 ticks already.
       startTime = System.nanoTime() - (long) (tickCount * tickPeriodNanoseconds);
     } else {
@@ -54,7 +54,7 @@ public class TickCounter implements Simulator.Listener {
       return "";
     }
 
-    final var currentFrequency = simulator.getTickFrequency();
+    final double currentFrequency = simulator.getTickFrequency();
 
     // Reset history when the user changes the desired simulation frequency.
     if (previousFrequency != currentFrequency) {
@@ -62,7 +62,7 @@ public class TickCounter implements Simulator.Listener {
       clear();
     }
 
-    final var elapsedTime = System.nanoTime() - startTime;
+    final long elapsedTime = System.nanoTime() - startTime;
 
     // If we didn't have any elapsed time we can't compute a frequency.
     if (elapsedTime == 0) {
@@ -74,8 +74,8 @@ public class TickCounter implements Simulator.Listener {
       return "";
     }
 
-    final var ticksPerNanoseconds = (double) tickCount / elapsedTime;
-    final var fullCyclesPerSeconds = NANOSECONDS_PER_SECONDS / 2.0 * ticksPerNanoseconds; // 2 ticks per cycles
+    final double ticksPerNanoseconds = (double) tickCount / elapsedTime;
+    final double fullCyclesPerSeconds = NANOSECONDS_PER_SECONDS / 2.0 * ticksPerNanoseconds; // 2 ticks per cycles
     elapsedTimeSinceLastUnitUpdate += elapsedTime;
 
     // If time has come, update the frequency unit.
@@ -87,7 +87,7 @@ public class TickCounter implements Simulator.Listener {
     // If we accumulated a lot of ticks then lets reduce the weight of the past.
     if (tickCount > TICKS_THRESHOLD_BEFORE_HISTORY_WEIGHT_REDUCTION) {
       tickCount -= WEIGHT_REDUCTION_TICKS_COUNT;
-      final var nanoseconds = WEIGHT_REDUCTION_TICKS_COUNT / ticksPerNanoseconds;
+      final double nanoseconds = WEIGHT_REDUCTION_TICKS_COUNT / ticksPerNanoseconds;
       startTime += nanoseconds;
     }
 

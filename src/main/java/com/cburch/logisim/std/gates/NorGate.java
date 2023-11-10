@@ -27,15 +27,15 @@ class NorGate extends AbstractGate {
   private static class NorGateHdlGeneratorFactory extends AbstractGateHdlGenerator {
     @Override
     public LineBuffer getLogicFunction(int nrOfInputs, int bitwidth, boolean isOneHot) {
-      final var contents = LineBuffer.getHdlBuffer();
-      final var oneLine = new StringBuilder();
+      final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
+      final java.lang.StringBuilder oneLine = new StringBuilder();
       oneLine
           .append(Hdl.assignPreamble())
           .append("result")
           .append(Hdl.assignOperator())
           .append(Hdl.notOperator())
           .append("(");
-      final var tabWidth = oneLine.length();
+      final int tabWidth = oneLine.length();
       boolean first = true;
       for (int i = 0; i < nrOfInputs; i++) {
         if (!first) {

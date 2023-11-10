@@ -90,11 +90,11 @@ public class CsvReadParameterDialog extends JDialog implements ActionListener {
     int celHeight = AppPreferences.getScaled(25);
     c.gridwidth = 1;
     labels = new JLabel[16];
-    final var border = BorderFactory.createLineBorder(Color.BLACK, AppPreferences.getScaled(1));
-    final var dim = new Dimension(celwidth, celHeight);
+    final javax.swing.border.Border border = BorderFactory.createLineBorder(Color.BLACK, AppPreferences.getScaled(1));
+    final java.awt.Dimension dim = new Dimension(celwidth, celHeight);
     for (int x = 0; x < 4; x++)
       for (int y = 0; y < 4; y++) {
-        final var j = new JPanel();
+        final javax.swing.JPanel j = new JPanel();
         labels[y * 4 + x] = new JLabel(x + "," + y);
         j.setBorder(border);
         j.setBackground(Color.WHITE);
@@ -116,7 +116,7 @@ public class CsvReadParameterDialog extends JDialog implements ActionListener {
 
   private void updateLabels() {
     try {
-      final var scan = new Scanner(file);
+      final java.util.Scanner scan = new Scanner(file);
       for (int y = 0; y < 4; y++) {
         List<String> line = null;
         if (scan.hasNext())
@@ -148,12 +148,12 @@ public class CsvReadParameterDialog extends JDialog implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     if (param == null) return;
     if (e.getSource() == quotes) {
-      final var sel = (String) quotes.getSelectedItem();
+      final java.lang.String sel = (String) quotes.getSelectedItem();
       param.setQuote(sel.charAt(0));
       updateLabels();
     }
     if (e.getSource() == seperators) {
-      final var sel = (String) seperators.getSelectedItem();
+      final java.lang.String sel = (String) seperators.getSelectedItem();
       if (sel.length() == 1) {
         param.setSeperator(sel.charAt(0));
       } else if (sel.equals(sepSpace)) {

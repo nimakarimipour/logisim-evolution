@@ -30,13 +30,13 @@ public class DrawShapeIcon extends BaseIcon {
 
   @Override
   protected void paintIcon(Graphics2D gfx) {
-    final var state = 3;
+    final int state = 3;
 
     gfx.setStroke(new BasicStroke(AppPreferences.getScaled(2)));
-    final var x = scale(1);
-    final var y = scale(3);
-    final var width = scale(points[(state - 1) * 2]);
-    final var height = scale(points[(state - 1) * 2 + 1]);
+    final int x = scale(1);
+    final int y = scale(3);
+    final int width = scale(points[(state - 1) * 2]);
+    final int height = scale(points[(state - 1) * 2 + 1]);
 
     switch (shapeType) {
       case RECTANGLE -> {

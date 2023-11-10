@@ -99,10 +99,10 @@ public class AssemblerAsmInstruction {
   }
 
   public boolean replaceLabels(Map<String, Long> labels, Map<AssemblerToken, StringGetter> errors) {
-    for (final var parameter : parameters) {
-      for (final var assemblerToken : parameter) {
+    for (final com.cburch.logisim.soc.util.AssemblerToken[] parameter : parameters) {
+      for (final com.cburch.logisim.soc.util.AssemblerToken assemblerToken : parameter) {
         if (assemblerToken.getType() == AssemblerToken.PARAMETER_LABEL) {
-          final var name = assemblerToken.getValue();
+          final java.lang.String name = assemblerToken.getValue();
           if (!labels.containsKey(name)) {
             errors.put(assemblerToken, S.getter("AssemblerCouldNotFindAddressForLabel"));
             return false;
@@ -117,10 +117,10 @@ public class AssemblerAsmInstruction {
 
   public boolean replaceDefines(
       Map<String, Integer> defines, Map<AssemblerToken, StringGetter> errors) {
-    for (final var parameter : parameters) {
-      for (final var assemblerToken : parameter) {
+    for (final com.cburch.logisim.soc.util.AssemblerToken[] parameter : parameters) {
+      for (final com.cburch.logisim.soc.util.AssemblerToken assemblerToken : parameter) {
         if (assemblerToken.getType() == AssemblerToken.MAYBE_LABEL) {
-          final var name = assemblerToken.getValue();
+          final java.lang.String name = assemblerToken.getValue();
           if (!defines.containsKey(name)) {
             errors.put(assemblerToken, S.getter("AssemblerCouldNotFindValueForDefine"));
             return false;
@@ -135,9 +135,9 @@ public class AssemblerAsmInstruction {
 
   public void replacePcAndDoCalc(long pc, Map<AssemblerToken, StringGetter> errors) {
     for (int idx = 0; idx < parameters.size(); idx++) {
-      final var parameter = parameters.get(idx);
+      final com.cburch.logisim.soc.util.AssemblerToken[] parameter = parameters.get(idx);
       boolean found = false;
-      for (final var assemblerToken : parameter) {
+      for (final com.cburch.logisim.soc.util.AssemblerToken assemblerToken : parameter) {
         if (assemblerToken.getType() == AssemblerToken.PROGRAM_COUNTER) {
           found = true;
           assemblerToken.setType(AssemblerToken.HEX_NUMBER);
@@ -146,7 +146,7 @@ public class AssemblerAsmInstruction {
       }
       if (found && parameter.length > 1) {
         int i = 0;
-        final var toBeRemoved = new HashSet<Integer>();
+        final java.util.HashSet<java.lang.Integer> toBeRemoved = new HashSet<Integer>();
         while (i < parameter.length) {
           if (AssemblerToken.MATH_OPERATORS.contains(parameter[i].getType())) {
             long beforeValue = -1L;
@@ -159,7 +159,7 @@ public class AssemblerAsmInstruction {
                 toBeRemoved.add(i - 1);
                 beforeValue = parameter[i - 1].getLongValue();
               }
-              final var afterValue = parameter[i + 1].getLongValue();
+              final long afterValue = parameter[i + 1].getLongValue();
               toBeRemoved.add(i);
               long result = 0;
               switch (parameter[i].getType()) {
@@ -193,8 +193,8 @@ public class AssemblerAsmInstruction {
           }
           i++;
         }
-        final var newNrOfParameters = parameter.length - toBeRemoved.size();
-        final var newParameter = new AssemblerToken[newNrOfParameters];
+        final int newNrOfParameters = parameter.length - toBeRemoved.size();
+        final com.cburch.logisim.soc.util.AssemblerToken[] newParameter = new AssemblerToken[newNrOfParameters];
         int j = 0;
         for (i = 0; i < parameter.length; i++) {
           if (!toBeRemoved.contains(i)) {

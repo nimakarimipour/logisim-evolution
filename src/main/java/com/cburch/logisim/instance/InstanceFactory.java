@@ -136,13 +136,13 @@ public abstract class InstanceFactory extends AbstractComponentFactory {
 
   @Override
   public AttributeSet createAttributeSet() {
-    final var as = attrs;
+    final com.cburch.logisim.data.Attribute<?>[] as = attrs;
     return as == null ? AttributeSets.EMPTY : AttributeSets.fixedSet(as, defaults);
   }
 
   @Override
   public Component createComponent(Location loc, AttributeSet attrs) {
-    final var ret = new InstanceComponent(this, loc, attrs);
+    final com.cburch.logisim.instance.InstanceComponent ret = new InstanceComponent(this, loc, attrs);
     configureNewInstance(ret.getInstance());
     return ret;
   }
@@ -158,8 +158,8 @@ public abstract class InstanceFactory extends AbstractComponentFactory {
   @Override
   public final void drawGhost(
       ComponentDrawContext context, Color color, int x, int y, AttributeSet attrs) {
-    final var painter = context.getInstancePainter();
-    final var gfx = painter.getGraphics();
+    final com.cburch.logisim.instance.InstancePainter painter = context.getInstancePainter();
+    final java.awt.Graphics gfx = painter.getGraphics();
     gfx.setColor(color);
     gfx.translate(x, y);
     painter.setFactory(this, attrs);
@@ -172,7 +172,7 @@ public abstract class InstanceFactory extends AbstractComponentFactory {
 
   @Override
   public Object getDefaultAttributeValue(Attribute<?> attr, LogisimVersion ver) {
-    final var as = attrs;
+    final com.cburch.logisim.data.Attribute<?>[] as = attrs;
     if (as != null) {
       for (int i = 0; i < as.length; i++) {
         if (as[i] == attr) {
@@ -258,7 +258,7 @@ public abstract class InstanceFactory extends AbstractComponentFactory {
   }
 
   private boolean isClassOk(Class<?> sub, Class<?> sup) {
-    final var isSub = sup.isAssignableFrom(sub);
+    final boolean isSub = sup.isAssignableFrom(sub);
     if (!isSub) {
       logger.error("{}  must be a subclass of {}", sub.getName(), sup.getName());
       return false;
@@ -280,9 +280,9 @@ public abstract class InstanceFactory extends AbstractComponentFactory {
 
   @Override
   public final void paintIcon(ComponentDrawContext context, int x, int y, AttributeSet attrs) {
-    final var painter = context.getInstancePainter();
+    final com.cburch.logisim.instance.InstancePainter painter = context.getInstancePainter();
     painter.setFactory(this, attrs);
-    final var gfx = painter.getGraphics();
+    final java.awt.Graphics gfx = painter.getGraphics();
     gfx.translate(x, y);
     paintIcon(painter);
     gfx.translate(-x, -y);

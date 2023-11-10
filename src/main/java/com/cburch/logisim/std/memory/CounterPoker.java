@@ -17,12 +17,12 @@ public class CounterPoker extends RegisterPoker {
 
   @Override
   public void paint(InstancePainter painter) {
-    final var bds = painter.getBounds();
-    final var dataWidth = painter.getAttributeValue(StdAttr.WIDTH);
-    final var width = dataWidth == null ? 8 : dataWidth.getWidth();
-    final var len = (width + 3) / 4;
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+    final com.cburch.logisim.data.BitWidth dataWidth = painter.getAttributeValue(StdAttr.WIDTH);
+    final int width = dataWidth == null ? 8 : dataWidth.getWidth();
+    final int len = (width + 3) / 4;
 
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     g.setColor(Color.RED);
     if (painter.getAttributeValue(StdAttr.APPEARANCE) == StdAttr.APPEAR_CLASSIC) {
       if (len > 4) {

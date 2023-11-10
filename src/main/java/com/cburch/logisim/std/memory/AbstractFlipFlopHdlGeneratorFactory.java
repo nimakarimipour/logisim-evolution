@@ -55,7 +55,7 @@ public class AbstractFlipFlopHdlGeneratorFactory extends AbstractHdlGeneratorFac
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist nets, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
     contents
         .pair("invertClock", INVERT_CLOCK_STRING)
         .pair("Clock", HdlPorts.CLOCK)

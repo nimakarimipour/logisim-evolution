@@ -112,10 +112,10 @@ public class Analyzer extends LFrame.SubWindow {
     }
 
     private void update() {
-      final var tt = model.getTruthTable();
-      final var nrOfInputs = tt.getInputColumnCount();
-      final var nrOfOutputs = tt.getOutputColumnCount();
-      final var hasInputsAndOutputs = (nrOfInputs > 0) && (nrOfOutputs > 0);
+      final com.cburch.logisim.analyze.model.TruthTable tt = model.getTruthTable();
+      final int nrOfInputs = tt.getInputColumnCount();
+      final int nrOfOutputs = tt.getOutputColumnCount();
+      final boolean hasInputsAndOutputs = (nrOfInputs > 0) && (nrOfOutputs > 0);
       buildCircuit.setEnabled(hasInputsAndOutputs);
       minimizeMinterms.setEnabled(hasInputsAndOutputs
               && (nrOfInputs > Implicant.MAXIMAL_NR_OF_INPUTS_FOR_AUTO_MINIMAL_FORM));
@@ -134,23 +134,23 @@ public class Analyzer extends LFrame.SubWindow {
   }
 
   public static void main(String[] args) throws Exception {
-    final var frame = new Analyzer();
-    final var model = frame.getModel();
+    final com.cburch.logisim.analyze.gui.Analyzer frame = new Analyzer();
+    final com.cburch.logisim.analyze.model.AnalyzerModel model = frame.getModel();
 
     if (args.length >= 2) {
-      final var inputs = new ArrayList<Var>();
-      final var outputs = new ArrayList<Var>();
+      final java.util.ArrayList<com.cburch.logisim.analyze.model.Var> inputs = new ArrayList<Var>();
+      final java.util.ArrayList<com.cburch.logisim.analyze.model.Var> outputs = new ArrayList<Var>();
       for (String s : args[0].split(",")) inputs.add(Var.parse(s));
       for (String s : args[1].split(",")) outputs.add(Var.parse(s));
       model.setVariables(inputs, outputs);
     }
     for (int i = 2; i < args.length; i++) {
-      final var s = args[i];
-      final var idx = s.indexOf('=');
+      final java.lang.String s = args[i];
+      final int idx = s.indexOf('=');
       if (idx >= 0) {
-        final var name = s.substring(0, idx);
-        final var exprString = s.substring(idx + 1);
-        final var expr = Parser.parse(exprString, model);
+        final java.lang.String name = s.substring(0, idx);
+        final java.lang.String exprString = s.substring(idx + 1);
+        final com.cburch.logisim.analyze.model.Expression expr = Parser.parse(exprString, model);
         model.getOutputExpressions().setExpression(name, expr, exprString);
       } else {
         Parser.parse(s, model); // for testing Parser.parse
@@ -185,7 +185,7 @@ public class Analyzer extends LFrame.SubWindow {
 
   Analyzer() {
     super(null);
-    final var tableListener = new TableListener();
+    final com.cburch.logisim.analyze.gui.Analyzer.TableListener tableListener = new TableListener();
     model.getTruthTable().addTruthTableListener(tableListener);
     menuListener = new AnalyzerMenuListener(menubar);
     ioPanel = new VariableTab(model.getInputs(), model.getOutputs(), menubar);
@@ -213,12 +213,12 @@ public class Analyzer extends LFrame.SubWindow {
     tabbedPane.setEnabledAt(EXPRESSION_TAB, false);
     tabbedPane.setEnabledAt(TABLE_TAB, false);
 
-    final var contents = getContentPane();
-    final var vertStrut = new JPanel(null);
+    final java.awt.Container contents = getContentPane();
+    final javax.swing.JPanel vertStrut = new JPanel(null);
     vertStrut.setPreferredSize(new Dimension(0, AppPreferences.getScaled(300)));
-    final var horzStrut = new JPanel(null);
+    final javax.swing.JPanel horzStrut = new JPanel(null);
     horzStrut.setPreferredSize(new Dimension(AppPreferences.getScaled(450), 0));
-    final var buttonPanel = new JPanel();
+    final javax.swing.JPanel buttonPanel = new JPanel();
     buttonPanel.add(importTable);
     buttonPanel.add(buildCircuit);
     buttonPanel.add(minimizeMinterms);
@@ -230,10 +230,10 @@ public class Analyzer extends LFrame.SubWindow {
     contents.add(tabbedPane, BorderLayout.CENTER);
     contents.add(buttonPanel, BorderLayout.SOUTH);
 
-    final var myLocaleListener = new MyLocaleListener();
+    final com.cburch.logisim.analyze.gui.Analyzer.MyLocaleListener myLocaleListener = new MyLocaleListener();
     LocaleManager.addLocaleListener(myLocaleListener);
     myLocaleListener.localeChanged();
-    final var myChangeListener = new MyChangeListener();
+    final com.cburch.logisim.analyze.gui.Analyzer.MyChangeListener myChangeListener = new MyChangeListener();
     tabbedPane.addChangeListener(myChangeListener);
     setSelectedTab(0);
     myChangeListener.stateChanged(null);
@@ -244,13 +244,13 @@ public class Analyzer extends LFrame.SubWindow {
       tabbedPane.insertTab(S.get("untitled"), null, comp, null, index);
       return;
     }
-    final var pane = new JScrollPane(comp,
+    final javax.swing.JScrollPane pane = new JScrollPane(comp,
         ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
         ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
     pane.addComponentListener(new ComponentAdapter() {
       @Override
       public void componentResized(ComponentEvent event) {
-        final var width = pane.getViewport().getWidth();
+        final int width = pane.getViewport().getWidth();
         comp.setSize(new Dimension(width, comp.getHeight()));
       }
     });
@@ -304,9 +304,9 @@ public class Analyzer extends LFrame.SubWindow {
 
     public T get() {
       worker.execute();
-      final var progressBar = new JProgressBar();
+      final javax.swing.JProgressBar progressBar = new JProgressBar();
       progressBar.setIndeterminate(true);
-      final var panel = new JPanel(new BorderLayout());
+      final javax.swing.JPanel panel = new JPanel(new BorderLayout());
       panel.add(progressBar, BorderLayout.CENTER);
       panel.add(new JLabel(S.get("analyzePleaseWait")), BorderLayout.PAGE_START);
       add(panel);

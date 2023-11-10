@@ -85,16 +85,16 @@ public class Circuit {
 
     @Override
     protected void run(CircuitMutator mutator) {
-      for (final var loc : toRemove.keySet()) {
-        final var removed = toRemove.get(loc);
-        final var replaced = toAdd.remove(loc);
+      for (final com.cburch.logisim.data.Location loc : toRemove.keySet()) {
+        final com.cburch.logisim.comp.EndData removed = toRemove.get(loc);
+        final com.cburch.logisim.comp.EndData replaced = toAdd.remove(loc);
         if (replaced == null) {
           wires.remove(comp, removed);
         } else if (!replaced.equals(removed)) {
           wires.replace(comp, removed, replaced);
         }
       }
-      for (final var end : toAdd.values()) {
+      for (final com.cburch.logisim.comp.EndData end : toAdd.values()) {
         wires.add(comp, end);
       }
       ((CircuitMutatorImpl) mutator).markModified(Circuit.this);
@@ -112,20 +112,20 @@ public class Circuit {
       locker.checkForWritePermission("ends changed", Circuit.this);
       isAnnotated = false;
       myNetList.clear();
-      final var comp = e.getSource();
-      final var toRemove = toMap(e.getOldData());
-      final var toAdd = toMap(e.getData());
-      final var xn = new EndChangedTransaction(comp, toRemove, toAdd);
+      final com.cburch.logisim.comp.Component comp = e.getSource();
+      final java.util.HashMap<com.cburch.logisim.data.Location,com.cburch.logisim.comp.EndData> toRemove = toMap(e.getOldData());
+      final java.util.HashMap<com.cburch.logisim.data.Location,com.cburch.logisim.comp.EndData> toAdd = toMap(e.getData());
+      final com.cburch.logisim.circuit.Circuit.EndChangedTransaction xn = new EndChangedTransaction(comp, toRemove, toAdd);
       locker.execute(xn);
       fireEvent(CircuitEvent.ACTION_INVALIDATE, comp);
     }
 
     private HashMap<Location, EndData> toMap(Object val) {
-      final var map = new HashMap<Location, EndData>();
+      final java.util.HashMap<com.cburch.logisim.data.Location,com.cburch.logisim.comp.EndData> map = new HashMap<Location, EndData>();
       if (val instanceof List) {
         @SuppressWarnings("unchecked")
-        final var valList = (List<EndData>) val;
-        for (final var end : valList) {
+        final List<EndData> valList = (List<EndData>) val;
+        for (final com.cburch.logisim.comp.EndData end : valList) {
           if (end != null) map.put(end.getLocation(), end);
         }
       } else if (val instanceof EndData end) {
@@ -136,10 +136,10 @@ public class Circuit {
 
     @Override
     public void labelChanged(ComponentEvent e) {
-      final var attrEvent = (AttributeEvent) e.getData();
+      final com.cburch.logisim.data.AttributeEvent attrEvent = (AttributeEvent) e.getData();
       if (attrEvent.getSource() == null || attrEvent.getValue() == null) return;
-      final var newLabel = (String) attrEvent.getValue();
-      final var oldLabel = attrEvent.getOldValue() != null ? (String) attrEvent.getOldValue() : "";
+      final java.lang.String newLabel = (String) attrEvent.getValue();
+      final java.lang.String oldLabel = attrEvent.getOldValue() != null ? (String) attrEvent.getOldValue() : "";
       @SuppressWarnings("unchecked")
       Attribute<String> lattr = (Attribute<String>) attrEvent.getAttribute();
       if (!isCorrectLabel(getName(), newLabel, comps, attrEvent.getSource(), e.getSource().getFactory(), true)) {
@@ -166,7 +166,7 @@ public class Circuit {
         && circuitName.equalsIgnoreCase(name)
         && myFactory instanceof Pin) {
       if (showDialog) {
-        final var msg = S.get("ComponentLabelEqualCircuitName");
+        final java.lang.String msg = S.get("ComponentLabelEqualCircuitName");
         OptionPane.showMessageDialog(null, "\"" + name + "\" : " + msg);
       }
       return false;
@@ -177,10 +177,10 @@ public class Circuit {
 
   private static boolean isComponentName(String name, Set<Component> comps, Boolean showDialog) {
     if (name.isEmpty()) return false;
-    for (final var comp : comps) {
+    for (final com.cburch.logisim.comp.Component comp : comps) {
       if (comp.getFactory().getName().equalsIgnoreCase(name)) {
         if (showDialog) {
-          final var msg = S.get("ComponentLabelNameError");
+          final java.lang.String msg = S.get("ComponentLabelNameError");
           OptionPane.showMessageDialog(null, "\"" + name + "\" : " + msg);
         }
         return true;
@@ -193,15 +193,15 @@ public class Circuit {
 
   private static boolean isExistingLabel(String name, AttributeSet me, Set<Component> comps, Boolean showDialog) {
     if (name.isEmpty()) return false;
-    for (final var comp : comps) {
+    for (final com.cburch.logisim.comp.Component comp : comps) {
       if (!comp.getAttributeSet().equals(me) && !(comp.getFactory() instanceof Tunnel)) {
-        final var Label =
+        final java.lang.String Label =
             (comp.getAttributeSet().containsAttribute(StdAttr.LABEL))
                 ? comp.getAttributeSet().getValue(StdAttr.LABEL)
                 : "";
         if (Label.equalsIgnoreCase(name)) {
           if (showDialog) {
-            final var msg = S.get("UsedLabelNameError");
+            final java.lang.String msg = S.get("UsedLabelNameError");
             OptionPane.showMessageDialog(null, "\"" + name + "\" : " + msg);
           }
           return true;
@@ -318,19 +318,19 @@ public class Circuit {
       Reporter.report.addInfo("Nothing to do!");
       return;
     }
-    final var comps = new TreeSet<Component>(Location.CompareVertical);
-    final var labelers = new HashMap<String, AutoLabel>();
-    final var labelNames = new LinkedHashSet<String>();
-    final var subCircuits = new LinkedHashSet<String>();
-    for (final var comp : getNonWires()) {
+    final java.util.TreeSet<com.cburch.logisim.comp.Component> comps = new TreeSet<Component>(Location.CompareVertical);
+    final java.util.HashMap<java.lang.String,com.cburch.logisim.util.AutoLabel> labelers = new HashMap<String, AutoLabel>();
+    final java.util.LinkedHashSet<java.lang.String> labelNames = new LinkedHashSet<String>();
+    final java.util.LinkedHashSet<java.lang.String> subCircuits = new LinkedHashSet<String>();
+    for (final com.cburch.logisim.comp.Component comp : getNonWires()) {
       if (comp.getFactory() instanceof Tunnel) continue;
       /* we are directly going to remove duplicated labels */
-      final var attrs = comp.getAttributeSet();
+      final com.cburch.logisim.data.AttributeSet attrs = comp.getAttributeSet();
       if (attrs.containsAttribute(StdAttr.LABEL)) {
-        final var label = attrs.getValue(StdAttr.LABEL);
+        final java.lang.String label = attrs.getValue(StdAttr.LABEL);
         if (!label.isEmpty()) {
           if (labelNames.contains(label.toUpperCase())) {
-            final var act = new SetAttributeAction(this, S.getter("changeComponentAttributesAction"));
+            final com.cburch.logisim.tools.SetAttributeAction act = new SetAttributeAction(this, S.getter("changeComponentAttributesAction"));
             act.set(comp, StdAttr.LABEL, "");
             proj.doAction(act);
             // FIXME: hardcoded string
@@ -346,13 +346,13 @@ public class Circuit {
           /* in case of label cleaning, we clear first the old label */
           // FIXME: hardcoded string
           Reporter.report.addInfo("Cleared " + this.getName() + "/" + comp.getAttributeSet().getValue(StdAttr.LABEL));
-          final var act = new SetAttributeAction(this, S.getter("changeComponentAttributesAction"));
+          final com.cburch.logisim.tools.SetAttributeAction act = new SetAttributeAction(this, S.getter("changeComponentAttributesAction"));
           act.set(comp, StdAttr.LABEL, "");
           proj.doAction(act);
         }
         if (comp.getAttributeSet().getValue(StdAttr.LABEL).isEmpty()) {
           comps.add(comp);
-          final var componentName = getAnnotationName(comp);
+          final java.lang.String componentName = getAnnotationName(comp);
           if (!labelers.containsKey(componentName)) {
             labelers.put(componentName, new AutoLabel(componentName + "_0", this));
           }
@@ -365,8 +365,8 @@ public class Circuit {
     }
     /* Now Annotate */
     boolean sizeMightHaveChanged = false;
-    for (final var comp : comps) {
-      final var componentName = getAnnotationName(comp);
+    for (final com.cburch.logisim.comp.Component comp : comps) {
+      final java.lang.String componentName = getAnnotationName(comp);
       if (!labelers.containsKey(componentName) || !labelers.get(componentName).hasNext(this)) {
         // This should never happen!
         // FIXME: hardcoded string
@@ -374,8 +374,8 @@ public class Circuit {
             "Annotate internal Error: Either there exists duplicate labels or the label syntax is incorrect!\nPlease try annotation on labeled components also\n");
         return;
       } else {
-        final var newLabel = labelers.get(componentName).getNext(this, comp.getFactory());
-        final var act = new SetAttributeAction(this, S.getter("changeComponentAttributesAction"));
+        final java.lang.String newLabel = labelers.get(componentName).getNext(this, comp.getFactory());
+        final com.cburch.logisim.tools.SetAttributeAction act = new SetAttributeAction(this, S.getter("changeComponentAttributesAction"));
         act.set(comp, StdAttr.LABEL, newLabel);
         proj.doAction(act);
         Reporter.report.addInfo("Labeled " + this.getName() + "/" + newLabel);
@@ -399,9 +399,9 @@ public class Circuit {
               + "\" this might have changed it's boxsize and might have impacted it's connections in circuits using this one!");
     isAnnotated = true;
     /* Now annotate all circuits below me */
-    for (final var subs : subCircuits) {
-      final var circ = LibraryTools.getCircuitFromLibs(proj.getLogisimFile(), subs.toUpperCase());
-      final var inLibrary = !proj.getLogisimFile().getCircuits().contains(circ);
+    for (final java.lang.String subs : subCircuits) {
+      final com.cburch.logisim.circuit.Circuit circ = LibraryTools.getCircuitFromLibs(proj.getLogisimFile(), subs.toUpperCase());
+      final boolean inLibrary = !proj.getLogisimFile().getCircuits().contains(circ);
       circ.annotate(proj, clearExistingLabels, inLibrary);
     }
   }
@@ -411,7 +411,7 @@ public class Circuit {
   public void clearAnnotationLevel() {
     isAnnotated = false;
     myNetList.clear();
-    for (final var comp : this.getNonWires()) {
+    for (final com.cburch.logisim.comp.Component comp : this.getNonWires()) {
       if (comp.getFactory() instanceof SubcircuitFactory sub) {
         sub.getSubcircuit().clearAnnotationLevel();
       }
@@ -429,14 +429,14 @@ public class Circuit {
    * will be checked and if the value of pin[1] is 1 the function return true.
    * It will return zero otherwise  */
   public boolean doTestBench(Project project, Instance[] pin, Value[] val) {
-    final var state = project.getCircuitState();
+    final com.cburch.logisim.circuit.CircuitState state = project.getCircuitState();
     /* This is introduced in order to not block in case both the signal never happend*/
-    final var pinsState = new InstanceState[pin.length];
-    final var vPins = new Value[pin.length];
+    final com.cburch.logisim.instance.InstanceState[] pinsState = new InstanceState[pin.length];
+    final com.cburch.logisim.data.Value[] vPins = new Value[pin.length];
     state.reset();
 
-    final var ts = new TimeoutSimulation();
-    final var timer = new Timer();
+    final com.cburch.logisim.circuit.Circuit.TimeoutSimulation ts = new TimeoutSimulation();
+    final java.util.Timer timer = new Timer();
     timer.schedule(ts, maxTimeoutTestBenchSec);
 
     while (true) {
@@ -444,7 +444,7 @@ public class Circuit {
       project.getSimulator().tick(1);
       Thread.yield();
 
-      for (final var pinStatus : pin) {
+      for (final com.cburch.logisim.instance.Instance pinStatus : pin) {
         pinsState[i] = state.getInstanceState(pinStatus);
         vPins[i] = Pin.FACTORY.getValue(pinsState[i]);
         i++;
@@ -466,17 +466,17 @@ public class Circuit {
    * Code taken from Cornell's version of Logisim: http://www.cs.cornell.edu/courses/cs3410/2015sp/
    */
   public void doTestVector(Project project, Instance[] pin, Value[] val) throws TestException {
-    final var state = project.getCircuitState();
+    final com.cburch.logisim.circuit.CircuitState state = project.getCircuitState();
     state.reset();
 
     for (int i = 0; i < pin.length; ++i) {
       if (Pin.FACTORY.isInputPin(pin[i])) {
-        final var pinState = state.getInstanceState(pin[i]);
+        final com.cburch.logisim.instance.InstanceState pinState = state.getInstanceState(pin[i]);
         Pin.FACTORY.setValue(pinState, val[i]);
       }
     }
 
-    final var prop = state.getPropagator();
+    final com.cburch.logisim.circuit.Propagator prop = state.getPropagator();
 
     try {
       prop.propagate();
@@ -489,10 +489,10 @@ public class Circuit {
     FailException err = null;
 
     for (int i = 0; i < pin.length; i++) {
-      final var pinState = state.getInstanceState(pin[i]);
+      final com.cburch.logisim.instance.InstanceState pinState = state.getInstanceState(pin[i]);
       if (Pin.FACTORY.isInputPin(pin[i])) continue;
 
-      final var v = Pin.FACTORY.getValue(pinState);
+      final com.cburch.logisim.data.Value v = Pin.FACTORY.getValue(pinState);
       if (!val[i].compatible(v)) {
         if (err == null) {
           err = new FailException(i, pinState.getAttributeValue(StdAttr.LABEL), val[i], v);
@@ -511,14 +511,14 @@ public class Circuit {
   // Graphics methods
   //
   public void draw(ComponentDrawContext context, Collection<Component> hidden) {
-    final var g = context.getGraphics();
+    final java.awt.Graphics g = context.getGraphics();
     java.awt.Graphics gCopy = g.create();
     context.setGraphics(gCopy);
     wires.draw(context, hidden);
 
     if (CollectionUtil.isNullOrEmpty(hidden)) {
-      for (final var c : comps) {
-        final var gNew = g.create();
+      for (final com.cburch.logisim.comp.Component c : comps) {
+        final java.awt.Graphics gNew = g.create();
         context.setGraphics(gNew);
         gCopy.dispose();
         gCopy = gNew;
@@ -526,9 +526,9 @@ public class Circuit {
         c.draw(context);
       }
     } else {
-      for (final var c : comps) {
+      for (final com.cburch.logisim.comp.Component c : comps) {
         if (!hidden.contains(c)) {
-          final var gNew = g.create();
+          final java.awt.Graphics gNew = g.create();
           context.setGraphics(gNew);
           gCopy.dispose();
           gCopy = gNew;
@@ -547,7 +547,7 @@ public class Circuit {
   }
 
   private void fireEvent(CircuitEvent event) {
-    for (final var l : listeners) {
+    for (final com.cburch.logisim.circuit.CircuitListener l : listeners) {
       l.circuitChanged(event);
     }
   }
@@ -561,32 +561,32 @@ public class Circuit {
   }
 
   public Collection<Component> getAllContaining(Location pt) {
-    final var ret = new LinkedHashSet<Component>();
-    for (final var comp : getComponents()) {
+    final java.util.LinkedHashSet<com.cburch.logisim.comp.Component> ret = new LinkedHashSet<Component>();
+    for (final com.cburch.logisim.comp.Component comp : getComponents()) {
       if (comp.contains(pt)) ret.add(comp);
     }
     return ret;
   }
 
   public Collection<Component> getAllContaining(Location pt, Graphics g) {
-    final var ret = new LinkedHashSet<Component>();
-    for (final var comp : getComponents()) {
+    final java.util.LinkedHashSet<com.cburch.logisim.comp.Component> ret = new LinkedHashSet<Component>();
+    for (final com.cburch.logisim.comp.Component comp : getComponents()) {
       if (comp.contains(pt, g)) ret.add(comp);
     }
     return ret;
   }
 
   public Collection<Component> getAllWithin(Bounds bds) {
-    final var ret = new LinkedHashSet<Component>();
-    for (final var comp : getComponents()) {
+    final java.util.LinkedHashSet<com.cburch.logisim.comp.Component> ret = new LinkedHashSet<Component>();
+    for (final com.cburch.logisim.comp.Component comp : getComponents()) {
       if (bds.contains(comp.getBounds())) ret.add(comp);
     }
     return ret;
   }
 
   public Collection<Component> getAllWithin(Bounds bds, Graphics g) {
-    final var ret = new LinkedHashSet<Component>();
-    for (final var comp : getComponents()) {
+    final java.util.LinkedHashSet<com.cburch.logisim.comp.Component> ret = new LinkedHashSet<Component>();
+    for (final com.cburch.logisim.comp.Component comp : getComponents()) {
       if (bds.contains(comp.getBounds(g))) ret.add(comp);
     }
     return ret;
@@ -597,11 +597,11 @@ public class Circuit {
   }
 
   public Bounds getBounds() {
-    final var wireBounds = wires.getWireBounds();
-    final var it = comps.iterator();
+    final com.cburch.logisim.data.Bounds wireBounds = wires.getWireBounds();
+    final java.util.Iterator<com.cburch.logisim.comp.Component> it = comps.iterator();
     if (!it.hasNext()) return wireBounds;
-    final var first = it.next();
-    final var firstBounds = first.getBounds();
+    final com.cburch.logisim.comp.Component first = it.next();
+    final com.cburch.logisim.data.Bounds firstBounds = first.getBounds();
     int xMin = firstBounds.getX();
     int yMin = firstBounds.getY();
     int xMax = xMin + firstBounds.getWidth();
@@ -618,14 +618,14 @@ public class Circuit {
       if (y0 < yMin) yMin = y0;
       if (y1 > yMax) yMax = y1;
     }
-    final var compBounds = Bounds.create(xMin, yMin, xMax - xMin, yMax - yMin);
+    final com.cburch.logisim.data.Bounds compBounds = Bounds.create(xMin, yMin, xMax - xMin, yMax - yMin);
     return (wireBounds.getWidth() == 0 || wireBounds.getHeight() == 0)
         ? compBounds
         : compBounds.add(wireBounds);
   }
 
   public Bounds getBounds(Graphics g) {
-    final var ret = wires.getWireBounds();
+    final com.cburch.logisim.data.Bounds ret = wires.getWireBounds();
     int xMin = ret.getX();
     int yMin = ret.getY();
     int xMax = xMin + ret.getWidth();
@@ -636,13 +636,13 @@ public class Circuit {
       xMax = Integer.MIN_VALUE;
       yMax = Integer.MIN_VALUE;
     }
-    for (final var comp : comps) {
-      final var bds = comp.getBounds(g);
+    for (final com.cburch.logisim.comp.Component comp : comps) {
+      final com.cburch.logisim.data.Bounds bds = comp.getBounds(g);
       if (bds != null && bds != Bounds.EMPTY_BOUNDS) {
-        final var x0 = bds.getX();
-        final var x1 = x0 + bds.getWidth();
-        final var y0 = bds.getY();
-        final var y1 = y0 + bds.getHeight();
+        final int x0 = bds.getX();
+        final int x1 = x0 + bds.getWidth();
+        final int y0 = bds.getY();
+        final int y1 = y0 + bds.getHeight();
         if (x0 < xMin) xMin = x0;
         if (x1 > xMax) xMax = x1;
         if (y0 < yMin) yMin = y0;
@@ -697,7 +697,7 @@ public class Circuit {
   }
 
   public Set<String> getBoardMapNamestoSave() {
-    final var ret = new HashSet<String>();
+    final java.util.HashSet<java.lang.String> ret = new HashSet<String>();
     ret.addAll(loadedMaps.keySet());
     ret.addAll(myMappableResources.keySet());
     return ret;
@@ -713,8 +713,8 @@ public class Circuit {
 
   public void setBoardMap(String boardName, MappableResourcesContainer map) {
     if (loadedMaps.containsKey(boardName)) {
-      for (final var key : loadedMaps.get(boardName).keySet()) {
-        final var cmap = loadedMaps.get(boardName).get(key);
+      for (final java.lang.String key : loadedMaps.get(boardName).keySet()) {
+        final com.cburch.logisim.circuit.CircuitMapInfo cmap = loadedMaps.get(boardName).get(key);
         map.tryMap(key, cmap);
       }
       loadedMaps.remove(boardName);
@@ -789,14 +789,14 @@ public class Circuit {
   }
 
   private boolean isDoubleMapped(Component comp) {
-    final var loc = comp.getLocation();
-    final var existing = wires.points.getNonWires(loc);
-    for (final var existingComp : existing) {
+    final com.cburch.logisim.data.Location loc = comp.getLocation();
+    final java.util.Collection<? extends com.cburch.logisim.comp.Component> existing = wires.points.getNonWires(loc);
+    for (final com.cburch.logisim.comp.Component existingComp : existing) {
       if (existingComp.getFactory().equals(comp.getFactory())) {
         /* we make an exception for the pin in case we have an input placed on an output */
         if (comp.getFactory() instanceof Pin) {
-          final var dir1 = comp.getAttributeSet().getValue(Pin.ATTR_TYPE);
-          final var dir2 = existingComp.getAttributeSet().getValue(Pin.ATTR_TYPE);
+          final java.lang.Boolean dir1 = comp.getAttributeSet().getValue(Pin.ATTR_TYPE);
+          final java.lang.Boolean dir2 = existingComp.getAttributeSet().getValue(Pin.ATTR_TYPE);
           if (dir1.equals(dir2)) return true;
         } else {
           return true;
@@ -807,7 +807,7 @@ public class Circuit {
   }
 
   public boolean isConnected(Location loc, Component ignore) {
-    for (final var o : wires.points.getComponents(loc)) {
+    for (final com.cburch.logisim.comp.Component o : wires.points.getComponents(loc)) {
       if (o != ignore) return true;
     }
     return false;
@@ -831,32 +831,32 @@ public class Circuit {
       // if it already exists in the circuit
       if (c.getAttributeSet().containsAttribute(StdAttr.LABEL)
           && !(c.getFactory() instanceof Tunnel)) {
-        final var labels = new HashSet<String>();
-        for (final var comp : comps) {
+        final java.util.HashSet<java.lang.String> labels = new HashSet<String>();
+        for (final com.cburch.logisim.comp.Component comp : comps) {
           if (comp.equals(c) || comp.getFactory() instanceof Tunnel) continue;
           if (comp.getAttributeSet().containsAttribute(StdAttr.LABEL)) {
-            final var label = comp.getAttributeSet().getValue(StdAttr.LABEL);
+            final java.lang.String label = comp.getAttributeSet().getValue(StdAttr.LABEL);
             if (StringUtil.isNotEmpty(label)) labels.add(label.toUpperCase());
           }
         }
         /* we also have to check for the entity name */
         if (getName() != null && !getName().isEmpty()) labels.add(getName());
-        final var label = c.getAttributeSet().getValue(StdAttr.LABEL);
+        final java.lang.String label = c.getAttributeSet().getValue(StdAttr.LABEL);
         if (StringUtil.isNotEmpty(label) && labels.contains(label.toUpperCase())) {
           c.getAttributeSet().setValue(StdAttr.LABEL, "");
         }
       }
       wires.add(c);
-      final var factory = c.getFactory();
+      final com.cburch.logisim.comp.ComponentFactory factory = c.getFactory();
       if (factory instanceof Clock) {
         clocks.add(c);
       } else if (factory instanceof Rom) {
         Rom.closeHexFrame(c);
       } else if (factory instanceof SubcircuitFactory subFactory) {
-        final var subcirc = subFactory;
+        final com.cburch.logisim.circuit.SubcircuitFactory subcirc = subFactory;
         subcirc.getSubcircuit().circuitsUsingThis.put(c, this);
       } else if (factory instanceof VhdlEntity vhdlEntity) {
-        final var vhdl = vhdlEntity;
+        final com.cburch.logisim.vhdl.base.VhdlEntity vhdl = vhdlEntity;
         vhdl.addCircuitUsing(c, this);
       }
       c.addComponentListener(myComponentListener);
@@ -868,15 +868,15 @@ public class Circuit {
   public void mutatorClear() {
     locker.checkForWritePermission("clear", this);
 
-    final var oldComps = comps;
+    final java.util.LinkedHashSet<com.cburch.logisim.comp.Component> oldComps = comps;
     comps = new LinkedHashSet<>();
     wires = new CircuitWires();
     clocks.clear();
     myNetList.clear();
     isAnnotated = false;
-    for (final var comp : oldComps) {
+    for (final com.cburch.logisim.comp.Component comp : oldComps) {
       socSim.removeComponent(comp);
-      final var factory = comp.getFactory();
+      final com.cburch.logisim.comp.ComponentFactory factory = comp.getFactory();
       factory.removeComponent(this, comp, proj.getCircuitState(this));
     }
     fireEvent(CircuitEvent.ACTION_CLEAR, oldComps);
@@ -893,7 +893,7 @@ public class Circuit {
       wires.remove(c);
       comps.remove(c);
       socSim.removeComponent(c);
-      final var factory = c.getFactory();
+      final com.cburch.logisim.comp.ComponentFactory factory = c.getFactory();
       factory.removeComponent(this, c, proj.getCircuitState(this));
       if (factory instanceof Clock) {
         clocks.remove(c);
@@ -907,10 +907,10 @@ public class Circuit {
 
   private void removeWrongLabels(String label) {
     boolean changed = false;
-    for (final var comp : comps) {
-      final var attrs = comp.getAttributeSet();
+    for (final com.cburch.logisim.comp.Component comp : comps) {
+      final com.cburch.logisim.data.AttributeSet attrs = comp.getAttributeSet();
       if (attrs.containsAttribute(StdAttr.LABEL)) {
-        final var compLabel = attrs.getValue(StdAttr.LABEL);
+        final java.lang.String compLabel = attrs.getValue(StdAttr.LABEL);
         if (label.equalsIgnoreCase(compLabel)) {
           attrs.setValue(StdAttr.LABEL, "");
           changed = true;
@@ -964,7 +964,7 @@ public class Circuit {
   }
 
   public void setTickFrequency(double value) {
-    final var currentTickFrequency = staticAttrs.getValue(CircuitAttributes.SIMULATION_FREQUENCY);
+    final java.lang.Double currentTickFrequency = staticAttrs.getValue(CircuitAttributes.SIMULATION_FREQUENCY);
     if (value != currentTickFrequency) {
       staticAttrs.setValue(CircuitAttributes.SIMULATION_FREQUENCY, value);
       if ((proj != null) && (currentTickFrequency > 0)) proj.setForcedDirty();

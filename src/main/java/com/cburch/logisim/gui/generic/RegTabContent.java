@@ -60,21 +60,21 @@ public class RegTabContent extends JScrollPane implements LocaleListener, Simula
   private void fillArray() {
     registers.clear();
     panel.removeAll();
-    for (final var circ : proj.getLogisimFile().getCircuits()) {
+    for (final com.cburch.logisim.circuit.Circuit circ : proj.getLogisimFile().getCircuits()) {
       getAllRegisters(circ);
     }
     if (proj.getLogisimFile().getLibrary("prodis_v1.3") instanceof LoadedLibrary loadedLib) {
       if (loadedLib.getBase() instanceof LogisimFile lsFile) {
-        for (final var circ : lsFile.getCircuits()) {
+        for (final com.cburch.logisim.circuit.Circuit circ : lsFile.getCircuits()) {
           getAllRegisters(circ);
         }
       }
     }
 
     // FIXME: hardcoded strings
-    final var col1 = new MyLabel("Circuit", Font.ITALIC | Font.BOLD);
-    final var col2 = new MyLabel("Reg name", Font.BOLD);
-    final var col3 = new MyLabel("Value", Font.BOLD);
+    final com.cburch.logisim.gui.generic.RegTabContent.MyLabel col1 = new MyLabel("Circuit", Font.ITALIC | Font.BOLD);
+    final com.cburch.logisim.gui.generic.RegTabContent.MyLabel col2 = new MyLabel("Reg name", Font.BOLD);
+    final com.cburch.logisim.gui.generic.RegTabContent.MyLabel col3 = new MyLabel("Value", Font.BOLD);
 
     col1.setColor(Color.LIGHT_GRAY);
     col2.setColor(Color.LIGHT_GRAY);
@@ -99,26 +99,26 @@ public class RegTabContent extends JScrollPane implements LocaleListener, Simula
     y++;
 
     if (!registers.isEmpty()) {
-      final var keys = registers.keySet().stream().sorted(new AlphanumComparator()).toList();
-      for (final var key : keys) {
+      final java.util.List<java.lang.String> keys = registers.keySet().stream().sorted(new AlphanumComparator()).toList();
+      for (final java.lang.String key : keys) {
         constraints.gridy = y;
         constraints.gridx = 0;
-        final var circuitName = key.split("/")[0];
+        final java.lang.String circuitName = key.split("/")[0];
         panel.add(new MyLabel(circuitName, Font.ITALIC, true), constraints);
         constraints.gridx++;
-        final var registerName = key.split("/")[1];
+        final java.lang.String registerName = key.split("/")[1];
         panel.add(new MyLabel(registerName), constraints);
         constraints.gridx++;
-        final var selReg = registers.get(key);
+        final com.cburch.logisim.comp.Component selReg = registers.get(key);
         com.cburch.logisim.circuit.CircuitState mainCircState = proj.getCircuitState();
         if (mainCircState == null) continue;
         while (mainCircState.getParentState() != null) { // Get the main circuit
           mainCircState = mainCircState.getParentState();
         }
-        final var val = findVal(mainCircState, circuitName, selReg.getEnd(0).getLocation()); // Get Q port location
+        final com.cburch.logisim.data.Value val = findVal(mainCircState, circuitName, selReg.getEnd(0).getLocation()); // Get Q port location
 
         if (val != null) {
-          final var hexLabel = new MyLabel(val.toHexString());
+          final com.cburch.logisim.gui.generic.RegTabContent.MyLabel hexLabel = new MyLabel(val.toHexString());
           hexLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, hexLabel.getFont().getSize()));
           panel.add(hexLabel, constraints);
         } else {
@@ -151,8 +151,8 @@ public class RegTabContent extends JScrollPane implements LocaleListener, Simula
     }
 
     if (CollectionUtil.isNotEmpty(cs.getSubStates())) {
-      for (final var cst : cs.getSubStates()) {
-        final var ret = findVal(cst, cn, loc);
+      for (final com.cburch.logisim.circuit.CircuitState cst : cs.getSubStates()) {
+        final com.cburch.logisim.data.Value ret = findVal(cst, cn, loc);
         if (ret != null) return ret;
       }
     }
@@ -167,7 +167,7 @@ public class RegTabContent extends JScrollPane implements LocaleListener, Simula
    * @param circuit The circuit in which the registers are searched.
    */
   private synchronized void getAllRegisters(Circuit circuit) {
-    for (final var comp : circuit.getNonWires()) {
+    for (final com.cburch.logisim.comp.Component comp : circuit.getNonWires()) {
       if (comp.getFactory().getName().equals("Register")) {
         if (comp.getAttributeSet().getValue(Register.ATTR_SHOW_IN_TAB) && !comp.getAttributeSet().getValue(StdAttr.LABEL).equals("")) {
           registers.put(circuit.getName() + "/" + comp.getAttributeSet().getValue(StdAttr.LABEL), comp);

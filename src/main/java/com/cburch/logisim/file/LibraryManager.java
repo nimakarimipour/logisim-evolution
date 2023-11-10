@@ -120,7 +120,7 @@ public final class LibraryManager {
   }
 
   private static String toRelative(Loader loader, File file) {
-    final var currentDirectory = loader.getCurrentDirectory();
+    final java.io.File currentDirectory = loader.getCurrentDirectory();
     java.lang.String fileName = file.toString();
     try {
       fileName = file.getCanonicalPath();
@@ -128,17 +128,17 @@ public final class LibraryManager {
       // Do nothing as we already have defined the default above
     }
     if (currentDirectory != null) {
-      final var currentParts = currentDirectory.toString().split(Pattern.quote(File.separator));
-      final var newParts = fileName.split(Pattern.quote(File.separator));
-      final var nrOfNewParts = newParts.length;
+      final java.lang.String[] currentParts = currentDirectory.toString().split(Pattern.quote(File.separator));
+      final java.lang.String[] newParts = fileName.split(Pattern.quote(File.separator));
+      final int nrOfNewParts = newParts.length;
       // note that the newParts includes the filename, whilst the old doesn't
       int nrOfPartsEqual = 0;
       while ((nrOfPartsEqual < currentParts.length) && (nrOfPartsEqual < (nrOfNewParts - 1))
           && (currentParts[nrOfPartsEqual].equals(newParts[nrOfPartsEqual]))) {
         nrOfPartsEqual++;
       }
-      final var nrOfLevelsToGoDown = currentParts.length - nrOfPartsEqual;
-      final var relativeFile = new StringBuilder();
+      final int nrOfLevelsToGoDown = currentParts.length - nrOfPartsEqual;
+      final java.lang.StringBuilder relativeFile = new StringBuilder();
       relativeFile.append(String.format("..%s", File.separator).repeat(nrOfLevelsToGoDown));
       for (int restingPartId = nrOfPartsEqual; restingPartId < nrOfNewParts; restingPartId++) {
         relativeFile.append(newParts[restingPartId]);
@@ -151,14 +151,14 @@ public final class LibraryManager {
 
 
   public void fileSaved(Loader loader, File dest, File oldFile, LogisimFile file) {
-    final var old = findKnown(oldFile);
+    final com.cburch.logisim.file.LoadedLibrary old = findKnown(oldFile);
     if (old != null) {
       old.setDirty(false);
     }
 
-    final var lib = findKnown(dest);
+    final com.cburch.logisim.file.LoadedLibrary lib = findKnown(dest);
     if (lib != null) {
-      final var clone = file.cloneLogisimFile(loader);
+      final com.cburch.logisim.file.LogisimFile clone = file.cloneLogisimFile(loader);
       clone.setName(file.getName());
       clone.setDirty(false);
       lib.setBase(clone);
@@ -166,11 +166,11 @@ public final class LibraryManager {
   }
 
   private LoadedLibrary findKnown(Object key) {
-    final var retLibRef = fileMap.get(key);
+    final java.lang.ref.WeakReference<com.cburch.logisim.file.LoadedLibrary> retLibRef = fileMap.get(key);
     if (retLibRef == null) {
       return null;
     } else {
-      final var retLib = retLibRef.get();
+      final com.cburch.logisim.file.LoadedLibrary retLib = retLibRef.get();
       if (retLib == null) {
         fileMap.remove(key);
         return null;
@@ -181,14 +181,14 @@ public final class LibraryManager {
   }
 
   public Library findReference(LogisimFile file, File query) {
-    for (final var lib : file.getLibraries()) {
-      final var desc = invMap.get(lib);
+    for (final com.cburch.logisim.tools.Library lib : file.getLibraries()) {
+      final com.cburch.logisim.file.LibraryManager.LibraryDescriptor desc = invMap.get(lib);
       if (desc != null && desc.concernsFile(query)) {
         return lib;
       }
       if (lib instanceof LoadedLibrary loadedLib) {
         if (loadedLib.getBase() instanceof LogisimFile loadedProj) {
-          final var ret = findReference(loadedProj, query);
+          final com.cburch.logisim.tools.Library ret = findReference(loadedProj, query);
           if (ret != null) return lib;
         }
       }
@@ -200,7 +200,7 @@ public final class LibraryManager {
     if (loader.getBuiltin().getLibraries().contains(lib)) {
       return DESC_SEP + lib.getName();
     } else {
-      final var desc = invMap.get(lib);
+      final com.cburch.logisim.file.LibraryManager.LibraryDescriptor desc = invMap.get(lib);
       if (desc != null) {
         return desc.toDescriptor(loader);
       } else {
@@ -211,8 +211,8 @@ public final class LibraryManager {
   }
 
   Collection<LogisimFile> getLogisimLibraries() {
-    final var ret = new ArrayList<LogisimFile>();
-    for (final var lib : invMap.keySet()) {
+    final java.util.ArrayList<com.cburch.logisim.file.LogisimFile> ret = new ArrayList<LogisimFile>();
+    for (final com.cburch.logisim.file.LoadedLibrary lib : invMap.keySet()) {
       if (lib.getBase() instanceof LogisimFile lsFile) {
         ret.add(lsFile);
       }
@@ -221,7 +221,7 @@ public final class LibraryManager {
   }
 
   public LoadedLibrary loadJarLibrary(Loader loader, File toRead, String className) {
-    final var jarDescriptor = new JarDescriptor(toRead, className);
+    final com.cburch.logisim.file.LibraryManager.JarDescriptor jarDescriptor = new JarDescriptor(toRead, className);
     com.cburch.logisim.file.LoadedLibrary ret = findKnown(jarDescriptor);
     if (ret != null) return ret;
 
@@ -238,8 +238,8 @@ public final class LibraryManager {
   }
 
   public static Set<String> getBuildinNames(Loader loader) {
-    final var buildinNames = new HashSet<String>();
-    for (final var lib : loader.getBuiltin().getLibraries()) {
+    final java.util.HashSet<java.lang.String> buildinNames = new HashSet<String>();
+    for (final com.cburch.logisim.tools.Library lib : loader.getBuiltin().getLibraries()) {
       buildinNames.add(lib.getName());
     }
     return buildinNames;
@@ -248,17 +248,17 @@ public final class LibraryManager {
   public Library loadLibrary(Loader loader, String desc) {
     // It may already be loaded.
     // Otherwise we'll have to decode it.
-    final var sep = desc.indexOf(DESC_SEP);
+    final int sep = desc.indexOf(DESC_SEP);
     if (sep < 0) {
       loader.showError(S.get("fileDescriptorError", desc));
       return null;
     }
-    final var type = desc.substring(0, sep);
-    final var name = desc.substring(sep + 1);
+    final java.lang.String type = desc.substring(0, sep);
+    final java.lang.String name = desc.substring(sep + 1);
 
     switch (type) {
       case "" -> {
-        final var ret = loader.getBuiltin().getLibrary(name);
+        final com.cburch.logisim.tools.Library ret = loader.getBuiltin().getLibrary(name);
         if (ret == null) {
           loader.showError(S.get("fileBuiltinMissingError", name));
           return null;
@@ -266,14 +266,14 @@ public final class LibraryManager {
         return ret;
       }
       case "file" -> {
-        final var toRead = loader.getFileFor(name, Loader.LOGISIM_FILTER);
+        final java.io.File toRead = loader.getFileFor(name, Loader.LOGISIM_FILTER);
         return loadLogisimLibrary(loader, toRead);
       }
       case "jar" -> {
-        final var sepLoc = name.lastIndexOf(DESC_SEP);
-        final var fileName = name.substring(0, sepLoc);
-        final var className = name.substring(sepLoc + 1);
-        final var toRead = loader.getFileFor(fileName, Loader.JAR_FILTER);
+        final int sepLoc = name.lastIndexOf(DESC_SEP);
+        final java.lang.String fileName = name.substring(0, sepLoc);
+        final java.lang.String className = name.substring(sepLoc + 1);
+        final java.io.File toRead = loader.getFileFor(fileName, Loader.JAR_FILTER);
         return loadJarLibrary(loader, toRead, className);
       }
       default -> {
@@ -284,13 +284,13 @@ public final class LibraryManager {
   }
 
   public static String getLibraryFilePath(Loader loader, String desc) {
-    final var sep = desc.indexOf(DESC_SEP);
+    final int sep = desc.indexOf(DESC_SEP);
     if (sep < 0) {
       loader.showError(S.get("fileDescriptorError", desc));
       return null;
     }
-    final var type = desc.substring(0, sep);
-    final var name = desc.substring(sep + 1);
+    final java.lang.String type = desc.substring(0, sep);
+    final java.lang.String name = desc.substring(sep + 1);
     return switch (type) {
       case "file" -> loader.getFileFor(name, Loader.LOGISIM_FILTER).getAbsolutePath();
       case "jar" -> loader.getFileFor(name.substring(0, name.lastIndexOf(DESC_SEP)), Loader.JAR_FILTER).getAbsolutePath();
@@ -299,13 +299,13 @@ public final class LibraryManager {
   }
 
   public static String getReplacementDescriptor(Loader loader, String desc, String fileName) {
-    final var sep = desc.indexOf(DESC_SEP);
+    final int sep = desc.indexOf(DESC_SEP);
     if (sep < 0) {
       loader.showError(S.get("fileDescriptorError", desc));
       return null;
     }
-    final var type = desc.substring(0, sep);
-    final var name = desc.substring(sep + 1);
+    final java.lang.String type = desc.substring(0, sep);
+    final java.lang.String name = desc.substring(sep + 1);
     return switch (type) {
       case "file" -> String.format("file#%s", fileName);
       case "jar" -> LineBuffer.format("jar#{{1}}#{{2}}", fileName, name.substring(name.lastIndexOf(DESC_SEP) + 1));
@@ -324,14 +324,14 @@ public final class LibraryManager {
       return null;
     }
 
-    final var desc = new LogisimProjectDescriptor(toRead);
+    final com.cburch.logisim.file.LibraryManager.LogisimProjectDescriptor desc = new LogisimProjectDescriptor(toRead);
     fileMap.put(desc, new WeakReference<>(ret));
     invMap.put(ret, desc);
     return ret;
   }
 
   public void reload(Loader loader, LoadedLibrary lib) {
-    final var descriptor = invMap.get(lib);
+    final com.cburch.logisim.file.LibraryManager.LibraryDescriptor descriptor = invMap.get(lib);
     if (descriptor == null) {
       loader.showError(S.get("unknownLibraryFileError", lib.getDisplayName()));
     } else {
@@ -344,7 +344,7 @@ public final class LibraryManager {
   }
 
   void setDirty(File file, boolean dirty) {
-    final var lib = findKnown(file);
+    final com.cburch.logisim.file.LoadedLibrary lib = findKnown(file);
     if (lib != null) {
       lib.setDirty(dirty);
     }
@@ -360,11 +360,11 @@ public final class LibraryManager {
       logiLib = logi;
     }
     if (logiLib == null) return;
-    final var toBeRemoved = new HashSet<String>();
-    for (final var library : logiLib.getLibraries()) {
+    final java.util.HashSet<java.lang.String> toBeRemoved = new HashSet<String>();
+    for (final com.cburch.logisim.tools.Library library : logiLib.getLibraries()) {
       boolean isUsed = false;
-      for (final var circ : logiLib.getCircuits()) {
-        for (final var tool : circ.getNonWires()) {
+      for (final com.cburch.logisim.circuit.Circuit circ : logiLib.getCircuits()) {
+        for (final com.cburch.logisim.comp.Component tool : circ.getNonWires()) {
           isUsed |= library.contains(tool.getFactory());
         }
       }
@@ -374,14 +374,14 @@ public final class LibraryManager {
         removeUnusedLibraries(library);
       }
     }
-    for (final var remove : toBeRemoved) {
+    for (final java.lang.String remove : toBeRemoved) {
       lib.removeLibrary(remove);
     }
   }
 
   public static Set<String> getUsedBaseLibraries(Library library) {
-    final var result = new HashSet<String>();
-    for (final var lib : library.getLibraries()) {
+    final java.util.HashSet<java.lang.String> result = new HashSet<String>();
+    for (final com.cburch.logisim.tools.Library lib : library.getLibraries()) {
       result.addAll(getUsedBaseLibraries(lib));
       if (!(lib instanceof LoadedLibrary) && !(lib instanceof LogisimFile)) {
         result.add(lib.getName());
@@ -391,9 +391,9 @@ public final class LibraryManager {
   }
 
   public static void removeBaseLibraries(Library library, Set<String> baseLibs) {
-    final var libIterator = library.getLibraries().iterator();
+    final java.util.Iterator<com.cburch.logisim.tools.Library> libIterator = library.getLibraries().iterator();
     while (libIterator.hasNext()) {
-      final var lib = libIterator.next();
+      final com.cburch.logisim.tools.Library lib = libIterator.next();
       if (baseLibs.contains(lib.getName())) {
         libIterator.remove();
       } else {

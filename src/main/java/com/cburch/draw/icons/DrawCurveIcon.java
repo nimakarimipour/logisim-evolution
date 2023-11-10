@@ -19,7 +19,7 @@ public class DrawCurveIcon extends BaseIcon {
 
   @Override
   protected void paintIcon(Graphics2D gfx) {
-    final var wh = scale(3);
+    final int wh = scale(3);
     gfx.setStroke(new BasicStroke(scale(1)));
     gfx.setColor(Color.GRAY);
 
@@ -28,7 +28,7 @@ public class DrawCurveIcon extends BaseIcon {
     gfx.setStroke(new BasicStroke(scale(2)));
     gfx.setColor(Color.BLUE.darker());
 
-    final var p = new GeneralPath();
+    final java.awt.geom.GeneralPath p = new GeneralPath();
     p.moveTo(scale(1), scale(5));
     p.quadTo(scale(10), scale(1), scale(14), scale(14));
     gfx.draw(p);

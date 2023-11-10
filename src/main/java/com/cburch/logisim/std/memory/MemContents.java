@@ -68,8 +68,8 @@ public class MemContents implements Cloneable, HexModel {
   }
 
   private void clearPage(int index) {
-    final var page = pages[index];
-    final var oldValues = new long[page.getLength()];
+    final com.cburch.logisim.std.memory.MemContents.Page page = pages[index];
+    final long[] oldValues = new long[page.getLength()];
     boolean changed = false;
     for (int j = 0; j < oldValues.length; j++) {
       long val = page.get(j) & mask;
@@ -88,7 +88,7 @@ public class MemContents implements Cloneable, HexModel {
   @Override
   public MemContents clone() {
     try {
-      final var ret = (MemContents) super.clone();
+      final com.cburch.logisim.std.memory.MemContents ret = (MemContents) super.clone();
       ret.listeners = null;
       ret.pages = new Page[this.pages.length];
       for (int i = 0; i < ret.pages.length; i++) {
@@ -113,18 +113,18 @@ public class MemContents implements Cloneable, HexModel {
     if (len == 0) return;
 
     int pageStart = (int) (start >>> PAGE_SIZE_BITS);
-    final var startOffs = (int) (start & PAGE_MASK);
-    final var pageEnd = (int) ((start + len - 1) >>> PAGE_SIZE_BITS);
-    final var endOffs = (int) ((start + len - 1) & PAGE_MASK);
+    final int startOffs = (int) (start & PAGE_MASK);
+    final int pageEnd = (int) ((start + len - 1) >>> PAGE_SIZE_BITS);
+    final int endOffs = (int) ((start + len - 1) & PAGE_MASK);
     value &= mask;
 
     if (pageStart == pageEnd) {
       ensurePage(pageStart);
-      final var vals = new long[(int) len];
+      final long[] vals = new long[(int) len];
       Arrays.fill(vals, value);
-      final var page = pages[pageStart];
+      final com.cburch.logisim.std.memory.MemContents.Page page = pages[pageStart];
       if (!page.matches(vals, startOffs, mask)) {
-        final var oldValues = page.get(startOffs, (int) len);
+        final long[] oldValues = page.get(startOffs, (int) len);
         page.load(startOffs, vals, mask);
         if (value == 0 && page.isClear()) pages[pageStart] = null;
         fireBytesChanged(start, len, oldValues);
@@ -137,11 +137,11 @@ public class MemContents implements Cloneable, HexModel {
           // nothing to do
         } else {
           ensurePage(pageStart);
-          final var vals = new long[PAGE_SIZE - startOffs];
+          final long[] vals = new long[PAGE_SIZE - startOffs];
           Arrays.fill(vals, value);
-          final var page = pages[pageStart];
+          final com.cburch.logisim.std.memory.MemContents.Page page = pages[pageStart];
           if (!page.matches(vals, startOffs, mask)) {
-            final var oldValues = page.get(startOffs, vals.length);
+            final long[] oldValues = page.get(startOffs, vals.length);
             page.load(startOffs, vals, mask);
             if (value == 0 && page.isClear()) pages[pageStart] = null;
             fireBytesChanged(start, PAGE_SIZE - pageStart, oldValues);
@@ -153,28 +153,28 @@ public class MemContents implements Cloneable, HexModel {
           if (pages[i] != null) clearPage(i);
         }
       } else {
-        final var vals = new long[PAGE_SIZE];
+        final long[] vals = new long[PAGE_SIZE];
         Arrays.fill(vals, value);
         for (int i = pageStart + 1; i < pageEnd; i++) {
           ensurePage(i);
-          final var page = pages[i];
+          final com.cburch.logisim.std.memory.MemContents.Page page = pages[i];
           if (!page.matches(vals, 0, mask)) {
-            final var oldValues = page.get(0, PAGE_SIZE);
+            final long[] oldValues = page.get(0, PAGE_SIZE);
             page.load(0, vals, mask);
             fireBytesChanged(i << PAGE_SIZE_BITS, PAGE_SIZE, oldValues);
           }
         }
       }
       if (endOffs >= 0) {
-        final var page = pages[pageEnd];
+        final com.cburch.logisim.std.memory.MemContents.Page page = pages[pageEnd];
         if (value == 0 && page == null) {
           // nothing to do
         } else {
           ensurePage(pageEnd);
-          final var vals = new long[endOffs + 1];
+          final long[] vals = new long[endOffs + 1];
           Arrays.fill(vals, value);
           if (!page.matches(vals, 0, mask)) {
-            final var oldValues = page.get(0, endOffs + 1);
+            final long[] oldValues = page.get(0, endOffs + 1);
             page.load(0, vals, mask);
             if (value == 0 && page.isClear()) pages[pageEnd] = null;
             fireBytesChanged(pageEnd << PAGE_SIZE_BITS, endOffs + 1, oldValues);
@@ -187,7 +187,7 @@ public class MemContents implements Cloneable, HexModel {
   private void fireBytesChanged(long start, long numBytes, long[] oldValues) {
     if (listeners == null) return;
     boolean found = false;
-    for (final var l : listeners) {
+    for (final com.cburch.hex.HexModelListener l : listeners) {
       found = true;
       l.bytesChanged(this, start, numBytes, oldValues);
     }
@@ -197,7 +197,7 @@ public class MemContents implements Cloneable, HexModel {
   private void fireMetainfoChanged() {
     if (listeners == null) return;
     boolean found = false;
-    for (final var l : listeners) {
+    for (final com.cburch.hex.HexModelListener l : listeners) {
       found = true;
       l.metainfoChanged(this);
     }
@@ -236,7 +236,7 @@ public class MemContents implements Cloneable, HexModel {
   }
 
   public boolean isClear() {
-    for (final var page : pages) {
+    for (final com.cburch.logisim.std.memory.MemContents.Page page : pages) {
       if (page != null) {
         for (int j = page.getLength() - 1; j >= 0; j--) {
           if (page.get(j) != 0) return false;
@@ -255,7 +255,7 @@ public class MemContents implements Cloneable, HexModel {
 
   @Override
   public void set(long addr, long value) {
-    final var page = (int) (addr >>> PAGE_SIZE_BITS);
+    final int page = (int) (addr >>> PAGE_SIZE_BITS);
     long offs = (addr & PAGE_MASK);
     if (page < 0 || page >= pages.length) return;
     long old = pages[page] == null ? 0 : pages[page].get(offs) & mask;
@@ -274,15 +274,15 @@ public class MemContents implements Cloneable, HexModel {
     if (values.length == 0) return;
 
     int pageStart = (int) (start >>> PAGE_SIZE_BITS);
-    final var startOffs = (int) (start & PAGE_MASK);
-    final var pageEnd = (int) ((start + values.length - 1) >>> PAGE_SIZE_BITS);
-    final var endOffs = (int) ((start + values.length - 1) & PAGE_MASK);
+    final int startOffs = (int) (start & PAGE_MASK);
+    final int pageEnd = (int) ((start + values.length - 1) >>> PAGE_SIZE_BITS);
+    final int endOffs = (int) ((start + values.length - 1) & PAGE_MASK);
 
     if (pageStart == pageEnd) {
       ensurePage(pageStart);
-      final var page = pages[pageStart];
+      final com.cburch.logisim.std.memory.MemContents.Page page = pages[pageStart];
       if (!page.matches(values, startOffs, mask)) {
-        final var oldValues = page.get(startOffs, values.length);
+        final long[] oldValues = page.get(startOffs, values.length);
         page.load(startOffs, values, mask);
         if (page.isClear()) pages[pageStart] = null;
         fireBytesChanged(start, values.length, oldValues);
@@ -294,11 +294,11 @@ public class MemContents implements Cloneable, HexModel {
         nextOffs = 0;
       } else {
         ensurePage(pageStart);
-        final var vals = new long[PAGE_SIZE - startOffs];
+        final long[] vals = new long[PAGE_SIZE - startOffs];
         System.arraycopy(values, 0, vals, 0, vals.length);
-        final var page = pages[pageStart];
+        final com.cburch.logisim.std.memory.MemContents.Page page = pages[pageStart];
         if (!page.matches(vals, startOffs, mask)) {
-          final var oldValues = page.get(startOffs, vals.length);
+          final long[] oldValues = page.get(startOffs, vals.length);
           page.load(startOffs, vals, mask);
           if (page.isClear()) pages[pageStart] = null;
           fireBytesChanged(start, PAGE_SIZE - pageStart, oldValues);
@@ -325,7 +325,7 @@ public class MemContents implements Cloneable, HexModel {
         if (page != null) {
           System.arraycopy(values, offs, vals, 0, PAGE_SIZE);
           if (!page.matches(vals, startOffs, mask)) {
-            final var oldValues = page.get(0, PAGE_SIZE);
+            final long[] oldValues = page.get(0, PAGE_SIZE);
             page.load(0, vals, mask);
             if (page.isClear()) pages[i] = null;
             fireBytesChanged(i << PAGE_SIZE_BITS, PAGE_SIZE, oldValues);
@@ -336,9 +336,9 @@ public class MemContents implements Cloneable, HexModel {
         ensurePage(pageEnd);
         vals = new long[endOffs + 1];
         System.arraycopy(values, offs, vals, 0, endOffs + 1);
-        final var page = pages[pageEnd];
+        final com.cburch.logisim.std.memory.MemContents.Page page = pages[pageEnd];
         if (!page.matches(vals, startOffs, mask)) {
-          final var oldValues = page.get(0, endOffs + 1);
+          final long[] oldValues = page.get(0, endOffs + 1);
           page.load(0, vals, mask);
           if (page.isClear()) pages[pageEnd] = null;
           fireBytesChanged(pageEnd << PAGE_SIZE_BITS, endOffs + 1, oldValues);
@@ -369,8 +369,8 @@ public class MemContents implements Cloneable, HexModel {
 
     do {
       com.cburch.logisim.std.memory.MemContents.Page dstPage = pages[dp];
-      final var srcPage = src.pages[sp];
-      final var n = Math.min(count, Math.min(PAGE_SIZE - si, PAGE_SIZE - di));
+      final com.cburch.logisim.std.memory.MemContents.Page srcPage = src.pages[sp];
+      final int n = Math.min(count, Math.min(PAGE_SIZE - si, PAGE_SIZE - di));
       if (dstPage == null && srcPage == null) {
         // both already all zeros, so do nothing
       } else if (srcPage == null) {
@@ -379,7 +379,7 @@ public class MemContents implements Cloneable, HexModel {
       } else {
         if (dstPage == null) dstPage = pages[dp] = MemContentsSub.createPage(PAGE_SIZE, width, randomize);
         // copy locations di..di+n on this page
-        final var vals = srcPage.get(si, n);
+        final long[] vals = srcPage.get(si, n);
         dstPage.set(di, vals);
       }
       count -= n;
@@ -403,7 +403,7 @@ public class MemContents implements Cloneable, HexModel {
     this.width = width;
     this.mask = width == 64 ? -1L : ((1L << width) - 1);
 
-    final var oldPages = pages;
+    final com.cburch.logisim.std.memory.MemContents.Page[] oldPages = pages;
     int pageCount;
     int pageLength;
     if (addrBits < PAGE_SIZE_BITS) {
@@ -415,11 +415,11 @@ public class MemContents implements Cloneable, HexModel {
     }
     pages = new Page[pageCount];
     if (oldPages != null) {
-      final var n = Math.min(oldPages.length, pages.length);
+      final int n = Math.min(oldPages.length, pages.length);
       for (int i = 0; i < n; i++) {
         if (oldPages[i] != null) {
           pages[i] = MemContentsSub.createPage(pageLength, width, randomize);
-          final var m = Math.min(oldPages[i].getLength(), pageLength);
+          final int m = Math.min(oldPages[i].getLength(), pageLength);
           for (int j = 0; j < m; j++) {
             pages[i].set(j, oldPages[i].get(j));
           }
@@ -435,7 +435,7 @@ public class MemContents implements Cloneable, HexModel {
 
   public void condFillRandom() {
     if (AppPreferences.Memory_Startup_Unknown.get()) {
-      final var pageLength = (addrBits < PAGE_SIZE_BITS) ? 1 << addrBits : PAGE_SIZE;
+      final int pageLength = (addrBits < PAGE_SIZE_BITS) ? 1 << addrBits : PAGE_SIZE;
       for (int i = 0; i < pages.length; i++)
         if (pages[i] == null) pages[i] = MemContentsSub.createPage(pageLength, width, randomize);
     }
@@ -454,7 +454,7 @@ public class MemContents implements Cloneable, HexModel {
     abstract long get(long addr);
 
     long[] get(long start, int len) {
-      final var ret = new long[len];
+      final long[] ret = new long[len];
       for (int i = 0; i < ret.length; i++) ret[i] = get(start + i);
       return ret;
     }

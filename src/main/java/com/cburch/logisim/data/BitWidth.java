@@ -52,7 +52,7 @@ public class BitWidth implements Comparable<BitWidth> {
       // there are too many dropdown options, so use the default editor
       if (choices == null) return super.getCellEditor(value);
 
-      final var combo = new ComboBox<>(choices);
+      final com.cburch.logisim.gui.generic.ComboBox<com.cburch.logisim.data.BitWidth> combo = new ComboBox<>(choices);
       if (value != null) combo.setSelectedItem(value);
       combo.setEditable(true);
       return combo;

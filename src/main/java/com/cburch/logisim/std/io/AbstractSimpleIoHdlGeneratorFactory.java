@@ -28,15 +28,15 @@ public class AbstractSimpleIoHdlGeneratorFactory extends InlinedHdlGeneratorFact
   @Override
   public LineBuffer getInlinedCode(
       Netlist nets, Long componentId, netlistComponent componentInfo, String circuitName) {
-    final var contents = LineBuffer.getHdlBuffer();
-    final var wires = new HashMap<String, String>();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
+    final java.util.HashMap<java.lang.String,java.lang.String> wires = new HashMap<String, String>();
     for (int i = 0; i < componentInfo.nrOfEnds(); i++) {
       if (componentInfo.isEndConnected(i) && isInputComponent) {
-        final var pressPassive =
+        final boolean pressPassive =
             componentInfo.getComponent().getAttributeSet().getValue(Button.ATTR_PRESS)
                 == Button.BUTTON_PRESS_PASSIVE;
-        final var destination = Hdl.getNetName(componentInfo, i, true, nets);
-        final var source =
+        final java.lang.String destination = Hdl.getNetName(componentInfo, i, true, nets);
+        final java.lang.String source =
             LineBuffer.formatHdl(
                 "{{1}}{{2}}{{<}}{{3}}{{>}}",
                 (pressPassive ? Hdl.notOperator() : ""),

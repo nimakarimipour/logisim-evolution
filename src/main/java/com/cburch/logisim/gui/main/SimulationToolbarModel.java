@@ -93,9 +93,9 @@ public class SimulationToolbarModel extends AbstractToolbarModel implements Chan
 
   @Override
   public void stateChanged(ChangeEvent e) {
-    final var sim = project.getSimulator();
-    final var running = sim != null && sim.isAutoPropagating();
-    final var ticking = sim != null && sim.isAutoTicking();
+    final com.cburch.logisim.circuit.Simulator sim = project.getSimulator();
+    final boolean running = sim != null && sim.isAutoPropagating();
+    final boolean ticking = sim != null && sim.isAutoTicking();
     if (running) {
       RunToggleIcon.setType(SimulationIcon.SIM_PAUSE);
       simRunToggle.setToolTip(S.getter("simulateStopTip"));

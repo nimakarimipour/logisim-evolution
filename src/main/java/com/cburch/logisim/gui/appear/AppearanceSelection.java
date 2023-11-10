@@ -34,7 +34,7 @@ public class AppearanceSelection extends Selection {
   }
 
   private boolean shouldSnap(Collection<? extends CanvasObject> shapes) {
-    for (final var obj : shapes) {
+    for (final com.cburch.draw.model.CanvasObject obj : shapes) {
       if (obj instanceof AppearanceElement) return true;
     }
     return false;

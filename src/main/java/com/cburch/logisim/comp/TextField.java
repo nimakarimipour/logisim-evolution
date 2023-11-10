@@ -54,15 +54,15 @@ public class TextField {
   }
 
   public void draw(Graphics g) {
-    final var old = g.getFont();
+    final java.awt.Font old = g.getFont();
     if (font != null) g.setFont(font);
 
     int x = this.x;
     int y = this.y;
-    final var fm = g.getFontMetrics();
-    final var width = fm.stringWidth(text);
-    final var ascent = fm.getAscent();
-    final var descent = fm.getDescent();
+    final java.awt.FontMetrics fm = g.getFontMetrics();
+    final int width = fm.stringWidth(text);
+    final int ascent = fm.getAscent();
+    final int descent = fm.getDescent();
     switch (halign) {
       case TextField.H_CENTER -> x -= width / 2;
       case TextField.H_RIGHT -> x -= width;
@@ -82,7 +82,7 @@ public class TextField {
   }
 
   public void fireTextChanged(TextFieldEvent e) {
-    for (final var l : new ArrayList<>(listeners)) {
+    for (final com.cburch.logisim.comp.TextFieldListener l : new ArrayList<>(listeners)) {
       l.textChanged(e);
     }
   }
@@ -90,10 +90,10 @@ public class TextField {
   public Bounds getBounds(Graphics g) {
     int x = this.x;
     int y = this.y;
-    final var fm = (font == null) ? g.getFontMetrics() : g.getFontMetrics(font);
-    final var width = fm.stringWidth(text);
-    final var ascent = fm.getAscent();
-    final var descent = fm.getDescent();
+    final java.awt.FontMetrics fm = (font == null) ? g.getFontMetrics() : g.getFontMetrics(font);
+    final int width = fm.stringWidth(text);
+    final int ascent = fm.getAscent();
+    final int descent = fm.getDescent();
 
     switch (halign) {
       case TextField.H_CENTER -> x -= width / 2;
@@ -185,7 +185,7 @@ public class TextField {
   //
   public void setText(String text) {
     if (!text.equals(this.text)) {
-      final var e = new TextFieldEvent(this, this.text, text);
+      final com.cburch.logisim.comp.TextFieldEvent e = new TextFieldEvent(this, this.text, text);
       this.text = text;
       fireTextChanged(e);
     }

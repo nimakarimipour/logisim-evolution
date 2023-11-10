@@ -25,21 +25,21 @@ public final class WindowMenuManager {
   }
 
   public static void addManager(WindowMenuItemManager manager) {
-    for (final var menu : menus) {
+    for (final com.cburch.logisim.util.WindowMenu menu : menus) {
       manager.createMenuItem(menu);
     }
     managers.add(manager);
   }
 
   public static void addMenu(WindowMenu menu) {
-    for (final var manager : managers) {
+    for (final com.cburch.logisim.util.WindowMenuItemManager manager : managers) {
       manager.createMenuItem(menu);
     }
     menus.add(menu);
   }
 
   private static void enableAll() {
-    for (final var menu : menus) {
+    for (final com.cburch.logisim.util.WindowMenu menu : menus) {
       menu.computeEnabled();
     }
   }
@@ -55,7 +55,7 @@ public final class WindowMenuManager {
   // TODO frames should call removeMenu when they're destroyed
 
   public static void removeManager(WindowMenuItemManager manager) {
-    for (final var menu : menus) {
+    for (final com.cburch.logisim.util.WindowMenu menu : menus) {
       manager.removeMenuItem(menu);
     }
     managers.remove(manager);
@@ -64,7 +64,7 @@ public final class WindowMenuManager {
   static void setCurrentManager(WindowMenuItemManager value) {
     if (value == currentManager) return;
 
-    final var doEnable = (currentManager == null) != (value == null);
+    final boolean doEnable = (currentManager == null) != (value == null);
     if (currentManager == null) setNullItems(false);
     else currentManager.setSelected(false);
     currentManager = value;
@@ -74,7 +74,7 @@ public final class WindowMenuManager {
   }
 
   private static void setNullItems(boolean value) {
-    for (final var menu : menus) {
+    for (final com.cburch.logisim.util.WindowMenu menu : menus) {
       menu.setNullItemSelected(value);
     }
   }

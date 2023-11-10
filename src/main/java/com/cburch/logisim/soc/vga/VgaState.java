@@ -413,7 +413,7 @@ public class VgaState implements SocBusSlaveInterface, SocBusSnifferInterface, S
   public String getName() {
     java.lang.String name = label;
     if (StringUtil.isNullOrEmpty(name)) {
-      final var loc = attachedBus.getComponent().getLocation();
+      final com.cburch.logisim.data.Location loc = attachedBus.getComponent().getLocation();
       name = attachedBus.getComponent().getFactory().getDisplayName() + "@" + loc.getX() + "," + loc.getY();
     }
     return name;

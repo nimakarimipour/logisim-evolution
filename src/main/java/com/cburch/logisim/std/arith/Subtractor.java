@@ -50,7 +50,7 @@ public class Subtractor extends InstanceFactory {
     setOffsetBounds(Bounds.create(-40, -20, 40, 40));
     setIcon(new ArithmeticIcon("-"));
 
-    final var ps = new Port[5];
+    final com.cburch.logisim.instance.Port[] ps = new Port[5];
     ps[IN0] = new Port(-40, -10, Port.INPUT, StdAttr.WIDTH);
     ps[IN1] = new Port(-40, 10, Port.INPUT, StdAttr.WIDTH);
     ps[OUT] = new Port(0, 0, Port.OUTPUT, StdAttr.WIDTH);
@@ -66,7 +66,7 @@ public class Subtractor extends InstanceFactory {
 
   @Override
   public String getHDLName(AttributeSet attrs) {
-    final var fullName = new StringBuilder();
+    final java.lang.StringBuilder fullName = new StringBuilder();
     if (attrs.getValue(StdAttr.WIDTH).getWidth() == 1) fullName.append("FullSubtractor");
     else fullName.append(CorrectLabel.getCorrectLabel(this.getName()));
     return fullName.toString();
@@ -74,7 +74,7 @@ public class Subtractor extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var gfx = painter.getGraphics();
+    final java.awt.Graphics gfx = painter.getGraphics();
     painter.drawBounds();
 
     gfx.setColor(Color.GRAY);
@@ -84,9 +84,9 @@ public class Subtractor extends InstanceFactory {
     painter.drawPort(B_IN, "b in", Direction.NORTH);
     painter.drawPort(B_OUT, "b out", Direction.SOUTH);
 
-    final var loc = painter.getLocation();
-    final var x = loc.getX();
-    final var y = loc.getY();
+    final com.cburch.logisim.data.Location loc = painter.getLocation();
+    final int x = loc.getX();
+    final int y = loc.getY();
     GraphicsUtil.switchToWidth(gfx, 2);
     gfx.setColor(Color.BLACK);
     gfx.drawLine(x - 15, y, x - 5, y);
@@ -99,14 +99,14 @@ public class Subtractor extends InstanceFactory {
     BitWidth data = state.getAttributeValue(StdAttr.WIDTH);
 
     // compute outputs
-    final var a = state.getPortValue(IN0);
-    final var b = state.getPortValue(IN1);
+    final com.cburch.logisim.data.Value a = state.getPortValue(IN0);
+    final com.cburch.logisim.data.Value b = state.getPortValue(IN1);
     com.cburch.logisim.data.Value bIn = state.getPortValue(B_IN);
     if (bIn == Value.UNKNOWN || bIn == Value.NIL) bIn = Value.FALSE;
-    final var outs = Adder.computeSum(data, a, b.not(), bIn.not());
+    final com.cburch.logisim.data.Value[] outs = Adder.computeSum(data, a, b.not(), bIn.not());
 
     // propagate them
-    final var delay = (data.getWidth() + 4) * Adder.PER_DELAY;
+    final int delay = (data.getWidth() + 4) * Adder.PER_DELAY;
     state.setPort(OUT, outs[0], delay);
     state.setPort(B_OUT, outs[1].not(), delay);
   }

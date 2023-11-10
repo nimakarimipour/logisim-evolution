@@ -34,9 +34,9 @@ public class ReplacementMap {
 
   public ReplacementMap(Component oldComp, Component newComp) {
     this(new HashMap<>(), new HashMap<>());
-    final var oldSet = new HashSet<Component>(3);
+    final java.util.HashSet<com.cburch.logisim.comp.Component> oldSet = new HashSet<Component>(3);
     oldSet.add(oldComp);
-    final var newSet = new HashSet<Component>(3);
+    final java.util.HashSet<com.cburch.logisim.comp.Component> newSet = new HashSet<Component>(3);
     newSet.add(newComp);
     map.put(oldComp, newSet);
     inverse.put(newComp, oldSet);
@@ -56,9 +56,9 @@ public class ReplacementMap {
   }
 
   void append(ReplacementMap next) {
-    for (final var e : next.map.entrySet()) {
-      final var b = e.getKey();
-      final var cs = e.getValue(); // what b is replaced by
+    for (final java.util.Map.Entry<com.cburch.logisim.comp.Component,java.util.HashSet<com.cburch.logisim.comp.Component>> e : next.map.entrySet()) {
+      final com.cburch.logisim.comp.Component b = e.getKey();
+      final java.util.HashSet<com.cburch.logisim.comp.Component> cs = e.getValue(); // what b is replaced by
       java.util.HashSet<com.cburch.logisim.comp.Component> as = this.inverse.remove(b); // what was replaced
       // to get b
       if (as == null) { // b pre-existed replacements so
@@ -66,13 +66,13 @@ public class ReplacementMap {
         as.add(b);
       }
 
-      for (final var a : as) {
-        final var aDst = this.map.computeIfAbsent(a, k -> new HashSet<>(cs.size()));
+      for (final com.cburch.logisim.comp.Component a : as) {
+        final java.util.HashSet<com.cburch.logisim.comp.Component> aDst = this.map.computeIfAbsent(a, k -> new HashSet<>(cs.size()));
         aDst.remove(b);
         aDst.addAll(cs);
       }
 
-      for (final var c : cs) {
+      for (final com.cburch.logisim.comp.Component c : cs) {
         java.util.HashSet<com.cburch.logisim.comp.Component> cSrc = this.inverse.get(c); // should always
         // be null
         if (cSrc == null) {
@@ -83,10 +83,10 @@ public class ReplacementMap {
       }
     }
 
-    for (final var e : next.inverse.entrySet()) {
-      final var c = e.getKey();
+    for (final java.util.Map.Entry<com.cburch.logisim.comp.Component,java.util.HashSet<com.cburch.logisim.comp.Component>> e : next.inverse.entrySet()) {
+      final com.cburch.logisim.comp.Component c = e.getKey();
       if (!inverse.containsKey(c)) {
-        final var bs = e.getValue();
+        final java.util.HashSet<com.cburch.logisim.comp.Component> bs = e.getValue();
         if (!bs.isEmpty()) {
           logger.error("Internal error: component replaced but not represented");
         }
@@ -125,20 +125,20 @@ public class ReplacementMap {
 
   public void print(PrintStream out) {
     boolean found = false;
-    for (final var comp : getRemovals()) {
+    for (final com.cburch.logisim.comp.Component comp : getRemovals()) {
       if (!found) out.println("  removals:");
       found = true;
       out.println("    " + comp.toString());
-      for (final var b : map.get(comp)) out.println("     `--> " + b.toString());
+      for (final com.cburch.logisim.comp.Component b : map.get(comp)) out.println("     `--> " + b.toString());
     }
     if (!found) out.println("  removals: none");
 
     found = false;
-    for (final var b : getAdditions()) {
+    for (final com.cburch.logisim.comp.Component b : getAdditions()) {
       if (!found) out.println("  additions:");
       found = true;
       out.println("    " + b.toString());
-      for (final var a : inverse.get(b)) out.println("     ^-- " + a.toString());
+      for (final com.cburch.logisim.comp.Component a : inverse.get(b)) out.println("     ^-- " + a.toString());
     }
     if (!found) out.println("  additions: none");
   }
@@ -146,11 +146,11 @@ public class ReplacementMap {
   public void put(Component a, Collection<? extends Component> bs) {
     if (frozen) throw new IllegalStateException("cannot change map after frozen");
 
-    final var oldBs = map.computeIfAbsent(a, k -> new HashSet<>(bs.size()));
+    final java.util.HashSet<com.cburch.logisim.comp.Component> oldBs = map.computeIfAbsent(a, k -> new HashSet<>(bs.size()));
     oldBs.addAll(bs);
 
-    for (final var b : bs) {
-      final var oldAs = inverse.computeIfAbsent(b, k -> new HashSet<>(3));
+    for (final com.cburch.logisim.comp.Component b : bs) {
+      final java.util.HashSet<com.cburch.logisim.comp.Component> oldAs = inverse.computeIfAbsent(b, k -> new HashSet<>(3));
       oldAs.add(a);
     }
   }
@@ -171,8 +171,8 @@ public class ReplacementMap {
 
   @Override
   public String toString() {
-    final var out = new ByteArrayOutputStream();
-    try (final var p = new PrintStream(out, true, StandardCharsets.UTF_8)) {
+    final java.io.ByteArrayOutputStream out = new ByteArrayOutputStream();
+    try (final java.io.PrintStream p = new PrintStream(out, true, StandardCharsets.UTF_8)) {
       print(p);
     } catch (Exception ignored) {
       // Do nothing.

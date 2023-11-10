@@ -66,7 +66,7 @@ class MenuHelp extends JMenu implements ActionListener {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    final var src = e.getSource();
+    final java.lang.Object src = e.getSource();
     if (guide.equals(src)) {
       showHelp("guide");
     } else if (tutorial.equals(src)) {
@@ -93,9 +93,9 @@ class MenuHelp extends JMenu implements ActionListener {
       helpUrl = "doc/doc_en.hs";
     }
     if (helpSet == null || helpFrame == null || !helpUrl.equals(helpSetUrl)) {
-      final var loader = MenuHelp.class.getClassLoader();
+      final java.lang.ClassLoader loader = MenuHelp.class.getClassLoader();
       try {
-        final var hsUrl = HelpSet.findHelpSet(loader, helpUrl);
+        final java.net.URL hsUrl = HelpSet.findHelpSet(loader, helpUrl);
         if (hsUrl == null) {
           disableHelp();
           OptionPane.showMessageDialog(menubar.getParentFrame(), S.get("helpNotFoundError"));

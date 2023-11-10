@@ -89,7 +89,7 @@ public class PlaTable {
     inSize = other.inSize;
     outSize = other.outSize;
     for (Row otherRow : other.rows) {
-      final var r = addTableRow();
+      final com.cburch.logisim.std.gates.PlaTable.Row r = addTableRow();
       r.copyFrom(otherRow);
     }
   }
@@ -117,7 +117,7 @@ public class PlaTable {
   }
 
   public Row addTableRow() {
-    final var r = new Row(inSize, outSize);
+    final com.cburch.logisim.std.gates.PlaTable.Row r = new Row(inSize, outSize);
     rows.add(r);
     return r;
   }
@@ -132,14 +132,14 @@ public class PlaTable {
   }
 
   public String toStandardString() {
-    final var ret = new StringBuilder();
-    for (final var r : rows) ret.append(r.toStandardString()).append("\n");
+    final java.lang.StringBuilder ret = new StringBuilder();
+    for (final com.cburch.logisim.std.gates.PlaTable.Row r : rows) ret.append(r.toStandardString()).append("\n");
     return ret.toString();
   }
 
   public static PlaTable parse(String str) {
     PlaTable tt = null;
-    for (final var line : str.split("\n")) {
+    for (final java.lang.String line : str.split("\n")) {
       try {
         tt = parseOneLine(tt, line);
       } catch (IOException e) {
@@ -153,14 +153,14 @@ public class PlaTable {
 
   private static PlaTable parseOneLine(PlaTable tt, String line) throws IOException {
     line = line.trim();
-    final var jj = line.indexOf("#");
+    final int jj = line.indexOf("#");
     String andBits, orBits, comment = "";
     if (jj >= 0) {
       comment = line.substring(jj + 1).trim();
       line = line.substring(0, jj).trim();
     }
     if (line.equals("")) return tt;
-    final var ii = line.indexOf(" ");
+    final int ii = line.indexOf(" ");
     if (ii <= 0) throw new IOException("PLA row '" + line + "' is missing outputs.");
     andBits = line.substring(0, ii).trim();
     orBits = line.substring(ii + 1).trim();
@@ -171,15 +171,15 @@ public class PlaTable {
     else if (orBits.length() != tt.outSize)
       throw new IOException(
           "PLA row '" + line + "' must have exactly " + tt.outSize + " output bits.");
-    final var r = tt.addTableRow();
+    final com.cburch.logisim.std.gates.PlaTable.Row r = tt.addTableRow();
     for (int i = 0; i < andBits.length(); i++) {
-      final var s = andBits.charAt(i);
+      final char s = andBits.charAt(i);
       if (s != ONE && s != ZERO && s != DONTCARE)
         throw new IOException("PLA row '" + line + "' contains invalid input bit '" + s + "'.");
       r.inBits[andBits.length() - i - 1] = s;
     }
     for (int i = 0; i < orBits.length(); i++) {
-      final var s = orBits.charAt(i);
+      final char s = orBits.charAt(i);
       if (s != ONE && s != ZERO)
         throw new IOException("PLA row '" + line + "' contains invalid output bit '" + s + "'.");
       r.outBits[orBits.length() - i - 1] = s;
@@ -272,7 +272,7 @@ public class PlaTable {
 
     static char[] truncate(char[] b, int n) {
       if (b.length == n) return b;
-      final var a = new char[n];
+      final char[] a = new char[n];
       for (int i = 0; i < n && i < b.length; i++) a[i] = b[i];
       for (int i = b.length; i < n; i++) a[i] = ZERO;
       return a;
@@ -284,9 +284,9 @@ public class PlaTable {
     }
 
     public String toStandardString() {
-      final var i = new StringBuilder();
+      final java.lang.StringBuilder i = new StringBuilder();
       for (char inBit : inBits) i.insert(0, inBit);
-      final var o = new StringBuilder();
+      final java.lang.StringBuilder o = new StringBuilder();
       for (char outBit : outBits) o.insert(0, outBit);
       java.lang.String ret = i + " " + o;
       if (!comment.trim().equals("")) ret += " # " + comment.trim();
@@ -294,7 +294,7 @@ public class PlaTable {
     }
 
     boolean matches(long input) {
-      for (final var bit : inBits) {
+      for (final char bit : inBits) {
         long b = input & 1;
         if ((bit == ONE && b != 1) || (bit == ZERO && b != 0)) return false;
         input = (input >> 1);
@@ -314,12 +314,12 @@ public class PlaTable {
   }
 
   public long valueFor(long input) {
-    for (final var row : rows) if (row.matches(input)) return row.getOutput();
+    for (final com.cburch.logisim.std.gates.PlaTable.Row row : rows) if (row.matches(input)) return row.getOutput();
     return 0;
   }
 
   public String commentFor(long input) {
-    for (final var row : rows) if (row.matches(input)) return row.comment;
+    for (final com.cburch.logisim.std.gates.PlaTable.Row row : rows) if (row.matches(input)) return row.comment;
     return "n/a";
   }
 
@@ -337,13 +337,13 @@ public class PlaTable {
     public EditorDialog(Frame parent) {
       super(parent, S.get("plaEditorTitle"), true);
       setResizable(true);
-      final var cPane = super.getContentPane();
+      final java.awt.Container cPane = super.getContentPane();
       cPane.setLayout(new BorderLayout(5, 5));
 
       hdrPanel = new HeaderPanel();
       // Give header a vertical (but invisible) vertical scroll bar, to help
       // align with the lower panel.
-      final var header =
+      final javax.swing.JScrollPane header =
           new JScrollPane(
               hdrPanel,
               JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
@@ -369,7 +369,7 @@ public class PlaTable {
                 }
 
                 private JButton createZeroButton() {
-                  final var jbutton = new JButton();
+                  final javax.swing.JButton jbutton = new JButton();
                   jbutton.setPreferredSize(new Dimension(0, 0));
                   jbutton.setMinimumSize(new Dimension(0, 0));
                   jbutton.setMaximumSize(new Dimension(0, 0));
@@ -380,7 +380,7 @@ public class PlaTable {
       ttPanel = new TablePanel();
       ttScrollPanel = new JPanel();
       ttScrollPanel.add(ttPanel, BorderLayout.CENTER);
-      final var table =
+      final javax.swing.JScrollPane table =
           new JScrollPane(
               ttScrollPanel,
               JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
@@ -415,11 +415,11 @@ public class PlaTable {
       hdrPanel.reset();
       ttPanel.reset();
       if (resize) {
-        final var d = hdrPanel.getPreferredSize();
-        final var w = (int) d.getWidth() + 50;
-        final var h = (int) d.getHeight() + 20 * newTable.rows.size() + 140;
-        final var ww = Math.max(Math.min(w, 800), 300);
-        final var hh = Math.max(Math.min(h, 500), 200);
+        final java.awt.Dimension d = hdrPanel.getPreferredSize();
+        final int w = (int) d.getWidth() + 50;
+        final int h = (int) d.getHeight() + 20 * newTable.rows.size() + 140;
+        final int ww = Math.max(Math.min(w, 800), 300);
+        final int hh = Math.max(Math.min(h, 500), 200);
         repack(new Dimension(AppPreferences.getScaled(ww), AppPreferences.getScaled(hh)));
       }
     }
@@ -450,15 +450,15 @@ public class PlaTable {
     }
 
     void read() {
-      final var chooser = JFileChoosers.create();
+      final javax.swing.JFileChooser chooser = JFileChoosers.create();
       chooser.setSelectedFile(new File(normalizeName(oldTable.label)));
       chooser.setDialogTitle(S.get("plaLoadDialogTitle"));
       chooser.setFileFilter(Loader.TXT_FILTER);
-      final var choice = chooser.showOpenDialog(null);
+      final int choice = chooser.showOpenDialog(null);
       if (choice == JFileChooser.APPROVE_OPTION) {
-        final var f = chooser.getSelectedFile();
+        final java.io.File f = chooser.getSelectedFile();
         try {
-          final var loaded = parse(f);
+          final com.cburch.logisim.std.gates.PlaTable loaded = parse(f);
           newTable.copyFrom(loaded);
           reset(false);
         } catch (IOException e) {
@@ -469,13 +469,13 @@ public class PlaTable {
     }
 
     void write() {
-      final var chooser = JFileChoosers.create();
+      final javax.swing.JFileChooser chooser = JFileChoosers.create();
       chooser.setSelectedFile(new File(normalizeName(oldTable.label)));
       chooser.setDialogTitle(S.get("plaSaveDialogTitle"));
       chooser.setFileFilter(Loader.TXT_FILTER);
-      final var choice = chooser.showSaveDialog(null);
+      final int choice = chooser.showSaveDialog(null);
       if (choice == JFileChooser.APPROVE_OPTION) {
-        final var f = chooser.getSelectedFile();
+        final java.io.File f = chooser.getSelectedFile();
         try {
           newTable.save(f);
         } catch (IOException e) {
@@ -489,20 +489,20 @@ public class PlaTable {
       private static final long serialVersionUID = 1L;
 
       public ButtonPanel(JDialog parent) {
-        final var write = new JButton("Export");
+        final javax.swing.JButton write = new JButton("Export");
         write.addActionListener(e -> write());
         add(write);
 
-        final var read = new JButton("Import");
+        final javax.swing.JButton read = new JButton("Import");
         read.addActionListener(e -> read());
         add(read);
 
-        final var ok = new JButton("OK");
+        final javax.swing.JButton ok = new JButton("OK");
         ok.addActionListener(e -> close(true));
         parent.getRootPane().setDefaultButton(ok);
         add(ok);
 
-        final var cancel = new JButton("Cancel");
+        final javax.swing.JButton cancel = new JButton("Cancel");
         cancel.addActionListener(e -> close(false));
         add(cancel);
 
@@ -539,13 +539,13 @@ public class PlaTable {
 
       void reset() {
         removeAll();
-        for (final var r : newTable.rows) add(new RowPanel(r));
+        for (final com.cburch.logisim.std.gates.PlaTable.Row r : newTable.rows) add(new RowPanel(r));
         add(new InsertRowPanel());
         add(Box.createVerticalGlue());
       }
 
       void addRow() {
-        final var prevSize = EditorDialog.this.getSize();
+        final java.awt.Dimension prevSize = EditorDialog.this.getSize();
         add(new RowPanel(newTable.addTableRow()), getComponentCount() - 2);
         repack(prevSize);
         vScrollModel.setValue(vScrollModel.getMaximum());
@@ -565,7 +565,7 @@ public class PlaTable {
           super(new FlowLayout(FlowLayout.CENTER, 0, 0));
           this.row = r;
 
-          final var rm = new JButton("Remove");
+          final javax.swing.JButton rm = new JButton("Remove");
           rm.setFont(AppPreferences.getScaledFont(rm.getFont().deriveFont(smallFont)));
           rm.addActionListener(e -> deleteRow(RowPanel.this));
           rm.setMargin(new Insets(0, 0, 0, 0));
@@ -576,14 +576,14 @@ public class PlaTable {
           int inSz = row.inBits.length;
           int outSz = row.outBits.length;
 
-          final var layout = new GridLayout(1, 1 + inSz + 1 + Math.max(outSz, 2) + 1);
+          final java.awt.GridLayout layout = new GridLayout(1, 1 + inSz + 1 + Math.max(outSz, 2) + 1);
           layout.setHgap(BUTTON_HGAP);
-          final var bitPanel = new JPanel(layout);
+          final javax.swing.JPanel bitPanel = new JPanel(layout);
 
           bitPanel.add(new Box(BoxLayout.X_AXIS));
 
           for (int i = inSz - 1; i >= 0; i--) {
-            final var ii = i;
+            final int ii = i;
             bitPanel.add(
                 new BitStateButton(row.inBits[ii]) {
                   private static final long serialVersionUID = 1L;
@@ -599,7 +599,7 @@ public class PlaTable {
 
           for (int i = outSz; i < 2; i++) bitPanel.add(new Box(BoxLayout.X_AXIS));
           for (int i = outSz - 1; i >= 0; i--) {
-            final var ii = i;
+            final int ii = i;
             bitPanel.add(
                 new BitStateButton(row.outBits[ii]) {
                   private static final long serialVersionUID = 1L;
@@ -615,7 +615,7 @@ public class PlaTable {
 
           add(bitPanel);
 
-          final var txt = new JTextField(null, row.comment, 10);
+          final javax.swing.JTextField txt = new JTextField(null, row.comment, 10);
           txt.addKeyListener(
               new KeyAdapter() {
                 @Override
@@ -642,7 +642,7 @@ public class PlaTable {
 
         public InsertRowPanel() {
           super(new FlowLayout(FlowLayout.CENTER));
-          final var more = new JButton("Add Row");
+          final javax.swing.JButton more = new JButton("Add Row");
           more.setFont(AppPreferences.getScaledFont(more.getFont().deriveFont(smallFont)));
           more.addActionListener(e -> addRow());
           more.setMargin(new Insets(1, 20, 1, 20));
@@ -661,10 +661,10 @@ public class PlaTable {
                 new Dimension(
                     AppPreferences.getScaled(75 + BS),
                     AppPreferences.getScaled(15)))); // space for remove button
-        final var dim = new Dimension(AppPreferences.getScaled(BS), AppPreferences.getScaled(15));
+        final java.awt.Dimension dim = new Dimension(AppPreferences.getScaled(BS), AppPreferences.getScaled(15));
 
         for (int i = inSz - 1; i >= 0; i--) {
-          final var l = new JLabel("" + i, SwingConstants.CENTER);
+          final javax.swing.JLabel l = new JLabel("" + i, SwingConstants.CENTER);
           l.setFont(AppPreferences.getScaledFont(l.getFont().deriveFont(tinyFont)));
           l.setPreferredSize(dim);
           add(l);
@@ -674,7 +674,7 @@ public class PlaTable {
 
         for (int i = outSz; i < 2; i++) add(Box.createRigidArea(dim));
         for (int i = outSz - 1; i >= 0; i--) {
-          final var l = new JLabel("" + i, SwingConstants.CENTER);
+          final javax.swing.JLabel l = new JLabel("" + i, SwingConstants.CENTER);
           l.setFont(AppPreferences.getScaledFont(l.getFont().deriveFont(tinyFont)));
           l.setPreferredSize(dim);
           add(l);
@@ -682,7 +682,7 @@ public class PlaTable {
 
         add(Box.createRigidArea(dim));
 
-        final var c = new JLabel("comments");
+        final javax.swing.JLabel c = new JLabel("comments");
         c.setFont(AppPreferences.getScaledFont(c.getFont().deriveFont(smallFont)));
         c.setPreferredSize(
             new Dimension(
@@ -706,14 +706,14 @@ public class PlaTable {
                     AppPreferences.getScaled(75 + BS - Math.max(3 - inSz, 0) * BS),
                     AppPreferences.getScaled(15)))); // space for remove button
 
-        final var i = new JLabel("input", SwingConstants.RIGHT);
+        final javax.swing.JLabel i = new JLabel("input", SwingConstants.RIGHT);
         i.setFont(AppPreferences.getScaledFont(i.getFont().deriveFont(smallFont)));
         i.setPreferredSize(
             new Dimension(
                 AppPreferences.getScaled(Math.max(inSz, 3) * BS), AppPreferences.getScaled(15)));
         add(i);
 
-        final var o = new JLabel("output", SwingConstants.RIGHT);
+        final javax.swing.JLabel o = new JLabel("output", SwingConstants.RIGHT);
         o.setFont(AppPreferences.getScaledFont(o.getFont().deriveFont(smallFont)));
         o.setPreferredSize(
             new Dimension(

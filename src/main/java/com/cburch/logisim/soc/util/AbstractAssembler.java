@@ -101,7 +101,7 @@ public abstract class AbstractAssembler implements AssemblerInterface {
 
   private int addLabels(SectionHeader sh, HashMap<Integer, String> labels) {
     int maxSize = 0;
-    for (final var st : sh.getSymbols()) {
+    for (final com.cburch.logisim.soc.file.SymbolTable st : sh.getSymbols()) {
       java.lang.String stName = st.getName();
       if (StringUtil.isNotEmpty(stName)) {
         java.lang.Integer addr = st.getValue(SymbolTable.ST_VALUE);
@@ -249,7 +249,7 @@ public abstract class AbstractAssembler implements AssemblerInterface {
                            ElfProgramHeader elfHeader, ElfSectionHeader elfSections,
                            HashMap<Integer, Integer> validDebugLines) {
 
-    final var lines = new StringBuilder();
+    final java.lang.StringBuilder lines = new StringBuilder();
     int lineNum = 1;
     if (elfSections != null && elfSections.isValid()) {
       /* The section header gives more information on the program, so we prefer this one over the

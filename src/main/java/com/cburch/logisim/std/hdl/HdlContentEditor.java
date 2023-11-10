@@ -68,11 +68,11 @@ public class HdlContentEditor extends JDialog implements JInputDialog {
         if (!editor.getText().equals(model.getContent()))
           if (!confirmImport(HdlContentEditor.this)) return;
 
-        final var chooser = JFileChoosers.createAt(getDefaultImportFile(null));
+        final javax.swing.JFileChooser chooser = JFileChoosers.createAt(getDefaultImportFile(null));
         chooser.setDialogTitle(S.get("openButton"));
         int choice = chooser.showOpenDialog(HdlContentEditor.this);
         if (choice == JFileChooser.APPROVE_OPTION) {
-          final var f = chooser.getSelectedFile();
+          final java.io.File f = chooser.getSelectedFile();
           try {
             HdlFile.open(f, HdlContentEditor.this);
           } catch (IOException e) {
@@ -85,11 +85,11 @@ public class HdlContentEditor extends JDialog implements JInputDialog {
         }
       }
       if (source == save) {
-        final var chooser = JFileChoosers.createSelected(getDefaultExportFile(null));
+        final javax.swing.JFileChooser chooser = JFileChoosers.createSelected(getDefaultExportFile(null));
         chooser.setDialogTitle(S.get("saveButton"));
         int choice = chooser.showSaveDialog(HdlContentEditor.this);
         if (choice == JFileChooser.APPROVE_OPTION) {
-          final var f = chooser.getSelectedFile();
+          final java.io.File f = chooser.getSelectedFile();
           try {
             HdlFile.save(f, HdlContentEditor.this);
           } catch (IOException e) {
@@ -190,7 +190,7 @@ public class HdlContentEditor extends JDialog implements JInputDialog {
     Object[] options = {
       S.get("confirmCloseYes"), S.get("confirmCloseNo"), S.get("confirmCloseBackup")
     };
-    final var n =
+    final int n =
         OptionPane.showOptionDialog(
             this,
             S.get("confirmCloseMessage"),
@@ -216,7 +216,7 @@ public class HdlContentEditor extends JDialog implements JInputDialog {
     this.model.addHdlModelListener(modelListener);
     this.addWindowListener(frameListener);
 
-    final var buttonsPanel = new JPanel();
+    final javax.swing.JPanel buttonsPanel = new JPanel();
     buttonsPanel.add(open);
     buttonsPanel.add(save);
     buttonsPanel.add(validate);
@@ -232,7 +232,7 @@ public class HdlContentEditor extends JDialog implements JInputDialog {
     editor.setAntiAliasingEnabled(true);
     editor.getDocument().addDocumentListener(editorListener);
 
-    final var sp = new RTextScrollPane(editor);
+    final org.fife.ui.rtextarea.RTextScrollPane sp = new RTextScrollPane(editor);
     sp.setFoldIndicatorEnabled(true);
 
     add(sp, BorderLayout.CENTER);
@@ -242,8 +242,8 @@ public class HdlContentEditor extends JDialog implements JInputDialog {
     frameListener.localeChanged();
     pack();
 
-    final var size = getSize();
-    final var screen = getToolkit().getScreenSize();
+    final java.awt.Dimension size = getSize();
+    final java.awt.Dimension screen = getToolkit().getScreenSize();
     if (size.width > screen.width || size.height > screen.height) {
       size.width = Math.min(size.width, screen.width);
       size.height = Math.min(size.height, screen.height);
@@ -252,7 +252,7 @@ public class HdlContentEditor extends JDialog implements JInputDialog {
   }
 
   private File getDefaultExportFile(File defaultFile) {
-    final var projectFile = project.getLogisimFile().getLoader().getMainFile();
+    final java.io.File projectFile = project.getLogisimFile().getLoader().getMainFile();
     if (projectFile == null) {
       if (defaultFile == null) return new File(model.getName() + ".vhd");
       return defaultFile;
@@ -273,7 +273,7 @@ public class HdlContentEditor extends JDialog implements JInputDialog {
   }
 
   private File getDefaultImportFile(File defaultFile) {
-    final var projectFile = project.getLogisimFile().getLoader().getMainFile();
+    final java.io.File projectFile = project.getLogisimFile().getLoader().getMainFile();
     if (projectFile == null) return defaultFile;
 
     File compFolder;

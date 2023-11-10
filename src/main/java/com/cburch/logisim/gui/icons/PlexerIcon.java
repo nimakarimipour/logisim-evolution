@@ -28,8 +28,8 @@ public class PlexerIcon extends BaseIcon {
   @Override
   protected void paintIcon(Graphics2D g2) {
     g2.setStroke(new BasicStroke(scale(2)));
-    final var realPosX = new int[4];
-    final var realPosY = new int[4];
+    final int[] realPosX = new int[4];
+    final int[] realPosY = new int[4];
     int xOffset = inverted ? 2 : 0;
     for (int i = 0; i < 4; i++) {
       realPosX[i] = scale(xpos[(i + xOffset) & 3]);

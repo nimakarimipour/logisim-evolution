@@ -28,7 +28,7 @@ public final class AvoidanceMap {
   }
 
   static AvoidanceMap create(Collection<Component> elements, int dx, int dy) {
-    final var ret = new AvoidanceMap(new HashMap<>());
+    final com.cburch.logisim.tools.move.AvoidanceMap ret = new AvoidanceMap(new HashMap<>());
     ret.markAll(elements, dx, dy);
     return ret;
   }
@@ -44,7 +44,7 @@ public final class AvoidanceMap {
   public void markAll(Collection<Component> elements, int dx, int dy) {
     // first we go through the components, saying that we should not
     // intersect with any point that lies within a component
-    for (final var element : elements) {
+    for (final com.cburch.logisim.comp.Component element : elements) {
       if (element instanceof Wire wire) {
         markWire(wire, dx, dy);
       } else {
@@ -54,24 +54,24 @@ public final class AvoidanceMap {
   }
 
   public void markComponent(Component comp, int dx, int dy) {
-    final var avoid = this.avoidanceMap;
-    final var translated = dx != 0 || dy != 0;
-    final var bds = comp.getBounds();
+    final java.util.HashMap<com.cburch.logisim.data.Location,java.lang.String> avoid = this.avoidanceMap;
+    final boolean translated = dx != 0 || dy != 0;
+    final com.cburch.logisim.data.Bounds bds = comp.getBounds();
     int x0 = bds.getX() + dx;
     int y0 = bds.getY() + dy;
-    final var x1 = x0 + bds.getWidth();
-    final var y1 = y0 + bds.getHeight();
+    final int x1 = x0 + bds.getWidth();
+    final int y1 = y0 + bds.getHeight();
     x0 += 9 - (x0 + 9) % 10;
     y0 += 9 - (y0 + 9) % 10;
     for (int x = x0; x <= x1; x += 10) {
       for (int y = y0; y <= y1; y += 10) {
-        final var loc = Location.create(x, y, false);
+        final com.cburch.logisim.data.Location loc = Location.create(x, y, false);
         // loc is most likely in the component, so go ahead and
         // put it into the map as if it is - and in the rare event
         // that loc isn't in the component, we can remove it.
-        final var prev = avoid.put(loc, Connector.ALLOW_NEITHER);
+        final java.lang.String prev = avoid.put(loc, Connector.ALLOW_NEITHER);
         if (!Connector.ALLOW_NEITHER.equals(prev)) {
-          final var baseLoc = translated ? loc.translate(-dx, -dy) : loc;
+          final com.cburch.logisim.data.Location baseLoc = translated ? loc.translate(-dx, -dy) : loc;
           if (!comp.contains(baseLoc)) {
             if (prev == null) {
               avoid.remove(loc);
@@ -85,8 +85,8 @@ public final class AvoidanceMap {
   }
 
   public void markWire(Wire w, int dx, int dy) {
-    final var avoid = this.avoidanceMap;
-    final var translated = dx != 0 || dy != 0;
+    final java.util.HashMap<com.cburch.logisim.data.Location,java.lang.String> avoid = this.avoidanceMap;
+    final boolean translated = dx != 0 || dy != 0;
     com.cburch.logisim.data.Location loc0 = w.getEnd0();
     com.cburch.logisim.data.Location loc1 = w.getEnd1();
     if (translated) {
@@ -95,22 +95,22 @@ public final class AvoidanceMap {
     }
     avoid.put(loc0, Connector.ALLOW_NEITHER);
     avoid.put(loc1, Connector.ALLOW_NEITHER);
-    final var x0 = loc0.getX();
-    final var y0 = loc0.getY();
-    final var x1 = loc1.getX();
-    final var y1 = loc1.getY();
+    final int x0 = loc0.getX();
+    final int y0 = loc0.getY();
+    final int x1 = loc1.getX();
+    final int y1 = loc1.getY();
     if (x0 == x1) {
       // vertical wire
-      for (final var loc : Wire.create(loc0, loc1)) {
-        final var prev = avoid.put(loc, Connector.ALLOW_HORIZONTAL);
+      for (final com.cburch.logisim.data.Location loc : Wire.create(loc0, loc1)) {
+        final java.lang.String prev = avoid.put(loc, Connector.ALLOW_HORIZONTAL);
         if (Connector.ALLOW_NEITHER.equals(prev) || Connector.ALLOW_VERTICAL.equals(prev)) {
           avoid.put(loc, Connector.ALLOW_NEITHER);
         }
       }
     } else if (y0 == y1) {
       // horizontal wire
-      for (final var loc : Wire.create(loc0, loc1)) {
-        final var prev = avoid.put(loc, Connector.ALLOW_VERTICAL);
+      for (final com.cburch.logisim.data.Location loc : Wire.create(loc0, loc1)) {
+        final java.lang.String prev = avoid.put(loc, Connector.ALLOW_VERTICAL);
         if (Connector.ALLOW_NEITHER.equals(prev) || Connector.ALLOW_HORIZONTAL.equals(prev)) {
           avoid.put(loc, Connector.ALLOW_NEITHER);
         }
@@ -134,20 +134,20 @@ public final class AvoidanceMap {
   }
 
   public void unmarkWire(Wire w, Location deletedEnd, Set<Location> unmarkable) {
-    final var loc0 = w.getEnd0();
-    final var loc1 = w.getEnd1();
+    final com.cburch.logisim.data.Location loc0 = w.getEnd0();
+    final com.cburch.logisim.data.Location loc1 = w.getEnd1();
     if (unmarkable == null || unmarkable.contains(deletedEnd)) {
       avoidanceMap.remove(deletedEnd);
     }
-    final var x0 = loc0.getX();
-    final var y0 = loc0.getY();
-    final var x1 = loc1.getX();
-    final var y1 = loc1.getY();
+    final int x0 = loc0.getX();
+    final int y0 = loc0.getY();
+    final int x1 = loc1.getX();
+    final int y1 = loc1.getY();
     if (x0 == x1) {
       // vertical wire
-      for (final var loc : w) {
+      for (final com.cburch.logisim.data.Location loc : w) {
         if (unmarkable == null || unmarkable.contains(deletedEnd)) {
-          final var prev = avoidanceMap.remove(loc);
+          final java.lang.String prev = avoidanceMap.remove(loc);
           if (Connector.ALLOW_HORIZONTAL.equals(prev)) {
             avoidanceMap.put(loc, Connector.ALLOW_VERTICAL);
           }
@@ -155,9 +155,9 @@ public final class AvoidanceMap {
       }
     } else if (y0 == y1) {
       // horizontal wire
-      for (final var loc : w) {
+      for (final com.cburch.logisim.data.Location loc : w) {
         if (unmarkable == null || unmarkable.contains(deletedEnd)) {
-          final var prev = avoidanceMap.remove(loc);
+          final java.lang.String prev = avoidanceMap.remove(loc);
           if (!Connector.ALLOW_VERTICAL.equals(prev)) {
             avoidanceMap.put(loc, Connector.ALLOW_HORIZONTAL);
           }

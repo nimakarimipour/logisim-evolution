@@ -21,9 +21,9 @@ import java.nio.charset.StandardCharsets;
 public class Template {
 
   public static Template create(InputStream in) {
-    final var reader = new InputStreamReader(in);
-    final var buf = new char[4096];
-    final var dest = new StringBuilder();
+    final java.io.InputStreamReader reader = new InputStreamReader(in);
+    final char[] buf = new char[4096];
+    final java.lang.StringBuilder dest = new StringBuilder();
     while (true) {
       try {
         int nbytes = reader.read(buf);
@@ -37,8 +37,8 @@ public class Template {
   }
 
   public static Template createEmpty() {
-    final var circName = S.get("newCircuitName");
-    final var buf =
+    final java.lang.String circName = S.get("newCircuitName");
+    final java.lang.String buf =
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             + "<project source=\""
             + BuildInfo.version

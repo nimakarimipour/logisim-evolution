@@ -42,11 +42,11 @@ public class Var implements Iterable<String> {
 
   public static Var parse(String s) throws ParserException {
     s = s.trim();
-    final var i = s.indexOf('[');
-    final var j = s.lastIndexOf(']');
+    final int i = s.indexOf('[');
+    final int j = s.lastIndexOf(']');
     int w = 1;
     if (0 < i && i < j && j == s.length() - 1) {
-      final var braces = s.substring(i + 1, j);
+      final java.lang.String braces = s.substring(i + 1, j);
       if (!braces.endsWith("..0")) throw new ParserException(S.getter("variableFormat"), i);
       try {
         w = 1 + Integer.parseInt(braces.substring(0, braces.length() - 3));
@@ -83,8 +83,8 @@ public class Var implements Iterable<String> {
       int i = s.indexOf(':');
       if (i > 0) {
         try {
-          final var name = s.substring(0, i);
-          final var sub = Integer.parseInt(s.substring(i + 1));
+          final java.lang.String name = s.substring(0, i);
+          final int sub = Integer.parseInt(s.substring(i + 1));
           return new Bit(name, sub);
         } catch (NumberFormatException e) {
           throw new ParserException(S.getter("badVariableIndexError"), i);
@@ -96,8 +96,8 @@ public class Var implements Iterable<String> {
       int j = s.lastIndexOf(']');
       if (0 < i && i < j && j == s.length() - 1) {
         try {
-          final var name = s.substring(0, i).trim();
-          final var sub = Integer.parseInt(s.substring(i + 1, j));
+          final java.lang.String name = s.substring(0, i).trim();
+          final int sub = Integer.parseInt(s.substring(i + 1, j));
           return new Bit(name, sub);
         } catch (NumberFormatException e) {
           throw new ParserException(S.getter("badVariableIndexError"), i);

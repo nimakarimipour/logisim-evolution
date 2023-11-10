@@ -19,11 +19,11 @@ import java.awt.Graphics2D;
 class SplitterPainter {
   static void drawLabels(ComponentDrawContext context, SplitterAttributes attrs, Location origin) {
     // compute labels
-    final var ends = new String[attrs.fanout + 1];
+    final java.lang.String[] ends = new String[attrs.fanout + 1];
     int curEnd = -1;
     int cur0 = 0;
     for (int i = 0, n = attrs.bitEnd.length; i <= n; i++) {
-      final var bit = i == n ? -1 : attrs.bitEnd[i];
+      final byte bit = i == n ? -1 : attrs.bitEnd[i];
       if (bit != curEnd) {
         int cur1 = i - 1;
         String toAdd;
@@ -35,7 +35,7 @@ class SplitterPainter {
           toAdd = cur1 + "-" + cur0;
         }
         if (toAdd != null) {
-          final var old = ends[curEnd];
+          final java.lang.String old = ends[curEnd];
           if (old == null) {
             ends[curEnd] = toAdd;
           } else {
@@ -47,11 +47,11 @@ class SplitterPainter {
       }
     }
 
-    final var g = context.getGraphics().create();
-    final var font = g.getFont();
+    final java.awt.Graphics g = context.getGraphics().create();
+    final java.awt.Font font = g.getFont();
     g.setFont(font.deriveFont(7.0f));
 
-    final var parms = attrs.getParameters();
+    final com.cburch.logisim.circuit.SplitterParameters parms = attrs.getParameters();
     int x = origin.getX() + parms.getEnd0X() + parms.getEndToSpineDeltaX();
     int y = origin.getY() + parms.getEnd0Y() + parms.getEndToSpineDeltaY();
     int dx = parms.getEndToEndDeltaX();
@@ -66,12 +66,12 @@ class SplitterPainter {
       dx = dy;
       dy = t;
     }
-    final var halign = parms.getTextHorzAlign();
-    final var valign = parms.getTextVertAlign();
+    final int halign = parms.getTextHorzAlign();
+    final int valign = parms.getTextVertAlign();
     x += (halign == GraphicsUtil.H_RIGHT ? -1 : 1) * (SPINE_WIDTH / 2 + 1);
     y += valign == GraphicsUtil.V_TOP ? 0 : -3;
     for (int i = 0, n = attrs.fanout; i < n; i++) {
-      final var text = ends[i + 1];
+      final java.lang.String text = ends[i + 1];
       if (text != null) {
         GraphicsUtil.drawText(g, text, x, y, halign, valign);
       }
@@ -83,21 +83,21 @@ class SplitterPainter {
   }
 
   static void drawLegacy(ComponentDrawContext context, SplitterAttributes attrs, Location origin) {
-    final var g = context.getGraphics();
-    final var state = context.getCircuitState();
-    final var facing = attrs.facing;
-    final var fanout = attrs.fanout;
-    final var parms = attrs.getParameters();
+    final java.awt.Graphics g = context.getGraphics();
+    final com.cburch.logisim.circuit.CircuitState state = context.getCircuitState();
+    final com.cburch.logisim.data.Direction facing = attrs.facing;
+    final byte fanout = attrs.fanout;
+    final com.cburch.logisim.circuit.SplitterParameters parms = attrs.getParameters();
 
     g.setColor(Value.multiColor);
-    final var x0 = origin.getX();
-    final var y0 = origin.getY();
-    final var x1 = x0 + parms.getEnd0X();
-    final var y1 = y0 + parms.getEnd0Y();
-    final var dx = parms.getEndToEndDeltaX();
-    final var dy = parms.getEndToEndDeltaY();
+    final int x0 = origin.getX();
+    final int y0 = origin.getY();
+    final int x1 = x0 + parms.getEnd0X();
+    final int y1 = y0 + parms.getEnd0Y();
+    final int dx = parms.getEndToEndDeltaX();
+    final int dy = parms.getEndToEndDeltaY();
     if (facing == Direction.NORTH || facing == Direction.SOUTH) {
-      final var ySpine = (y0 + y1) / 2;
+      final int ySpine = (y0 + y1) / 2;
       GraphicsUtil.switchToWidth(g, Wire.WIDTH);
       g.drawLine(x0, y0, x0, ySpine);
       int xi = x1;
@@ -106,7 +106,7 @@ class SplitterPainter {
         if (context.getShowState()) {
           g.setColor(state.getValue(Location.create(xi, yi, true)).getColor());
         }
-        final var xSpine = xi + (xi == x0 ? 0 : (xi < x0 ? 10 : -10));
+        final int xSpine = xi + (xi == x0 ? 0 : (xi < x0 ? 10 : -10));
         g.drawLine(xi, yi, xSpine, ySpine);
         xi += dx;
         yi += dy;
@@ -121,7 +121,7 @@ class SplitterPainter {
         g.fillOval(x0 - SPINE_DOT / 2, ySpine - SPINE_DOT / 2, SPINE_DOT, SPINE_DOT);
       }
     } else {
-      final var xSpine = (x0 + x1) / 2;
+      final int xSpine = (x0 + x1) / 2;
       GraphicsUtil.switchToWidth(g, Wire.WIDTH);
       g.drawLine(x0, y0, xSpine, y0);
       int xi = x1;
@@ -130,7 +130,7 @@ class SplitterPainter {
         if (context.getShowState()) {
           g.setColor(state.getValue(Location.create(xi, yi, true)).getColor());
         }
-        final var ySpine = yi + (yi == y0 ? 0 : (yi < y0 ? 10 : -10));
+        final int ySpine = yi + (yi == y0 ? 0 : (yi < y0 ? 10 : -10));
         g.drawLine(xi, yi, xSpine, ySpine);
         xi += dx;
         yi += dy;
@@ -150,25 +150,25 @@ class SplitterPainter {
 
   static void drawLines(ComponentDrawContext context, SplitterAttributes attrs, Location origin) {
     boolean showState = context.getShowState();
-    final var state = showState ? context.getCircuitState() : null;
+    final com.cburch.logisim.circuit.CircuitState state = showState ? context.getCircuitState() : null;
     if (state == null) showState = false;
 
-    final var parms = attrs.getParameters();
-    final var x0 = origin.getX();
-    final var y0 = origin.getY();
+    final com.cburch.logisim.circuit.SplitterParameters parms = attrs.getParameters();
+    final int x0 = origin.getX();
+    final int y0 = origin.getY();
     int x = x0 + parms.getEnd0X();
     int y = y0 + parms.getEnd0Y();
     int dx = parms.getEndToEndDeltaX();
     int dy = parms.getEndToEndDeltaY();
-    final var dxEndSpine = parms.getEndToSpineDeltaX();
-    final var dyEndSpine = parms.getEndToSpineDeltaY();
+    final int dxEndSpine = parms.getEndToSpineDeltaX();
+    final int dyEndSpine = parms.getEndToSpineDeltaY();
 
-    final var g = context.getGraphics();
-    final var oldColor = g.getColor();
+    final java.awt.Graphics g = context.getGraphics();
+    final java.awt.Color oldColor = g.getColor();
     GraphicsUtil.switchToWidth(g, Wire.WIDTH);
     for (int i = 0, n = attrs.fanout; i < n; i++) {
       if (showState) {
-        final var val = state.getValue(Location.create(x, y, true));
+        final com.cburch.logisim.data.Value val = state.getValue(Location.create(x, y, true));
         g.setColor(val.getColor());
       }
       g.drawLine(x, y, x + dxEndSpine, y + dyEndSpine);
@@ -182,7 +182,7 @@ class SplitterPainter {
     int spine1x = x0 + parms.getSpine1X();
     int spine1y = y0 + parms.getSpine1Y();
     if (spine0x == spine1x && spine0y == spine1y) { // centered
-      final var fanout = attrs.fanout;
+      final byte fanout = attrs.fanout;
       spine0x = x0 + parms.getEnd0X() + parms.getEndToSpineDeltaX();
       spine0y = y0 + parms.getEnd0Y() + parms.getEndToSpineDeltaY();
       spine1x = spine0x + (fanout - 1) * parms.getEndToEndDeltaX();

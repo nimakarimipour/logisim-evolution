@@ -25,7 +25,7 @@ public class Value {
       else if ((value & 1) != 0) return Value.TRUE;
       else return Value.FALSE;
     } else {
-      final var mask = (width == 64 ? -1L : ~(-1L << width));
+      final long mask = (width == 64 ? -1L : ~(-1L << width));
       error = error & mask;
       unknown = unknown & mask & ~error;
       value = value & mask & ~unknown & ~error;
@@ -42,7 +42,7 @@ public class Value {
             && val.error == error
             && val.unknown == unknown) return val;
       }
-      final var ret = new Value(width, error, unknown, value);
+      final com.cburch.logisim.data.Value ret = new Value(width, error, unknown, value);
       cache.put(hashCode, ret);
       return ret;
     }
@@ -55,7 +55,7 @@ public class Value {
       throw new RuntimeException("Cannot have more than " + MAX_WIDTH + " bits in a value");
     }
 
-    final var width = values.length;
+    final int width = values.length;
     long value = 0;
     long unknown = 0;
     long error = 0;
@@ -101,7 +101,7 @@ public class Value {
    * Code taken from Cornell's version of Logisim: http://www.cs.cornell.edu/courses/cs3410/2015sp/
    */
   public static Value fromLogString(BitWidth width, String t) throws Exception {
-    final var radix = radixOfLogString(width, t);
+    final int radix = radixOfLogString(width, t);
     int offset;
 
     if (radix == 16 || radix == 8) offset = 2;
@@ -117,7 +117,7 @@ public class Value {
     long unknown = 0;
 
     for (int i = offset; i < n; i++) {
-      final var c = t.charAt(i);
+      final char c = t.charAt(i);
       int d;
 
       if (c == 'x' && radix != 10) d = -1;
@@ -170,7 +170,7 @@ public class Value {
     if (bits == 1) {
       return base;
     } else {
-      final var ret = new Value[bits];
+      final com.cburch.logisim.data.Value[] ret = new Value[bits];
       Arrays.fill(ret, base);
       return create(ret);
     }
@@ -324,7 +324,7 @@ public class Value {
   }
 
   public Value[] getAll() {
-    final var ret = new Value[width];
+    final com.cburch.logisim.data.Value[] ret = new Value[width];
     for (int i = 0; i < ret.length; i++) {
       ret[i] = get(i);
     }
@@ -433,7 +433,7 @@ public class Value {
         else if (value != 0) return Character.toString(TRUECHAR);
         else return Character.toString(FALSECHAR);
       default:
-        final var ret = new StringBuilder();
+        final java.lang.StringBuilder ret = new StringBuilder();
         for (int i = width - 1; i >= 0; i--) {
           ret.append(get(i).toString());
         }
@@ -472,7 +472,7 @@ public class Value {
         else if (value != 0) return Character.toString(TRUECHAR);
         else return Character.toString(FALSECHAR);
       default:
-        final var ret = new StringBuilder();
+        final java.lang.StringBuilder ret = new StringBuilder();
         for (int i = width - 1; i >= 0; i--) {
           ret.append(get(i).toString());
           if (i % 4 == 0 && i != 0) ret.append(" ");
@@ -501,12 +501,12 @@ public class Value {
     if (width <= 1) {
       return toString();
     } else {
-      final var vals = getAll();
-      final var c = new char[(vals.length + 3) / 4];
+      final com.cburch.logisim.data.Value[] vals = getAll();
+      final char[] c = new char[(vals.length + 3) / 4];
       for (int i = 0; i < c.length; i++) {
-        final var k = c.length - 1 - i;
-        final var frst = 4 * k;
-        final var last = Math.min(vals.length, 4 * (k + 1));
+        final int k = c.length - 1 - i;
+        final int frst = 4 * k;
+        final int last = Math.min(vals.length, 4 * (k + 1));
         int v = 0;
         c[i] = ' ';
         for (int j = last - 1; j >= frst; j--) {
@@ -547,12 +547,12 @@ public class Value {
     if (width <= 1) {
       return toString();
     } else {
-      final var vals = getAll();
-      final var c = new char[(vals.length + 2) / 3];
+      final com.cburch.logisim.data.Value[] vals = getAll();
+      final char[] c = new char[(vals.length + 2) / 3];
       for (int i = 0; i < c.length; i++) {
-        final var k = c.length - 1 - i;
-        final var frst = 3 * k;
-        final var last = Math.min(vals.length, 3 * (k + 1));
+        final int k = c.length - 1 - i;
+        final int frst = 3 * k;
+        final int last = Math.min(vals.length, 3 * (k + 1));
         int v = 0;
         c[i] = ' ';
         for (int j = last - 1; j >= frst; j--) {
@@ -584,7 +584,7 @@ public class Value {
         else if (value != 0) return Character.toString(TRUECHAR);
         else return Character.toString(FALSECHAR);
       default:
-        final var ret = new StringBuilder();
+        final java.lang.StringBuilder ret = new StringBuilder();
         for (int i = width - 1; i >= 0; i--) {
           ret.append(get(i).toString());
           if (i % 4 == 0 && i != 0) ret.append(" ");

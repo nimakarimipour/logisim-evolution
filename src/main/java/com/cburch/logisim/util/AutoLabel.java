@@ -90,7 +90,7 @@ public class AutoLabel {
   public String getMatrixLabel(Circuit circ, ComponentFactory me, String common, int x, int y) {
     if (StringUtil.isNullOrEmpty(common) || (x < 0) || (y < 0)) return "";
     if (circ == null || !currentLabel.containsKey(circ) || currentLabel.get(circ).isEmpty()) return "";
-    final var label = common.concat("_X" + x + "_Y" + y);
+    final java.lang.String label = common.concat("_X" + x + "_Y" + y);
     if (Circuit.isCorrectLabel(circ.getName(), label, circ.getNonWires(), null, me, false)
         && SyntaxChecker.isVariableNameAcceptable(label, false)) return label;
     return "";
@@ -107,7 +107,7 @@ public class AutoLabel {
     }
     java.lang.String newLabel = "";
     java.lang.Integer curIdx = currentIndex.get(circ);
-    final var baseLabel = labelBase.get(circ);
+    final java.lang.String baseLabel = labelBase.get(circ);
     boolean undescore = useUnderscore.get(circ);
     do {
       curIdx++;
@@ -218,8 +218,8 @@ public class AutoLabel {
     switch (keyCode) {
       case KeyEvent.VK_L -> {
         if (attrs.containsAttribute(StdAttr.LABEL)) {
-          final var oldLabel = attrs.getValue(StdAttr.LABEL);
-          final var newLabel = askAndSetLabel(componentName, oldLabel, circ, comp, compFactory,
+          final java.lang.String oldLabel = attrs.getValue(StdAttr.LABEL);
+          final java.lang.String newLabel = askAndSetLabel(componentName, oldLabel, circ, comp, compFactory,
               attrs, act, createAction);
           if (!newLabel.equals(oldLabel)) {
             if (!newLabel.isEmpty() && labelEndsWithNumber(newLabel)) {

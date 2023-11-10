@@ -62,9 +62,9 @@ class AttrTableComponentModel extends AttributeSetTableModel {
       SetAttributeAction act = new SetAttributeAction(circ, S.getter("changeAttributeAction"));
       AttributeSet compAttrSet = comp.getAttributeSet();
       if (compAttrSet != null) {
-        final var mayBeChangedList = compAttrSet.attributesMayAlsoBeChanged(attr, value);
+        final java.util.List<com.cburch.logisim.data.Attribute<?>> mayBeChangedList = compAttrSet.attributesMayAlsoBeChanged(attr, value);
         if (mayBeChangedList != null) {
-          for (final var mayChangeAttr : mayBeChangedList) {
+          for (final com.cburch.logisim.data.Attribute<?> mayChangeAttr : mayBeChangedList) {
             // mayChangeAttr is set to its current value to have it restored on undo
             act.set(comp, mayChangeAttr, compAttrSet.getValue(mayChangeAttr));
           }

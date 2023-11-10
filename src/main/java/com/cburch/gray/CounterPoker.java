@@ -40,14 +40,14 @@ public class CounterPoker extends InstancePoker {
   @Override
   public void keyTyped(InstanceState state, KeyEvent e) {
     // convert it to a hex digit; if it isn't a hex digit, abort.
-    final var val = Character.digit(e.getKeyChar(), 16);
-    final var width = state.getAttributeValue(StdAttr.WIDTH);
+    final int val = Character.digit(e.getKeyChar(), 16);
+    final com.cburch.logisim.data.BitWidth width = state.getAttributeValue(StdAttr.WIDTH);
     if (val < 0 || (val & width.getMask()) != val) return;
 
     // compute the next value
-    final var cur = CounterData.get(state, width);
-    final var newVal = (cur.getValue().toLongValue() * 16 + val) & width.getMask();
-    final var newValue = Value.createKnown(width, newVal);
+    final com.cburch.gray.CounterData cur = CounterData.get(state, width);
+    final long newVal = (cur.getValue().toLongValue() * 16 + val) & width.getMask();
+    final com.cburch.logisim.data.Value newValue = Value.createKnown(width, newVal);
     cur.setValue(newValue);
     state.fireInvalidated();
 
@@ -64,13 +64,13 @@ public class CounterPoker extends InstancePoker {
    */
   @Override
   public void paint(InstancePainter painter) {
-    final var bds = painter.getBounds();
-    final var len = (painter.getAttributeValue(StdAttr.WIDTH).getWidth() + 3) / 4;
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+    final int len = (painter.getAttributeValue(StdAttr.WIDTH).getWidth() + 3) / 4;
 
-    final var gfx = painter.getGraphics();
+    final java.awt.Graphics gfx = painter.getGraphics();
     gfx.setColor(Color.RED);
-    final var width = 7 * len + 2; // width of caret rectangle
-    final var height = 16; // height of caret rectangle
+    final int width = 7 * len + 2; // width of caret rectangle
+    final int height = 16; // height of caret rectangle
     gfx.drawRect(
         bds.getX() + (bds.getWidth() - width) / 2,
         bds.getY() + (bds.getHeight() - height) / 2,

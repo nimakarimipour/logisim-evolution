@@ -13,6 +13,8 @@ import static com.cburch.logisim.gui.Strings.S;
 
 import com.cburch.logisim.prefs.AppPreferences;
 import com.cburch.logisim.proj.ProjectActions;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -64,7 +66,7 @@ class OpenRecent extends JMenu implements PropertyChangeListener {
 
   void localeChanged() {
     setText(S.get("fileOpenRecentItem"));
-    for (final var item : recentItems) {
+    for (final com.cburch.logisim.gui.menu.OpenRecent.RecentItem item : recentItems) {
       if (item.file == null) {
         item.setText(S.get("fileOpenRecentNoChoices"));
       }
@@ -84,11 +86,11 @@ class OpenRecent extends JMenu implements PropertyChangeListener {
     }
     recentItems.clear();
 
-    final var files = AppPreferences.getRecentFiles();
+    final java.util.List<java.io.File> files = AppPreferences.getRecentFiles();
     if (files.isEmpty()) {
       recentItems.add(new RecentItem(null));
     } else {
-      for (final var file : files) {
+      for (final java.io.File file : files) {
         recentItems.add(new RecentItem(file));
       }
     }
@@ -111,11 +113,10 @@ class OpenRecent extends JMenu implements PropertyChangeListener {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-      final var proj = menubar.getSaveProject();
-      final var baseProj = menubar.getBaseProject();
-      final var parent =
-          (baseProj != null) ? baseProj.getFrame().getCanvas() : menubar.getParentFrame();
-      final var newProj = ProjectActions.doOpen(parent, baseProj, file);
+      final com.cburch.logisim.proj.Project proj = menubar.getSaveProject();
+      final com.cburch.logisim.proj.Project baseProj = menubar.getBaseProject();
+      final Component parent = (baseProj != null) ? baseProj.getFrame().getCanvas() : menubar.getParentFrame();
+      final com.cburch.logisim.proj.Project newProj = ProjectActions.doOpen(parent, baseProj, file);
       // If the current project hasn't been touched and has no file associated
       // with it (i.e. is entirely blank), and the new file was opened
       // successfully, then go ahead and close the old blank window.

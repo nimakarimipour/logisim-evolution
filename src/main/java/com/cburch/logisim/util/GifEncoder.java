@@ -202,7 +202,7 @@ public class GifEncoder {
       com.cburch.logisim.util.GifEncoder.LZWStringTable strings = new LZWStringTable();
       strings.clearTable(codesize);
 
-      final var bitFile = new BitFile(output);
+      final com.cburch.logisim.util.GifEncoder.BitFile bitFile = new BitFile(output);
       bitFile.writeBits(clearcode, numbits);
 
       for (byte compress : toCompress) {

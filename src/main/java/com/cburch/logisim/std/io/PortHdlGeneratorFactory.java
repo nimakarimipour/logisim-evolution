@@ -21,17 +21,17 @@ public class PortHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
   @Override
   public LineBuffer getInlinedCode(
       Netlist nets, Long componentId, netlistComponent componentInfo, String circuitName) {
-    final var contents = LineBuffer.getHdlBuffer();
-    final var portType = componentInfo.getComponent().getAttributeSet().getValue(PortIo.ATTR_DIR);
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
+    final com.cburch.logisim.data.AttributeOption portType = componentInfo.getComponent().getAttributeSet().getValue(PortIo.ATTR_DIR);
     int nrOfPins =
         componentInfo.getComponent().getAttributeSet().getValue(PortIo.ATTR_SIZE).getWidth();
     if (portType == PortIo.INPUT) {
       for (int busIndex = 0; nrOfPins > 0; busIndex++) {
-        final var startIndex =
+        final int startIndex =
             componentInfo.getLocalBubbleInputStartId() + busIndex * BitWidth.MAXWIDTH;
-        final var nrOfBitsInThisBus = Math.min(nrOfPins, BitWidth.MAXWIDTH);
+        final int nrOfBitsInThisBus = Math.min(nrOfPins, BitWidth.MAXWIDTH);
         nrOfPins -= nrOfBitsInThisBus;
-        final var endIndex = startIndex + nrOfBitsInThisBus - 1;
+        final int endIndex = startIndex + nrOfBitsInThisBus - 1;
         contents.add(
             "{{assign}} {{1}}{{=}}{{2}}{{<}}{{3}}{{4}}{{5}}{{>}};",
             Hdl.getBusName(componentInfo, busIndex, nets),
@@ -42,11 +42,11 @@ public class PortHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
       }
     } else if (portType == PortIo.OUTPUT) {
       for (int busIndex = 0; nrOfPins > 0; busIndex++) {
-        final var startIndex =
+        final int startIndex =
             componentInfo.getLocalBubbleOutputStartId() + busIndex * BitWidth.MAXWIDTH;
-        final var nrOfBitsInThisBus = Math.min(nrOfPins, BitWidth.MAXWIDTH);
+        final int nrOfBitsInThisBus = Math.min(nrOfPins, BitWidth.MAXWIDTH);
         nrOfPins -= nrOfBitsInThisBus;
-        final var endIndex = startIndex + nrOfBitsInThisBus - 1;
+        final int endIndex = startIndex + nrOfBitsInThisBus - 1;
         contents.add(
             "{{assign}} {{1}}{{<}}{{2}}{{3}}{{4}}{{>}}{{=}}{{5}};",
             LOCAL_OUTPUT_BUBBLE_BUS_NAME,
@@ -59,12 +59,12 @@ public class PortHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
       // first we handle the input connections, and after that the output connections
       int outputIndex = 0;
       for (int busIndex = 0; nrOfPins > 0; busIndex++) {
-        final var startIndex =
+        final int startIndex =
             componentInfo.getLocalBubbleInOutStartId() + busIndex * BitWidth.MAXWIDTH;
-        final var nrOfBitsInThisBus = Math.min(nrOfPins, BitWidth.MAXWIDTH);
+        final int nrOfBitsInThisBus = Math.min(nrOfPins, BitWidth.MAXWIDTH);
         nrOfPins -= nrOfBitsInThisBus;
-        final var endIndex = startIndex + nrOfBitsInThisBus - 1;
-        final var inputIndex = (portType == PortIo.INOUTSE) ? (busIndex + 1) : (busIndex * 2 + 1);
+        final int endIndex = startIndex + nrOfBitsInThisBus - 1;
+        final int inputIndex = (portType == PortIo.INOUTSE) ? (busIndex + 1) : (busIndex * 2 + 1);
         outputIndex = inputIndex + 1;
         contents.add(
             "{{assign}} {{1}}{{=}}{{2}}{{<}}{{3}}{{4}}{{5}}{{>}};",
@@ -78,11 +78,11 @@ public class PortHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
       nrOfPins =
           componentInfo.getComponent().getAttributeSet().getValue(PortIo.ATTR_SIZE).getWidth();
       for (int busIndex = 0; nrOfPins > 0; busIndex++) {
-        final var startIndex =
+        final int startIndex =
             componentInfo.getLocalBubbleInOutStartId() + busIndex * BitWidth.MAXWIDTH;
-        final var nrOfBitsInThisBus = Math.min(nrOfPins, BitWidth.MAXWIDTH);
+        final int nrOfBitsInThisBus = Math.min(nrOfPins, BitWidth.MAXWIDTH);
         nrOfPins -= nrOfBitsInThisBus;
-        final var endIndex = startIndex + nrOfBitsInThisBus - 1;
+        final int endIndex = startIndex + nrOfBitsInThisBus - 1;
         if ((portType != PortIo.INOUTSE) && (busIndex > 0)) enableIndex += 2;
         // simple case first, we have a single output enable
         if (portType == PortIo.INOUTSE) {

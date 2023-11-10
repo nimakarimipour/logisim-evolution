@@ -47,8 +47,8 @@ public class AppearanceAnchor extends AppearanceElement {
       return true;
     }
 
-    final var center = getLocation();
-    final var end = center.translate(factingDirection, RADIUS + INDICATOR_LENGTH);
+    final com.cburch.logisim.data.Location center = getLocation();
+    final com.cburch.logisim.data.Location end = center.translate(factingDirection, RADIUS + INDICATOR_LENGTH);
     return (factingDirection == Direction.EAST || factingDirection == Direction.WEST)
         ? Math.abs(loc.getY() - center.getY()) < 2
             && (loc.getX() < center.getX()) != (loc.getX() < end.getX())
@@ -63,9 +63,9 @@ public class AppearanceAnchor extends AppearanceElement {
 
   @Override
   public Bounds getBounds() {
-    final var bds = super.getBounds(RADIUS);
-    final var center = getLocation();
-    final var end = center.translate(factingDirection, RADIUS + INDICATOR_LENGTH);
+    final com.cburch.logisim.data.Bounds bds = super.getBounds(RADIUS);
+    final com.cburch.logisim.data.Location center = getLocation();
+    final com.cburch.logisim.data.Location end = center.translate(factingDirection, RADIUS + INDICATOR_LENGTH);
     return bds.add(end);
   }
 
@@ -80,8 +80,8 @@ public class AppearanceAnchor extends AppearanceElement {
 
   @Override
   public List<Handle> getHandles(HandleGesture gesture) {
-    final var c = getLocation();
-    final var end = c.translate(factingDirection, RADIUS + INDICATOR_LENGTH);
+    final com.cburch.logisim.data.Location c = getLocation();
+    final com.cburch.logisim.data.Location end = c.translate(factingDirection, RADIUS + INDICATOR_LENGTH);
     return UnmodifiableList.create(new Handle[] {new Handle(this, c), new Handle(this, end)});
   }
 
@@ -106,20 +106,20 @@ public class AppearanceAnchor extends AppearanceElement {
 
   @Override
   public void paint(Graphics g, HandleGesture gesture) {
-    final var location = getLocation();
-    final var x = location.getX();
-    final var y = location.getY();
+    final com.cburch.logisim.data.Location location = getLocation();
+    final int x = location.getX();
+    final int y = location.getY();
     g.setColor(SYMBOL_COLOR);
     g.drawOval(x - RADIUS, y - RADIUS, 2 * RADIUS, 2 * RADIUS);
-    final var e0 = location.translate(factingDirection, RADIUS);
-    final var e1 = location.translate(factingDirection, RADIUS + INDICATOR_LENGTH);
+    final com.cburch.logisim.data.Location e0 = location.translate(factingDirection, RADIUS);
+    final com.cburch.logisim.data.Location e1 = location.translate(factingDirection, RADIUS + INDICATOR_LENGTH);
     g.drawLine(e0.getX(), e0.getY(), e1.getX(), e1.getY());
   }
 
   @Override
   public Element toSvgElement(Document doc) {
-    final var loc = getLocation();
-    final var ret = doc.createElement("circ-anchor");
+    final com.cburch.logisim.data.Location loc = getLocation();
+    final org.w3c.dom.Element ret = doc.createElement("circ-anchor");
     ret.setAttribute("x", Integer.toString(loc.getX()));
     ret.setAttribute("y", Integer.toString(loc.getY()));
     ret.setAttribute("facing", factingDirection.toString());

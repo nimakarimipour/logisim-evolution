@@ -36,10 +36,10 @@ public class TtyShape extends DynamicElement {
 
   @Override
   public void paintDynamic(Graphics g, CircuitState state) {
-    final var data = state == null ? null : (TtyState) getData(state);
+    final com.cburch.logisim.std.io.TtyState data = state == null ? null : (TtyState) getData(state);
     if (data != null) {
-      final var rows = data.getNrRows();
-      final var cols = data.getNrCols();
+      final int rows = data.getNrRows();
+      final int cols = data.getNrCols();
       int width = 2 * Tty.BORDER + cols * Tty.COL_WIDTH;
       if (width < 30) width = 30;
       int height = 2 * Tty.BORDER + rows * Tty.ROW_HEIGHT;
@@ -64,14 +64,14 @@ public class TtyShape extends DynamicElement {
         2 * Tty.BORDER,
         2 * Tty.BORDER);
     if (data != null) {
-      final var rows = data.getNrRows();
-      final var rowData = new String[rows];
+      final int rows = data.getNrRows();
+      final java.lang.String[] rowData = new String[rows];
       synchronized (data) {
         for (int i = 0; i < rows; i++) rowData[i] = data.getRowString(i);
       }
       g.setFont(Tty.DEFAULT_FONT);
-      final var fm = g.getFontMetrics();
-      final var x = bounds.getX() + Tty.BORDER;
+      final java.awt.FontMetrics fm = g.getFontMetrics();
+      final int x = bounds.getX() + Tty.BORDER;
       int y = bounds.getY() + Tty.BORDER + (Tty.ROW_HEIGHT + fm.getAscent()) / 2;
       for (int i = 0; i < rows; i++) {
         g.drawString(rowData[i], x, y);

@@ -72,7 +72,7 @@ public class ZipClassLoader extends ClassLoader {
 
     @Override
     public String toString() {
-      final var act = action == REQUEST_LOAD ? "load" : action == REQUEST_FIND ? "find" : "act" + action;
+      final java.lang.String act = action == REQUEST_LOAD ? "load" : action == REQUEST_FIND ? "find" : "act" + action;
       return act + ":" + resource;
     }
   }
@@ -105,10 +105,10 @@ public class ZipClassLoader extends ClassLoader {
       try {
         if (zipFile != null) {
           if (DEBUG >= 3) logger.debug("  retrieve ZIP entry");
-          final var res = req.resource;
-          final var zipEntry = zipFile.getEntry(res);
+          final java.lang.String res = req.resource;
+          final java.util.zip.ZipEntry zipEntry = zipFile.getEntry(res);
           if (zipEntry != null) {
-            final var url = "jar:" + zipPath.toURI() + "!/" + res;
+            final java.lang.String url = "jar:" + zipPath.toURI() + "!/" + res;
             ret = new URL(url);
             if (DEBUG >= 3) logger.debug("  found: " + url);
           }
@@ -128,10 +128,10 @@ public class ZipClassLoader extends ClassLoader {
       try {
         if (zipFile != null) {
           if (DEBUG >= 3) logger.debug("  retrieve ZIP entry");
-          final var zipEntry = zipFile.getEntry(req.resource);
+          final java.util.zip.ZipEntry zipEntry = zipFile.getEntry(req.resource);
           if (zipEntry != null) {
             if (DEBUG >= 3) logger.debug("  load file");
-            final var result = new byte[(int) zipEntry.getSize()];
+            final byte[] result = new byte[(int) zipEntry.getSize()];
             bis = new BufferedInputStream(zipFile.getInputStream(zipEntry));
             try {
               bis.read(result, 0, result.length);
@@ -162,7 +162,7 @@ public class ZipClassLoader extends ClassLoader {
     public void run() {
       try {
         while (true) {
-          final var request = waitForNextRequest();
+          final com.cburch.logisim.util.ZipClassLoader.Request request = waitForNextRequest();
           if (request == null) return;
 
           if (DEBUG >= 2) logger.debug("processing " + request);
@@ -258,7 +258,7 @@ public class ZipClassLoader extends ClassLoader {
 
     // try loading it from the ZIP file if we haven't
     if (!found) {
-      final var resourceName = className.replace('.', '/') + ".class";
+      final java.lang.String resourceName = className.replace('.', '/') + ".class";
       result = request(REQUEST_LOAD, resourceName);
 
       if (result instanceof byte[] data) {
@@ -292,7 +292,7 @@ public class ZipClassLoader extends ClassLoader {
   @Override
   public URL findResource(String resourceName) {
     if (DEBUG >= 3) logger.debug("findResource " + resourceName);
-    final var ret = request(REQUEST_FIND, resourceName);
+    final java.lang.Object ret = request(REQUEST_FIND, resourceName);
     return (ret instanceof URL url)
            ? url
            : super.findResource(resourceName);

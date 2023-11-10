@@ -47,8 +47,8 @@ class AppearanceToolbarModel extends AbstractToolbarModel implements PropertyCha
       new PolyTool(true, attrs),
     };
 
-    final var rawItems = new ArrayList<ToolbarItem>();
-    for (final var tool : tools) {
+    final java.util.ArrayList<com.cburch.draw.toolbar.ToolbarItem> rawItems = new ArrayList<ToolbarItem>();
+    for (final com.cburch.draw.tools.AbstractTool tool : tools) {
       rawItems.add(new ToolbarToolItem(tool));
     }
     rawItems.add(new ResetAppearanceTool(canvas, true));
@@ -59,7 +59,7 @@ class AppearanceToolbarModel extends AbstractToolbarModel implements PropertyCha
   }
 
   AbstractTool getFirstTool() {
-    final var item = (ToolbarToolItem) items.get(0);
+    final com.cburch.draw.tools.ToolbarToolItem item = (ToolbarToolItem) items.get(0);
     return item.getTool();
   }
 
@@ -71,7 +71,7 @@ class AppearanceToolbarModel extends AbstractToolbarModel implements PropertyCha
   @Override
   public boolean isSelected(ToolbarItem item) {
     if (item instanceof ToolbarToolItem toolItem) {
-      final var tool = toolItem.getTool();
+      final com.cburch.draw.tools.AbstractTool tool = toolItem.getTool();
       return canvas != null && tool == canvas.getTool();
     } else {
       return false;
@@ -81,7 +81,7 @@ class AppearanceToolbarModel extends AbstractToolbarModel implements PropertyCha
   @Override
   public void itemSelected(ToolbarItem item) {
     if (item instanceof ToolbarToolItem toolItem) {
-      final var tool = toolItem.getTool();
+      final com.cburch.draw.tools.AbstractTool tool = toolItem.getTool();
       canvas.setTool(tool);
       fireToolbarAppearanceChanged();
     }
@@ -89,7 +89,7 @@ class AppearanceToolbarModel extends AbstractToolbarModel implements PropertyCha
 
   @Override
   public void propertyChange(PropertyChangeEvent e) {
-    final var prop = e.getPropertyName();
+    final java.lang.String prop = e.getPropertyName();
     if (Canvas.TOOL_PROPERTY.equals(prop)) {
       fireToolbarAppearanceChanged();
     }

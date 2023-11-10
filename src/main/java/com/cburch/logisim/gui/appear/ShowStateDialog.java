@@ -52,7 +52,7 @@ public class ShowStateDialog extends JDialog implements ActionListener {
     this.canvas = canvas;
     setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-    final var circuit = canvas.getCircuit();
+    final com.cburch.logisim.circuit.Circuit circuit = canvas.getCircuit();
     setTitle(S.get("showStateDialogTitle", circuit.getName()));
 
     root = enumerate(circuit, null);
@@ -61,23 +61,23 @@ public class ShowStateDialog extends JDialog implements ActionListener {
     }
     tree = new CheckBoxTree(root);
     tree.setCheckingPaths(getPaths());
-    final var infoPane = new JScrollPane(tree);
+    final javax.swing.JScrollPane infoPane = new JScrollPane(tree);
 
     ok = new JButton(S.get("showStateDialogOkButton"));
     cancel = new JButton(S.get("showStateDialogCancelButton"));
     ok.addActionListener(this);
     cancel.addActionListener(this);
-    final var buttonPanel = new JPanel();
+    final javax.swing.JPanel buttonPanel = new JPanel();
     buttonPanel.add(ok);
     buttonPanel.add(cancel);
 
-    final var contents = this.getContentPane();
+    final java.awt.Container contents = this.getContentPane();
     contents.setLayout(new BorderLayout());
     contents.add(infoPane, BorderLayout.CENTER);
     contents.add(buttonPanel, BorderLayout.PAGE_END);
     this.pack();
 
-    final var pref = contents.getPreferredSize();
+    final java.awt.Dimension pref = contents.getPreferredSize();
     if (pref.width > 750 || pref.height > 550 || pref.width < 200 || pref.height < 150) {
       if (pref.width > 750) pref.width = 750;
       else if (pref.width < 200) pref.width = 200;
@@ -91,7 +91,7 @@ public class ShowStateDialog extends JDialog implements ActionListener {
     while (badPosition(avoid, shape)) {
       // move down
       shape.translate(0, 10);
-      final var loc = shape.getLocation();
+      final com.cburch.logisim.data.Location loc = shape.getLocation();
       if (loc.getX() < bbox.getX() + bbox.getWidth()
           && loc.getY() + shape.getBounds().getHeight() >= bbox.getY() + bbox.getHeight())
         // if we are below the bounding box, move right and up
@@ -100,24 +100,24 @@ public class ShowStateDialog extends JDialog implements ActionListener {
   }
 
   private static boolean badPosition(List<CanvasObject> avoid, CanvasObject shape) {
-    for (final var s : avoid) {
+    for (final com.cburch.draw.model.CanvasObject s : avoid) {
       if (shape.overlaps(s) || s.overlaps(shape)) return true;
     }
     return false;
   }
 
   private static DynamicElement.Path toComponentPath(TreePath p) {
-    final var o = p.getPath();
-    final var elt = new InstanceComponent[o.length - 1];
+    final java.lang.Object[] o = p.getPath();
+    final com.cburch.logisim.instance.InstanceComponent[] elt = new InstanceComponent[o.length - 1];
     for (int i = 1; i < o.length; i++) {
-      final var r = ((RefTreeNode) o[i]).refData;
+      final com.cburch.logisim.gui.appear.ShowStateDialog.Ref r = ((RefTreeNode) o[i]).refData;
       elt[i - 1] = r.ic;
     }
     return new DynamicElement.Path(elt);
   }
 
   private static TreePath toTreePath(RefTreeNode root, DynamicElement.Path path) {
-    final var objs = new Object[path.elt.length + 1];
+    final java.lang.Object[] objs = new Object[path.elt.length + 1];
     objs[0] = root;
     for (int i = 1; i < objs.length; i++) {
       objs[i] = findChild((RefTreeNode) objs[i - 1], path.elt[i - 1]);
@@ -128,8 +128,8 @@ public class ShowStateDialog extends JDialog implements ActionListener {
 
   private static RefTreeNode findChild(RefTreeNode node, InstanceComponent ic) {
     for (int i = 0; i < node.getChildCount(); i++) {
-      final var child = (RefTreeNode) node.getChildAt(i);
-      final var r = child.refData;
+      final com.cburch.logisim.gui.appear.ShowStateDialog.RefTreeNode child = (RefTreeNode) node.getChildAt(i);
+      final com.cburch.logisim.gui.appear.ShowStateDialog.Ref r = child.refData;
       if (r.ic.getLocation().equals(ic.getLocation())
           && r.ic.getFactory().getName().equals(ic.getFactory().getName())) return child;
     }
@@ -137,35 +137,35 @@ public class ShowStateDialog extends JDialog implements ActionListener {
   }
 
   private TreePath[] getPaths() {
-    final var root = (RefTreeNode) tree.getModel().getRoot();
-    final var paths = new ArrayList<TreePath>();
-    for (final var shape : canvas.getModel().getObjectsFromBottom()) {
+    final com.cburch.logisim.gui.appear.ShowStateDialog.RefTreeNode root = (RefTreeNode) tree.getModel().getRoot();
+    final java.util.ArrayList<javax.swing.tree.TreePath> paths = new ArrayList<TreePath>();
+    for (final com.cburch.draw.model.CanvasObject shape : canvas.getModel().getObjectsFromBottom()) {
       if (!(shape instanceof DynamicElement dynEl)) continue;
-      final var path = toTreePath(root, dynEl.getPath());
+      final javax.swing.tree.TreePath path = toTreePath(root, dynEl.getPath());
       paths.add(path);
     }
     return paths.toArray(new TreePath[0]);
   }
 
   private void apply() {
-    final var model = canvas.getModel();
-    final var root = (RefTreeNode) tree.getModel().getRoot();
+    final com.cburch.draw.model.CanvasModel model = canvas.getModel();
+    final com.cburch.logisim.gui.appear.ShowStateDialog.RefTreeNode root = (RefTreeNode) tree.getModel().getRoot();
 
     com.cburch.logisim.data.Bounds boundingBox = Bounds.EMPTY_BOUNDS;
-    for (final var shape : model.getObjectsFromBottom()) {
+    for (final com.cburch.draw.model.CanvasObject shape : model.getObjectsFromBottom()) {
       boundingBox = boundingBox.add(shape.getBounds());
     }
     com.cburch.logisim.data.Location loc = Location.create(boundingBox.getX(), boundingBox.getY(), true);
 
     // TreePath[] roots = tree.getCheckingRoots();
-    final var checked = tree.getCheckingPaths();
-    final var toAdd = new ArrayList<>(Arrays.asList(checked));
+    final javax.swing.tree.TreePath[] checked = tree.getCheckingPaths();
+    final java.util.ArrayList<javax.swing.tree.TreePath> toAdd = new ArrayList<>(Arrays.asList(checked));
 
     // Remove existing dynamic objects that are no longer checked.
-    final var toRemove = new ArrayList<CanvasObject>();
-    for (final var shape : model.getObjectsFromBottom()) {
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> toRemove = new ArrayList<CanvasObject>();
+    for (final com.cburch.draw.model.CanvasObject shape : model.getObjectsFromBottom()) {
       if (!(shape instanceof DynamicElement dynEl)) continue;
-      final var path = toTreePath(root, dynEl.getPath());
+      final javax.swing.tree.TreePath path = toTreePath(root, dynEl.getPath());
       if (path != null && tree.isPathChecked(path)) {
         toAdd.remove(path); // already present, don't need to add it again
       } else {
@@ -182,22 +182,22 @@ public class ShowStateDialog extends JDialog implements ActionListener {
     // sort the remaining shapes
     toAdd.sort(new CompareByLocations());
 
-    final var avoid = new ArrayList<>(model.getObjectsFromBottom());
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> avoid = new ArrayList<>(model.getObjectsFromBottom());
     for (int i = avoid.size() - 1; i >= 0; i--) {
       if (avoid.get(i) instanceof AppearanceAnchor) avoid.remove(i);
     }
-    final var newShapes = new ArrayList<CanvasObject>();
+    final java.util.ArrayList<com.cburch.draw.model.CanvasObject> newShapes = new ArrayList<CanvasObject>();
 
-    for (final var path : toAdd) {
-      final var node = (RefTreeNode) path.getLastPathComponent();
-      final var ref = node.refData;
+    for (final javax.swing.tree.TreePath path : toAdd) {
+      final com.cburch.logisim.gui.appear.ShowStateDialog.RefTreeNode node = (RefTreeNode) path.getLastPathComponent();
+      final com.cburch.logisim.gui.appear.ShowStateDialog.Ref ref = node.refData;
       if (ref instanceof CircuitRef) continue;
-      final var factory = ref.ic.getFactory();
+      final com.cburch.logisim.comp.ComponentFactory factory = ref.ic.getFactory();
       if (factory instanceof DynamicElementProvider) {
-        final var x = loc.getX();
-        final var y = loc.getY();
-        final var p = toComponentPath(path);
-        final var shape = ((DynamicElementProvider) factory).createDynamicElement(x, y, p);
+        final int x = loc.getX();
+        final int y = loc.getY();
+        final com.cburch.logisim.circuit.appear.DynamicElement.Path p = toComponentPath(path);
+        final com.cburch.logisim.circuit.appear.DynamicElement shape = ((DynamicElementProvider) factory).createDynamicElement(x, y, p);
         pickPlacement(avoid, shape, boundingBox);
         loc = shape.getLocation();
         avoid.add(shape);
@@ -221,14 +221,14 @@ public class ShowStateDialog extends JDialog implements ActionListener {
   }
 
   private RefTreeNode enumerate(Circuit circuit, InstanceComponent ic) {
-    final var root = new RefTreeNode(new CircuitRef(circuit, ic));
-    for (final var c : circuit.getNonWires()) {
+    final com.cburch.logisim.gui.appear.ShowStateDialog.RefTreeNode root = new RefTreeNode(new CircuitRef(circuit, ic));
+    for (final com.cburch.logisim.comp.Component c : circuit.getNonWires()) {
       if (c instanceof InstanceComponent child) {
-        final var factory = child.getFactory();
+        final com.cburch.logisim.comp.ComponentFactory factory = child.getFactory();
         if (factory instanceof DynamicElementProvider) {
           root.add(new RefTreeNode(new Ref(child)));
         } else if (factory instanceof SubcircuitFactory sub) {
-          final var node = enumerate(sub.getSubcircuit(), child);
+          final com.cburch.logisim.gui.appear.ShowStateDialog.RefTreeNode node = enumerate(sub.getSubcircuit(), child);
           if (node != null) root.add(node);
         }
       }
@@ -239,13 +239,13 @@ public class ShowStateDialog extends JDialog implements ActionListener {
   private static class CompareByLocations implements Comparator<TreePath> {
     @Override
     public int compare(TreePath a, TreePath b) {
-      final var aa = a.getPath();
-      final var bb = b.getPath();
+      final java.lang.Object[] aa = a.getPath();
+      final java.lang.Object[] bb = b.getPath();
       for (int i = 1; i < aa.length && i < bb.length; i++) {
-        final var refA = ((RefTreeNode) aa[i]).refData;
-        final var refB = ((RefTreeNode) bb[i]).refData;
-        final var locA = refA.ic.getLocation();
-        final var locB = refB.ic.getLocation();
+        final com.cburch.logisim.gui.appear.ShowStateDialog.Ref refA = ((RefTreeNode) aa[i]).refData;
+        final com.cburch.logisim.gui.appear.ShowStateDialog.Ref refB = ((RefTreeNode) bb[i]).refData;
+        final com.cburch.logisim.data.Location locA = refA.ic.getLocation();
+        final com.cburch.logisim.data.Location locB = refB.ic.getLocation();
         int diff = locA.compareTo(locB);
         if (diff != 0) return diff;
       }
@@ -262,8 +262,8 @@ public class ShowStateDialog extends JDialog implements ActionListener {
 
     @Override
     public String toString() {
-      final var s = ic.getInstance().getAttributeValue(StdAttr.LABEL);
-      final var loc = ic.getInstance().getLocation();
+      final java.lang.String s = ic.getInstance().getAttributeValue(StdAttr.LABEL);
+      final com.cburch.logisim.data.Location loc = ic.getInstance().getLocation();
       java.lang.String str = "";
 
       if (s != null && s.length() > 0) str += "\"" + s + "\" ";  // mind trailing space!

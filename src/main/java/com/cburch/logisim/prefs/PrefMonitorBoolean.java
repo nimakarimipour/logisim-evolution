@@ -39,12 +39,12 @@ public class PrefMonitorBoolean extends AbstractPrefMonitor<Boolean> implements 
   }
 
   public void preferenceChange(PreferenceChangeEvent event) {
-    final var prefs = event.getNode();
-    final var prop = event.getKey();
-    final var name = getIdentifier();
+    final java.util.prefs.Preferences prefs = event.getNode();
+    final java.lang.String prop = event.getKey();
+    final java.lang.String name = getIdentifier();
     if (prop.equals(name)) {
-      final var oldValue = value;
-      final var newValue = prefs.getBoolean(name, dflt);
+      final boolean oldValue = value;
+      final boolean newValue = prefs.getBoolean(name, dflt);
       if (newValue != oldValue) {
         value = newValue;
         AppPreferences.firePropertyChange(name, oldValue, newValue);

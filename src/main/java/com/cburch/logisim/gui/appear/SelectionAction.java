@@ -56,13 +56,13 @@ class SelectionAction extends Action {
 
   @Override
   public void doIt(Project proj) {
-    final var sel = canvas.getSelection();
+    final com.cburch.draw.canvas.Selection sel = canvas.getSelection();
     sel.clearSelected();
     if (toRemove != null) canvasModel.removeObjects(toRemove.keySet());
     int dest = AppearanceCanvas.getMaxIndex(canvasModel) + 1;
     if (toAdd != null) canvasModel.addObjects(dest, toAdd);
 
-    final var anchor = findAnchor(canvasModel);
+    final com.cburch.logisim.circuit.appear.AppearanceAnchor anchor = findAnchor(canvasModel);
     if (anchor != null && anchorNewLocation != null) {
       anchorOldLocation = anchor.getLocation();
       anchor.translate(
@@ -91,7 +91,7 @@ class SelectionAction extends Action {
 
   @Override
   public void undo(Project proj) {
-    final var anchor = findAnchor(canvasModel);
+    final com.cburch.logisim.circuit.appear.AppearanceAnchor anchor = findAnchor(canvasModel);
     if (anchor != null && anchorOldLocation != null) {
       anchor.translate(
           anchorOldLocation.getX() - anchorNewLocation.getX(),
@@ -100,7 +100,7 @@ class SelectionAction extends Action {
     if (anchor != null && anchorOldFacing != null) {
       anchor.setValue(AppearanceAnchor.FACING, anchorOldFacing);
     }
-    final var sel = canvas.getSelection();
+    final com.cburch.draw.canvas.Selection sel = canvas.getSelection();
     sel.clearSelected();
     if (toAdd != null) canvasModel.removeObjects(toAdd);
     if (toRemove != null) canvasModel.addObjects(toRemove);

@@ -29,12 +29,12 @@ public class LedBarIcon extends BaseIcon {
     g2.setColor(Color.DARK_GRAY);
     g2.fillRect(0, 0, getIconWidth(), getIconHeight());
 
-    final var col1 = Color.green;
-    final var col2 = Color.gray;
+    final java.awt.Color col1 = Color.green;
+    final java.awt.Color col2 = Color.gray;
 
-    final var y = scale(2);
-    final var h = scale(12);
-    final var w = scale(5);
+    final int y = scale(2);
+    final int h = scale(12);
+    final int w = scale(5);
     g2.setColor(col1);
     g2.fillRect(scale(2), y, w, h);
     g2.setColor(col2);

@@ -194,7 +194,7 @@ class SelectionBase {
         newX = Canvas.snapXToGrid(newX);
         newY = Canvas.snapYToGrid(newY);
       }
-      final var newLoc = Location.create(newX, newY, false);
+      final com.cburch.logisim.data.Location newLoc = Location.create(newX, newY, false);
       Component copy = comp.getFactory().createComponent(newLoc, attrs);
       ret.put(comp, copy);
     }

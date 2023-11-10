@@ -47,15 +47,15 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public void getGenerationTimeWiresPorts(Netlist theNetlist, AttributeSet attrs) {
-    final var inOutBubbles = theNetlist.numberOfInOutBubbles();
-    final var inputBubbles = theNetlist.getNumberOfInputBubbles();
-    final var outputBubbles = theNetlist.numberOfOutputBubbles();
+    final int inOutBubbles = theNetlist.numberOfInOutBubbles();
+    final int inputBubbles = theNetlist.getNumberOfInputBubbles();
+    final int outputBubbles = theNetlist.numberOfOutputBubbles();
     // First we add the wires
-    for (final var wire : theNetlist.getAllNets())
+    for (final com.cburch.logisim.fpga.designrulecheck.Net wire : theNetlist.getAllNets())
       if (!wire.isBus())
         myWires.addWire(String.format("%s%d", NET_NAME, theNetlist.getNetId(wire)), 1);
     // Now we add the busses
-    for (final var wire : theNetlist.getAllNets())
+    for (final com.cburch.logisim.fpga.designrulecheck.Net wire : theNetlist.getAllNets())
       if (wire.isBus() && wire.isRootNet())
         myWires.addWire(String.format("%s%d", BUS_NAME, theNetlist.getNetId(wire)), wire.getBitWidth());
     if (inOutBubbles > 0)
@@ -67,10 +67,10 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
     if (inputBubbles > 0)
       myPorts.add(Port.INPUT, LOCAL_INPUT_BUBBLE_BUS_NAME, inputBubbles > 1 ? inputBubbles : 0, 0);
     for (int input = 0; input < theNetlist.getNumberOfInputPorts(); input++) {
-      final var selectedInput = theNetlist.getInputPin(input);
+      final com.cburch.logisim.fpga.designrulecheck.netlistComponent selectedInput = theNetlist.getInputPin(input);
       if (selectedInput != null)  {
-        final var name = selectedInput.getComponent().getAttributeSet().getValue(StdAttr.LABEL);
-        final var nrOfBits = selectedInput.getComponent().getAttributeSet().getValue(StdAttr.WIDTH).getWidth();
+        final java.lang.String name = selectedInput.getComponent().getAttributeSet().getValue(StdAttr.LABEL);
+        final int nrOfBits = selectedInput.getComponent().getAttributeSet().getValue(StdAttr.WIDTH).getWidth();
         myPorts.add(Port.INPUT, CorrectLabel.getCorrectLabel(name), nrOfBits, 0);
       }
     }
@@ -78,10 +78,10 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
       myPorts.add(Port.OUTPUT, LOCAL_OUTPUT_BUBBLE_BUS_NAME, outputBubbles > 1 ? outputBubbles : 0, 0);
     }
     for (int output = 0; output < theNetlist.numberOfOutputPorts(); output++) {
-      final var selectedInput = theNetlist.getOutputPin(output);
+      final com.cburch.logisim.fpga.designrulecheck.netlistComponent selectedInput = theNetlist.getOutputPin(output);
       if (selectedInput != null)  {
-        final var name = selectedInput.getComponent().getAttributeSet().getValue(StdAttr.LABEL);
-        final var nrOfBits = selectedInput.getComponent().getAttributeSet().getValue(StdAttr.WIDTH).getWidth();
+        final java.lang.String name = selectedInput.getComponent().getAttributeSet().getValue(StdAttr.LABEL);
+        final int nrOfBits = selectedInput.getComponent().getAttributeSet().getValue(StdAttr.WIDTH).getWidth();
         myPorts.add(Port.OUTPUT, CorrectLabel.getCorrectLabel(name), nrOfBits, 0);
       }
     }
@@ -103,7 +103,7 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
     if (hierarchy == null) {
       hierarchy = new ArrayList<>();
     }
-    final var myNetList = myCircuit.getNetList();
+    final com.cburch.logisim.fpga.designrulecheck.Netlist myNetList = myCircuit.getNetList();
     if (myNetList == null) {
       return false;
     }
@@ -113,13 +113,13 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
     }
     myNetList.setCurrentHierarchyLevel(hierarchy);
     /* First we handle the normal components */
-    for (final var thisComponent : myNetList.getNormalComponents()) {
-      final var componentName =
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent thisComponent : myNetList.getNormalComponents()) {
+      final java.lang.String componentName =
           thisComponent.getComponent()
               .getFactory()
               .getHDLName(thisComponent.getComponent().getAttributeSet());
       if (!handledComponents.contains(componentName)) {
-        final var worker =
+        final com.cburch.logisim.fpga.hdlgenerator.HdlGeneratorFactory worker =
             thisComponent.getComponent()
                 .getFactory()
                 .getHDLGenerator(thisComponent.getComponent().getAttributeSet());
@@ -154,8 +154,8 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
       }
     }
     /* Now we go down the hierarchy to get all other components */
-    for (final var thisCircuit : myNetList.getSubCircuits()) {
-      final var worker =
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent thisCircuit : myNetList.getSubCircuits()) {
+      final com.cburch.logisim.circuit.CircuitHdlGeneratorFactory worker =
           (CircuitHdlGeneratorFactory)
               thisCircuit.getComponent()
                   .getFactory()
@@ -201,7 +201,7 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   /* here the private handles are defined */
   private String getBubbleIndex(netlistComponent comp, bubbleType type) {
-    final var fmt = "{{<}}{{1}} {{2}} {{3}}{{>}}";
+    final java.lang.String fmt = "{{<}}{{1}} {{2}} {{3}}{{>}}";
     return switch (type) {
       case INPUT -> LineBuffer.format(fmt, comp.getLocalBubbleInputEndId(), 
           Hdl.vectorLoopId(), comp.getLocalBubbleInputStartId());
@@ -215,13 +215,13 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getComponentDeclarationSection(Netlist theNetlist, AttributeSet attrs) {
-    final var components = LineBuffer.getBuffer();
-    final var instantiatedComponents = new HashSet<String>();
-    for (final var gate : theNetlist.getNormalComponents()) {
-      final var compName = gate.getComponent().getFactory().getHDLName(gate.getComponent().getAttributeSet());
+    final com.cburch.logisim.util.LineBuffer components = LineBuffer.getBuffer();
+    final java.util.HashSet<java.lang.String> instantiatedComponents = new HashSet<String>();
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent gate : theNetlist.getNormalComponents()) {
+      final java.lang.String compName = gate.getComponent().getFactory().getHDLName(gate.getComponent().getAttributeSet());
       if (!instantiatedComponents.contains(compName)) {
         instantiatedComponents.add(compName);
-        final var worker = gate.getComponent().getFactory().getHDLGenerator(gate.getComponent().getAttributeSet());
+        final com.cburch.logisim.fpga.hdlgenerator.HdlGeneratorFactory worker = gate.getComponent().getFactory().getHDLGenerator(gate.getComponent().getAttributeSet());
         if (worker != null) {
           if (!worker.isOnlyInlined()) {
             components.empty().add(worker.getComponentInstantiation(theNetlist, 
@@ -231,12 +231,12 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
       }
     }
     instantiatedComponents.clear();
-    for (final var gate : theNetlist.getSubCircuits()) {
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent gate : theNetlist.getSubCircuits()) {
       java.lang.String compName = gate.getComponent().getFactory().getHDLName(gate.getComponent().getAttributeSet());
       if (gate.isGatedInstance()) compName = compName.concat("_gated");
       if (!instantiatedComponents.contains(compName)) {
         instantiatedComponents.add(compName);
-        final var worker = gate.getComponent().getFactory().getHDLGenerator(gate.getComponent().getAttributeSet());
+        final com.cburch.logisim.fpga.hdlgenerator.HdlGeneratorFactory worker = gate.getComponent().getFactory().getHDLGenerator(gate.getComponent().getAttributeSet());
         SubcircuitFactory sub = (SubcircuitFactory) gate.getComponent().getFactory();
         if (worker != null) {
           components.empty().add(worker.getComponentInstantiation(sub.getSubcircuit().getNetList(),
@@ -248,26 +248,26 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
   }
 
   public Map<String, String> getHdlWiring(Netlist theNets) {
-    final var contents = new HashMap<String, String>();
+    final java.util.HashMap<java.lang.String,java.lang.String> contents = new HashMap<String, String>();
     // we cycle through all nets with a forced root net annotation
-    for (final var thisNet : theNets.getAllNets()) {
+    for (final com.cburch.logisim.fpga.designrulecheck.Net thisNet : theNets.getAllNets()) {
       if (thisNet.isForcedRootNet()) {
         // now we cycle through all the bits
-        final var wireId = theNets.getNetId(thisNet);
+        final java.lang.Integer wireId = theNets.getNetId(thisNet);
         for (int bit = 0; bit < thisNet.getBitWidth(); bit++) {
           // First we perform all source connections
-          for (final var source : thisNet.getSourceNets(bit)) {
-            final var destination = thisNet.isBus() ? LineBuffer.formatHdl("{{1}}{{2}}{{<}}{{3}}{{>}}", BUS_NAME, wireId, bit)
+          for (final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint source : thisNet.getSourceNets(bit)) {
+            final java.lang.String destination = thisNet.isBus() ? LineBuffer.formatHdl("{{1}}{{2}}{{<}}{{3}}{{>}}", BUS_NAME, wireId, bit)
                 :  LineBuffer.formatHdl("{{1}}{{2}}", NET_NAME, wireId);
-            final var sourceWire = LineBuffer.formatHdl("{{1}}{{2}}{{<}}{{3}}{{>}}", BUS_NAME,
+            final java.lang.String sourceWire = LineBuffer.formatHdl("{{1}}{{2}}{{<}}{{3}}{{>}}", BUS_NAME,
                 theNets.getNetId(source.getParentNet()), source.getParentNetBitIndex());
             contents.put(destination, sourceWire);
           }
           // Next we perform all sink connections
-          for (final var source : thisNet.getSinkNets(bit)) {
-            final var destination = LineBuffer.formatHdl("{{1}}{{2}}{{<}}{{3}}{{>}}", BUS_NAME,
+          for (final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint source : thisNet.getSinkNets(bit)) {
+            final java.lang.String destination = LineBuffer.formatHdl("{{1}}{{2}}{{<}}{{3}}{{>}}", BUS_NAME,
                 theNets.getNetId(source.getParentNet()), source.getParentNetBitIndex());
-            final var sourceWire = thisNet.isBus() ? LineBuffer.formatHdl("{{1}}{{2}}{{<}}{{3}}{{>}}", BUS_NAME, wireId, bit)
+            final java.lang.String sourceWire = thisNet.isBus() ? LineBuffer.formatHdl("{{1}}{{2}}{{<}}{{3}}{{>}}", BUS_NAME, wireId, bit)
                 :  LineBuffer.formatHdl("{{1}}{{2}}", NET_NAME, wireId);
             contents.put(destination, sourceWire);
           }
@@ -279,26 +279,26 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist theNetList, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
     boolean isFirstLine = true;
-    final var compIds = new HashMap<String, Long>();
-    final var wires = new HashMap<String, String>();
+    final java.util.HashMap<java.lang.String,java.lang.Long> compIds = new HashMap<String, Long>();
+    final java.util.HashMap<java.lang.String,java.lang.String> wires = new HashMap<String, String>();
     /* we start with the connection of the clock sources */
-    for (final var clockSource : theNetList.getClockSources()) {
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent clockSource : theNetList.getClockSources()) {
       if (!clockSource.isEndConnected(0)) {
         // FIXME: hardcoded string
-        final var msg = String.format("Clock component found with no connection, skipping: '%s'",
+        final java.lang.String msg = String.format("Clock component found with no connection, skipping: '%s'",
                 clockSource.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
         Reporter.report.addWarning(msg);
         continue;
       }
-      final var clockNet = Hdl.getClockNetName(clockSource, 0, theNetList);
+      final java.lang.String clockNet = Hdl.getClockNetName(clockSource, 0, theNetList);
       if (clockNet.isEmpty()) {
         // FIXME: hardcoded string
         Reporter.report.addFatalError("INTERNAL ERROR: Cannot find clocknet!");
       }
-      final var destination = Hdl.getNetName(clockSource, 0, true, theNetList);
-      final var source = theNetList.requiresGlobalClockConnection() ? TickComponentHdlGeneratorFactory.FPGA_CLOCK
+      final java.lang.String destination = Hdl.getNetName(clockSource, 0, true, theNetList);
+      final java.lang.String source = theNetList.requiresGlobalClockConnection() ? TickComponentHdlGeneratorFactory.FPGA_CLOCK
           :  LineBuffer.formatHdl("{{1}}{{<}}{{2}}{{>}}", clockNet, ClockHdlGeneratorFactory.DERIVED_CLOCK_INDEX);
       wires.put(destination, source);
     }
@@ -314,8 +314,8 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
     }
     /* Now we define all input signals; hence Input port -> Internal Net */
     for (int i = 0; i < theNetList.getNumberOfInputPorts(); i++) {
-      final var myInput = theNetList.getInputPin(i);
-      final var pinName = CorrectLabel.getCorrectLabel(myInput.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
+      final com.cburch.logisim.fpga.designrulecheck.netlistComponent myInput = theNetList.getInputPin(i);
+      final java.lang.String pinName = CorrectLabel.getCorrectLabel(myInput.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
       wires.putAll(getSignalMap(pinName, myInput, 0, theNetList));
     }
     if (!wires.isEmpty()) {
@@ -325,7 +325,7 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
     /* Now we define all output signals; hence Internal Net -> Input port */
     for (int i = 0; i < theNetList.numberOfOutputPorts(); i++) {
       netlistComponent myOutput = theNetList.getOutputPin(i);
-      final var pinName = CorrectLabel.getCorrectLabel(myOutput.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
+      final java.lang.String pinName = CorrectLabel.getCorrectLabel(myOutput.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
       wires.putAll(getSignalMap(pinName, myOutput, 0, theNetList));
     }
     if (!wires.isEmpty()) {
@@ -334,23 +334,23 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
     }
     /* Here all in-lined components are generated */
     isFirstLine = true;
-    for (final var comp : theNetList.getNormalComponents()) {
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : theNetList.getNormalComponents()) {
       com.cburch.logisim.fpga.hdlgenerator.HdlGeneratorFactory worker = comp.getComponent().getFactory().getHDLGenerator(comp.getComponent().getAttributeSet());
       if (worker != null) {
         if (worker.isOnlyInlined()) {
-          final var inlinedName = comp.getComponent().getFactory().getHDLName(comp.getComponent().getAttributeSet());
-          final var InlinedId = "InlinedComponent";
+          final java.lang.String inlinedName = comp.getComponent().getFactory().getHDLName(comp.getComponent().getAttributeSet());
+          final java.lang.String InlinedId = "InlinedComponent";
           long id = (compIds.containsKey(InlinedId)) ? compIds.get(InlinedId) : (long) 1;
           if (isFirstLine) {
             contents.add("");
             contents.addRemarkBlock("Here all in-lined components are defined");
             isFirstLine = false;
           }
-          final var thisAttrs = comp.getComponent().getAttributeSet();
-          final var hasLabel = thisAttrs.containsAttribute(StdAttr.LABEL) 
+          final com.cburch.logisim.data.AttributeSet thisAttrs = comp.getComponent().getAttributeSet();
+          final boolean hasLabel = thisAttrs.containsAttribute(StdAttr.LABEL) 
               && !thisAttrs.getValue(StdAttr.LABEL).isEmpty();
-          final var compName = hasLabel ? CorrectLabel.getCorrectLabel(thisAttrs.getValue(StdAttr.LABEL)) : "";
-          final var remarkLine = LineBuffer.format("{{1}}{{2}}{{3}}", comp.getComponent().getFactory().getDisplayName(),
+          final java.lang.String compName = hasLabel ? CorrectLabel.getCorrectLabel(thisAttrs.getValue(StdAttr.LABEL)) : "";
+          final java.lang.String remarkLine = LineBuffer.format("{{1}}{{2}}{{3}}", comp.getComponent().getFactory().getDisplayName(),
               hasLabel ? ": " : "", compName);
           contents
               .empty()
@@ -362,12 +362,12 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
     }
     /* Here all "normal" components are generated */
     isFirstLine = true;
-    for (final var comp : theNetList.getNormalComponents()) {
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : theNetList.getNormalComponents()) {
       com.cburch.logisim.fpga.hdlgenerator.HdlGeneratorFactory worker = comp.getComponent().getFactory().getHDLGenerator(comp.getComponent().getAttributeSet());
       if (worker != null) {
         if (!worker.isOnlyInlined()) {
-          final var compName = comp.getComponent().getFactory().getHDLName(comp.getComponent().getAttributeSet());
-          final var compId = "NormalComponent";
+          final java.lang.String compName = comp.getComponent().getFactory().getHDLName(comp.getComponent().getAttributeSet());
+          final java.lang.String compId = "NormalComponent";
           long id = (compIds.containsKey(compId)) ? compIds.get(compId) : (long) 1;
           if (isFirstLine) {
             contents.empty().addRemarkBlock("Here all normal components are defined");
@@ -380,14 +380,14 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
     }
     /* Finally we instantiate all sub-circuits */
     isFirstLine = true;
-    for (final var comp : theNetList.getSubCircuits()) {
-      final var worker = comp.getComponent().getFactory().getHDLGenerator(comp.getComponent().getAttributeSet());
+    for (final com.cburch.logisim.fpga.designrulecheck.netlistComponent comp : theNetList.getSubCircuits()) {
+      final com.cburch.logisim.fpga.hdlgenerator.HdlGeneratorFactory worker = comp.getComponent().getFactory().getHDLGenerator(comp.getComponent().getAttributeSet());
       if (worker != null) {
         java.lang.String compName = comp.getComponent().getFactory().getHDLName(comp.getComponent().getAttributeSet());
         if (comp.isGatedInstance())  compName = compName.concat("_gated");
-        final var CompId = "SubCircuits";
+        final java.lang.String CompId = "SubCircuits";
         long id = (compIds.containsKey(CompId)) ? compIds.get(CompId) : (long) 1;
-        final var compMap = worker.getComponentMap(theNetList, id++, comp, compName);
+        final com.cburch.logisim.util.LineBuffer compMap = worker.getComponentMap(theNetList, id++, comp, compName);
         if (!compMap.isEmpty()) {
           if (isFirstLine) {
             contents.empty().addRemarkBlock("Here all sub-circuits are defined");
@@ -404,14 +404,14 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public Map<String, String> getPortMap(Netlist nets, Object theMapInfo) {
-    final var portMap = new TreeMap<String, String>();
+    final java.util.TreeMap<java.lang.String,java.lang.String> portMap = new TreeMap<String, String>();
     if (theMapInfo == null) return null;
-    final var topLevel = theMapInfo instanceof MappableResourcesContainer;
-    final var componentInfo = topLevel ? null : (netlistComponent) theMapInfo;
+    final boolean topLevel = theMapInfo instanceof MappableResourcesContainer;
+    final com.cburch.logisim.fpga.designrulecheck.netlistComponent componentInfo = topLevel ? null : (netlistComponent) theMapInfo;
     com.cburch.logisim.fpga.data.MappableResourcesContainer mapInfo = topLevel ? (MappableResourcesContainer) theMapInfo : null;
-    final var Preamble = topLevel ? "s_" : "";
-    final var sub = topLevel ? null : (SubcircuitFactory) componentInfo.getComponent().getFactory();
-    final var myNetList = topLevel ? nets : sub.getSubcircuit().getNetList();
+    final java.lang.String Preamble = topLevel ? "s_" : "";
+    final com.cburch.logisim.circuit.SubcircuitFactory sub = topLevel ? null : (SubcircuitFactory) componentInfo.getComponent().getFactory();
+    final com.cburch.logisim.fpga.designrulecheck.Netlist myNetList = topLevel ? nets : sub.getSubcircuit().getNetList();
 
     /* First we instantiate the Clock tree busses when present */
     for (int i = 0; i < myNetList.numberOfClockTrees(); i++) {
@@ -431,18 +431,18 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
               topLevel ? LOCAL_OUTPUT_BUBBLE_BUS_NAME : getBubbleIndex(componentInfo, bubbleType.OUTPUT)));
     }
 
-    final var nrOfIOBubbles = myNetList.numberOfInOutBubbles();
+    final int nrOfIOBubbles = myNetList.numberOfInOutBubbles();
     if (nrOfIOBubbles > 0) {
       if (topLevel) {
-        final var vector = new StringBuilder();
+        final java.lang.StringBuilder vector = new StringBuilder();
         for (int i = nrOfIOBubbles - 1; i >= 0; i--) {
           /* first pass find the component which is connected to this io */
           int compPin = -1;
           MapComponent map = null;
-          for (final var key : mapInfo.getMappableResources().keySet()) {
-            final var comp = mapInfo.getMappableResources().get(key);
+          for (final java.util.ArrayList<java.lang.String> key : mapInfo.getMappableResources().keySet()) {
+            final com.cburch.logisim.fpga.data.MapComponent comp = mapInfo.getMappableResources().get(key);
             if (comp.hasIos()) {
-              final var id = comp.getIoBubblePinId(i);
+              final int id = comp.getIoBubblePinId(i);
               if (id >= 0) {
                 compPin = id;
                 map = comp;
@@ -481,16 +481,16 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
       }
     }
 
-    final var nrOfInputPorts = myNetList.getNumberOfInputPorts();
+    final int nrOfInputPorts = myNetList.getNumberOfInputPorts();
     if (nrOfInputPorts > 0) {
       for (int i = 0; i < nrOfInputPorts; i++) {
         netlistComponent selected = myNetList.getInputPin(i);
         if (selected != null) {
-          final var pinLabel = CorrectLabel.getCorrectLabel(selected.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
+          final java.lang.String pinLabel = CorrectLabel.getCorrectLabel(selected.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
           if (topLevel) {
             portMap.put(pinLabel, Preamble + pinLabel);
           } else {
-            final var endId = nets.getEndIndex(componentInfo, pinLabel, false);
+            final int endId = nets.getEndIndex(componentInfo, pinLabel, false);
             if (endId < 0) {
               // FIXME: hardcoded string
               Reporter.report.addFatalError(
@@ -503,17 +503,17 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
       }
     }
 
-    final var nrOfInOutPorts = myNetList.numberOfInOutPorts();
+    final int nrOfInOutPorts = myNetList.numberOfInOutPorts();
     if (nrOfInOutPorts > 0) {
       for (int i = 0; i < nrOfInOutPorts; i++) {
-        final var selected = myNetList.getInOutPin(i);
+        final com.cburch.logisim.fpga.designrulecheck.netlistComponent selected = myNetList.getInOutPin(i);
         if (selected != null) {
-          final var pinLabel = CorrectLabel.getCorrectLabel(selected.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
+          final java.lang.String pinLabel = CorrectLabel.getCorrectLabel(selected.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
           if (topLevel) {
             /* Do not exist yet in logisim */
             /* TODO: implement by going over each bit */
           } else {
-            final var endId = nets.getEndIndex(componentInfo, pinLabel, false);
+            final int endId = nets.getEndIndex(componentInfo, pinLabel, false);
             if (endId < 0) {
               // FIXME: hardcoded string
               Reporter.report.addFatalError(
@@ -526,16 +526,16 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
       }
     }
 
-    final var nrOfOutputPorts = myNetList.numberOfOutputPorts();
+    final int nrOfOutputPorts = myNetList.numberOfOutputPorts();
     if (nrOfOutputPorts > 0) {
       for (int i = 0; i < nrOfOutputPorts; i++) {
-        final var selected = myNetList.getOutputPin(i);
+        final com.cburch.logisim.fpga.designrulecheck.netlistComponent selected = myNetList.getOutputPin(i);
         if (selected != null) {
-          final var pinLabel = CorrectLabel.getCorrectLabel(selected.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
+          final java.lang.String pinLabel = CorrectLabel.getCorrectLabel(selected.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
           if (topLevel) {
             portMap.put(pinLabel, Preamble + pinLabel);
           } else {
-            final var endid = nets.getEndIndex(componentInfo, pinLabel, true);
+            final int endid = nets.getEndIndex(componentInfo, pinLabel, true);
             if (endid < 0) {
               // FIXME: hardcoded string
               Reporter.report.addFatalError(
@@ -551,7 +551,7 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
   }
 
   private static Map<String, String> getSignalMap(String portName, netlistComponent comp, int endIndex, Netlist theNets) {
-    final var signal = new HashMap<String, String>();
+    final java.util.HashMap<java.lang.String,java.lang.String> signal = new HashMap<String, String>();
     if ((endIndex < 0) || (endIndex >= comp.nrOfEnds())) {
       // FIXME: hardcoded string
       Reporter.report.addFatalErrorFmt(
@@ -559,9 +559,9 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
               comp.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
       return signal;
     }
-    final var connectionInformation = comp.getEnd(endIndex);
-    final var isInputConnection = connectionInformation.isOutputEnd();
-    final var nrOfBits = connectionInformation.getNrOfBits();
+    final com.cburch.logisim.fpga.designrulecheck.ConnectionEnd connectionInformation = comp.getEnd(endIndex);
+    final boolean isInputConnection = connectionInformation.isOutputEnd();
+    final int nrOfBits = connectionInformation.getNrOfBits();
     if (nrOfBits == 1) {
       /* Here we have the easy case, just a single bit net */
       if (isInputConnection) {
@@ -607,8 +607,8 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
         } else {
           /* The last case, we have to enumerate through each bit */
           for (int bit = 0; bit < nrOfBits; bit++) {
-            final var bitConnection = LineBuffer.formatHdl("{{1}}{{<}}{{2}}{{>}}", portName, bit);
-            final var solderPoint = connectionInformation.get((byte) bit);
+            final java.lang.String bitConnection = LineBuffer.formatHdl("{{1}}{{<}}{{2}}{{>}}", portName, bit);
+            final com.cburch.logisim.fpga.designrulecheck.ConnectionPoint solderPoint = connectionInformation.get((byte) bit);
             if (solderPoint.getParentNet() == null) {
               /* The net is not connected */
               if (isInputConnection) continue;
@@ -620,7 +620,7 @@ public class CircuitHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
                * The net is connected, we have to find out if the
                * connection is to a bus or to a normal net
                */
-              final var connectedNet = solderPoint.getParentNet().getBitWidth() == 1
+              final java.lang.String connectedNet = solderPoint.getParentNet().getBitWidth() == 1
                     ? LineBuffer.formatHdl("{{1}}{{2}}", NET_NAME, theNets.getNetId(solderPoint.getParentNet()))
                     : LineBuffer.formatHdl("{{1}}{{2}}{{<}}{{3}}{{>}}", BUS_NAME,
                         theNets.getNetId(solderPoint.getParentNet()), solderPoint.getParentNetBitIndex());

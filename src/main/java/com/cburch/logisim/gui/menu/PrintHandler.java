@@ -47,14 +47,14 @@ public abstract class PrintHandler implements Printable {
   }
 
   public void actionPerformed(ActionEvent e) {
-    final var src = e.getSource();
+    final java.lang.Object src = e.getSource();
     if (src == LogisimMenuBar.PRINT) print();
     else if (src == LogisimMenuBar.EXPORT_IMAGE) exportImage();
   }
 
   public void print() {
-    final var format = new PageFormat();
-    final var job = PrinterJob.getPrinterJob();
+    final java.awt.print.PageFormat format = new PageFormat();
+    final java.awt.print.PrinterJob job = PrinterJob.getPrinterJob();
     job.setPrintable(this, format);
     if (!job.printDialog()) return;
     try {
@@ -70,9 +70,9 @@ public abstract class PrintHandler implements Printable {
 
   @Override
   public int print(Graphics pg, PageFormat pf, int pageNum) {
-    final var imWidth = pf.getImageableWidth();
-    final var imHeight = pf.getImageableHeight();
-    final var g = (Graphics2D) pg;
+    final double imWidth = pf.getImageableWidth();
+    final double imHeight = pf.getImageableHeight();
+    final java.awt.Graphics2D g = (Graphics2D) pg;
     g.translate(pf.getImageableX(), pf.getImageableY());
     return print(g, pf, pageNum, imWidth, imHeight);
   }
@@ -87,22 +87,22 @@ public abstract class PrintHandler implements Printable {
       ExportImage.getFilter(ExportImage.FORMAT_TIKZ),
       ExportImage.getFilter(ExportImage.FORMAT_SVG)
     };
-    final var chooser = JFileChoosers.createSelected(getLastExported());
+    final javax.swing.JFileChooser chooser = JFileChoosers.createSelected(getLastExported());
     chooser.setAcceptAllFileFilterUsed(false);
-    for (final var ff : filters) {
+    for (final com.cburch.logisim.gui.main.ExportImage.ImageFileFilter ff : filters) {
       chooser.addChoosableFileFilter(ff);
     }
     chooser.setFileFilter(filters[0]);
     chooser.setDialogTitle(S.get("exportImageFileSelect"));
 
-    final var returnVal =
+    final int returnVal =
         chooser.showDialog(
             KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow(),
             S.get("exportImageButton"));
     if (returnVal != JFileChooser.APPROVE_OPTION) return;
     java.io.File dest = chooser.getSelectedFile();
     FileFilter ff = null;
-    for (final var filter : filters) {
+    for (final com.cburch.logisim.gui.main.ExportImage.ImageFileFilter filter : filters) {
       if (filter.accept(dest)) ff = filter;
     }
     if (ff == null) ff = chooser.getFileFilter();
@@ -115,7 +115,7 @@ public abstract class PrintHandler implements Printable {
     }
     setLastExported(dest);
     if (dest.exists()) {
-      final var confirm =
+      final int confirm =
           OptionPane.showConfirmDialog(
               KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow(),
               S.get("confirmOverwriteMessage"),
@@ -123,7 +123,7 @@ public abstract class PrintHandler implements Printable {
               OptionPane.YES_NO_OPTION);
       if (confirm != OptionPane.YES_OPTION) return;
     }
-    final var fmt =
+    final int fmt =
         (ff == filters[0]
             ? ExportImage.FORMAT_PNG
             : ff == filters[1]
@@ -135,15 +135,15 @@ public abstract class PrintHandler implements Printable {
   }
 
   public void exportImage(File dest, int fmt) {
-    final var d = getExportImageSize();
+    final java.awt.Dimension d = getExportImageSize();
     if (d == null) {
       showErr("couldNotCreateImage");
       return;
     }
 
-    final var img = new BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_RGB);
-    final var base = (fmt == ExportImage.FORMAT_TIKZ || fmt == ExportImage.FORMAT_SVG) ? new TikZWriter() : img.getGraphics();
-    final var gr = base.create();
+    final java.awt.image.BufferedImage img = new BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_RGB);
+    final java.awt.Graphics base = (fmt == ExportImage.FORMAT_TIKZ || fmt == ExportImage.FORMAT_SVG) ? new TikZWriter() : img.getGraphics();
+    final java.awt.Graphics gr = base.create();
 
     try {
       if (!(gr instanceof Graphics2D g2d)) {

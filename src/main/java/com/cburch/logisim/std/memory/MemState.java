@@ -49,10 +49,10 @@ class MemState implements InstanceData, Cloneable, HexModelListener {
       Graphics g, int offsetX, int offsetY, int DisplayWidth, int DisplayHeight) {
     recalculateParameters = false;
     displayWindow = Bounds.create(offsetX, offsetY, DisplayWidth, DisplayHeight);
-    final var addrBits = getAddrBits();
-    final var dataBits = contents.getWidth();
-    final var font = g.getFont();
-    final var fm = g.getFontMetrics(font);
+    final int addrBits = getAddrBits();
+    final int dataBits = contents.getWidth();
+    final java.awt.Font font = g.getFont();
+    final java.awt.FontMetrics fm = g.getFontMetrics(font);
     addrBlockSize = ((fm.stringWidth(StringUtil.toHexString(addrBits, 0)) + 9) / 10) * 10;
     dataSize = fm.stringWidth(StringUtil.toHexString(dataBits, 0) + " ");
     spaceSize = fm.stringWidth(" ");
@@ -64,7 +64,7 @@ class MemState implements InstanceData, Cloneable, HexModelListener {
             / (fm.getHeight() + 2); // (dataBits == 1) ? 1 : TotalHeight / (fm.getHeight() + 2);
     if (NrOfLines == 0) NrOfLines = 1;
     int totalShowableEntries = nrDataSymbolsEachLine * NrOfLines;
-    final var totalNrOfEntries = (1 << addrBits);
+    final int totalNrOfEntries = (1 << addrBits);
     while (totalShowableEntries > (totalNrOfEntries + nrDataSymbolsEachLine - 1)) {
       NrOfLines--;
       totalShowableEntries -= nrDataSymbolsEachLine;
@@ -75,7 +75,7 @@ class MemState implements InstanceData, Cloneable, HexModelListener {
     }
     /* here we calculate to total x-sizes */
     dataBlockSize = nrDataSymbolsEachLine * (dataSize);
-    final var totalWidth = addrBlockSize + dataBlockSize;
+    final int totalWidth = addrBlockSize + dataBlockSize;
     xOffset = offsetX + (DisplayWidth / 2) - (totalWidth / 2);
     /* Same calculations for the height */
     CharHeight = fm.getHeight();
@@ -209,8 +209,8 @@ class MemState implements InstanceData, Cloneable, HexModelListener {
       int nrItemsToHighlight) {
     if (recalculateParameters || windowChanged(offsetX, offsetY, displayWidth, displayHeight))
       calculateDisplayParameters(g, offsetX, offsetY, displayWidth, displayHeight);
-    final var blockHeight = NrOfLines * (CharHeight + 2);
-    final var totalNrOfEntries = (1 << getAddrBits());
+    final int blockHeight = NrOfLines * (CharHeight + 2);
+    final int totalNrOfEntries = (1 << getAddrBits());
     g.setColor(Color.LIGHT_GRAY);
     g.fillRect(leftX + xOffset, topY + yOffset, dataBlockSize + addrBlockSize, blockHeight);
     g.setColor(Color.DARK_GRAY);
@@ -242,7 +242,7 @@ class MemState implements InstanceData, Cloneable, HexModelListener {
         if (isValidAddr(addr + j)) {
 
           if (highLight((addr + j), nrItemsToHighlight)) {
-            final var dataBounds = getDataBound(leftX, topY, i, j);
+            final com.cburch.logisim.data.Bounds dataBounds = getDataBound(leftX, topY, i, j);
             g.setColor(Color.DARK_GRAY);
             g.fillRect(
                 dataBounds.getX(),

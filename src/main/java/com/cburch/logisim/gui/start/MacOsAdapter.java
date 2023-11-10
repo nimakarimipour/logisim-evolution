@@ -31,7 +31,7 @@ class MacOsAdapter {
     }
     if (Desktop.isDesktopSupported()) {
       listenersAdded = true;
-      final var dt = Desktop.getDesktop();
+      final java.awt.Desktop dt = Desktop.getDesktop();
       try {
         dt.setAboutHandler(e -> About.showAboutDialog(null));
       } catch (Exception ignored) {

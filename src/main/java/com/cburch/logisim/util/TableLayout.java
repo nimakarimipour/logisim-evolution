@@ -46,7 +46,7 @@ public class TableLayout implements LayoutManager2 {
     while (curRow >= contents.size()) {
       contents.add(new Component[colCount]);
     }
-    final var rowContents = contents.get(curRow);
+    final java.awt.Component[] rowContents = contents.get(curRow);
     rowContents[curCol] = comp;
     ++curCol;
     if (curCol == colCount) {
@@ -73,10 +73,10 @@ public class TableLayout implements LayoutManager2 {
 
   @Override
   public void layoutContainer(Container parent) {
-    final var pref = preferredLayoutSize(parent);
+    final java.awt.Dimension pref = preferredLayoutSize(parent);
     int[] prefRow = this.prefRow;
     int[] prefCol = this.prefCol;
-    final var size = parent.getSize();
+    final java.awt.Dimension size = parent.getSize();
 
     double y0;
     int yRemaining = size.height - pref.height;
@@ -101,7 +101,7 @@ public class TableLayout implements LayoutManager2 {
       int yRound = (int) (y + 0.5);
       int x = x0;
       for (int j = 0; j < row.length; j++) {
-        final var comp = row[j];
+        final java.awt.Component comp = row[j];
         if (comp != null) {
           row[j].setBounds(x, yRound, prefCol[j], prefRow[i]);
         }
@@ -130,15 +130,15 @@ public class TableLayout implements LayoutManager2 {
   @Override
   public Dimension preferredLayoutSize(Container parent) {
     if (prefs == null) {
-      final var prefCol = new int[colCount];
-      final var prefRow = new int[contents.size()];
+      final int[] prefCol = new int[colCount];
+      final int[] prefRow = new int[contents.size()];
       int height = 0;
       for (int i = 0; i < prefRow.length; i++) {
-        final var row = contents.get(i);
+        final java.awt.Component[] row = contents.get(i);
         int rowHeight = 0;
         for (int j = 0; j < row.length; j++) {
           if (row[j] != null) {
-            final var dim = row[j].getPreferredSize();
+            final java.awt.Dimension dim = row[j].getPreferredSize();
             if (dim.height > rowHeight) rowHeight = dim.height;
             if (dim.width > prefCol[j]) prefCol[j] = dim.width;
           }
@@ -159,7 +159,7 @@ public class TableLayout implements LayoutManager2 {
 
   @Override
   public void removeLayoutComponent(Component comp) {
-    for (final var row : contents) {
+    for (final java.awt.Component[] row : contents) {
       for (int j = 0; j < row.length; j++) {
         if (row[j] == comp) {
           row[j] = null;
@@ -178,7 +178,7 @@ public class TableLayout implements LayoutManager2 {
       throw new IllegalArgumentException("row index must be nonnegative");
     }
     if ((rowWeight == null || rowIndex >= rowWeight.length) && weight != 0.0) {
-      final var a = new double[rowIndex + 10];
+      final double[] a = new double[rowIndex + 10];
       if (rowWeight != null) System.arraycopy(rowWeight, 0, a, 0, rowWeight.length);
       rowWeight = a;
     }

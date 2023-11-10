@@ -38,14 +38,14 @@ class ShiftRegisterData extends ClockState implements InstanceData {
 
   @Override
   public ShiftRegisterData clone() {
-    final var ret = (ShiftRegisterData) super.clone();
+    final com.cburch.logisim.std.memory.ShiftRegisterData ret = (ShiftRegisterData) super.clone();
     ret.vs = this.vs.clone();
     return ret;
   }
 
   public Value get(int index) {
     int i = vsPos + index;
-    final var v = vs;
+    final com.cburch.logisim.data.Value[] v = vs;
     if (i >= v.length) i -= v.length;
     return v[i];
   }
@@ -55,27 +55,27 @@ class ShiftRegisterData extends ClockState implements InstanceData {
   }
 
   public void push(Value v) {
-    final var pos = vsPos;
+    final int pos = vsPos;
     vs[pos] = v;
     vsPos = pos >= vs.length - 1 ? 0 : pos + 1;
   }
 
   public void set(int index, Value val) {
     int i = vsPos + index;
-    final var v = vs;
+    final com.cburch.logisim.data.Value[] v = vs;
     if (i >= v.length) i -= v.length;
     v[i] = val;
   }
 
   public void setDimensions(BitWidth newWidth, int newLength) {
     com.cburch.logisim.data.Value[] v = vs;
-    final var oldWidth = width;
-    final var oldW = oldWidth.getWidth();
-    final var newW = newWidth.getWidth();
+    final com.cburch.logisim.data.BitWidth oldWidth = width;
+    final int oldW = oldWidth.getWidth();
+    final int newW = newWidth.getWidth();
     if (v.length != newLength) {
-      final var newV = new Value[newLength];
+      final com.cburch.logisim.data.Value[] newV = new Value[newLength];
       int j = vsPos;
-      final var copy = Math.min(newLength, v.length);
+      final int copy = Math.min(newLength, v.length);
       for (int i = 0; i < copy; i++) {
         newV[i] = v[j];
         j++;
@@ -88,7 +88,7 @@ class ShiftRegisterData extends ClockState implements InstanceData {
     }
     if (oldW != newW) {
       for (int i = 0; i < v.length; i++) {
-        final var vi = v[i];
+        final com.cburch.logisim.data.Value vi = v[i];
         if (vi.getWidth() != newW) {
           v[i] = vi.extendWidth(newW, Value.FALSE);
         }

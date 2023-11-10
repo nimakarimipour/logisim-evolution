@@ -236,7 +236,7 @@ public class FpgaCommander
 
   public FpgaCommander(Project Main) {
     MyProject = Main;
-    final var circuitName = Main.getCurrentCircuit().getName();
+    final java.lang.String circuitName = Main.getCurrentCircuit().getName();
     FrequencyPanel = new FpgaClockPanel(Main);
     ToolPath.setActionCommand("ToolPath");
     ToolPath.addActionListener(this);
@@ -305,11 +305,11 @@ public class FpgaCommander
   }
 
   private void updateCircuitBoard(String circuitName) {
-    final var circuit = MyProject.getLogisimFile().getCircuit(circuitName);
+    final com.cburch.logisim.circuit.Circuit circuit = MyProject.getLogisimFile().getCircuit(circuitName);
     if (circuit != null
         && !AppPreferences.Boards.getSelectedBoardFileName().equals(circuit.getDownloadBoard())) {
-      final var boardName = circuit.getDownloadBoard();
-      final var boardIndex = AppPreferences.Boards.getBoardNames().indexOf(boardName);
+      final java.lang.String boardName = circuit.getDownloadBoard();
+      final int boardIndex = AppPreferences.Boards.getBoardNames().indexOf(boardName);
       if (boardIndex >= 0) AppPreferences.Boards.boardSelector().setSelectedIndex(boardIndex + 1);
     }
   }
@@ -391,7 +391,7 @@ public class FpgaCommander
       Progress.setValue(0);
     } else if (e.getActionCommand().equals("mainCircuit")) {
       if (circuitsList.getSelectedItem() != null) {
-        final var circuitName = circuitsList.getSelectedItem().toString();
+        final java.lang.String circuitName = circuitsList.getSelectedItem().toString();
         FrequencyPanel.updateFrequencyList(circuitName);
         updateCircuitBoard(circuitName);
       }

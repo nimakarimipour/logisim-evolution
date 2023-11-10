@@ -28,10 +28,10 @@ class OrGate extends AbstractGate {
   private static class OrGateHdlGeneratorFactory extends AbstractGateHdlGenerator {
     @Override
     public LineBuffer getLogicFunction(int nrOfInputs, int bitwidth, boolean isOneHot) {
-      final var contents = LineBuffer.getHdlBuffer();
-      final var oneLine = new StringBuilder();
+      final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
+      final java.lang.StringBuilder oneLine = new StringBuilder();
       oneLine.append(Hdl.assignPreamble()).append("result").append(Hdl.assignOperator());
-      final var tabWidth = oneLine.length();
+      final int tabWidth = oneLine.length();
       boolean first = true;
       for (int i = 0; i < nrOfInputs; i++) {
         if (!first) {
@@ -89,17 +89,17 @@ class OrGate extends AbstractGate {
 
   protected static void paintIconANSI(
       Graphics2D g, int iconSize, int borderSize, int negateSize, boolean inverted) {
-    final var ystart = negateSize >> 1;
-    final var yend = iconSize - ystart;
-    final var xstart = 0;
-    final var xend = iconSize - negateSize;
-    final var shape = new GeneralPath();
+    final int ystart = negateSize >> 1;
+    final int yend = iconSize - ystart;
+    final int xstart = 0;
+    final int xend = iconSize - negateSize;
+    final java.awt.geom.GeneralPath shape = new GeneralPath();
     shape.moveTo(xend, iconSize >> 1);
     shape.quadTo((2 * xend) / 3, ystart, xstart, ystart);
     shape.quadTo(xend / 3, iconSize >> 1, xstart, yend);
     shape.quadTo((2 * xend) / 3, yend, xend, iconSize >> 1);
     shape.closePath();
-    final var af = g.getTransform();
+    final java.awt.geom.AffineTransform af = g.getTransform();
     g.translate(borderSize, borderSize);
     g.draw(shape);
     paintIconPins(g, iconSize, borderSize, negateSize, inverted, false);

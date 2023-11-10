@@ -45,12 +45,12 @@ public class BitSelectorHdlGeneratorFactory extends AbstractHdlGeneratorFactory 
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist theNetlist, AttributeSet attrs) {
-    final var contents =
+    final com.cburch.logisim.util.LineBuffer contents =
         LineBuffer.getBuffer()
             .pair("extBits", EXTENDED_BITS_STRING)
             .pair("inBits", INPUT_BITS_STRING)
             .pair("outBits", OUTPUTS_BITS_STRING);
-    final var outputBits = attrs.getValue(BitSelector.GROUP_ATTR).getWidth();
+    final int outputBits = attrs.getValue(BitSelector.GROUP_ATTR).getWidth();
     if (Hdl.isVhdl()) {
       contents.empty().addVhdlKeywords()
           .add("""

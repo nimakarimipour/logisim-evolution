@@ -29,15 +29,15 @@ public class ModelReorderAction extends ModelAction {
     super(model);
     this.requests = new ArrayList<>(requests);
     this.objects = new ArrayList<>(requests.size());
-    for (final var req : requests) {
+    for (final com.cburch.draw.model.ReorderRequest req : requests) {
       objects.add(req.getObject());
     }
     int typeIndex = 0; // 0 = mixed/unknown, -1 = to greater index, 1 = to
     // smaller index
-    for (final var req : requests) {
-      final var from = req.getFromIndex();
-      final var to = req.getToIndex();
-      final var thisType = Integer.compare(to, from);
+    for (final com.cburch.draw.model.ReorderRequest req : requests) {
+      final int from = req.getFromIndex();
+      final int to = req.getToIndex();
+      final int thisType = Integer.compare(to, from);
       if (typeIndex == 2) {
         typeIndex = thisType;
       } else if (typeIndex != thisType) {
@@ -50,12 +50,12 @@ public class ModelReorderAction extends ModelAction {
 
   public static ModelReorderAction createLower(
       CanvasModel model, Collection<? extends CanvasObject> objects) {
-    final var reqs = new ArrayList<ReorderRequest>();
-    final var zmap = ZOrder.getZIndex(objects, model);
-    for (final var entry : zmap.entrySet()) {
-      final var obj = entry.getKey();
-      final var from = entry.getValue();
-      final var above = ZOrder.getObjectBelow(obj, model, objects);
+    final java.util.ArrayList<com.cburch.draw.model.ReorderRequest> reqs = new ArrayList<ReorderRequest>();
+    final java.util.Map<com.cburch.draw.model.CanvasObject,java.lang.Integer> zmap = ZOrder.getZIndex(objects, model);
+    for (final java.util.Map.Entry<com.cburch.draw.model.CanvasObject,java.lang.Integer> entry : zmap.entrySet()) {
+      final com.cburch.draw.model.CanvasObject obj = entry.getKey();
+      final java.lang.Integer from = entry.getValue();
+      final com.cburch.draw.model.CanvasObject above = ZOrder.getObjectBelow(obj, model, objects);
       if (above != null) {
         int to = ZOrder.getZIndex(above, model);
         if (objects.contains(above)) {
@@ -73,12 +73,12 @@ public class ModelReorderAction extends ModelAction {
 
   public static ModelReorderAction createLowerBottom(
       CanvasModel model, Collection<? extends CanvasObject> objects) {
-    final var reqs = new ArrayList<ReorderRequest>();
-    final var zmap = ZOrder.getZIndex(objects, model);
+    final java.util.ArrayList<com.cburch.draw.model.ReorderRequest> reqs = new ArrayList<ReorderRequest>();
+    final java.util.Map<com.cburch.draw.model.CanvasObject,java.lang.Integer> zmap = ZOrder.getZIndex(objects, model);
     int to = 0;
-    for (final var entry : zmap.entrySet()) {
-      final var obj = entry.getKey();
-      final var from = entry.getValue();
+    for (final java.util.Map.Entry<com.cburch.draw.model.CanvasObject,java.lang.Integer> entry : zmap.entrySet()) {
+      final com.cburch.draw.model.CanvasObject obj = entry.getKey();
+      final java.lang.Integer from = entry.getValue();
       reqs.add(new ReorderRequest(obj, from, to));
     }
     if (reqs.isEmpty()) return null;
@@ -90,12 +90,12 @@ public class ModelReorderAction extends ModelAction {
 
   public static ModelReorderAction createRaise(
       CanvasModel model, Collection<? extends CanvasObject> objects) {
-    final var reqs = new ArrayList<ReorderRequest>();
-    final var zmap = ZOrder.getZIndex(objects, model);
-    for (final var entry : zmap.entrySet()) {
-      final var obj = entry.getKey();
-      final var from = entry.getValue();
-      final var above = ZOrder.getObjectAbove(obj, model, objects);
+    final java.util.ArrayList<com.cburch.draw.model.ReorderRequest> reqs = new ArrayList<ReorderRequest>();
+    final java.util.Map<com.cburch.draw.model.CanvasObject,java.lang.Integer> zmap = ZOrder.getZIndex(objects, model);
+    for (final java.util.Map.Entry<com.cburch.draw.model.CanvasObject,java.lang.Integer> entry : zmap.entrySet()) {
+      final com.cburch.draw.model.CanvasObject obj = entry.getKey();
+      final java.lang.Integer from = entry.getValue();
+      final com.cburch.draw.model.CanvasObject above = ZOrder.getObjectAbove(obj, model, objects);
       if (above != null) {
         int to = ZOrder.getZIndex(above, model);
         if (objects.contains(above)) {
@@ -113,13 +113,13 @@ public class ModelReorderAction extends ModelAction {
 
   public static ModelReorderAction createRaiseTop(
       CanvasModel model, Collection<? extends CanvasObject> objects) {
-    final var reqs = new ArrayList<ReorderRequest>();
-    final var zmap = ZOrder.getZIndex(objects, model);
+    final java.util.ArrayList<com.cburch.draw.model.ReorderRequest> reqs = new ArrayList<ReorderRequest>();
+    final java.util.Map<com.cburch.draw.model.CanvasObject,java.lang.Integer> zmap = ZOrder.getZIndex(objects, model);
 
-    final var to = model.getObjectsFromBottom().size() - 1;
-    for (final var entry : zmap.entrySet()) {
-      final var obj = entry.getKey();
-      final var from = entry.getValue();
+    final int to = model.getObjectsFromBottom().size() - 1;
+    for (final java.util.Map.Entry<com.cburch.draw.model.CanvasObject,java.lang.Integer> entry : zmap.entrySet()) {
+      final com.cburch.draw.model.CanvasObject obj = entry.getKey();
+      final java.lang.Integer from = entry.getValue();
       reqs.add(new ReorderRequest(obj, from, to));
     }
     if (reqs.isEmpty()) return null;
@@ -131,13 +131,13 @@ public class ModelReorderAction extends ModelAction {
 
   private static void repairRequests(List<ReorderRequest> reqs) {
     for (int i = 0, n = reqs.size(); i < n; i++) {
-      final var req = reqs.get(i);
+      final com.cburch.draw.model.ReorderRequest req = reqs.get(i);
       int from = req.getFromIndex();
       int to = req.getToIndex();
       for (int j = 0; j < i; j++) {
-        final var prev = reqs.get(j);
-        final var prevFrom = prev.getFromIndex();
-        final var prevTo = prev.getToIndex();
+        final com.cburch.draw.model.ReorderRequest prev = reqs.get(j);
+        final int prevFrom = prev.getFromIndex();
+        final int prevTo = prev.getToIndex();
         if (prevFrom <= from && from < prevTo) {
           from--;
         } else if (prevTo <= from && from < prevFrom) {
@@ -154,7 +154,7 @@ public class ModelReorderAction extends ModelAction {
       }
     }
     for (int i = reqs.size() - 1; i >= 0; i--) {
-      final var req = reqs.get(i);
+      final com.cburch.draw.model.ReorderRequest req = reqs.get(i);
       if (req.getFromIndex() == req.getToIndex()) {
         reqs.remove(i);
       }
@@ -188,9 +188,9 @@ public class ModelReorderAction extends ModelAction {
 
   @Override
   void undoSub(CanvasModel model) {
-    final var inv = new ArrayList<ReorderRequest>(requests.size());
+    final java.util.ArrayList<com.cburch.draw.model.ReorderRequest> inv = new ArrayList<ReorderRequest>(requests.size());
     for (int i = requests.size() - 1; i >= 0; i--) {
-      final var request = requests.get(i);
+      final com.cburch.draw.model.ReorderRequest request = requests.get(i);
       inv.add(
           new ReorderRequest(request.getObject(), request.getToIndex(), request.getFromIndex()));
     }

@@ -38,7 +38,7 @@ public class Ttl74175 extends AbstractTtlGate {
 
   @Override
   public void paintInternal(InstancePainter painter, int x, int y, int height, boolean up) {
-    final var g = painter.getGraphics();
+    final java.awt.Graphics g = painter.getGraphics();
     super.paintBase(painter, false, false);
     drawFlops(g, x, y, height);
   }

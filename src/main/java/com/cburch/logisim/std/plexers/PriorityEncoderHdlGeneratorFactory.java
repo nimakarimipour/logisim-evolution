@@ -50,11 +50,11 @@ public class PriorityEncoderHdlGeneratorFactory extends AbstractHdlGeneratorFact
 
   @Override
   public SortedMap<String, String> getPortMap(Netlist nets, Object mapInfo) {
-    final var map = new TreeMap<String, String>();
+    final java.util.TreeMap<java.lang.String,java.lang.String> map = new TreeMap<String, String>();
     if (!(mapInfo instanceof final netlistComponent comp)) return map;
-    final var nrOfBits = comp.nrOfEnds() - 4;
+    final int nrOfBits = comp.nrOfEnds() - 4;
     map.putAll(Hdl.getNetMap("enable", false, comp, nrOfBits + PriorityEncoder.EN_IN, nets));
-    final var vectorList = new StringBuilder();
+    final java.lang.StringBuilder vectorList = new StringBuilder();
     for (int i = nrOfBits - 1; i >= 0; i--) {
       if (Hdl.isVhdl())
         map.putAll(Hdl.getNetMap("inputVector(" + i + ")", true, comp, i, nets));
@@ -72,7 +72,7 @@ public class PriorityEncoderHdlGeneratorFactory extends AbstractHdlGeneratorFact
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist nets, AttributeSet attrs) {
-    final var contents = LineBuffer.getBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getBuffer()
             .pair("selBits", NR_OF_SELECT_BITS_STRING)
             .pair("inBits", NR_OF_INPUT_BITS_STRING);
     if (Hdl.isVhdl()) {

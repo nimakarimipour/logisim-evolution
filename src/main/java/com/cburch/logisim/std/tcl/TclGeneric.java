@@ -49,7 +49,7 @@ public class TclGeneric extends TclComponent {
 
     @Override
     public java.awt.Component getCellEditor(Window source, VhdlContentComponent value) {
-      final var proj =
+      final com.cburch.logisim.proj.Project proj =
           source instanceof com.cburch.logisim.gui.main.Frame frame
               ? frame.getProject()
               : null;
@@ -58,7 +58,7 @@ public class TclGeneric extends TclComponent {
 
     @Override
     public VhdlContentComponent parse(String value) {
-      final var content = VhdlContentComponent.create();
+      final com.cburch.logisim.std.hdl.VhdlContentComponent content = VhdlContentComponent.create();
       if (!content.compare(value)) content.setContent(value);
       return content;
     }
@@ -101,8 +101,8 @@ public class TclGeneric extends TclComponent {
 
   @Override
   protected void configureNewInstance(Instance instance) {
-    final var content = instance.getAttributeValue(CONTENT_ATTR);
-    final var listener = new TclGenericListener(instance);
+    final com.cburch.logisim.std.hdl.VhdlContentComponent content = instance.getAttributeValue(CONTENT_ATTR);
+    final com.cburch.logisim.std.tcl.TclGeneric.TclGenericListener listener = new TclGenericListener(instance);
 
     contentListeners.put(instance, listener);
     content.addHdlModelListener(listener);
@@ -123,9 +123,9 @@ public class TclGeneric extends TclComponent {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    final var content = attrs.getValue(CONTENT_ATTR);
-    final var nbInputs = content.getInputsNumber();
-    final var nbOutputs = content.getOutputsNumber();
+    final com.cburch.logisim.std.hdl.VhdlContentComponent content = attrs.getValue(CONTENT_ATTR);
+    final int nbInputs = content.getInputsNumber();
+    final int nbOutputs = content.getOutputsNumber();
 
     return Bounds.create(0, 0, WIDTH, Math.max(nbInputs, nbOutputs) * PORT_GAP + HEIGHT);
   }
@@ -140,13 +140,13 @@ public class TclGeneric extends TclComponent {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var g = painter.getGraphics();
-    final var content = painter.getAttributeValue(CONTENT_ATTR);
+    final java.awt.Graphics g = painter.getGraphics();
+    final com.cburch.logisim.std.hdl.VhdlContentComponent content = painter.getAttributeValue(CONTENT_ATTR);
     java.awt.FontMetrics metric = g.getFontMetrics();
 
-    final var bds = painter.getBounds();
-    final var x0 = bds.getX() + (bds.getWidth() / 2);
-    final var y0 = bds.getY() + metric.getHeight() + 12;
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+    final int x0 = bds.getX() + (bds.getWidth() / 2);
+    final int y0 = bds.getY() + metric.getHeight() + 12;
     GraphicsUtil.drawText(
         g,
         StringUtil.resizeString(content.getName(), metric, WIDTH),
@@ -155,9 +155,9 @@ public class TclGeneric extends TclComponent {
         GraphicsUtil.H_CENTER,
         GraphicsUtil.V_BOTTOM);
 
-    final var glbLabel = painter.getAttributeValue(StdAttr.LABEL);
+    final java.lang.String glbLabel = painter.getAttributeValue(StdAttr.LABEL);
     if (glbLabel != null) {
-      final var font = g.getFont();
+      final java.awt.Font font = g.getFont();
       g.setFont(painter.getAttributeValue(StdAttr.LABEL_FONT));
       GraphicsUtil.drawCenteredText(g, glbLabel, bds.getX() + bds.getWidth() / 2, bds.getY() - g.getFont().getSize());
       g.setFont(font);
@@ -167,8 +167,8 @@ public class TclGeneric extends TclComponent {
     g.setFont(g.getFont().deriveFont((float) 10));
     metric = g.getFontMetrics();
 
-    final var inputs = content.getInputs();
-    final var outputs = content.getOutputs();
+    final com.cburch.logisim.instance.Port[] inputs = content.getInputs();
+    final com.cburch.logisim.instance.Port[] outputs = content.getOutputs();
 
     for (int i = 0; i < inputs.length; i++)
       GraphicsUtil.drawText(
@@ -193,7 +193,7 @@ public class TclGeneric extends TclComponent {
 
   @Override
   void updatePorts(Instance instance) {
-    final var content = instance.getAttributeValue(CONTENT_ATTR);
+    final com.cburch.logisim.std.hdl.VhdlContentComponent content = instance.getAttributeValue(CONTENT_ATTR);
     instance.setPorts(content.getPorts());
     setPorts(content.getPorts());
   }

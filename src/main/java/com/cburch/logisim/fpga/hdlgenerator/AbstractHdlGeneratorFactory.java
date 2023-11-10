@@ -39,8 +39,8 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
   protected boolean getWiresPortsDuringHDLWriting = false;
 
   public AbstractHdlGeneratorFactory() {
-    final var className = getClass().toString().replace('.', ':').replace(' ', ':');
-    final var parts = className.split(":");
+    final java.lang.String className = getClass().toString().replace('.', ':').replace(' ', ':');
+    final java.lang.String[] parts = className.split(":");
     if (parts.length < 2) throw new ExceptionInInitializerError("Cannot read class path!");
     subDirectoryName = parts[parts.length - 2];
   }
@@ -63,7 +63,7 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
 
   @Override
   public List<String> getArchitecture(Netlist theNetlist, AttributeSet attrs, String componentName) {
-    final var contents = LineBuffer.getHdlBuffer();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
     if (getWiresPortsDuringHDLWriting) {
       myWires.removeWires();
       myTypedWires.clear();
@@ -79,30 +79,30 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
             .empty();
       }
 
-      final var components = getComponentDeclarationSection(theNetlist, attrs);
+      final com.cburch.logisim.util.LineBuffer components = getComponentDeclarationSection(theNetlist, attrs);
       if (!components.isEmpty())
         contents.addRemarkBlock("Here all used components are defined", 3).add(components.getWithIndent()).empty();
 
-      final var typedWires = myTypedWires.getTypedWires();
-      final var mySignals = new HashMap<String, String>();
+      final java.util.Map<java.lang.String,java.lang.String> typedWires = myTypedWires.getTypedWires();
+      final java.util.HashMap<java.lang.String,java.lang.String> mySignals = new HashMap<String, String>();
       // first we gather some info on the wire names
       int maxNameLength = 0;
-      for (final var wire : myWires.wireKeySet()) {
+      for (final java.lang.String wire : myWires.wireKeySet()) {
         maxNameLength = Math.max(maxNameLength, wire.length());
         mySignals.put(wire, getTypeIdentifier(myWires.get(wire), attrs));
       }
-      for (final var reg : myWires.registerKeySet()) {
+      for (final java.lang.String reg : myWires.registerKeySet()) {
         maxNameLength = Math.max(maxNameLength, reg.length());
         mySignals.put(reg, getTypeIdentifier(myWires.get(reg), attrs));
       }
-      for (final var wire : typedWires.keySet()) {
+      for (final java.lang.String wire : typedWires.keySet()) {
         maxNameLength = Math.max(maxNameLength, wire.length());
         mySignals.put(wire, typedWires.get(wire));
       }
       // now we add them
       if (maxNameLength > 0) contents.addRemarkBlock("All used signals are defined here");
-      final var sortedSignals = new TreeSet<>(mySignals.keySet());
-      for (final var signal : sortedSignals)
+      final java.util.TreeSet<java.lang.String> sortedSignals = new TreeSet<>(mySignals.keySet());
+      for (final java.lang.String signal : sortedSignals)
         contents.add("   {{signal}} {{1}}{{2}} : {{3}};", signal, " ".repeat(maxNameLength - signal.length()),
             mySignals.get(signal));
       if (maxNameLength > 0) contents.empty();
@@ -110,34 +110,34 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
           .add(getModuleFunctionality(theNetlist, attrs).getWithIndent())
           .add("{{end}} platformIndependent;");
     } else {
-      final var preamble = String.format("module %s( ", componentName);
-      final var indenting = " ".repeat(preamble.length());
-      final var body = LineBuffer.getHdlBuffer();
+      final java.lang.String preamble = String.format("module %s( ", componentName);
+      final java.lang.String indenting = " ".repeat(preamble.length());
+      final com.cburch.logisim.util.LineBuffer body = LineBuffer.getHdlBuffer();
       if (myPorts.isEmpty()) {
         contents.add(preamble + " );");
       } else {
-        final var ports = new TreeSet<>(myPorts.keySet());
-        for (final var port : myPorts.keySet())
+        final java.util.TreeSet<java.lang.String> ports = new TreeSet<>(myPorts.keySet());
+        for (final java.lang.String port : myPorts.keySet())
           if (myPorts.isClock(port)) ports.add(myPorts.getTickName(port));
         boolean first = true;
         int maxNrOfPorts = ports.size();
-        for (final var port : ports) {
+        for (final java.lang.String port : ports) {
           maxNrOfPorts--;
-          final var end = maxNrOfPorts == 0 ? " );" : ",";
+          final java.lang.String end = maxNrOfPorts == 0 ? " );" : ",";
           contents.add("{{1}}{{2}}{{3}}", first ? preamble : indenting, port, end);
           first = false;
         }
       }
       if (!myParametersList.isEmpty(attrs)) {
         body.empty().addRemarkBlock("Here all module parameters are defined with a dummy value");
-        final var parameters = new TreeSet<String>();
-        for (final var paramId : myParametersList.keySet(attrs)) {
+        final java.util.TreeSet<java.lang.String> parameters = new TreeSet<String>();
+        for (final java.lang.Integer paramId : myParametersList.keySet(attrs)) {
           // For verilog we specify a maximum vector, this seems the best way to do it
-          final var paramName = myParametersList.isPresentedByInteger(paramId, attrs)
+          final java.lang.String paramName = myParametersList.isPresentedByInteger(paramId, attrs)
               ? myParametersList.get(paramId, attrs) : String.format("[64:0] %s", myParametersList.get(paramId, attrs));
           parameters.add(paramName);
         }
-        for (final var param : parameters)
+        for (final java.lang.String param : parameters)
           body.add(String.format("parameter %s = 1;", param));
       }
       if (myTypedWires.getNrOfTypes() > 0) {
@@ -145,8 +145,8 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
             .addRemarkBlock("Here all private types are defined")
             .add(myTypedWires.getTypeDefinitions());
       }
-      final var inputs = myPorts.keySet(Port.INPUT);
-      for (final var input : myPorts.keySet(Port.INPUT)) {
+      final java.util.ArrayList<java.lang.String> inputs = myPorts.keySet(Port.INPUT);
+      for (final java.lang.String input : myPorts.keySet(Port.INPUT)) {
         if (myPorts.isClock(input))
           inputs.add(myPorts.getTickName(input));
       }
@@ -154,35 +154,35 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
         body.empty().addRemarkBlock("The inputs are defined here");
         if (!getVerilogSignalSet("input", inputs, attrs, true, body)) return null;
       }
-      final var outputs = myPorts.keySet(Port.OUTPUT);
+      final java.util.ArrayList<java.lang.String> outputs = myPorts.keySet(Port.OUTPUT);
       if (!outputs.isEmpty()) {
         body.empty().addRemarkBlock("The outputs are defined here");
         if (!getVerilogSignalSet("output", outputs, attrs, true, body)) return null;
       }
-      final var inouts = myPorts.keySet(Port.INOUT);
+      final java.util.ArrayList<java.lang.String> inouts = myPorts.keySet(Port.INOUT);
       if (!inouts.isEmpty()) {
         body.empty().addRemarkBlock("The inouts are defined here");
         if (!getVerilogSignalSet("inout", inouts, attrs, true, body)) return null;
       }
-      final var wires = myWires.wireKeySet();
+      final java.util.List<java.lang.String> wires = myWires.wireKeySet();
       if (!wires.isEmpty()) {
         body.empty().addRemarkBlock("The wires are defined here");
         if (!getVerilogSignalSet("wire", wires, attrs, false, body)) return null;
       }
-      final var regs = myWires.registerKeySet();
+      final java.util.List<java.lang.String> regs = myWires.registerKeySet();
       if (!regs.isEmpty()) {
         body.empty().addRemarkBlock("The registers are defined here");
         if (!getVerilogSignalSet("reg", regs, attrs, false, body)) return null;
       }
-      final var typedWires = myTypedWires.getTypedWires();
+      final java.util.Map<java.lang.String,java.lang.String> typedWires = myTypedWires.getTypedWires();
       if (!typedWires.isEmpty()) {
         body.empty().addRemarkBlock("The type defined signals are defined here");
-        final var sortedWires = new TreeSet<>(typedWires.keySet());
+        final java.util.TreeSet<java.lang.String> sortedWires = new TreeSet<>(typedWires.keySet());
         int maxNameLength = 0;
-        for (final var wire : sortedWires)
+        for (final java.lang.String wire : sortedWires)
           maxNameLength = Math.max(maxNameLength, typedWires.get(wire).length());
-        for (final var wire : sortedWires) {
-          final var typeName = typedWires.get(wire);
+        for (final java.lang.String wire : sortedWires) {
+          final java.lang.String typeName = typedWires.get(wire);
           body.add(LineBuffer.format("{{1}}{{2}} {{3}};", typeName, " ".repeat(maxNameLength - typeName.length()), wire));
         }
       }
@@ -205,26 +205,26 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
 
   @Override
   public LineBuffer getComponentInstantiation(Netlist theNetlist, AttributeSet attrs, String componentName) {
-    final var contents = LineBuffer.getHdlBuffer();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
     if (Hdl.isVhdl()) contents.add(getVHDLBlackBox(theNetlist, attrs, componentName, false));
     return contents;
   }
 
   @Override
   public LineBuffer getComponentMap(Netlist nets, Long componentId, Object componentInfo, String name) {
-    final var contents = LineBuffer.getHdlBuffer();
-    final var parameterMap = new TreeMap<String, String>();
-    final var portMap = getPortMap(nets, componentInfo);
-    final var componentHdlName =
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
+    final java.util.TreeMap<java.lang.String,java.lang.String> parameterMap = new TreeMap<String, String>();
+    final java.util.Map<java.lang.String,java.lang.String> portMap = getPortMap(nets, componentInfo);
+    final java.lang.String componentHdlName =
             (componentInfo instanceof netlistComponent comp)
               ? comp.getComponent().getFactory().getHDLName(((netlistComponent) componentInfo).getComponent().getAttributeSet())
               : name;
-    final var compName = StringUtil.isNotEmpty(name) ? name : componentHdlName;
-    final var thisInstanceIdentifier = getInstanceIdentifier(componentInfo, componentId);
-    final var oneLine = new StringBuilder();
+    final java.lang.String compName = StringUtil.isNotEmpty(name) ? name : componentHdlName;
+    final java.lang.String thisInstanceIdentifier = getInstanceIdentifier(componentInfo, componentId);
+    final java.lang.StringBuilder oneLine = new StringBuilder();
     if (componentInfo == null) parameterMap.putAll(myParametersList.getMaps(null));
     else if (componentInfo instanceof netlistComponent comp) {
-      final var attrs = comp.getComponent().getAttributeSet();
+      final com.cburch.logisim.data.AttributeSet attrs = comp.getComponent().getAttributeSet();
       parameterMap.putAll(myParametersList.getMaps(attrs));
     }
     int tabLength = 0;
@@ -234,14 +234,14 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
       if (!parameterMap.isEmpty()) {
         // first we gather information on the generic string lengths
         int maxNameLength = 0;
-        for (final var generic : parameterMap.keySet())
+        for (final java.lang.String generic : parameterMap.keySet())
           maxNameLength = Math.max(maxNameLength, generic.length());
         int currentGeneric = 0;
-        final var genericNames = new TreeSet<>(parameterMap.keySet());
-        final var nrOfGenerics = genericNames.size();
+        final java.util.TreeSet<java.lang.String> genericNames = new TreeSet<>(parameterMap.keySet());
+        final int nrOfGenerics = genericNames.size();
         // now we add them
-        for (final var generic : genericNames) {
-          final var preamble = currentGeneric == 0 ? "{{generic}} {{map}} (" : " ".repeat(13);
+        for (final java.lang.String generic : genericNames) {
+          final java.lang.String preamble = currentGeneric == 0 ? "{{generic}} {{map}} (" : " ".repeat(13);
           contents.add("   {{1}} {{2}}{{3}} => {{4}}{{5}}", preamble, generic,
               " ".repeat(Math.max(0, maxNameLength - generic.length())),
               parameterMap.get(generic),
@@ -252,13 +252,13 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
       if (!portMap.isEmpty()) {
         // first we gather information on the port string lengths
         int maxNameLength = 0;
-        for (final var port : portMap.keySet())
+        for (final java.lang.String port : portMap.keySet())
           maxNameLength = Math.max(maxNameLength, port.length());
         int currentPort = 0;
-        final var portNames = new TreeSet<>(portMap.keySet());
-        final var nrOfPorts = portNames.size();
-        for (final var port : portNames) {
-          final var preamble = currentPort == 0 ? "{{port}} {{map}} (" : " ".repeat(10);
+        final java.util.TreeSet<java.lang.String> portNames = new TreeSet<>(portMap.keySet());
+        final int nrOfPorts = portNames.size();
+        for (final java.lang.String port : portNames) {
+          final java.lang.String preamble = currentPort == 0 ? "{{port}} {{map}} (" : " ".repeat(10);
           contents.add("   {{1}} {{2}}{{3}} => {{4}}{{5}}", preamble, port,
               " ".repeat(Math.max(0, maxNameLength - port.length())),
               portMap.get(port),
@@ -297,11 +297,11 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
             oneLine.append(" ".repeat(tabLength));
           } else first = false;
           oneLine.append(".").append(port).append("(");
-          final var MappedSignal = portMap.get(port);
+          final java.lang.String MappedSignal = portMap.get(port);
           if (!MappedSignal.contains(",")) {
             oneLine.append(MappedSignal);
           } else {
-            final var vectorList = MappedSignal.split(",");
+            final java.lang.String[] vectorList = MappedSignal.split(",");
             oneLine.append("{");
             int tabSize = oneLine.length();
             for (int vectorEntries = 0; vectorEntries < vectorList.length; vectorEntries++) {
@@ -326,7 +326,7 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
 
   @Override
   public List<String> getEntity(Netlist theNetlist, AttributeSet attrs, String componentName) {
-    final var contents = LineBuffer.getHdlBuffer();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
     if (Hdl.isVhdl()) {
       contents.add(FileWriter.getGenerateRemark(componentName, theNetlist.projName()))
           .add(Hdl.getExtendedLibrary())
@@ -337,9 +337,9 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
 
   private String getInstanceIdentifier(Object componentInfo, Long componentId) {
     if (componentInfo instanceof netlistComponent comp) {
-      final var attrs = comp.getComponent().getAttributeSet();
+      final com.cburch.logisim.data.AttributeSet attrs = comp.getComponent().getAttributeSet();
       if (attrs.containsAttribute(StdAttr.LABEL)) {
-        final var label = attrs.getValue(StdAttr.LABEL);
+        final java.lang.String label = attrs.getValue(StdAttr.LABEL);
         if (StringUtil.isNotEmpty(label)) {
           return CorrectLabel.getCorrectLabel(label);
         }
@@ -363,10 +363,10 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
   }
 
   public Map<String, String> getPortMap(Netlist nets, Object mapInfo) {
-    final var result = new TreeMap<String, String>();
+    final java.util.TreeMap<java.lang.String,java.lang.String> result = new TreeMap<String, String>();
     if ((mapInfo instanceof netlistComponent componentInfo) && !myPorts.isEmpty()) {
-      final var compName = componentInfo.getComponent().getFactory().getDisplayName();
-      final var attrs = componentInfo.getComponent().getAttributeSet();
+      final java.lang.String compName = componentInfo.getComponent().getFactory().getDisplayName();
+      final com.cburch.logisim.data.AttributeSet attrs = componentInfo.getComponent().getAttributeSet();
       if (getWiresPortsDuringHDLWriting) {
         myWires.removeWires();
         myTypedWires.clear();
@@ -380,15 +380,15 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
           com.cburch.logisim.data.AttributeOption clockAttr = attrs.containsAttribute(StdAttr.EDGE_TRIGGER)
               ? attrs.getValue(StdAttr.EDGE_TRIGGER) : attrs.getValue(StdAttr.TRIGGER);
           if (clockAttr == null) clockAttr = StdAttr.TRIG_RISING; // default case if no other specified (for TTL library)
-          final var activeLow = StdAttr.TRIG_LOW.equals(clockAttr) || StdAttr.TRIG_FALLING.equals(clockAttr);
-          final var compPinId = myPorts.getComponentPortId(port);
+          final boolean activeLow = StdAttr.TRIG_LOW.equals(clockAttr) || StdAttr.TRIG_FALLING.equals(clockAttr);
+          final int compPinId = myPorts.getComponentPortId(port);
           if (!componentInfo.isEndConnected(compPinId)) {
             // FIXME hard coded string
             Reporter.report.addSevereWarning(
                 String.format("Component \"%s\" in circuit \"%s\" has no clock connection!", compName, nets.getCircuitName()));
             hasClock = false;
           }
-          final var clockNetName = Hdl.getClockNetName(componentInfo, compPinId, nets);
+          final java.lang.String clockNetName = Hdl.getClockNetName(componentInfo, compPinId, nets);
           if (StringUtil.isNullOrEmpty(clockNetName)) {
             // FIXME hard coded string
             Reporter.report.addSevereWarning(
@@ -400,7 +400,7 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
               result.put(myPorts.getTickName(port), LineBuffer
                   .formatHdl("{{1}}{{<}}{{2}}{{>}}", clockNetName, ClockHdlGeneratorFactory.GLOBAL_CLOCK_INDEX));
             } else {
-              final var clockIndex = activeLow ? ClockHdlGeneratorFactory.NEGATIVE_EDGE_TICK_INDEX : ClockHdlGeneratorFactory.POSITIVE_EDGE_TICK_INDEX;
+              final int clockIndex = activeLow ? ClockHdlGeneratorFactory.NEGATIVE_EDGE_TICK_INDEX : ClockHdlGeneratorFactory.POSITIVE_EDGE_TICK_INDEX;
               result.put(myPorts.getTickName(port), LineBuffer.formatHdl("{{1}}{{<}}{{2}}{{>}}", clockNetName, clockIndex));
             }
             result.put(HdlPorts.CLOCK, LineBuffer
@@ -411,14 +411,14 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
           } else {
             result.put(myPorts.getTickName(port), Hdl.oneBit());
             if (!gatedClock) {
-              final var clockIndex = activeLow ? ClockHdlGeneratorFactory.INVERTED_DERIVED_CLOCK_INDEX : ClockHdlGeneratorFactory.DERIVED_CLOCK_INDEX;
+              final int clockIndex = activeLow ? ClockHdlGeneratorFactory.INVERTED_DERIVED_CLOCK_INDEX : ClockHdlGeneratorFactory.DERIVED_CLOCK_INDEX;
               result.put(HdlPorts.CLOCK, LineBuffer.formatHdl("{{1}}{{<}}{{2}}{{>}}", clockNetName, clockIndex));
             } else {
               result.put(HdlPorts.CLOCK, Hdl.getNetName(componentInfo, compPinId, true, nets));
             }
           }
         } else if (myPorts.isFixedMapped(port)) {
-          final var fixedMap = myPorts.getFixedMap(port);
+          final java.lang.String fixedMap = myPorts.getFixedMap(port);
           if (HdlPorts.PULL_DOWN.equals(fixedMap))
             result.put(port, Hdl.getConstantVector(0, myPorts.get(port, attrs)));
           else if (HdlPorts.PULL_UP.equals(fixedMap))
@@ -435,8 +435,8 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
 
   @Override
   public String getRelativeDirectory() {
-    final var mainDirectory = AppPreferences.HdlType.get().toLowerCase();
-    final var directoryName = new StringBuilder();
+    final java.lang.String mainDirectory = AppPreferences.HdlType.get().toLowerCase();
+    final java.lang.StringBuilder directoryName = new StringBuilder();
     directoryName.append(mainDirectory);
     if (!mainDirectory.endsWith(File.separator)) directoryName.append(File.separator);
     if (!subDirectoryName.isEmpty()) {
@@ -448,7 +448,7 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
 
   private List<String> getVHDLBlackBox(Netlist theNetlist, AttributeSet attrs,
       String componentName, Boolean isEntity) {
-    final var contents = LineBuffer.getHdlBuffer().addVhdlKeywords();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer().addVhdlKeywords();
     int maxNameLength = 0;
     if (getWiresPortsDuringHDLWriting) {
       myWires.removeWires();
@@ -459,16 +459,16 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
     contents.add(isEntity ? "{{entity}} {{1}} {{is}}" : "{{component}} {{1}}", componentName);
     if (!myParametersList.isEmpty(attrs)) {
       // first we build a list with parameters to determine the max. string length
-      final var myParameters = new HashMap<String, Boolean>();
-      for (final var generic : myParametersList.keySet(attrs)) {
-        final var parameterName = myParametersList.get(generic, attrs);
+      final java.util.HashMap<java.lang.String,java.lang.Boolean> myParameters = new HashMap<String, Boolean>();
+      for (final java.lang.Integer generic : myParametersList.keySet(attrs)) {
+        final java.lang.String parameterName = myParametersList.get(generic, attrs);
         maxNameLength = Math.max(maxNameLength, parameterName.length());
         myParameters.put(parameterName, myParametersList.isPresentedByInteger(generic, attrs));
       }
       maxNameLength += 1; // add one space after the longest one
-      final var myGenerics = new TreeSet<>(myParameters.keySet());
+      final java.util.TreeSet<java.lang.String> myGenerics = new TreeSet<>(myParameters.keySet());
       int currentGenericId = 0;
-      for (final var thisGeneric : myGenerics) {
+      for (final java.lang.String thisGeneric : myGenerics) {
         if (currentGenericId == 0) {
           contents.add("   {{generic}} ( {{1}}{{2}}: {{3}}{{4}};", thisGeneric,
               " ".repeat(Math.max(0, maxNameLength - thisGeneric.length())),
@@ -487,11 +487,11 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
       // now we gather information on the in/out and inout ports
       maxNameLength = 0;
       int nrOfEntries = myPorts.keySet().size();
-      final var tickers = new TreeSet<String>();
-      for (final var portName : myPorts.keySet()) {
+      final java.util.TreeSet<java.lang.String> tickers = new TreeSet<String>();
+      for (final java.lang.String portName : myPorts.keySet()) {
         maxNameLength = Math.max(maxNameLength, portName.length());
         if (myPorts.isClock(portName)) {
-          final var tickerName = myPorts.getTickName(portName);
+          final java.lang.String tickerName = myPorts.getTickName(portName);
           maxNameLength = Math.max(maxNameLength, tickerName.length());
           tickers.add(tickerName);
           nrOfEntries++;
@@ -503,27 +503,27 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
       int currentEntry = 0;
       // now we process in order
       java.lang.String direction = (!myPorts.keySet(Port.INOUT).isEmpty()) ? Vhdl.getVhdlKeyword("IN   ") : Vhdl.getVhdlKeyword("IN ");
-      final var myInputs = new TreeSet<>(myPorts.keySet(Port.INPUT));
+      final java.util.TreeSet<java.lang.String> myInputs = new TreeSet<>(myPorts.keySet(Port.INPUT));
       myInputs.addAll(tickers);
-      for (final var input : myInputs) {
+      for (final java.lang.String input : myInputs) {
         nrOfPortBits = myPorts.contains(input) ? myPorts.get(input, attrs) : 1;
-        final var type = getTypeIdentifier(nrOfPortBits, attrs);
+        final java.lang.String type = getTypeIdentifier(nrOfPortBits, attrs);
         firstEntry = addPortEntry(contents, firstEntry, nrOfEntries, currentEntry, input, direction, type, maxNameLength);
         currentEntry++;
       }
       direction = Vhdl.getVhdlKeyword("INOUT");
-      final var myInOuts = new TreeSet<>(myPorts.keySet(Port.INOUT));
-      for (final var inout : myInOuts) {
+      final java.util.TreeSet<java.lang.String> myInOuts = new TreeSet<>(myPorts.keySet(Port.INOUT));
+      for (final java.lang.String inout : myInOuts) {
         nrOfPortBits = myPorts.get(inout, attrs);
-        final var type = getTypeIdentifier(nrOfPortBits, attrs);
+        final java.lang.String type = getTypeIdentifier(nrOfPortBits, attrs);
         firstEntry = addPortEntry(contents, firstEntry, nrOfEntries, currentEntry, inout, direction, type, maxNameLength);
         currentEntry++;
       }
       direction = (!myPorts.keySet(Port.INOUT).isEmpty()) ? Vhdl.getVhdlKeyword("OUT  ") : Vhdl.getVhdlKeyword("OUT");
-      final var myOutputs = new TreeSet<>(myPorts.keySet(Port.OUTPUT));
-      for (final var output : myOutputs) {
+      final java.util.TreeSet<java.lang.String> myOutputs = new TreeSet<>(myPorts.keySet(Port.OUTPUT));
+      for (final java.lang.String output : myOutputs) {
         nrOfPortBits = myPorts.get(output, attrs);
-        final var type = getTypeIdentifier(nrOfPortBits, attrs);
+        final java.lang.String type = getTypeIdentifier(nrOfPortBits, attrs);
         firstEntry = addPortEntry(contents, firstEntry, nrOfEntries, currentEntry, output, direction, type, maxNameLength);
         currentEntry++;
       }
@@ -538,7 +538,7 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
 
   private boolean addPortEntry(LineBuffer contents, boolean firstEntry, int nrOfEntries, int currentEntry,
                                String name, String direction, String type, int maxLength) {
-    final var fmt = firstEntry
+    final java.lang.String fmt = firstEntry
                     ? "   {{port}} ( {{1}}{{2}}: {{3}} {{4}}{{5}};"
                     : "          {{1}}{{2}}: {{3}} {{4}}{{5}};";
     contents.add(fmt, name, " ".repeat(maxLength - name.length()), direction, type, currentEntry == (nrOfEntries - 1) ? " )" : "");
@@ -548,7 +548,7 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
   }
 
   private String getTypeIdentifier(int nrOfBits, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer().addVhdlKeywords();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer().addVhdlKeywords();
     if (nrOfBits < 0) {
       // we have generic based vector
       if (!myParametersList.containsKey(nrOfBits, attrs))
@@ -566,10 +566,10 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
 
   private boolean getVerilogSignalSet(String preamble, List<String> signals, AttributeSet attrs, boolean isPort, LineBuffer contents) {
     if (signals.isEmpty()) return true;
-    final var signalSet = new HashMap<String, String>();
-    for (final var input : signals) {
+    final java.util.HashMap<java.lang.String,java.lang.String> signalSet = new HashMap<String, String>();
+    for (final java.lang.String input : signals) {
       // this we have to check for the tick
-      final var nrOfBits = isPort ? myPorts.contains(input) ? myPorts.get(input, attrs) : 1 : myWires.get(input);
+      final int nrOfBits = isPort ? myPorts.contains(input) ? myPorts.get(input, attrs) : 1 : myWires.get(input);
       if (nrOfBits < 0) {
         if (myParametersList.containsKey(nrOfBits, attrs)) {
           signalSet.put(input, String.format("%s [%s-1:0]", preamble, myParametersList.get(nrOfBits, attrs)));
@@ -586,12 +586,12 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
         signalSet.put(input, preamble);
       }
     }
-    final var sortedSignals = new TreeSet<>(signalSet.keySet());
+    final java.util.TreeSet<java.lang.String> sortedSignals = new TreeSet<>(signalSet.keySet());
     int maxNameLength = 0;
-    for (final var signal : sortedSignals)
+    for (final java.lang.String signal : sortedSignals)
       maxNameLength = Math.max(maxNameLength, signalSet.get(signal).length());
-    for (final var signal : sortedSignals) {
-      final var type = signalSet.get(signal);
+    for (final java.lang.String signal : sortedSignals) {
+      final java.lang.String type = signalSet.get(signal);
       contents.add(LineBuffer.format("{{1}}{{2}} {{3}};", type, " ".repeat(maxNameLength - type.length()), signal));
     }
     return true;

@@ -29,7 +29,7 @@ class DrawingOverlaps {
   }
 
   private void addOverlap(CanvasObject a, CanvasObject b) {
-    final var alist = map.computeIfAbsent(a, k -> new ArrayList<>());
+    final java.util.List<com.cburch.draw.model.CanvasObject> alist = map.computeIfAbsent(a, k -> new ArrayList<>());
     if (!alist.contains(b)) {
       alist.add(b);
     }
@@ -40,9 +40,9 @@ class DrawingOverlaps {
   }
 
   private void ensureUpdated() {
-    for (final var o : untested) {
-      final var over = new ArrayList<CanvasObject>();
-      for (final var o2 : map.keySet()) {
+    for (final com.cburch.draw.model.CanvasObject o : untested) {
+      final java.util.ArrayList<com.cburch.draw.model.CanvasObject> over = new ArrayList<CanvasObject>();
+      for (final com.cburch.draw.model.CanvasObject o2 : map.keySet()) {
         if (o != o2 && o.overlaps(o2)) {
           over.add(o2);
           addOverlap(o2, o);
@@ -56,7 +56,7 @@ class DrawingOverlaps {
   public Collection<CanvasObject> getObjectsOverlapping(CanvasObject o) {
     ensureUpdated();
 
-    final var ret = map.get(o);
+    final java.util.List<com.cburch.draw.model.CanvasObject> ret = map.get(o);
     return CollectionUtil.isNullOrEmpty(ret)
         ? Collections.emptyList()
         : Collections.unmodifiableList(ret);
@@ -68,17 +68,17 @@ class DrawingOverlaps {
   }
 
   public void invalidateShapes(Collection<? extends CanvasObject> shapes) {
-    for (final var o : shapes) {
+    for (final com.cburch.draw.model.CanvasObject o : shapes) {
       invalidateShape(o);
     }
   }
 
   public void removeShape(CanvasObject shape) {
     untested.remove(shape);
-    final var mapped = map.remove(shape);
+    final java.util.List<com.cburch.draw.model.CanvasObject> mapped = map.remove(shape);
     if (mapped != null) {
-      for (final var o : mapped) {
-        final var reverse = map.get(o);
+      for (final com.cburch.draw.model.CanvasObject o : mapped) {
+        final java.util.List<com.cburch.draw.model.CanvasObject> reverse = map.get(o);
         if (reverse != null) {
           reverse.remove(shape);
         }

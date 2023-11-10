@@ -98,11 +98,11 @@ public class CsvInterpretor {
 
   public void getTruthTable(AnalyzerModel model) throws IOException {
     if (content.size() <= 1) return;
-    final var rows = new ArrayList<Entry[]>();
+    final java.util.ArrayList<com.cburch.logisim.analyze.model.Entry[]> rows = new ArrayList<Entry[]>();
     int nrOfEntries = inputs.bits.size() + outputs.bits.size();
     for (int row = 1; row < content.size(); row++) {
-      final var entryRow = new ArrayList<Entry>();
-      final var line = content.get(row);
+      final java.util.ArrayList<com.cburch.logisim.analyze.model.Entry> entryRow = new ArrayList<Entry>();
+      final java.util.List<java.lang.String> line = content.get(row);
       int col = 0;
       while (col < line.size()) {
         if (col != inputs.bits.size()) {
@@ -125,7 +125,7 @@ public class CsvInterpretor {
     } catch (IllegalArgumentException e) {
       throw new IOException(e.getMessage());
     }
-    final var table = model.getTruthTable();
+    final com.cburch.logisim.analyze.model.TruthTable table = model.getTruthTable();
     try {
       table.setVisibleRows(rows, false);
     } catch (IllegalArgumentException e) {
@@ -210,8 +210,8 @@ public class CsvInterpretor {
 
   private boolean getInputsOutputs() {
     /* first check: are all the lines the same size */
-    final var header = content.get(0);
-    final var nrOfEntries = header.size();
+    final java.util.List<java.lang.String> header = content.get(0);
+    final int nrOfEntries = header.size();
     for (int line = 1; line < content.size(); line++) {
       if (content.get(line).size() != nrOfEntries) {
         OptionPane.showMessageDialog(
@@ -227,7 +227,7 @@ public class CsvInterpretor {
     boolean inOuSepDetected = false;
     /* now read the cells */
     for (int idx = 0; idx < nrOfEntries; idx++) {
-      final var field = header.get(idx);
+      final java.lang.String field = header.get(idx);
       if (field == null) {
         OptionPane.showMessageDialog(
             parent,
@@ -244,9 +244,9 @@ public class CsvInterpretor {
       if (field.contains(":")) {
         /* Is B:<a> format */
         int pos = field.indexOf(":");
-        final var name = field.substring(0, pos);
+        final java.lang.String name = field.substring(0, pos);
         if (!isCorrectName(name)) return false;
-        final var index = field.substring(pos + 1);
+        final java.lang.String index = field.substring(pos + 1);
         for (char kar : index.toCharArray()) {
           if ("0123456789".indexOf(kar) < 0) {
             OptionPane.showMessageDialog(
@@ -257,10 +257,10 @@ public class CsvInterpretor {
             return false;
           }
         }
-        final var bitIndex = Integer.parseInt(index);
+        final int bitIndex = Integer.parseInt(index);
 
         if (bitspresent.containsKey(name.toLowerCase())) {
-          final var sels = bitspresent.get(name.toLowerCase());
+          final java.util.ArrayList<java.lang.Boolean> sels = bitspresent.get(name.toLowerCase());
           if (bitIndex >= sels.size() || !sels.get(bitIndex + 1)) {
             OptionPane.showMessageDialog(
                 parent,
@@ -280,8 +280,8 @@ public class CsvInterpretor {
           sels.set(bitIndex, true);
         } else {
           if (isDuplicate(name)) return false;
-          final var variable = new Var(name, bitIndex + 1);
-          final var sels = new ArrayList<Boolean>();
+          final com.cburch.logisim.analyze.model.Var variable = new Var(name, bitIndex + 1);
+          final java.util.ArrayList<java.lang.Boolean> sels = new ArrayList<Boolean>();
           for (int a = 0; a < bitIndex; a++) {
             sels.add(false);
           }
@@ -295,11 +295,11 @@ public class CsvInterpretor {
         }
       } else if (field.contains("[")) {
         /* check indexes and empty field */
-        final var pos = field.indexOf('[');
-        final var name = field.substring(0, pos);
+        final int pos = field.indexOf('[');
+        final java.lang.String name = field.substring(0, pos);
         if (!isCorrectName(name)) return false;
         if (isDuplicate(name)) return false;
-        final var nrOfBits = VariableTab.checkindex(field.substring(pos));
+        final int nrOfBits = VariableTab.checkindex(field.substring(pos));
         if (nrOfBits <= 0) {
           OptionPane.showMessageDialog(
               parent,
@@ -327,7 +327,7 @@ public class CsvInterpretor {
           }
         }
         idx += nrOfBits - 1;
-        final var variable = new Var(name, nrOfBits);
+        final com.cburch.logisim.analyze.model.Var variable = new Var(name, nrOfBits);
         if (processingInputs) {
           inputs.add(variable);
         } else {
@@ -337,7 +337,7 @@ public class CsvInterpretor {
         if (!isCorrectName(field) || isDuplicate(field)) {
           return false;
         }
-        final var variable = new Var(field, 1);
+        final com.cburch.logisim.analyze.model.Var variable = new Var(field, 1);
         if (processingInputs) {
           inputs.add(variable);
         } else {
@@ -362,7 +362,7 @@ public class CsvInterpretor {
       return false;
     }
     for (String key : bitspresent.keySet()) {
-      final var bit = bitspresent.get(key);
+      final java.util.ArrayList<java.lang.Boolean> bit = bitspresent.get(key);
       for (int x = 0; x < bit.size(); x++) {
         if (!bit.get(x)) {
           OptionPane.showMessageDialog(
@@ -379,7 +379,7 @@ public class CsvInterpretor {
 
   private void readFile(File file, CsvParameter param) {
     try {
-      final var scanner = new Scanner(file);
+      final java.util.Scanner scanner = new Scanner(file);
       while (scanner.hasNext()) {
         content.add(parseCsvLine(scanner.next(), param.seperator(), param.quote()));
       }

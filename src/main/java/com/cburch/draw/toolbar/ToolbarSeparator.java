@@ -39,12 +39,12 @@ public class ToolbarSeparator implements ToolbarItem {
 
   @Override
   public void paintIcon(Component destination, Graphics gfx) {
-    final var dim = destination.getSize();
+    final java.awt.Dimension dim = destination.getSize();
     int x = 0;
     int y = 0;
     int w = dim.width;
     int h = dim.height;
-    final var width = AppPreferences.getScaled(2);
+    final int width = AppPreferences.getScaled(2);
     if (h >= w) { // separator is a vertical line in horizontal toolbar
       x = (w - width - 2) / 2;
       w = width;

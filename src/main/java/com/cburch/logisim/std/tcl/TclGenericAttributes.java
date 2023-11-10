@@ -66,7 +66,7 @@ public class TclGenericAttributes extends TclComponentAttributes {
 
   @Override
   protected void copyInto(AbstractAttributeSet dest) {
-    final var attr = (TclGenericAttributes) dest;
+    final com.cburch.logisim.std.tcl.TclGenericAttributes attr = (TclGenericAttributes) dest;
     attr.vhdlEntitiy = vhdlEntitiy;
 
     super.copyInto(dest);
@@ -90,7 +90,7 @@ public class TclGenericAttributes extends TclComponentAttributes {
   @Override
   public <V> void setValue(Attribute<V> attr, V value) {
     if (attr == TclGeneric.CONTENT_ATTR) {
-      final var newContent = (VhdlContentComponent) value;
+      final com.cburch.logisim.std.hdl.VhdlContentComponent newContent = (VhdlContentComponent) value;
       if (!vhdlEntitiy.equals(newContent)) vhdlEntitiy = newContent;
       fireAttributeValueChanged(attr, value, null);
     } else {

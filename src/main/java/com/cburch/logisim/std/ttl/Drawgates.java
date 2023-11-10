@@ -22,8 +22,8 @@ public class Drawgates {
       g.drawRect(x - width, y - height / 2, width, height);
       GraphicsUtil.drawCenteredText(g, "&", x - width / 2, y);
     } else {
-      final var xp = new int[] {x - width / 2, x - width, x - width, x - width / 2};
-      final var yp = new int[] {y - width / 2, y - width / 2, y + width / 2, y + width / 2};
+      final int[] xp = new int[] {x - width / 2, x - width, x - width, x - width / 2};
+      final int[] yp = new int[] {y - width / 2, y - width / 2, y + width / 2, y + width / 2};
       GraphicsUtil.drawCenteredArc(g, x - width / 2, y, width / 2, -90, 180);
 
       g.drawPolyline(xp, yp, 4);
@@ -34,8 +34,8 @@ public class Drawgates {
   }
 
   static void paintBuffer(Graphics g, int x, int y, int width, int height) {
-    final var xp = new int[4];
-    final var yp = new int[4];
+    final int[] xp = new int[4];
+    final int[] yp = new int[4];
     xp[0] = x - 4;
     yp[0] = y;
     xp[1] = x - width;
@@ -111,8 +111,8 @@ public class Drawgates {
       g.drawRect(x - width, y - (width - 4) / 2, width - 4, width - 4);
       GraphicsUtil.drawCenteredText(g, "1", x - 4 - (width - 4) / 2, y);
     } else {
-      final var xp = new int[4];
-      final var yp = new int[4];
+      final int[] xp = new int[4];
+      final int[] yp = new int[4];
       xp[0] = x - 4;
       yp[0] = y;
       xp[1] = x - width;
@@ -127,7 +127,7 @@ public class Drawgates {
 
   static void paintOr(
       Graphics g, int x, int y, int width, int height, boolean negated, boolean rightToLeft) {
-    final var offset = rightToLeft ? -4 : 0;
+    final int offset = rightToLeft ? -4 : 0;
     if (negated) paintNegatedOutput(g, x + offset, y);
     if (AppPreferences.GATE_SHAPE.get().equals(AppPreferences.SHAPE_RECTANGULAR)) {
       if (!rightToLeft) {
@@ -152,8 +152,8 @@ public class Drawgates {
 
   static void paintOutputgate(
       Graphics g, int xpin, int y, int xoutput, int youtput, boolean up, int height) {
-    final var xPoints = new int[] {xoutput, xpin, xpin};
-    final var yPoints =
+    final int[] xPoints = new int[] {xoutput, xpin, xpin};
+    final int[] yPoints =
         !up
             ? new int[] {youtput, youtput, y + height - AbstractTtlGate.PIN_HEIGHT}
             : new int[] {youtput, youtput, y + AbstractTtlGate.PIN_HEIGHT};
@@ -162,8 +162,8 @@ public class Drawgates {
 
   static void paintPortNames(
       InstancePainter painter, int x, int y, int height, String[] portNames) {
-    final var gfx = painter.getGraphics();
-    final var portsPerRow = portNames.length / 2;
+    final java.awt.Graphics gfx = painter.getGraphics();
+    final int portsPerRow = portNames.length / 2;
     gfx.drawRect(
         x + 10,
         y + AbstractTtlGate.PIN_HEIGHT + 10,
@@ -186,8 +186,8 @@ public class Drawgates {
 
   static void paintSingleInputgate(
       Graphics g, int xpin, int y, int xinput, int youtput, boolean up, int height) {
-    final var xPoints = new int[] {xpin, xpin, xinput};
-    final var yPoints =
+    final int[] xPoints = new int[] {xpin, xpin, xinput};
+    final int[] yPoints =
         !up
             ? new int[] {y + height - AbstractTtlGate.PIN_HEIGHT, youtput, youtput}
             : new int[] {y + AbstractTtlGate.PIN_HEIGHT, youtput, youtput};

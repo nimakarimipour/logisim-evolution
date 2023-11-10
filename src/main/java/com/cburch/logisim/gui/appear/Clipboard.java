@@ -50,7 +50,7 @@ final class Clipboard {
   }
 
   public static void set(ClipboardContents value) {
-    final var old = current;
+    final com.cburch.logisim.gui.appear.ClipboardContents old = current;
     current = value;
     propertySupport.firePropertyChange(CONTENTS_PROPERTY, old, current);
   }

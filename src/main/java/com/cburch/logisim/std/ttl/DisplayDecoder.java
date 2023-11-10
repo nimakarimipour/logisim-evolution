@@ -252,9 +252,9 @@ public class DisplayDecoder extends InstanceFactory {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    final var dir = attrs.getValue(StdAttr.FACING);
-    final var len = 80; // lenght
-    final var offs = -len / 2; // to get y=0 in middle height
+    final com.cburch.logisim.data.Direction dir = attrs.getValue(StdAttr.FACING);
+    final int len = 80; // lenght
+    final int offs = -len / 2; // to get y=0 in middle height
     if (dir == Direction.NORTH) {
       return Bounds.create(offs, 0, len, 40);
     } else if (dir == Direction.SOUTH) {
@@ -274,12 +274,12 @@ public class DisplayDecoder extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var dir = painter.getAttributeValue(StdAttr.FACING);
-    final var g = painter.getGraphics();
+    final com.cburch.logisim.data.Direction dir = painter.getAttributeValue(StdAttr.FACING);
+    final java.awt.Graphics g = painter.getGraphics();
     painter.drawBounds();
-    final var bds = painter.getBounds();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
     byte nports = (byte) (11 + (painter.getAttributeValue(MULTI_BIT) ? 1 : 4));
-    final var multibit = painter.getAttributeValue(MULTI_BIT);
+    final java.lang.Boolean multibit = painter.getAttributeValue(MULTI_BIT);
     String text =
         (painter.getPortValue(7) == Value.FALSE)
             ? "!" + S.get("memEnableLabel")
@@ -317,7 +317,7 @@ public class DisplayDecoder extends InstanceFactory {
 
   @Override
   public void propagate(InstanceState state) {
-    final var multibit = state.getAttributeValue(MULTI_BIT);
+    final java.lang.Boolean multibit = state.getAttributeValue(MULTI_BIT);
     byte nports = (byte) (11 + (state.getAttributeValue(MULTI_BIT) ? 1 : 4));
     if (state.getPortValue(7) != Value.FALSE) { // enabled
       computeDisplayDecoderOutputs(
@@ -337,13 +337,13 @@ public class DisplayDecoder extends InstanceFactory {
   }
 
   private void updatePorts(Instance instance) {
-    final var dir = instance.getAttributeValue(StdAttr.FACING);
-    final var multibit = instance.getAttributeValue(MULTI_BIT) == Boolean.TRUE;
+    final com.cburch.logisim.data.Direction dir = instance.getAttributeValue(StdAttr.FACING);
+    final boolean multibit = instance.getAttributeValue(MULTI_BIT) == Boolean.TRUE;
     byte in = (byte) (multibit ? 1 : 4); // number of input ports
     byte out = 7; // number of output ports
     char cin = 65; // Letter A (to D in for)
     char cout = 97; // Letter a (to g in for)
-    final var ps = new Port[in + out + 4];
+    final com.cburch.logisim.instance.Port[] ps = new Port[in + out + 4];
     if (dir == Direction.NORTH || dir == Direction.SOUTH) { // horizzontal
       byte y = (byte) (dir == Direction.NORTH ? 40 : -40);
       if (!multibit) {
@@ -369,7 +369,7 @@ public class DisplayDecoder extends InstanceFactory {
       ps[ps.length - 1] = new Port(40, y + (dir == Direction.NORTH ? -30 : 30), Port.INPUT, 1); // Ripple Blanking
       // Input
     } else { // vertical
-      final var x = dir == Direction.EAST ? -40 : 40;
+      final int x = dir == Direction.EAST ? -40 : 40;
       if (!multibit) {
         for (byte i = 8; i < in + 8; i++) { // inputs
           ps[i] = new Port(x, 20 * (i - 8) - 30, Port.INPUT, 1);

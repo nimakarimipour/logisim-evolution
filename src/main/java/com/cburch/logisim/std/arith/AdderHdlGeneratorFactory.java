@@ -44,8 +44,8 @@ public class AdderHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist theNetlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getBuffer();
-    final var nrOfBits = attrs.getValue(StdAttr.WIDTH).getWidth();
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getBuffer();
+    final int nrOfBits = attrs.getValue(StdAttr.WIDTH).getWidth();
     if (Hdl.isVhdl()) {
       contents.empty().add("""
           s_extendedDataA <= "0"&dataA;

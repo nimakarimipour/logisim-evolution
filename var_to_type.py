@@ -11,6 +11,8 @@ with open('out.txt') as f:
         offset = int(l[:start]) - 4
         type = l[start + 1:end - 1]
         path = l[end:][:-1]
+        if(type.startswith("<anonymous ")):
+            type = type.replace("<anonymous ", "")[:-1]
         with open(path) as f:
             ## read f as one string
             content = f.read()
@@ -19,4 +21,4 @@ with open('out.txt') as f:
             content = content[:offset] + type + " " + content[offset + 4:]
             with open(path, "w") as f:
                 f.write(content)
-            
+

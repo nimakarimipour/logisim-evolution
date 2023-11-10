@@ -27,42 +27,42 @@ public class OutputExpressions {
 
     @Override
     public void cellsChanged(TruthTableEvent event) {
-      final var output = model.getOutputs().bits.get(event.getColumn());
+      final java.lang.String output = model.getOutputs().bits.get(event.getColumn());
       invalidate(output);
     }
 
     private void inputsChanged(VariableListEvent event) {
-      final var v = event.getVariable();
-      final var type = event.getType();
+      final com.cburch.logisim.analyze.model.Var v = event.getVariable();
+      final int type = event.getType();
       if (type == VariableListEvent.ALL_REPLACED && !outputData.isEmpty()) {
         outputData.clear();
         fireModelChanged(OutputExpressionsEvent.ALL_VARIABLES_REPLACED);
       } else if (type == VariableListEvent.REMOVE) {
-        for (final var input : v) {
-          for (final var output : outputData.keySet()) {
-            final var data = getOutputData(output, false);
+        for (final java.lang.String input : v) {
+          for (final java.lang.String output : outputData.keySet()) {
+            final com.cburch.logisim.analyze.model.OutputExpressions.OutputData data = getOutputData(output, false);
             if (data != null) data.removeInput(input);
           }
         }
       } else if (type == VariableListEvent.REPLACE) {
-        final var newVar = model.getInputs().vars.get(event.getIndex());
-        for (final var output : outputData.keySet()) {
+        final com.cburch.logisim.analyze.model.Var newVar = model.getInputs().vars.get(event.getIndex());
+        for (final java.lang.String output : outputData.keySet()) {
           for (int b = 0; b < v.width && b < newVar.width; b++) {
-            final var data = getOutputData(output, false);
+            final com.cburch.logisim.analyze.model.OutputExpressions.OutputData data = getOutputData(output, false);
             if (data != null) data.replaceInput(v.bitName(b), newVar.bitName(b));
           }
           for (int b = newVar.width; b < v.width; b++) {
-            final var data = getOutputData(output, false);
+            final com.cburch.logisim.analyze.model.OutputExpressions.OutputData data = getOutputData(output, false);
             if (data != null) data.removeInput(v.bitName(b));
           }
           if (v.width < newVar.width) {
-            final var data = getOutputData(output, false);
+            final com.cburch.logisim.analyze.model.OutputExpressions.OutputData data = getOutputData(output, false);
             if (data != null) data.invalidate(false, false, null);
           }
         }
       } else if (type == VariableListEvent.MOVE || type == VariableListEvent.ADD) {
-        for (final var output : outputData.keySet()) {
-          final var data = getOutputData(output, false);
+        for (final java.lang.String output : outputData.keySet()) {
+          final com.cburch.logisim.analyze.model.OutputExpressions.OutputData data = getOutputData(output, false);
           if (data != null) data.invalidate(false, false, null);
         }
       }
@@ -75,18 +75,18 @@ public class OutputExpressions {
     }
 
     private void outputsChanged(VariableListEvent event) {
-      final var type = event.getType();
+      final int type = event.getType();
       if (type == VariableListEvent.ALL_REPLACED && !outputData.isEmpty()) {
         outputData.clear();
         fireModelChanged(OutputExpressionsEvent.ALL_VARIABLES_REPLACED);
       } else if (type == VariableListEvent.REMOVE) {
-        for (final var bit : event.getVariable()) outputData.remove(bit);
+        for (final java.lang.String bit : event.getVariable()) outputData.remove(bit);
       } else if (type == VariableListEvent.REPLACE) {
         Var oldVar = event.getVariable();
         Var newVar = model.getOutputs().vars.get(event.getIndex());
         for (int b = 0; b < oldVar.width && b < newVar.width; b++) {
-          final var oldName = oldVar.bitName(b);
-          final var newName = newVar.bitName(b);
+          final java.lang.String oldName = oldVar.bitName(b);
+          final java.lang.String newName = newVar.bitName(b);
           if (outputData.containsKey(oldName)) {
             OutputData toMove = outputData.remove(oldName);
             toMove.output = newName;
@@ -149,25 +149,25 @@ public class OutputExpressions {
       if (invalidating) return;
       invalidating = true;
       try {
-        final var oldImplicants = minimalImplicants;
-        final var oldMinExpr = minimalExpr;
+        final java.util.List<com.cburch.logisim.analyze.model.Implicant> oldImplicants = minimalImplicants;
+        final com.cburch.logisim.analyze.model.Expression oldMinExpr = minimalExpr;
         minimalImplicants = Implicant.computeMinimal(format, model, output, outputArea);
         minimalExpr = Implicant.toExpression(format, model, minimalImplicants);
-        final var minChanged = !implicantsSame(oldImplicants, minimalImplicants);
+        final boolean minChanged = !implicantsSame(oldImplicants, minimalImplicants);
 
         if (!updatingTable) {
           // see whether the expression is still consistent with the
           // truth table
-          final var table = model.getTruthTable();
-          final var outputColumn = computeColumn(model.getTruthTable(), expr);
-          final var outputIndex = model.getOutputs().bits.indexOf(output);
-          final var currentColumn = table.getOutputColumn(outputIndex);
+          final com.cburch.logisim.analyze.model.TruthTable table = model.getTruthTable();
+          final com.cburch.logisim.analyze.model.Entry[] outputColumn = computeColumn(model.getTruthTable(), expr);
+          final int outputIndex = model.getOutputs().bits.indexOf(output);
+          final com.cburch.logisim.analyze.model.Entry[] currentColumn = table.getOutputColumn(outputIndex);
           if (!columnsMatch(currentColumn, outputColumn)
               || isAllUndefined(outputColumn)
               || formatChanged) {
             // if not, then we need to change the expression to
             // maintain consistency
-            final var exprChanged = expr != oldMinExpr || minChanged;
+            final boolean exprChanged = expr != oldMinExpr || minChanged;
             expr = minimalExpr;
             if (exprChanged) {
               exprString = null;
@@ -199,7 +199,7 @@ public class OutputExpressions {
         exprString = null; // invalidate it so it recomputes
       }
       if (expr != null) {
-        final var oldExpr = expr;
+        final com.cburch.logisim.analyze.model.Expression oldExpr = expr;
         Expression newExpr;
         if (oldExpr == oldMinExpr) {
           newExpr = getMinimalExpression();
@@ -238,8 +238,8 @@ public class OutputExpressions {
       exprString = newExprString;
 
       if (expr != minimalExpr) { // for efficiency to avoid recomputation
-        final var values = computeColumn(model.getTruthTable(), expr);
-        final var outputColumn = model.getOutputs().bits.indexOf(output);
+        final com.cburch.logisim.analyze.model.Entry[] values = computeColumn(model.getTruthTable(), expr);
+        final int outputColumn = model.getOutputs().bits.indexOf(output);
         updatingTable = true;
         try {
           model.getTruthTable().setOutputColumn(outputColumn, values);
@@ -263,7 +263,7 @@ public class OutputExpressions {
     if (a.length != b.length) return false;
     for (int i = 0; i < a.length; i++) {
       if (a[i] != b[i]) {
-        final var bothDefined =
+        final boolean bothDefined =
             (a[i] == Entry.ZERO || a[i] == Entry.ONE) && (b[i] == Entry.ZERO || b[i] == Entry.ONE);
         if (bothDefined) return false;
       }
@@ -272,13 +272,13 @@ public class OutputExpressions {
   }
 
   private static Entry[] computeColumn(TruthTable table, Expression expr) {
-    final var rows = table.getRowCount();
-    final var cols = table.getInputColumnCount();
-    final var values = new Entry[rows];
+    final int rows = table.getRowCount();
+    final int cols = table.getInputColumnCount();
+    final com.cburch.logisim.analyze.model.Entry[] values = new Entry[rows];
     if (expr == null) {
       Arrays.fill(values, Entry.DONT_CARE);
     } else {
-      final var assn = new Assignments();
+      final com.cburch.logisim.analyze.model.Assignments assn = new Assignments();
       for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
           assn.put(table.getInputHeader(j), TruthTable.isInputSet(i, j, cols));
@@ -293,17 +293,17 @@ public class OutputExpressions {
     if (a == null) return CollectionUtil.isNullOrEmpty(b);
     if (b == null) return a.isEmpty();
     if (a.size() != b.size()) return false;
-    final var ait = a.iterator();
-    for (final var bImplicant : b) {
+    final java.util.Iterator<com.cburch.logisim.analyze.model.Implicant> ait = a.iterator();
+    for (final com.cburch.logisim.analyze.model.Implicant bImplicant : b) {
       if (!ait.hasNext()) return false; // should never happen
-      final var ai = ait.next();
+      final com.cburch.logisim.analyze.model.Implicant ai = ait.next();
       if (!ai.equals(bImplicant)) return false;
     }
     return true;
   }
 
   private static boolean isAllUndefined(Entry[] a) {
-    for (final var entry : a) {
+    for (final com.cburch.logisim.analyze.model.Entry entry : a) {
       if (entry == Entry.ZERO || entry == Entry.ONE) return false;
     }
     return true;
@@ -327,8 +327,8 @@ public class OutputExpressions {
   }
 
   public void forcedOptimize(JTextArea outtextArea, int format) {
-    for (final var output : outputData.keySet()) {
-      final var data = outputData.get(output);
+    for (final java.lang.String output : outputData.keySet()) {
+      final com.cburch.logisim.analyze.model.OutputExpressions.OutputData data = outputData.get(output);
       data.setMinimizedFormat(format);
       data.invalidate(false, false, outtextArea);
     }
@@ -350,7 +350,7 @@ public class OutputExpressions {
   }
 
   private void fireModelChanged(int type, String variable, Object data) {
-    final var event = new OutputExpressionsEvent(model, type, variable, data);
+    final com.cburch.logisim.analyze.model.OutputExpressionsEvent event = new OutputExpressionsEvent(model, type, variable, data);
     for (OutputExpressionsListener l : listeners) {
       l.expressionChanged(event);
     }
@@ -418,7 +418,7 @@ public class OutputExpressions {
   }
 
   private void invalidate(String output) {
-    final var data = getOutputData(output, false);
+    final com.cburch.logisim.analyze.model.OutputExpressions.OutputData data = getOutputData(output, false);
     if (data != null) {
       if (!allowUpdates) {
         outputData.remove(output);
@@ -430,15 +430,15 @@ public class OutputExpressions {
 
   public boolean hasExpressions() {
     boolean returnValue = false;
-    for (final var output : outputData.keySet()) {
-      final var data = outputData.get(output);
+    for (final java.lang.String output : outputData.keySet()) {
+      final com.cburch.logisim.analyze.model.OutputExpressions.OutputData data = outputData.get(output);
       returnValue |= data.getMinimalImplicants().size() != 0;
     }
     return returnValue;
   }
 
   public boolean isExpressionMinimal(String output) {
-    final var data = getOutputData(output, false);
+    final com.cburch.logisim.analyze.model.OutputExpressions.OutputData data = getOutputData(output, false);
     return data == null || data.isExpressionMinimal();
   }
 
@@ -456,7 +456,7 @@ public class OutputExpressions {
   }
 
   public void setMinimizedFormat(String output, int format) {
-    final var oldFormat = getMinimizedFormat(output);
+    final int oldFormat = getMinimizedFormat(output);
     if (format != oldFormat) {
       getOutputData(output, true).setMinimizedFormat(format);
       invalidate(output);

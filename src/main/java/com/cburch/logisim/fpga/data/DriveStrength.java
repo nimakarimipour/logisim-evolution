@@ -22,8 +22,8 @@ public class DriveStrength {
 
   public static char getId(String identifier) {
     char result = 0;
-    final var theList = DriveStrength.getStrings();
-    final var iter = theList.iterator();
+    final java.util.List<java.lang.String> theList = DriveStrength.getStrings();
+    final java.util.Iterator<java.lang.String> iter = theList.iterator();
     result = 0;
     while (iter.hasNext()) {
       if (iter.next().equals(identifier)) return result;

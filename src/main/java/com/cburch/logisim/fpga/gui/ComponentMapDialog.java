@@ -242,21 +242,21 @@ public class ComponentMapDialog
   }
 
   private void load() {
-    final var fc = new JFileChooser(oldDirectory);
+    final javax.swing.JFileChooser fc = new JFileChooser(oldDirectory);
     fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
     // FIXME: hardcoded string
     fc.setDialogTitle("Choose XML board description file to use");
     fc.setFileFilter(XmlFileFilter.XML_FILTER);
     fc.setAcceptAllFileFilterUsed(false);
     panel.setVisible(false);
-    final var retVal = fc.showOpenDialog(null);
+    final int retVal = fc.showOpenDialog(null);
     if (retVal == JFileChooser.APPROVE_OPTION) {
-      final var file = fc.getSelectedFile();
-      final var fileName = file.getName();
-      final var absoluteFileName = file.getPath();
+      final java.io.File file = fc.getSelectedFile();
+      final java.lang.String fileName = file.getName();
+      final java.lang.String absoluteFileName = file.getPath();
       oldDirectory = absoluteFileName.substring(0, absoluteFileName.length() - fileName.length());
-      final var parse = new ComponentMapParser(file, mappableComponents, boardInfo);
-      final var result = parse.parseFile();
+      final com.cburch.logisim.fpga.data.ComponentMapParser parse = new ComponentMapParser(file, mappableComponents, boardInfo);
+      final int result = parse.parseFile();
       if (result == 0) {
         panel.setVisible(true);
         boardPicture.update();

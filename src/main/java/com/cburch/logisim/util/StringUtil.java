@@ -29,7 +29,7 @@ public final class StringUtil {
   }
 
   public static String resizeString(String value, FontMetrics metrics, int maxWidth) {
-    final var width = metrics.stringWidth(value);
+    final int width = metrics.stringWidth(value);
 
     if (width < maxWidth) return value;
     if (value.length() < 4) return value;
@@ -38,7 +38,7 @@ public final class StringUtil {
   }
 
   private static String resizeString(StringBuilder value, FontMetrics metrics, int maxWidth) {
-    final var width = metrics.stringWidth(value.toString());
+    final int width = metrics.stringWidth(value.toString());
 
     if (width < maxWidth) return value.toString();
     if (value.length() < 4) return value.toString();
@@ -47,8 +47,8 @@ public final class StringUtil {
 
   public static String toHexString(int bits, long value) {
     if (bits < 64) value &= (1L << bits) - 1;
-    final var len = (bits + 3) / 4;
-    final var ret = String.format("%0" + len + "x", value);
+    final int len = (bits + 3) / 4;
+    final java.lang.String ret = String.format("%0" + len + "x", value);
     return (ret.length() > len) ? ret.substring(ret.length() - len) : ret;
   }
 
@@ -77,9 +77,9 @@ public final class StringUtil {
       n = (Math.max(c, n));
       lines++;
     }
-    final var size = font.getSize();
-    final var h = size * lines;
-    final var w = size * n * 2 / 3; // assume approx monospace 12x8 aspect ratio
+    final int size = font.getSize();
+    final int h = size * lines;
+    final int w = size * n * 2 / 3; // assume approx monospace 12x8 aspect ratio
     int x;
     int y;
     if (hAlign == GraphicsUtil.H_LEFT) {

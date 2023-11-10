@@ -54,15 +54,15 @@ public class Curve extends FillableCanvasObject {
       type = DrawAttr.PAINT_STROKE_FILL;
     }
     if (type != DrawAttr.PAINT_FILL) {
-      final var q = toArray(loc);
-      final var p0 = toArray(this.p0);
-      final var p1 = toArray(this.p1);
-      final var p2 = toArray(this.p2);
-      final var p = CurveUtil.findNearestPoint(q, p0, p1, p2);
+      final double[] q = toArray(loc);
+      final double[] p0 = toArray(this.p0);
+      final double[] p1 = toArray(this.p1);
+      final double[] p2 = toArray(this.p2);
+      final double[] p = CurveUtil.findNearestPoint(q, p0, p1, p2);
       if (p == null) return false;
 
-      final var stroke = getStrokeWidth();
-      final var thr = (type == DrawAttr.PAINT_STROKE) ? Math.max(Line.ON_LINE_THRESH, stroke / 2) : stroke / 2;
+      final int stroke = getStrokeWidth();
+      final int thr = (type == DrawAttr.PAINT_STROKE) ? Math.max(Line.ON_LINE_THRESH, stroke / 2) : stroke / 2;
       if (LineUtil.distanceSquared(p[0], p[1], q[0], q[1]) < thr * thr) return true;
     }
     return (type != DrawAttr.PAINT_STROKE) ? getCurve(null).contains(loc.getX(), loc.getY()) : false;
@@ -83,7 +83,7 @@ public class Curve extends FillableCanvasObject {
   }
 
   private QuadCurve2D getCurve(HandleGesture gesture) {
-    final var p = getHandleArray(gesture);
+    final com.cburch.draw.model.Handle[] p = getHandleArray(gesture);
     return new QuadCurve2D.Double(p[0].getX(), p[0].getY(), p[1].getX(), p[1].getY(), p[2].getX(), p[2].getY());
   }
 
@@ -109,7 +109,7 @@ public class Curve extends FillableCanvasObject {
       return new Handle[] {new Handle(this, p0), new Handle(this, p1), new Handle(this, p2)};
     }
 
-    final var g = gesture.getHandle();
+    final com.cburch.draw.model.Handle g = gesture.getHandle();
     int gx = g.getX() + gesture.getDeltaX();
     int gy = g.getY() + gesture.getDeltaY();
     Handle[] ret = {new Handle(this, p0), new Handle(this, p1), new Handle(this, p2)};
@@ -125,15 +125,15 @@ public class Curve extends FillableCanvasObject {
               : new Handle(this, gx, gy);
     } else if (g.isAt(p1)) {
       if (gesture.isShiftDown()) {
-        final var x0 = p0.getX();
-        final var y0 = p0.getY();
-        final var x1 = p2.getX();
-        final var y1 = p2.getY();
-        final var midx = (x0 + x1) / 2;
-        final var midy = (y0 + y1) / 2;
-        final var dx = x1 - x0;
-        final var dy = y1 - y0;
-        final var p = LineUtil.nearestPointInfinite(gx, gy, midx, midy, midx - dy, midy + dx);
+        final int x0 = p0.getX();
+        final int y0 = p0.getY();
+        final int x1 = p2.getX();
+        final int y1 = p2.getY();
+        final int midx = (x0 + x1) / 2;
+        final int midy = (y0 + y1) / 2;
+        final int dx = x1 - x0;
+        final int dy = y1 - y0;
+        final double[] p = LineUtil.nearestPointInfinite(gx, gy, midx, midy, midx - dy, midy + dx);
         gx = (int) Math.round(p[0]);
         gy = (int) Math.round(p[1]);
       }
@@ -141,7 +141,7 @@ public class Curve extends FillableCanvasObject {
         final double[] e0 = {p0.getX(), p0.getY()};
         final double[] e1 = {p2.getX(), p2.getY()};
         final double[] mid = {gx, gy};
-        final var ct = CurveUtil.interpolate(e0, e1, mid);
+        final double[] ct = CurveUtil.interpolate(e0, e1, mid);
         gx = (int) Math.round(ct[0]);
         gy = (int) Math.round(ct[1]);
       }
@@ -177,7 +177,7 @@ public class Curve extends FillableCanvasObject {
 
   @Override
   public Handle moveHandle(HandleGesture gesture) {
-    final var hs = getHandleArray(gesture);
+    final com.cburch.draw.model.Handle[] hs = getHandleArray(gesture);
     Handle ret = null;
     if (!hs[0].getLocation().equals(p0)) {
       p0 = hs[0].getLocation();
@@ -197,7 +197,7 @@ public class Curve extends FillableCanvasObject {
 
   @Override
   public void paint(Graphics g, HandleGesture gesture) {
-    final var curve = getCurve(gesture);
+    final java.awt.geom.QuadCurve2D curve = getCurve(gesture);
     if (setForFill(g)) {
       ((Graphics2D) g).fill(curve);
     }

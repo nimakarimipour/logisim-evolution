@@ -44,7 +44,7 @@ public class Multiplexer extends InstanceFactory {
 
   static void drawSelectCircle(Graphics g, Bounds bds, Location loc) {
     if (Math.min(bds.getHeight(), bds.getWidth()) <= 20) return; // no dot for narrow mode
-    final var locDelta = Math.max(bds.getHeight(), bds.getWidth()) <= 50 ? 8 : 6;
+    final int locDelta = Math.max(bds.getHeight(), bds.getWidth()) <= 50 ? 8 : 6;
     Location circLoc;
     if (bds.getHeight() >= bds.getWidth()) { // vertically oriented
       if (loc.getY() < bds.getY() + bds.getHeight() / 2) { // at top
@@ -111,7 +111,7 @@ public class Multiplexer extends InstanceFactory {
 
   @Override
   public String getHDLName(AttributeSet attrs) {
-    final var completeName = new StringBuilder();
+    final java.lang.StringBuilder completeName = new StringBuilder();
     completeName.append(CorrectLabel.getCorrectLabel(this.getName()));
     if (attrs.getValue(StdAttr.WIDTH).getWidth() > 1) completeName.append("_bus");
     completeName.append("_").append(1 << attrs.getValue(PlexersLibrary.ATTR_SELECT).getWidth());
@@ -121,18 +121,18 @@ public class Multiplexer extends InstanceFactory {
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
     Object size = attrs.getValue(PlexersLibrary.ATTR_SIZE);
-    final var wide = size == PlexersLibrary.SIZE_WIDE;
-    final var dir = attrs.getValue(StdAttr.FACING);
-    final var select = attrs.getValue(PlexersLibrary.ATTR_SELECT);
-    final var inputs = 1 << select.getWidth();
+    final boolean wide = size == PlexersLibrary.SIZE_WIDE;
+    final com.cburch.logisim.data.Direction dir = attrs.getValue(StdAttr.FACING);
+    final com.cburch.logisim.data.BitWidth select = attrs.getValue(PlexersLibrary.ATTR_SELECT);
+    final int inputs = 1 << select.getWidth();
     if (inputs == 2) {
-      final var w = (wide ? 30 : 20);
+      final int w = (wide ? 30 : 20);
       return Bounds.create(-w, -20, w, 40).rotate(Direction.EAST, dir, 0, 0);
     } else {
-      final var w = (wide ? 40 : 20);
-      final var lengthAdjust = (wide ? 0 : -5);
+      final int w = (wide ? 40 : 20);
+      final int lengthAdjust = (wide ? 0 : -5);
       int offs = -(inputs / 2) * 10 - 10;
-      final var length = inputs * 10 + 20 + lengthAdjust;
+      final int length = inputs * 10 + 20 + lengthAdjust;
       // narrow isn't symmetrical when switchinng selector sides, rotating
       if (!wide && (dir == Direction.SOUTH || dir == Direction.WEST)) offs += 5;
       return Bounds.create(-w, offs, w, length).rotate(Direction.EAST, dir, 0, 0);
@@ -163,10 +163,10 @@ public class Multiplexer extends InstanceFactory {
   @Override
   public void paintGhost(InstancePainter painter) {
     Object size = painter.getAttributeValue(PlexersLibrary.ATTR_SIZE);
-    final var facing = painter.getAttributeValue(StdAttr.FACING);
-    final var select = painter.getAttributeValue(PlexersLibrary.ATTR_SELECT);
-    final var bds = painter.getBounds();
-    final var lean =
+    final com.cburch.logisim.data.Direction facing = painter.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.BitWidth select = painter.getAttributeValue(PlexersLibrary.ATTR_SELECT);
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
+    final int lean =
         (select.getWidth() == 1)
             ? (size == PlexersLibrary.SIZE_NARROW ? 7 : 10)
             : (size == PlexersLibrary.SIZE_NARROW ? 10 : 20);
@@ -175,21 +175,21 @@ public class Multiplexer extends InstanceFactory {
 
   @Override
   public void paintInstance(InstancePainter painter) {
-    final var g = painter.getGraphics();
-    final var bds = painter.getBounds();
+    final java.awt.Graphics g = painter.getGraphics();
+    final com.cburch.logisim.data.Bounds bds = painter.getBounds();
     Object size = painter.getAttributeValue(PlexersLibrary.ATTR_SIZE);
-    final var wide = size == PlexersLibrary.SIZE_WIDE;
-    final var facing = painter.getAttributeValue(StdAttr.FACING);
-    final var select = painter.getAttributeValue(PlexersLibrary.ATTR_SELECT);
-    final var enable = painter.getAttributeValue(PlexersLibrary.ATTR_ENABLE);
+    final boolean wide = size == PlexersLibrary.SIZE_WIDE;
+    final com.cburch.logisim.data.Direction facing = painter.getAttributeValue(StdAttr.FACING);
+    final com.cburch.logisim.data.BitWidth select = painter.getAttributeValue(PlexersLibrary.ATTR_SELECT);
+    final java.lang.Boolean enable = painter.getAttributeValue(PlexersLibrary.ATTR_ENABLE);
     int inputs = 1 << select.getWidth();
 
     // draw stubs for select/enable inputs that aren't on instance boundary
     GraphicsUtil.switchToWidth(g, 3);
-    final var vertical = facing != Direction.NORTH && facing != Direction.SOUTH;
+    final boolean vertical = facing != Direction.NORTH && facing != Direction.SOUTH;
     Object selectLoc = painter.getAttributeValue(StdAttr.SELECT_LOC);
-    final var selMult = selectLoc == StdAttr.SELECT_BOTTOM_LEFT ? 1 : -1;
-    final var oddside = (vertical == (selMult < 0));
+    final int selMult = selectLoc == StdAttr.SELECT_BOTTOM_LEFT ? 1 : -1;
+    final boolean oddside = (vertical == (selMult < 0));
     int dx, dy;
     if (wide) {
       dx = vertical ? 0 : -2 * selMult;
@@ -202,19 +202,19 @@ public class Multiplexer extends InstanceFactory {
       dy = (facing == Direction.SOUTH ? 1 : -1);
     }
     if (inputs == 2 || (!wide && oddside)) { // draw select wire
-      final var pt = painter.getInstance().getPortLocation(inputs);
+      final com.cburch.logisim.data.Location pt = painter.getInstance().getPortLocation(inputs);
       if (painter.getShowState()) {
         g.setColor(painter.getPortValue(inputs).getColor());
       }
-      final var len = (wide ? 2 : 1);
+      final int len = (wide ? 2 : 1);
       g.drawLine(pt.getX() - len * dx, pt.getY() - len * dy, pt.getX(), pt.getY());
     }
     if (enable) {
-      final var en = painter.getInstance().getPortLocation(inputs + 1);
+      final com.cburch.logisim.data.Location en = painter.getInstance().getPortLocation(inputs + 1);
       if (painter.getShowState()) {
         g.setColor(painter.getPortValue(inputs + 1).getColor());
       }
-      final var len = (inputs == 2) ? 3 : wide ? 2 : oddside ? 4 : 2;
+      final int len = (inputs == 2) ? 3 : wide ? 2 : oddside ? 4 : 2;
       g.drawLine(en.getX() - len * dx, en.getY() - len * dy, en.getX(), en.getY());
     }
     GraphicsUtil.switchToWidth(g, 1);
@@ -248,7 +248,7 @@ public class Multiplexer extends InstanceFactory {
 
     // draw the trapezoid, "MUX" string, the individual ports
     g.setColor(Color.BLACK);
-    final var lean =
+    final int lean =
         (inputs == 2)
             ? (size == PlexersLibrary.SIZE_NARROW ? 7 : 10)
             : (size == PlexersLibrary.SIZE_NARROW ? 10 : 20);
@@ -261,20 +261,20 @@ public class Multiplexer extends InstanceFactory {
 
   @Override
   public void propagate(InstanceState state) {
-    final var data = state.getAttributeValue(StdAttr.WIDTH);
-    final var select = state.getAttributeValue(PlexersLibrary.ATTR_SELECT);
-    final var enable = state.getAttributeValue(PlexersLibrary.ATTR_ENABLE);
-    final var inputs = 1 << select.getWidth();
-    final var en = enable ? state.getPortValue(inputs + 1) : Value.TRUE;
+    final com.cburch.logisim.data.BitWidth data = state.getAttributeValue(StdAttr.WIDTH);
+    final com.cburch.logisim.data.BitWidth select = state.getAttributeValue(PlexersLibrary.ATTR_SELECT);
+    final java.lang.Boolean enable = state.getAttributeValue(PlexersLibrary.ATTR_ENABLE);
+    final int inputs = 1 << select.getWidth();
+    final com.cburch.logisim.data.Value en = enable ? state.getPortValue(inputs + 1) : Value.TRUE;
     Value out;
     if (en == Value.FALSE) {
       Object opt = state.getAttributeValue(PlexersLibrary.ATTR_DISABLED);
-      final var base = opt == PlexersLibrary.DISABLED_ZERO ? Value.FALSE : Value.UNKNOWN;
+      final com.cburch.logisim.data.Value base = opt == PlexersLibrary.DISABLED_ZERO ? Value.FALSE : Value.UNKNOWN;
       out = Value.repeat(base, data.getWidth());
     } else if (en == Value.ERROR && state.isPortConnected(inputs + 1)) {
       out = Value.createError(data);
     } else {
-      final var sel = state.getPortValue(inputs);
+      final com.cburch.logisim.data.Value sel = state.getPortValue(inputs);
       if (sel.isFullyDefined()) {
         out = state.getPortValue((int) sel.toLongValue());
       } else if (sel.isErrorValue()) {
@@ -288,18 +288,18 @@ public class Multiplexer extends InstanceFactory {
 
   private void updatePorts(Instance instance) {
     Object size = instance.getAttributeValue(PlexersLibrary.ATTR_SIZE);
-    final var wide = size == PlexersLibrary.SIZE_WIDE;
-    final var dir = instance.getAttributeValue(StdAttr.FACING);
-    final var vertical = dir != Direction.NORTH && dir != Direction.SOUTH;
-    final var selectLoc = instance.getAttributeValue(StdAttr.SELECT_LOC);
-    final var botLeft = selectLoc == StdAttr.SELECT_BOTTOM_LEFT;
-    final var selMult = botLeft ? 1 : -1;
-    final var data = instance.getAttributeValue(StdAttr.WIDTH);
-    final var select = instance.getAttributeValue(PlexersLibrary.ATTR_SELECT);
-    final var enable = instance.getAttributeValue(PlexersLibrary.ATTR_ENABLE);
+    final boolean wide = size == PlexersLibrary.SIZE_WIDE;
+    final com.cburch.logisim.data.Direction dir = instance.getAttributeValue(StdAttr.FACING);
+    final boolean vertical = dir != Direction.NORTH && dir != Direction.SOUTH;
+    final com.cburch.logisim.data.AttributeOption selectLoc = instance.getAttributeValue(StdAttr.SELECT_LOC);
+    final boolean botLeft = selectLoc == StdAttr.SELECT_BOTTOM_LEFT;
+    final int selMult = botLeft ? 1 : -1;
+    final com.cburch.logisim.data.BitWidth data = instance.getAttributeValue(StdAttr.WIDTH);
+    final com.cburch.logisim.data.BitWidth select = instance.getAttributeValue(PlexersLibrary.ATTR_SELECT);
+    final java.lang.Boolean enable = instance.getAttributeValue(PlexersLibrary.ATTR_ENABLE);
 
-    final var inputs = 1 << select.getWidth();
-    final var ps = new Port[inputs + (enable ? 3 : 2)];
+    final int inputs = 1 << select.getWidth();
+    final com.cburch.logisim.instance.Port[] ps = new Port[inputs + (enable ? 3 : 2)];
     Location sel;
     int w, s;
     if (inputs == 2) {
@@ -360,7 +360,7 @@ public class Multiplexer extends InstanceFactory {
       sel = sel.translate(-10, 0); // left side, adjust selector left
     else if (!wide && vertical && !botLeft)
       sel = sel.translate(0, -10); // top side, adjust selector up
-    final var en = sel.translate(dir, 10);
+    final com.cburch.logisim.data.Location en = sel.translate(dir, 10);
     ps[inputs] = new Port(sel.getX(), sel.getY(), Port.INPUT, select.getWidth());
     if (enable) {
       ps[inputs + 1] = new Port(en.getX(), en.getY(), Port.INPUT, BitWidth.ONE);

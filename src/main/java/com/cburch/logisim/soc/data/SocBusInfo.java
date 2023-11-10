@@ -49,8 +49,8 @@ public class SocBusInfo {
   }
 
   public void paint(Graphics g, Bounds b) {
-    final var ident = socManager == null ? null : socManager.getSocBusDisplayString(busId);
-    final var color = (ident == null) ? Color.RED : Color.GREEN;
+    final java.lang.String ident = socManager == null ? null : socManager.getSocBusDisplayString(busId);
+    final java.awt.Color color = (ident == null) ? Color.RED : Color.GREEN;
     g.setColor(color);
     g.fillRect(b.getX(), b.getY(), b.getWidth(), b.getHeight());
     g.setColor(Color.BLACK);

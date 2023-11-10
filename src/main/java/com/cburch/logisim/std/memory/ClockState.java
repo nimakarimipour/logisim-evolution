@@ -29,7 +29,7 @@ public class ClockState implements Cloneable {
   }
 
   public boolean updateClock(Value newClock, Object trigger) {
-    final var oldClock = lastClock;
+    final com.cburch.logisim.data.Value oldClock = lastClock;
     lastClock = newClock;
     if (trigger == null || trigger == StdAttr.TRIG_RISING) {
       return oldClock == Value.FALSE && newClock == Value.TRUE;

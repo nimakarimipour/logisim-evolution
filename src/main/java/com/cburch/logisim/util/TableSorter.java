@@ -101,7 +101,7 @@ public class TableSorter extends AbstractTableModel {
 
     @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
-      final var color = c == null ? Color.GRAY : c.getBackground();
+      final java.awt.Color color = c == null ? Color.GRAY : c.getBackground();
       // In a compound sort, make each succesive triangle 20%
       // smaller than the previous one.
       int dx = (int) (size / 2 * Math.pow(0.8, priority));
@@ -147,10 +147,10 @@ public class TableSorter extends AbstractTableModel {
   private class MouseHandler extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent e) {
-      final var h = (JTableHeader) e.getSource();
-      final var columnModel = h.getColumnModel();
-      final var viewColumn = columnModel.getColumnIndexAtX(e.getX());
-      final var column = columnModel.getColumn(viewColumn).getModelIndex();
+      final javax.swing.table.JTableHeader h = (JTableHeader) e.getSource();
+      final javax.swing.table.TableColumnModel columnModel = h.getColumnModel();
+      final int viewColumn = columnModel.getColumnIndexAtX(e.getX());
+      final int column = columnModel.getColumn(viewColumn).getModelIndex();
       if (column != -1) {
         int status = getSortingStatus(column);
         if (!e.isControlDown()) {
@@ -177,7 +177,7 @@ public class TableSorter extends AbstractTableModel {
 
     @Override
     public int compareTo(Row o) {
-      for (final var directive : sortingColumns) {
+      for (final com.cburch.logisim.util.TableSorter.Directive directive : sortingColumns) {
         int column = directive.column;
 
         Object o1 = tableModel.getValueAt(modelIndex, column);
@@ -212,12 +212,12 @@ public class TableSorter extends AbstractTableModel {
     @Override
     public Component getTableCellRendererComponent(
         JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-      final var c =
+      final java.awt.Component c =
           tableCellRenderer.getTableCellRendererComponent(
               table, value, isSelected, hasFocus, row, column);
       if (c instanceof JLabel l) {
         l.setHorizontalTextPosition(JLabel.LEFT);
-        final var modelColumn = table.convertColumnIndexToModel(column);
+        final int modelColumn = table.convertColumnIndexToModel(column);
         l.setIcon(getHeaderRendererIcon(modelColumn, l.getFont().getSize()));
       }
       return c;
@@ -267,7 +267,7 @@ public class TableSorter extends AbstractTableModel {
       // it this class can end up re-sorting on alternate cell updates -
       // which can be a performance problem for large tables. The last
       // clause avoids this problem.
-      final var column = e.getColumn();
+      final int column = e.getColumn();
       if (e.getFirstRow() == e.getLastRow()
           && column != TableModelEvent.ALL_COLUMNS
           && getSortingStatus(column) == NOT_SORTED
@@ -406,7 +406,7 @@ public class TableSorter extends AbstractTableModel {
   }
 
   protected Icon getHeaderRendererIcon(int column, int size) {
-    final var directive = getDirective(column);
+    final com.cburch.logisim.util.TableSorter.Directive directive = getDirective(column);
     return (directive == EMPTY_DIRECTIVE)
       ? null
       : new Arrow(directive.direction == DESCENDING, size, sortingColumns.indexOf(directive));
@@ -414,7 +414,7 @@ public class TableSorter extends AbstractTableModel {
 
   private int[] getModelToView() {
     if (modelToView == null) {
-      final var n = getViewToModel().length;
+      final int n = getViewToModel().length;
       modelToView = new int[n];
       for (int i = 0; i < n; i++) {
         modelToView[modelIndex(i)] = i;
@@ -449,7 +449,7 @@ public class TableSorter extends AbstractTableModel {
 
   private Row[] getViewToModel() {
     if (viewToModel == null) {
-      final var tableModelRowCount = tableModel.getRowCount();
+      final int tableModelRowCount = tableModel.getRowCount();
       viewToModel = new Row[tableModelRowCount];
       for (int row = 0; row < tableModelRowCount; row++) {
         viewToModel[row] = new Row(row);
@@ -488,7 +488,7 @@ public class TableSorter extends AbstractTableModel {
   }
 
   public void setSortingStatus(int column, int status) {
-    final var directive = getDirective(column);
+    final com.cburch.logisim.util.TableSorter.Directive directive = getDirective(column);
     if (directive != EMPTY_DIRECTIVE) {
       sortingColumns.remove(directive);
     }
@@ -501,7 +501,7 @@ public class TableSorter extends AbstractTableModel {
   public void setTableHeader(JTableHeader tableHeader) {
     if (this.tableHeader != null) {
       this.tableHeader.removeMouseListener(mouseListener);
-      final var defaultRenderer = this.tableHeader.getDefaultRenderer();
+      final javax.swing.table.TableCellRenderer defaultRenderer = this.tableHeader.getDefaultRenderer();
       if (defaultRenderer instanceof SortableHeaderRenderer rend) {
         this.tableHeader.setDefaultRenderer(rend.tableCellRenderer);
       }

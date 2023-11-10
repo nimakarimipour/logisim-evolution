@@ -37,14 +37,14 @@ public class LedArrayLedDefaultHdlGeneratorFactory extends AbstractHdlGeneratorF
   }
 
   public static LineBuffer getGenericMap(int nrOfRows, int nrOfColumns, long fpgaClockFrequency, boolean activeLow) {
-    final var generics = new HashMap<String, String>();
+    final java.util.HashMap<java.lang.String,java.lang.String> generics = new HashMap<String, String>();
     generics.put(NR_OF_LEDS_STRING, Integer.toString(nrOfRows * nrOfColumns));
     generics.put(ACTIVE_LOW_STRING, activeLow ? "1" : "0");
     return LedArrayGenericHdlGeneratorFactory.getGenericPortMapAlligned(generics, true);
   }
 
   public static LineBuffer getPortMap(int id) {
-    final var ports = new HashMap<String, String>();
+    final java.util.HashMap<java.lang.String,java.lang.String> ports = new HashMap<String, String>();
     ports.put(LedArrayGenericHdlGeneratorFactory.LedArrayOutputs, String.format("%s%d", LedArrayGenericHdlGeneratorFactory.LedArrayOutputs, id));
     ports.put(LedArrayGenericHdlGeneratorFactory.LedArrayInputs, String.format("s_%s%d", LedArrayGenericHdlGeneratorFactory.LedArrayInputs, id));
     return LedArrayGenericHdlGeneratorFactory.getGenericPortMapAlligned(ports, false);
@@ -52,7 +52,7 @@ public class LedArrayLedDefaultHdlGeneratorFactory extends AbstractHdlGeneratorF
 
   @Override
   public LineBuffer getModuleFunctionality(Netlist TheNetlist, AttributeSet attrs) {
-    final var contents = LineBuffer.getHdlBuffer()
+    final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer()
         .pair("ins", LedArrayGenericHdlGeneratorFactory.LedArrayInputs)
         .pair("outs", LedArrayGenericHdlGeneratorFactory.LedArrayOutputs);
 

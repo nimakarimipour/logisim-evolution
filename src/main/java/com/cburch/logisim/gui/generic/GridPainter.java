@@ -62,7 +62,7 @@ public class GridPainter implements PropertyChangeListener {
   }
 
   public void setZoomFactor(double value) {
-    final var oldValue = zoomFactor;
+    final double oldValue = zoomFactor;
     if (oldValue != value) {
       zoomFactor = value;
       createGridImage(gridSize, value);
@@ -75,7 +75,7 @@ public class GridPainter implements PropertyChangeListener {
   }
 
   public void setZoomModel(ZoomModel model) {
-    final var old = zoomModel;
+    final com.cburch.logisim.gui.generic.ZoomModel old = zoomModel;
     if (model != old) {
       if (listener == null) {
         listener = new Listener();
@@ -98,9 +98,9 @@ public class GridPainter implements PropertyChangeListener {
   public void paintGrid(Graphics g) {
     if (!showGrid) return;
 
-    final var clip = g.getClipBounds();
-    final var x0 = (clip.x / gridImageWidth) * gridImageWidth; // round down to multiple of w
-    final var y0 = (clip.y / gridImageWidth) * gridImageWidth;
+    final java.awt.Rectangle clip = g.getClipBounds();
+    final int x0 = (clip.x / gridImageWidth) * gridImageWidth; // round down to multiple of w
+    final int y0 = (clip.y / gridImageWidth) * gridImageWidth;
     for (int x = 0; x < clip.width + gridImageWidth; x += gridImageWidth) {
       for (int y = 0; y < clip.height + gridImageWidth; y += gridImageWidth) {
         g.drawImage(gridImage, x0 + x, y0 + y, destination);
@@ -115,12 +115,12 @@ public class GridPainter implements PropertyChangeListener {
   private void createGridImage(int size, double f) {
     double ww = f * size * 5;
     while (2 * ww < 150) ww *= 2;
-    final var w = (int) Math.round(ww);
-    final var pix = new int[w * w];
+    final int w = (int) Math.round(ww);
+    final int[] pix = new int[w * w];
     Arrays.fill(pix, AppPreferences.GRID_BG_COLOR.get());
 
     if (f == 1.0) {
-      final var lineStep = size * w;
+      final int lineStep = size * w;
       for (int j = 0; j < pix.length; j += lineStep) {
         for (int i = 0; i < w; i += size) {
           pix[i + j] = AppPreferences.GRID_DOT_COLOR.get();
@@ -135,7 +135,7 @@ public class GridPainter implements PropertyChangeListener {
         off1 = off0 + num;
       }
 
-      final var dotColor =
+      final java.lang.Integer dotColor =
           f <= 0.5
               ? AppPreferences.GRID_ZOOMED_DOT_COLOR.get()
               : AppPreferences.GRID_DOT_COLOR.get();
@@ -189,8 +189,8 @@ public class GridPainter implements PropertyChangeListener {
   private class Listener implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent event) {
-      final var prop = event.getPropertyName();
-      final var val = event.getNewValue();
+      final java.lang.String prop = event.getPropertyName();
+      final java.lang.Object val = event.getNewValue();
       if (prop.equals(ZoomModel.ZOOM)) {
         setZoomFactor((Double) val);
         destination.repaint();

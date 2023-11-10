@@ -36,8 +36,8 @@ public class MatrixPlacerDialog extends JPanel implements ActionListener {
     compName = name;
     matrixInfo = value;
 
-    final var thisLayout = new GridBagLayout();
-    final var c = new GridBagConstraints();
+    final java.awt.GridBagLayout thisLayout = new GridBagLayout();
+    final java.awt.GridBagConstraints c = new GridBagConstraints();
     setLayout(thisLayout);
 
     c.fill = GridBagConstraints.BOTH;
@@ -60,12 +60,12 @@ public class MatrixPlacerDialog extends JPanel implements ActionListener {
       for (int y = 5; y < 12; y++) {
         c.gridx = x;
         c.gridy = y;
-        final var symbol =
+        final java.lang.String symbol =
             (((x == 4) || (x == 7) || (x == 10)) && ((y == 5) || (y == 8) || (y == 11)))
                 ? "O"
                 : ".";
-        final var spacer = " ".repeat(3);
-        final var compText = new JLabel(spacer + symbol + spacer);
+        final java.lang.String spacer = " ".repeat(3);
+        final javax.swing.JLabel compText = new JLabel(spacer + symbol + spacer);
         this.add(compText, c);
       }
     c.gridy = 1;

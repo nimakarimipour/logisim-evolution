@@ -22,14 +22,14 @@ import java.util.List;
 public class CorrectLabel {
   public static String getCorrectLabel(String label) {
     if (label.isEmpty()) return label;
-    final var result = new StringBuilder();
+    final java.lang.StringBuilder result = new StringBuilder();
     if (NUMBERS.contains(label.substring(0, 1))) result.append("L_");
     result.append(label.replace(" ", "_").replace("-", "_"));
     return result.toString();
   }
 
   public static boolean isCorrectLabel(String label, String errorIdentifierString) {
-    final var err = nameErrors(label, errorIdentifierString);
+    final java.lang.String err = nameErrors(label, errorIdentifierString);
     if (err != null) {
       Reporter.report.addFatalError(err);
       return false;
@@ -73,8 +73,8 @@ public class CorrectLabel {
   public static String firstInvalidCharacter(String label) {
     if (label.isEmpty()) return "";
     for (int i = 0; i < label.length(); i++) {
-      final var str = label.substring(i, i + 1);
-      final var low = str.toLowerCase();
+      final java.lang.String str = label.substring(i, i + 1);
+      final java.lang.String low = str.toLowerCase();
       if (!CHARS.contains(low) && !NUMBERS.contains(str)) {
         return low;
       }
