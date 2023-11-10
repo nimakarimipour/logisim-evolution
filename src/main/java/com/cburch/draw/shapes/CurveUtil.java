@@ -53,8 +53,8 @@ public final class CurveUtil {
     if (roots == null) return null;
 
     // find the closest point:
-    var tMin = Double.MAX_VALUE;
-    var dist2Min = Double.MAX_VALUE;
+    double tMin = Double.MAX_VALUE;
+    double dist2Min = Double.MAX_VALUE;
     final var posMin = new double[2];
     for (final var root : roots) {
       double t;
@@ -88,15 +88,15 @@ public final class CurveUtil {
     final var B = computeB(p0, p1, p2);
 
     // rough evaluation of bounds:
-    var xMin = Math.min(p0[0], Math.min(p1[0], p2[0]));
-    var xMax = Math.max(p0[0], Math.max(p1[0], p2[0]));
-    var yMin = Math.min(p0[1], Math.min(p1[1], p2[1]));
-    var yMax = Math.max(p0[1], Math.max(p1[1], p2[1]));
+    double xMin = Math.min(p0[0], Math.min(p1[0], p2[0]));
+    double xMax = Math.max(p0[0], Math.max(p1[0], p2[0]));
+    double yMin = Math.min(p0[1], Math.min(p1[1], p2[1]));
+    double yMax = Math.max(p0[1], Math.max(p1[1], p2[1]));
 
     // more accurate evaluation:
     // see Andree Michelle for a faster but less readable method
     if (xMin == p1[0] || xMax == p1[0]) {
-      var u = -A[0] / B[0]; // u where getTan(u)[0] == 0
+      double u = -A[0] / B[0]; // u where getTan(u)[0] == 0
       u = (1 - u) * (1 - u) * p0[0] + 2 * u * (1 - u) * p1[0] + u * u * p2[0];
       if (xMin == p1[0]) {
         xMin = u;
@@ -105,7 +105,7 @@ public final class CurveUtil {
       }
     }
     if (yMin == p1[1] || yMax == p1[1]) {
-      var u = -A[1] / B[1]; // u where getTan(u)[1] == 0
+      double u = -A[1] / B[1]; // u where getTan(u)[1] == 0
       u = (1 - u) * (1 - u) * p0[1] + 2 * u * (1 - u) * p1[1] + u * u * p2[1];
       if (yMin == p1[1]) {
         yMin = u;
@@ -142,8 +142,8 @@ public final class CurveUtil {
   // prospective economic advantage, resulting from the use or misuse of this
   // software program.
   public static double[] interpolate(double[] end0, double[] end1, double[] mid) {
-    var dx = mid[0] - end0[0];
-    var dy = mid[1] - end0[1];
+    double dx = mid[0] - end0[0];
+    double dy = mid[1] - end0[1];
     final var d0 = Math.sqrt(dx * dx + dy * dy);
 
     dx = mid[0] - end1[0];
@@ -173,7 +173,7 @@ public final class CurveUtil {
   private static double[] solveCubic(double a, double b, double c, double d) {
     if (Math.abs(a) > zeroMax) {
       // let's adopt form: x3 + ax2 + bx + d = 0
-      var z = a; // multi-purpose util variable
+      double z = a; // multi-purpose util variable
       a = b / z;
       b = c / z;
       c = d / z;
@@ -212,7 +212,7 @@ public final class CurveUtil {
       a = b;
       b = c;
       c = d;
-      var D = b * b - 4 * a * c;
+      double D = b * b - 4 * a * c;
       if (D <= -zeroMax) {
         // D negative
         return null;

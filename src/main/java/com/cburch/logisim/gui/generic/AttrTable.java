@@ -273,7 +273,7 @@ public class AttrTable extends JPanel implements LocaleListener {
     public void focusLost(FocusEvent e) {
       final var dst = e.getOppositeComponent();
       if (dst != null) {
-        var p = dst;
+        java.awt.Component p = dst;
         while (p != null && !(p instanceof Window)) {
           if (p == AttrTable.this) {
             // switch to another place in this table,
@@ -318,7 +318,7 @@ public class AttrTable extends JPanel implements LocaleListener {
         currentEditor.transferFocus();
       }
 
-      var editor = row.getEditor(parent);
+      java.awt.Component editor = row.getEditor(parent);
       if (editor instanceof JComboBox box) {
         box.addActionListener(this);
         editor.addFocusListener(this);
@@ -326,7 +326,7 @@ public class AttrTable extends JPanel implements LocaleListener {
         if (isSelected && rowIndexes.length > 1) {
           multiEditActive = true;
           rows = new AttrTableModelRow[rowIndexes.length];
-          for (var i = 0; i < rowIndexes.length; i++) {
+          for (int i = 0; i < rowIndexes.length; i++) {
             rows[i] = attrModel.getRow(rowIndexes[i]);
             if (!row.multiEditCompatible(rows[i])) {
               multiEditActive = false;

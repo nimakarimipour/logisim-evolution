@@ -115,7 +115,7 @@ class SearchNode implements Comparable<SearchNode> {
     if (ret < 0) {
       ret = Math.abs(dx) + Math.abs(dy);
     }
-    var penalizeDoubleTurn = false;
+    boolean penalizeDoubleTurn = false;
     if (curDir == Direction.EAST) {
       penalizeDoubleTurn = dx < 0;
     } else if (curDir == Direction.WEST) {
@@ -166,7 +166,7 @@ class SearchNode implements Comparable<SearchNode> {
   }
 
   public SearchNode next(Direction moveDir, boolean crossing) {
-    var newDist = dist;
+    int newDist = dist;
     final var connDir = conn.getDirection();
     final var nextLoc = loc.translate(moveDir, 10);
     final var exWire = extendsWire && moveDir == connDir;

@@ -174,14 +174,14 @@ public class SocBusMenuProvider implements ActionListener {
     @Override
     public void configureMenu(JPopupMenu menu, Project proj) {
       setParentFrame(instance, proj.getFrame());
-      var instanceName = instance.getAttributeValue(StdAttr.LABEL);
+      java.lang.String instanceName = instance.getAttributeValue(StdAttr.LABEL);
       if (StringUtil.isNullOrEmpty(instanceName)) {
         final var loc = instance.getLocation();
         instanceName = LineBuffer.format("{{1}}@{{2}},{{3}}",
                 instance.getFactory().getHDLName(instance.getAttributeSet()), loc.getX(), loc.getY());
       }
 
-      var name = (circuitState != null) ? (instanceName + ": ") : "";
+      java.lang.String name = (circuitState != null) ? (instanceName + ": ") : "";
       name += S.get("SocBusMemMap");
       menu.addSeparator();
       final var memMap = new InstanceMenuItem(instance, name, SHOW_MEMORY_MAP);
@@ -264,7 +264,7 @@ public class SocBusMenuProvider implements ActionListener {
       }
       final var frame = myInsertionFrames.get(state);
       frame.setVisible(true);
-      var fstate = frame.getExtendedState();
+      int fstate = frame.getExtendedState();
       fstate &= ~Frame.ICONIFIED;
       frame.setExtendedState(fstate);
     }
@@ -319,7 +319,7 @@ public class SocBusMenuProvider implements ActionListener {
         myTraceFrame.setSize(scaledWidth, scaledHeight);
       }
       myTraceFrame.setVisible(true);
-      var fstate = myTraceFrame.getExtendedState();
+      int fstate = myTraceFrame.getExtendedState();
       fstate &= ~Frame.ICONIFIED;
       myTraceFrame.setExtendedState(fstate);
     }

@@ -55,7 +55,7 @@ public class ConstantButton extends FpgaIoInformationContainer {
   }
 
   private boolean getConstant(int pin, MapComponent map) {
-    var v = 0L;
+    long v = 0L;
     boolean correct;
     do {
       correct = true;

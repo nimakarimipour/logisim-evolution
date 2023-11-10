@@ -447,7 +447,7 @@ public class SimOptions extends OptionsPanel {
 
     @Override
     public void preferenceChange(PreferenceChangeEvent evt) {
-      var update = false;
+      boolean update = false;
       final var key = evt.getKey();
       if (key.equals(AppPreferences.TRUE_COLOR.getIdentifier())) {
         Value.trueColor = new Color(AppPreferences.TRUE_COLOR.get());
@@ -530,8 +530,8 @@ public class SimOptions extends OptionsPanel {
       myPref = pref;
       this.addActionListener(new MyactionListener());
       final Character def = pref.get().charAt(0);
-      var seldef = -1;
-      for (var i = 0; i < choices.length(); i++) {
+      int seldef = -1;
+      for (int i = 0; i < choices.length(); i++) {
         final Character sel = choices.charAt(i);
         if (sel.equals(def)) seldef = i;
         this.addItem(sel);

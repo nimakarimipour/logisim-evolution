@@ -144,7 +144,7 @@ public class Analyzer extends LFrame.SubWindow {
       for (String s : args[1].split(",")) outputs.add(Var.parse(s));
       model.setVariables(inputs, outputs);
     }
-    for (var i = 2; i < args.length; i++) {
+    for (int i = 2; i < args.length; i++) {
       final var s = args[i];
       final var idx = s.indexOf('=');
       if (idx >= 0) {

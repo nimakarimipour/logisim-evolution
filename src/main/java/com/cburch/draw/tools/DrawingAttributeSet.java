@@ -70,7 +70,7 @@ public class DrawingAttributeSet implements AttributeSet, Cloneable {
   public <E extends CanvasObject> E applyTo(E drawable) {
     AbstractCanvasObject d = (AbstractCanvasObject) drawable;
     // use a for(i...) loop since the attribute list may change as we go on
-    for (var i = 0; i < d.getAttributes().size(); i++) {
+    for (int i = 0; i < d.getAttributes().size(); i++) {
       Attribute<?> attr = d.getAttributes().get(i);
       @SuppressWarnings("unchecked")
       Attribute<Object> a = (Attribute<Object>) attr;
@@ -161,7 +161,7 @@ public class DrawingAttributeSet implements AttributeSet, Cloneable {
       vit.next();
       if (a.equals(attr)) {
         vit.set(value);
-        var event = new AttributeEvent(this, attr, value, null);
+        com.cburch.logisim.data.AttributeEvent event = new AttributeEvent(this, attr, value, null);
         for (final var listener : listeners) {
           listener.attributeValueChanged(event);
         }

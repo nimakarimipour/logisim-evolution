@@ -51,9 +51,9 @@ public class Signal {
   }
 
   public long getEndTime() {
-    var t = timeStart;
-    for (var p = 0; p < curSize; p++) {
-      var i = (firstIndex + p) % curSize;
+    long t = timeStart;
+    for (int p = 0; p < curSize; p++) {
+      int i = (firstIndex + p) % curSize;
       t += dur[i / CHUNK][i % CHUNK];
     }
     return t;
@@ -157,11 +157,11 @@ public class Signal {
     final var last = cap == 0 ? CHUNK : Math.min(CHUNK, cap - (c - 1) * CHUNK);
     final var v = new Value[c][];
     final var d = new long[c][];
-    for (var i = 0; i < c; i++) {
+    for (int i = 0; i < c; i++) {
       v[i] = new Value[i < c - 1 ? CHUNK : last];
       d[i] = new long[i < c - 1 ? CHUNK : last];
     }
-    for (var p = 0; p < amt; p++) {
+    for (int p = 0; p < amt; p++) {
       int i = (firstIndex + offset + p) % curSize;
       v[p / CHUNK][p % CHUNK] = val[i / CHUNK][i % CHUNK];
       d[p / CHUNK][p % CHUNK] = dur[i / CHUNK][i % CHUNK];
@@ -213,7 +213,7 @@ public class Signal {
       } else { // curSize > newMaxSize
         // too much data, keep only most recent data and shift it left
         final var discard = (maxSize - newMaxSize);
-        for (var p = 0; p < discard; p++) {
+        for (int p = 0; p < discard; p++) {
           final var i = (firstIndex + p) % curSize;
           timeStart += dur[i / CHUNK][i % CHUNK];
         }
@@ -297,7 +297,7 @@ public class Signal {
   public Value getValue(long t) { // always current width, even when width changes
     if (t < timeStart) return null;
     final var width = info.getWidth();
-    var tt = timeStart;
+    long tt = timeStart;
     for (int p = 0; p < curSize; p++) {
       final var i = (firstIndex + p) % curSize;
       final var d = dur[i / CHUNK][i % CHUNK];

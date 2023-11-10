@@ -36,7 +36,7 @@ public class Poly extends FillableCanvasObject {
 
   public Poly(boolean closed, List<Location> locations) {
     final var hs = new Handle[locations.size()];
-    var i = -1;
+    int i = -1;
     for (final var loc : locations) {
       i++;
       hs[i] = new Handle(this, loc.getX(), loc.getY());
@@ -130,8 +130,8 @@ public class Poly extends FillableCanvasObject {
     final var n = hs.length;
     final var is = new Handle[n - 1];
     Handle previous = null;
-    var deleted = false;
-    for (var i = 0; i < n; i++) {
+    boolean deleted = false;
+    for (int i = 0; i < n; i++) {
       if (deleted) {
         is[i - 1] = hs[i];
       } else if (hs[i].equals(handle)) {
@@ -179,8 +179,8 @@ public class Poly extends FillableCanvasObject {
         final var y = h.getY() + gesture.getDeltaY();
         Location r;
         if (gesture.isShiftDown()) {
-          var prev = hs[(i + n - 1) % n].getLocation();
-          var next = hs[(i + 1) % n].getLocation();
+          com.cburch.logisim.data.Location prev = hs[(i + n - 1) % n].getLocation();
+          com.cburch.logisim.data.Location next = hs[(i + 1) % n].getLocation();
           if (!closed) {
             if (i == 0) prev = null;
             if (i == n - 1) next = null;
@@ -209,13 +209,13 @@ public class Poly extends FillableCanvasObject {
   }
 
   private GeneralPath getPath() {
-    var p = path;
+    java.awt.geom.GeneralPath p = path;
     if (p != null) return p;
 
     p = new GeneralPath();
     final var hs = handles;
     if (hs.length > 0) {
-      var first = true;
+      boolean first = true;
       for (final var h : hs) {
         if (first) {
           p.moveTo(h.getX(), h.getY());
@@ -231,11 +231,11 @@ public class Poly extends FillableCanvasObject {
 
   private Location getRandomBoundaryPoint(Random rand) {
     final var hs = handles;
-    var ls = lens;
+    double[] ls = lens;
     if (ls == null) {
       ls = new double[hs.length + (closed ? 1 : 0)];
-      var total = 0.0;
-      for (var i = 0; i < ls.length; i++) {
+      double total = 0.0;
+      for (int i = 0; i < ls.length; i++) {
         final var j = (i + 1) % hs.length;
         total += LineUtil.distance(hs[i].getX(), hs[i].getY(), hs[j].getX(), hs[j].getY());
         ls[i] = total;
@@ -243,7 +243,7 @@ public class Poly extends FillableCanvasObject {
       lens = ls;
     }
     final var pos = ls[ls.length - 1] * rand.nextDouble();
-    for (var i = 0; true; i++) {
+    for (int i = 0; true; i++) {
       if (pos < ls[i]) {
         final var p = hs[i];
         final var q = hs[(i + 1) % hs.length];
@@ -260,7 +260,7 @@ public class Poly extends FillableCanvasObject {
     if (getPaintType() != DrawAttr.PAINT_STROKE) {
       return super.getRandomPoint(bds, rand);
     }
-    var ret = getRandomBoundaryPoint(rand);
+    com.cburch.logisim.data.Location ret = getRandomBoundaryPoint(rand);
     final var w = getStrokeWidth();
     if (w > 1) {
       final var dx = rand.nextInt(w) - w / 2;
@@ -280,8 +280,8 @@ public class Poly extends FillableCanvasObject {
             ? PolyUtil.getClosestPoint(loc, closed, hs).getPreviousHandle()
             : previous;
     final var is = new Handle[hs.length + 1];
-    var inserted = false;
-    for (var i = 0; i < hs.length; i++) {
+    boolean inserted = false;
+    for (int i = 0; i < hs.length; i++) {
       if (inserted) {
         is[i + 1] = hs[i];
       } else if (hs[i].equals(prev)) {
@@ -322,7 +322,7 @@ public class Poly extends FillableCanvasObject {
 
   @Override
   public int matchesHashCode() {
-    var ret = super.matchesHashCode();
+    int ret = super.matchesHashCode();
     ret = ret * 3 + (closed ? 1 : 0);
     final var hs = handles;
     for (final var h : hs) {
@@ -335,7 +335,7 @@ public class Poly extends FillableCanvasObject {
   public Handle moveHandle(HandleGesture gesture) {
     final var hs = getHandles(gesture);
     final var is = new Handle[hs.size()];
-    var i = 0;
+    int i = 0;
     for (final var h : hs) {
       is[i++] = h;
     }
@@ -348,7 +348,7 @@ public class Poly extends FillableCanvasObject {
     final var hs = getHandles(gesture);
     final var xs = new int[hs.size()];
     final var ys = new int[hs.size()];
-    var i = 0;
+    int i = 0;
     for (final var h : hs) {
       xs[i] = h.getX();
       ys[i] = h.getY();
@@ -366,11 +366,11 @@ public class Poly extends FillableCanvasObject {
 
   private void recomputeBounds() {
     final var hs = handles;
-    var x0 = hs[0].getX();
-    var y0 = hs[0].getY();
-    var x1 = x0;
-    var y1 = y0;
-    for (var i = 1; i < hs.length; i++) {
+    int x0 = hs[0].getX();
+    int y0 = hs[0].getY();
+    int x1 = x0;
+    int y1 = y0;
+    for (int i = 1; i < hs.length; i++) {
       int x = hs[i].getX();
       int y = hs[i].getY();
       if (x < x0) x0 = x;
@@ -399,7 +399,7 @@ public class Poly extends FillableCanvasObject {
   public void translate(int dx, int dy) {
     final var hs = handles;
     final var is = new Handle[hs.length];
-    for (var i = 0; i < hs.length; i++) {
+    for (int i = 0; i < hs.length; i++) {
       is[i] = new Handle(this, hs[i].getX() + dx, hs[i].getY() + dy);
     }
     setHandles(is);

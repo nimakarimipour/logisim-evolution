@@ -100,7 +100,7 @@ public class Decoder extends InstanceFactory {
     final var select = attrs.getValue(PlexersLibrary.ATTR_SELECT);
     final var outputs = 1 << select.getWidth();
     Bounds bds;
-    var reversed = facing == Direction.WEST || facing == Direction.NORTH;
+    boolean reversed = facing == Direction.WEST || facing == Direction.NORTH;
     if (selectLoc == StdAttr.SELECT_TOP_RIGHT) reversed = !reversed;
     if (outputs == 2) {
       int y = reversed ? 0 : -40;
@@ -250,7 +250,7 @@ public class Decoder extends InstanceFactory {
     final var select = state.getAttributeValue(PlexersLibrary.ATTR_SELECT);
     final var threeState = state.getAttributeValue(PlexersLibrary.ATTR_TRISTATE);
     final var enable = state.getAttributeValue(PlexersLibrary.ATTR_ENABLE);
-    var outputs = 1 << select.getWidth();
+    int outputs = 1 << select.getWidth();
 
     // determine default output values
     Value others; // the default output
@@ -261,7 +261,7 @@ public class Decoder extends InstanceFactory {
     }
 
     // determine selected output value
-    var outIndex = -1; // the special output
+    int outIndex = -1; // the special output
     Value out = null;
     final var en = enable ? state.getPortValue(outputs + 1) : Value.TRUE;
     if (en == Value.FALSE) {
@@ -283,7 +283,7 @@ public class Decoder extends InstanceFactory {
     }
 
     // now propagate them
-    for (var i = 0; i < outputs; i++) {
+    for (int i = 0; i < outputs; i++) {
       state.setPort(i, i == outIndex ? out : others, PlexersLibrary.DELAY);
     }
   }
@@ -293,7 +293,7 @@ public class Decoder extends InstanceFactory {
     Object selectLoc = instance.getAttributeValue(StdAttr.SELECT_LOC);
     final var select = instance.getAttributeValue(PlexersLibrary.ATTR_SELECT);
     final var enable = instance.getAttributeValue(PlexersLibrary.ATTR_ENABLE);
-    var outputs = 1 << select.getWidth();
+    int outputs = 1 << select.getWidth();
     final var ps = new Port[outputs + (enable ? 2 : 1)];
     if (outputs == 2) {
       Location end0;
@@ -335,7 +335,7 @@ public class Decoder extends InstanceFactory {
         dy = selectLoc == StdAttr.SELECT_TOP_RIGHT ? 0 : -10 * outputs;
         ddy = 10;
       }
-      for (var i = 0; i < outputs; i++) {
+      for (int i = 0; i < outputs; i++) {
         ps[i] = new Port(dx, dy, Port.OUTPUT, 1);
         dx += ddx;
         dy += ddy;
@@ -346,7 +346,7 @@ public class Decoder extends InstanceFactory {
     if (enable) {
       ps[outputs + 1] = new Port(en.getX(), en.getY(), Port.INPUT, BitWidth.ONE);
     }
-    for (var i = 0; i < outputs; i++) {
+    for (int i = 0; i < outputs; i++) {
       ps[i].setToolTip(S.getter("decoderOutTip", "" + i));
     }
     ps[outputs].setToolTip(S.getter("decoderSelectTip"));

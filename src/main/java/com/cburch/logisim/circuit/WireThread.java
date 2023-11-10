@@ -21,7 +21,7 @@ class WireThread {
   }
 
   WireThread find() {
-    var ret = this;
+    com.cburch.logisim.circuit.WireThread ret = this;
     if (ret.parent != ret) {
       do ret = ret.parent;
       while (ret.parent != ret);

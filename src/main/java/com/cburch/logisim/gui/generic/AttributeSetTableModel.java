@@ -79,9 +79,9 @@ public abstract class AttributeSetTableModel implements AttrTableModel, Attribut
   @Override
   public void attributeListChanged(AttributeEvent e) {
     // if anything has changed, don't do anything
-    var index = 0;
-    var match = true;
-    var rowsSize = rows.size();
+    int index = 0;
+    boolean match = true;
+    int rowsSize = rows.size();
     for (final var attr : attrs.getAttributes()) {
       if (!attr.isHidden()) {
         if (index >= rowsSize || rows.get(index).attr != attr) {
@@ -101,7 +101,7 @@ public abstract class AttributeSetTableModel implements AttrTableModel, Attribut
     newRows.add(rowd);
     for (final var attr : attrs.getAttributes()) {
       if (!attr.isHidden()) {
-        var row = rowMap.get(attr);
+        com.cburch.logisim.gui.generic.AttributeSetTableModel.AttrRow row = rowMap.get(attr);
         if (row == null) {
           row = new AttrRow(attr);
           rowMap.put(attr, row);
@@ -260,7 +260,7 @@ public abstract class AttributeSetTableModel implements AttrTableModel, Attribut
         final var msg = S.get("attributeChangeInvalidError") + ": " + e;
         throw new AttrTableSetException(msg);
       } catch (NumberFormatException e) {
-        var msg = S.get("attributeChangeInvalidError");
+        java.lang.String msg = S.get("attributeChangeInvalidError");
         final var eMsg = e.getMessage();
         if (eMsg != null && eMsg.length() > 0) msg += ": " + eMsg;
         msg += ".";

@@ -109,7 +109,7 @@ public class ShowStateDialog extends JDialog implements ActionListener {
   private static DynamicElement.Path toComponentPath(TreePath p) {
     final var o = p.getPath();
     final var elt = new InstanceComponent[o.length - 1];
-    for (var i = 1; i < o.length; i++) {
+    for (int i = 1; i < o.length; i++) {
       final var r = ((RefTreeNode) o[i]).refData;
       elt[i - 1] = r.ic;
     }
@@ -119,7 +119,7 @@ public class ShowStateDialog extends JDialog implements ActionListener {
   private static TreePath toTreePath(RefTreeNode root, DynamicElement.Path path) {
     final var objs = new Object[path.elt.length + 1];
     objs[0] = root;
-    for (var i = 1; i < objs.length; i++) {
+    for (int i = 1; i < objs.length; i++) {
       objs[i] = findChild((RefTreeNode) objs[i - 1], path.elt[i - 1]);
       if (objs[i] == null) return null;
     }
@@ -127,7 +127,7 @@ public class ShowStateDialog extends JDialog implements ActionListener {
   }
 
   private static RefTreeNode findChild(RefTreeNode node, InstanceComponent ic) {
-    for (var i = 0; i < node.getChildCount(); i++) {
+    for (int i = 0; i < node.getChildCount(); i++) {
       final var child = (RefTreeNode) node.getChildAt(i);
       final var r = child.refData;
       if (r.ic.getLocation().equals(ic.getLocation())
@@ -151,11 +151,11 @@ public class ShowStateDialog extends JDialog implements ActionListener {
     final var model = canvas.getModel();
     final var root = (RefTreeNode) tree.getModel().getRoot();
 
-    var boundingBox = Bounds.EMPTY_BOUNDS;
+    com.cburch.logisim.data.Bounds boundingBox = Bounds.EMPTY_BOUNDS;
     for (final var shape : model.getObjectsFromBottom()) {
       boundingBox = boundingBox.add(shape.getBounds());
     }
-    var loc = Location.create(boundingBox.getX(), boundingBox.getY(), true);
+    com.cburch.logisim.data.Location loc = Location.create(boundingBox.getX(), boundingBox.getY(), true);
 
     // TreePath[] roots = tree.getCheckingRoots();
     final var checked = tree.getCheckingPaths();
@@ -173,7 +173,7 @@ public class ShowStateDialog extends JDialog implements ActionListener {
       }
     }
 
-    var dirty = true;
+    boolean dirty = true;
     if (toRemove.size() > 0) {
       canvas.doAction(new ModelRemoveAction(model, toRemove));
       dirty = true;
@@ -183,7 +183,7 @@ public class ShowStateDialog extends JDialog implements ActionListener {
     toAdd.sort(new CompareByLocations());
 
     final var avoid = new ArrayList<>(model.getObjectsFromBottom());
-    for (var i = avoid.size() - 1; i >= 0; i--) {
+    for (int i = avoid.size() - 1; i >= 0; i--) {
       if (avoid.get(i) instanceof AppearanceAnchor) avoid.remove(i);
     }
     final var newShapes = new ArrayList<CanvasObject>();
@@ -241,7 +241,7 @@ public class ShowStateDialog extends JDialog implements ActionListener {
     public int compare(TreePath a, TreePath b) {
       final var aa = a.getPath();
       final var bb = b.getPath();
-      for (var i = 1; i < aa.length && i < bb.length; i++) {
+      for (int i = 1; i < aa.length && i < bb.length; i++) {
         final var refA = ((RefTreeNode) aa[i]).refData;
         final var refB = ((RefTreeNode) bb[i]).refData;
         final var locA = refA.ic.getLocation();
@@ -264,7 +264,7 @@ public class ShowStateDialog extends JDialog implements ActionListener {
     public String toString() {
       final var s = ic.getInstance().getAttributeValue(StdAttr.LABEL);
       final var loc = ic.getInstance().getLocation();
-      var str = "";
+      java.lang.String str = "";
 
       if (s != null && s.length() > 0) str += "\"" + s + "\" ";  // mind trailing space!
       str += String.format("%s @ (%d, %d)", ic.getFactory(), loc.getX(), loc.getY());

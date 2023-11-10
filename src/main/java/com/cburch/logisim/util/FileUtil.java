@@ -39,7 +39,7 @@ public final class FileUtil {
 
   public static byte[] getBytes(InputStream is) throws IOException {
     int len;
-    var size = 1024;
+    int size = 1024;
     byte[] buf;
 
     if (is instanceof ByteArrayInputStream) {

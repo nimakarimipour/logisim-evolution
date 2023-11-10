@@ -68,7 +68,7 @@ public class AppearanceCanvas extends Canvas implements CanvasPaneContents, Acti
 
   static int getMaxIndex(CanvasModel model) {
     final var objects = model.getObjectsFromBottom();
-    for (var i = objects.size() - 1; i >= 0; i--) {
+    for (int i = objects.size() - 1; i >= 0; i--) {
       if (!(objects.get(i) instanceof AppearanceElement)) {
         return i;
       }
@@ -119,8 +119,8 @@ public class AppearanceCanvas extends Canvas implements CanvasPaneContents, Acti
       final var max = getMaxIndex(getModel());
       final var requests = reorder.getReorderRequests();
       final var mod = new ArrayList<ReorderRequest>(requests.size());
-      var changed = false;
-      var movedToMax = false;
+      boolean changed = false;
+      boolean movedToMax = false;
       for (final var singleRequest : requests) {
         final var obj = singleRequest.getObject();
         if (obj instanceof AppearanceElement) {

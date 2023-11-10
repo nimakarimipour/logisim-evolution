@@ -364,7 +364,7 @@ public class Circuit {
       }
     }
     /* Now Annotate */
-    var sizeMightHaveChanged = false;
+    boolean sizeMightHaveChanged = false;
     for (final var comp : comps) {
       final var componentName = getAnnotationName(comp);
       if (!labelers.containsKey(componentName) || !labelers.get(componentName).hasNext(this)) {
@@ -440,7 +440,7 @@ public class Circuit {
     timer.schedule(ts, maxTimeoutTestBenchSec);
 
     while (true) {
-      var i = 0;
+      int i = 0;
       project.getSimulator().tick(1);
       Thread.yield();
 
@@ -469,7 +469,7 @@ public class Circuit {
     final var state = project.getCircuitState();
     state.reset();
 
-    for (var i = 0; i < pin.length; ++i) {
+    for (int i = 0; i < pin.length; ++i) {
       if (Pin.FACTORY.isInputPin(pin[i])) {
         final var pinState = state.getInstanceState(pin[i]);
         Pin.FACTORY.setValue(pinState, val[i]);
@@ -488,7 +488,7 @@ public class Circuit {
 
     FailException err = null;
 
-    for (var i = 0; i < pin.length; i++) {
+    for (int i = 0; i < pin.length; i++) {
       final var pinState = state.getInstanceState(pin[i]);
       if (Pin.FACTORY.isInputPin(pin[i])) continue;
 
@@ -512,7 +512,7 @@ public class Circuit {
   //
   public void draw(ComponentDrawContext context, Collection<Component> hidden) {
     final var g = context.getGraphics();
-    var gCopy = g.create();
+    java.awt.Graphics gCopy = g.create();
     context.setGraphics(gCopy);
     wires.draw(context, hidden);
 
@@ -602,10 +602,10 @@ public class Circuit {
     if (!it.hasNext()) return wireBounds;
     final var first = it.next();
     final var firstBounds = first.getBounds();
-    var xMin = firstBounds.getX();
-    var yMin = firstBounds.getY();
-    var xMax = xMin + firstBounds.getWidth();
-    var yMax = yMin + firstBounds.getHeight();
+    int xMin = firstBounds.getX();
+    int yMin = firstBounds.getY();
+    int xMax = xMin + firstBounds.getWidth();
+    int yMax = yMin + firstBounds.getHeight();
     while (it.hasNext()) {
       Component c = it.next();
       Bounds bds = c.getBounds();
@@ -626,10 +626,10 @@ public class Circuit {
 
   public Bounds getBounds(Graphics g) {
     final var ret = wires.getWireBounds();
-    var xMin = ret.getX();
-    var yMin = ret.getY();
-    var xMax = xMin + ret.getWidth();
-    var yMax = yMin + ret.getHeight();
+    int xMin = ret.getX();
+    int yMin = ret.getY();
+    int xMax = xMin + ret.getWidth();
+    int yMax = yMin + ret.getHeight();
     if (ret == Bounds.EMPTY_BOUNDS) {
       xMin = Integer.MAX_VALUE;
       yMin = Integer.MAX_VALUE;
@@ -820,11 +820,11 @@ public class Circuit {
     myNetList.clear();
     if (c instanceof Wire wire) {
       if (wire.getEnd0().equals(wire.getEnd1())) return;
-      var added = wires.add(wire);
+      boolean added = wires.add(wire);
       if (!added) return;
     } else {
       // add it into the circuit
-      var added = comps.add(c);
+      boolean added = comps.add(c);
       if (!added) return;
       socSim.registerComponent(c);
       // Here we check for duplicated labels and clear the label
@@ -906,7 +906,7 @@ public class Circuit {
   }
 
   private void removeWrongLabels(String label) {
-    var changed = false;
+    boolean changed = false;
     for (final var comp : comps) {
       final var attrs = comp.getAttributeSet();
       if (attrs.containsAttribute(StdAttr.LABEL)) {

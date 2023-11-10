@@ -33,7 +33,7 @@ public class PopupMenu extends MouseAdapter {
       RadixOption radix = null;
       if (signals.size() > 0) {
         radix = signals.get(0).info.getRadix();
-        for (var i = 1; i < signals.size(); i++) {
+        for (int i = 1; i < signals.size(); i++) {
           if (signals.get(i).info.getRadix() != radix) {
             radix = null;
             break;
@@ -53,7 +53,7 @@ public class PopupMenu extends MouseAdapter {
             });
       }
       addSeparator();
-      var m = new JMenuItem(S.get("editClearItem"));
+      javax.swing.JMenuItem m = new JMenuItem(S.get("editClearItem"));
       add(m);
       m.setEnabled(signals.size() > 0);
       m.addActionListener(

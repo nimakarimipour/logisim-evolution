@@ -63,7 +63,7 @@ public class Joystick extends InstanceFactory {
 
     @Override
     public void paint(InstancePainter painter) {
-      var state = (State) painter.getData();
+      com.cburch.logisim.std.io.Joystick.State state = (State) painter.getData();
       if (state == null) {
         state = new State(0, 0);
         painter.setData(state);
@@ -86,7 +86,7 @@ public class Joystick extends InstanceFactory {
     }
 
     private void updateState(InstanceState state, int dx, int dy) {
-      var s = (State) state.getData();
+      com.cburch.logisim.std.io.Joystick.State s = (State) state.getData();
       if (dx < -14) dx = -14;
       if (dy < -14) dy = -14;
       if (dx > 14) dx = 14;

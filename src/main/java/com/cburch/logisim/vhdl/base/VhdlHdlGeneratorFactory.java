@@ -28,7 +28,7 @@ public class VhdlHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
   @Override
   public void getGenerationTimeWiresPorts(Netlist theNetlist, AttributeSet attrs) {
     VhdlContent content = ((VhdlEntityAttributes) attrs).getContent();
-    var i = 0;
+    int i = 0;
     for (final var port : content.getPorts()) {
       myPorts.add(port.getType(), port.getName(), port.getWidth().getWidth(), i++);
     }

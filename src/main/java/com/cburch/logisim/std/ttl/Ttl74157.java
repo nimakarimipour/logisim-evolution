@@ -106,7 +106,7 @@ public class Ttl74157 extends AbstractTtlGate {
     final var A = state.getPortValue(mapPort(inA)) == Value.TRUE;
     final var B = state.getPortValue(mapPort(inB)) == Value.TRUE;
 
-    var Y = strobe ? false : (select ? B : A);
+    boolean Y = strobe ? false : (select ? B : A);
     if (this.invertOutput) Y = !Y;
 
     return Y ? Value.TRUE : Value.FALSE;

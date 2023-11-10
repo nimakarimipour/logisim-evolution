@@ -20,8 +20,8 @@ public class ButtonIcon extends BaseIcon {
     final int state = 0;
 
     final var wh = scale(12);
-    var x = scale(state);
-    var y = scale(11) + scale(state);
+    int x = scale(state);
+    int y = scale(11) + scale(state);
     final int[] xpos = {x, x + wh, scale(14), scale(3)};
     final int[] ypos = {y, y, scale(14), scale(14)};
     g2.setColor(Color.LIGHT_GRAY);

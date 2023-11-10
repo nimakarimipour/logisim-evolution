@@ -147,7 +147,7 @@ class SimulateOptions extends OptionsPanel {
     private void loadSimLimit(Integer val) {
       final var value = val;
       final var model = simLimit.getModel();
-      for (var i = 0; i < model.getSize(); i++) {
+      for (int i = 0; i < model.getSize(); i++) {
         final var opt = (Integer) model.getElementAt(i);
         if (opt == value) {
           simLimit.setSelectedItem(opt);

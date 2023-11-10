@@ -224,8 +224,8 @@ public class HexDigit extends InstanceFactory implements DynamicElementProvider 
 
   @Override
   public void propagate(InstanceState state) {
-    var summary = 0;
-    var baseVal = state.getPortValue(HEX);
+    int summary = 0;
+    com.cburch.logisim.data.Value baseVal = state.getPortValue(HEX);
     if (baseVal == null) baseVal = Value.createUnknown(BitWidth.create(4));
     int segs = getSegs((int) baseVal.toLongValue());
     if ((segs & SEG_C_MASK) != 0) summary |= 4; // vertical seg in bottom right

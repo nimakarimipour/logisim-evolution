@@ -77,9 +77,9 @@ class KeyboardData implements InstanceData, Cloneable {
 
   private boolean fits(FontMetrics fm, String str, int w0, int w1, int i0, int i1, int max) {
     if (i0 >= i1) return true;
-    var len = str.length();
+    int len = str.length();
     if (i0 < 0 || i1 > len) return false;
-    var w = fm.stringWidth(str.substring(i0, i1));
+    int w = fm.stringWidth(str.substring(i0, i1));
     if (i0 > 0) w += w0;
     if (i1 < str.length()) w += w1;
     return w <= max;
@@ -162,7 +162,7 @@ class KeyboardData implements InstanceData, Cloneable {
     final var build = new StringBuilder();
     final var buf = buffer;
     final var len = bufferLength;
-    for (var i = 0; i < len; i++) {
+    for (int i = 0; i < len; i++) {
       final var c = buf[i];
       build.append(Character.isISOControl(c) ? ' ' : c);
     }
@@ -191,8 +191,8 @@ class KeyboardData implements InstanceData, Cloneable {
   public void updateDisplay(FontMetrics fm) {
     if (dispValid) return;
     final var pos = cursorPos;
-    var i0 = dispStart;
-    var i1 = dispEnd;
+    int i0 = dispStart;
+    int i1 = dispEnd;
     final var str = toString();
     final var len = str.length();
     final var max = Keyboard.WIDTH - 8 - 4;

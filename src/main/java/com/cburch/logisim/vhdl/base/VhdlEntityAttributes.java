@@ -108,7 +108,7 @@ public class VhdlEntityAttributes extends AbstractAttributeSet {
     value[5] = StdAttr.APPEAR_EVOLUTION;
     attrs[6] = VhdlSimConstants.SIM_NAME_ATTR;
     value[6] = "";
-    for (var i = 0; i < generic.length; i++) {
+    for (int i = 0; i < generic.length; i++) {
       attrs[6 + i] = genericAttr.get(i);
       value[6 + i] = generic[i].getDefaultValue();
     }

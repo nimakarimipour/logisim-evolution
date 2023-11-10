@@ -44,7 +44,7 @@ public class Var implements Iterable<String> {
     s = s.trim();
     final var i = s.indexOf('[');
     final var j = s.lastIndexOf(']');
-    var w = 1;
+    int w = 1;
     if (0 < i && i < j && j == s.length() - 1) {
       final var braces = s.substring(i + 1, j);
       if (!braces.endsWith("..0")) throw new ParserException(S.getter("variableFormat"), i);
@@ -80,7 +80,7 @@ public class Var implements Iterable<String> {
 
     public static Bit parse(String s) throws ParserException {
       s = s.trim();
-      var i = s.indexOf(':');
+      int i = s.indexOf(':');
       if (i > 0) {
         try {
           final var name = s.substring(0, i);

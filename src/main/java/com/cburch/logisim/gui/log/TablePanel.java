@@ -149,9 +149,9 @@ class TablePanel extends LogPanel {
       g.setColor(Color.BLACK);
       g.setFont(HEAD_FONT);
       final var headerMetric = g.getFontMetrics();
-      var x = left;
+      int x = left;
       final var y = top + headerMetric.getAscent() + 1;
-      for (var i = 0; i < columns; i++) {
+      for (int i = 0; i < columns; i++) {
         x = paintHeader(model.getItem(i).getShortName(), x, y, g, headerMetric);
       }
       g.setFont(BODY_FONT);
@@ -235,7 +235,7 @@ class TablePanel extends LogPanel {
     public int getBlockIncrement(int direction) {
       final var curY = getValue();
       final var curHeight = getVisibleAmount();
-      var numCells = curHeight / cellHeight - 1;
+      int numCells = curHeight / cellHeight - 1;
       if (numCells <= 0) numCells = 1;
       return (direction > 0)
           ? curY > 0 ? numCells * cellHeight : numCells * cellHeight + HEADER_SEP

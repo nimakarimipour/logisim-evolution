@@ -25,7 +25,7 @@ public final class XmlUtil {
    * </ul>
    */
   public static DocumentBuilderFactory getHardenedBuilderFactory() {
-    var dbf = DocumentBuilderFactory.newInstance();
+    javax.xml.parsers.DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
     String feature = null;
     try {

@@ -62,7 +62,7 @@ class Connector {
       default -> MAX_ORDERING_TRIES;
     };
     final var stopTime = System.currentTimeMillis() + MAX_SECONDS * 1000;
-    for (var tryNum = 0; tryNum < tries && stopTime - System.currentTimeMillis() > 0; tryNum++) {
+    for (int tryNum = 0; tryNum < tries && stopTime - System.currentTimeMillis() > 0; tryNum++) {
       if (ConnectorThread.isOverrideRequested()) return null;
       final var connects = new ArrayList<>(baseConnects);
       if (tryNum < 2) {
@@ -98,8 +98,8 @@ class Connector {
   }
 
   private static ArrayList<Location> convertToPath(SearchNode last) {
-    var next = last;
-    var prev = last.getPrevious();
+    com.cburch.logisim.tools.move.SearchNode next = last;
+    com.cburch.logisim.tools.move.SearchNode prev = last.getPrevious();
     final var ret = new ArrayList<Location>();
     ret.add(next.getLocation());
     while (prev != null) {
@@ -119,7 +119,7 @@ class Connector {
   private static SearchNode findShortestPath(List<SearchNode> nodes, Set<Location> pathLocs, AvoidanceMap avoid) {
     final var q = new PriorityQueue<>(nodes);
     final var visited = new HashSet<SearchNode>();
-    var iters = 0;
+    int iters = 0;
     while (!q.isEmpty() && iters < MAX_SEARCH_ITERATIONS) {
       iters++;
       final var node = q.remove();
@@ -134,9 +134,9 @@ class Connector {
         continue;
       }
       final var loc = node.getLocation();
-      var dir = node.getDirection();
-      var neighbors = 3;
-      var allowed = avoid.get(loc);
+      com.cburch.logisim.data.Direction dir = node.getDirection();
+      int neighbors = 3;
+      java.lang.Object allowed = avoid.get(loc);
       if (allowed != null && node.isStart() && pathLocs.contains(loc)) {
         allowed = null;
       }
@@ -176,7 +176,7 @@ class Connector {
           // must be 3
           default -> dir.reverse();
         };
-        var nextSearchNode = node.next(oDir, allowed != null);
+        com.cburch.logisim.tools.move.SearchNode nextSearchNode = node.next(oDir, allowed != null);
         if (nextSearchNode != null && !visited.contains(nextSearchNode)) {
           q.add(nextSearchNode);
         }
@@ -195,7 +195,7 @@ class Connector {
     final var cur = conn.getLocation();
     final var dest = cur.translate(dx, dy);
     if (selAvoid.get(cur) == null) {
-      var preferred = conn.getDirection();
+      com.cburch.logisim.data.Direction preferred = conn.getDirection();
       if (preferred == null) {
         preferred = (Math.abs(dx) > Math.abs(dy))
                     ? dx > 0 ? Direction.EAST : Direction.WEST
@@ -209,7 +209,7 @@ class Connector {
     for (final var wire : conn.getWirePath()) {
       for (final var loc : wire) {
         if (selAvoid.get(loc) == null || loc.equals(dest)) {
-          var added = connLocs.add(loc);
+          boolean added = connLocs.add(loc);
           if (added) {
             Direction dir = null;
             if (wire.endsAt(loc)) {
@@ -237,10 +237,10 @@ class Connector {
       ReplacementMap repl,
       Set<Location> unmarkable) {
     final var pathIt = path.iterator();
-    var loc0 = pathIt.next();
+    com.cburch.logisim.data.Location loc0 = pathIt.next();
     if (!loc0.equals(conn.getLocation())) {
-      var pathLoc = conn.getWirePathStart();
-      var found = loc0.equals(pathLoc);
+      com.cburch.logisim.data.Location pathLoc = conn.getWirePathStart();
+      boolean found = loc0.equals(pathLoc);
       for (final var wire : conn.getWirePath()) {
         final var nextLoc = wire.getOtherEnd(pathLoc);
         if (found) { // existing wire will be removed
@@ -279,7 +279,7 @@ class Connector {
       final var conn = it.next();
       final var dest = conn.getLocation().translate(dx, dy);
       if (avoid.get(dest) != null) {
-        var isInPath = false;
+        boolean isInPath = false;
         for (final var wire : pathWires) {
           if (wire.contains(dest)) {
             isInPath = true;
@@ -325,7 +325,7 @@ class Connector {
 
     final var replacements = new ReplacementMap();
     final var unconnected = new ArrayList<ConnectionData>();
-    var totalDistance = 0;
+    int totalDistance = 0;
     for (final var conn : connects) {
       if (ConnectorThread.isOverrideRequested()) return null;
       if (System.currentTimeMillis() - stopTime > 0) {

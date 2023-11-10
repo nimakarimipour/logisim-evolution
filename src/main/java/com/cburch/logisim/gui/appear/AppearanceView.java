@@ -77,7 +77,7 @@ public class AppearanceView {
   }
 
   public AttrTableDrawManager getAttrTableDrawManager(AttrTable table) {
-    var ret = attrTableManager;
+    com.cburch.draw.gui.AttrTableDrawManager ret = attrTableManager;
     if (ret == null) {
       ret = new AttrTableDrawManager(canvas, table, attrs);
       attrTableManager = ret;

@@ -51,7 +51,7 @@ public class ZoomSlider extends JSlider {
     setMinorTickSpacing(10);
     setPaintTicks(true);
     final var labelTable = new Hashtable<Integer, JLabel>();
-    var label = new JLabel(getId(min));
+    javax.swing.JLabel label = new JLabel(getId(min));
     label.setFont(AppPreferences.getScaledFont(label.getFont()));
     labelTable.put(min, label);
     label = new JLabel(getId(midValue));

@@ -112,7 +112,7 @@ public class SplitterFactory extends AbstractComponentFactory {
     final var parms = attrs.getParameters();
     final var xEnd0 = parms.getEnd0X();
     final var yEnd0 = parms.getEnd0Y();
-    var bds = Bounds.create(0, 0, 1, 1);
+    com.cburch.logisim.data.Bounds bds = Bounds.create(0, 0, 1, 1);
     bds = bds.add(xEnd0, yEnd0);
     bds = bds.add(xEnd0 + (fanout - 1) * parms.getEndToEndDeltaX(), yEnd0 + (fanout - 1) * parms.getEndToEndDeltaY());
     return bds;

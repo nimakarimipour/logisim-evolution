@@ -24,8 +24,8 @@ public class LedMatrixIcon extends BaseIcon {
     g2.drawRect(0, 0, scale(16), scale(16));
     final var xint = 2;
     final var yint = 1;
-    for (var i = 0; i < 4; i++)
-      for (var j = 0; j < 4; j++) {
+    for (int i = 0; i < 4; i++)
+      for (int j = 0; j < 4; j++) {
         g2.setColor((i == xint) && (j == yint) ? Color.RED.darker() : Color.GREEN.darker());
         g2.fillOval(scale(2 + i * 3), scale(2 + j * 3), scale(3), scale(3));
       }

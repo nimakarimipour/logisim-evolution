@@ -173,7 +173,7 @@ public final class CanvasModelEvent extends EventObject {
   }
 
   public Collection<? extends CanvasObject> getAffected() {
-    var ret = affected;
+    java.util.Collection<? extends com.cburch.draw.model.CanvasObject> ret = affected;
     if (ret == null) {
       final var newVals = newValues;
       if (newVals != null) {

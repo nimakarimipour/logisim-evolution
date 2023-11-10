@@ -49,8 +49,8 @@ public class ToplevelHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
     tickFrequency = tickClock;
     myCircuit = topLevel;
     myIOComponents = ioComponents;
-    var hasScanningLedArray = false;
-    var hasLedArray = false;
+    boolean hasScanningLedArray = false;
+    boolean hasLedArray = false;
     final var nets = topLevel.getNetList();
     final var ledArrayTypesUsed = new HashMap<String, Boolean>();
     final var ledArrays = new ArrayList<FpgaIoInformationContainer>();
@@ -80,7 +80,7 @@ public class ToplevelHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
     myLedArrays = ledArrays;
     if (nrOfClockTrees > 0) {
       myWires.addWire(TickComponentHdlGeneratorFactory.FPGA_TICK, 1);
-      for (var clockId = 0; clockId < nrOfClockTrees; clockId++)
+      for (int clockId = 0; clockId < nrOfClockTrees; clockId++)
         myWires.addWire(
             String.format("s_%s%d", CLOCK_TREE_NAME, clockId),
             ClockHdlGeneratorFactory.NR_OF_CLOCK_BITS);
@@ -98,7 +98,7 @@ public class ToplevelHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
           String.format("s_%s", HdlGeneratorFactory.LOCAL_OUTPUT_BUBBLE_BUS_NAME),
           nrOfOutputBubbles > 1 ? nrOfOutputBubbles : 0);
     if (nrOfInputPorts > 0) {
-      for (var input = 0; input < nrOfInputPorts; input++) {
+      for (int input = 0; input < nrOfInputPorts; input++) {
         final var inputName =
             String.format(
                 "s_%s",
@@ -112,7 +112,7 @@ public class ToplevelHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
       }
     }
     if (nrOfInOutPorts > 0) {
-      for (var inout = 0; inout < nrOfInOutPorts; inout++) {
+      for (int inout = 0; inout < nrOfInOutPorts; inout++) {
         final var ioName =
             String.format(
                 "s_%s",
@@ -126,7 +126,7 @@ public class ToplevelHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
       }
     }
     if (nrOfOutputPorts > 0) {
-      for (var output = 0; output < nrOfOutputPorts; output++) {
+      for (int output = 0; output < nrOfOutputPorts; output++) {
         final var outputName =
             String.format(
                 "s_%s",
@@ -235,7 +235,7 @@ public class ToplevelHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
     /* now we process the clock tree components */
     if (nrOfClockTrees > 0) {
       contents.empty().addRemarkBlock("The clock tree components are defined here");
-      var index = 0L;
+      long index = 0L;
       final var ticker = new TickComponentHdlGeneratorFactory(fpgaClockFrequency, tickFrequency);
       contents
           .add(
@@ -286,7 +286,7 @@ public class ToplevelHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
           "BUG: Found a component with no pins. Please report this occurance!");
       return wires;
     }
-    for (var i = 0; i < component.getNrOfPins(); i++) {
+    for (int i = 0; i < component.getNrOfPins(); i++) {
       final var preamble = component.isExternalInverted(i) ? "n_" : "";
       final var operator = component.isExternalInverted(i) ? Hdl.notOperator() : "";
       /* the internal mapped signals are handled in the top-level HDL generator */

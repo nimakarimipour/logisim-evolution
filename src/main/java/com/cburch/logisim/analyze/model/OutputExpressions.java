@@ -84,7 +84,7 @@ public class OutputExpressions {
       } else if (type == VariableListEvent.REPLACE) {
         Var oldVar = event.getVariable();
         Var newVar = model.getOutputs().vars.get(event.getIndex());
-        for (var b = 0; b < oldVar.width && b < newVar.width; b++) {
+        for (int b = 0; b < oldVar.width && b < newVar.width; b++) {
           final var oldName = oldVar.bitName(b);
           final var newName = newVar.bitName(b);
           if (outputData.containsKey(oldName)) {
@@ -93,7 +93,7 @@ public class OutputExpressions {
             outputData.put(newName, toMove);
           }
         }
-        for (var b = newVar.width; b < oldVar.width; b++) {
+        for (int b = newVar.width; b < oldVar.width; b++) {
           outputData.remove(oldVar.bitName(b));
         }
       }
@@ -261,7 +261,7 @@ public class OutputExpressions {
 
   private static boolean columnsMatch(Entry[] a, Entry[] b) {
     if (a.length != b.length) return false;
-    for (var i = 0; i < a.length; i++) {
+    for (int i = 0; i < a.length; i++) {
       if (a[i] != b[i]) {
         final var bothDefined =
             (a[i] == Entry.ZERO || a[i] == Entry.ONE) && (b[i] == Entry.ZERO || b[i] == Entry.ONE);
@@ -279,8 +279,8 @@ public class OutputExpressions {
       Arrays.fill(values, Entry.DONT_CARE);
     } else {
       final var assn = new Assignments();
-      for (var i = 0; i < rows; i++) {
-        for (var j = 0; j < cols; j++) {
+      for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
           assn.put(table.getInputHeader(j), TruthTable.isInputSet(i, j, cols));
         }
         values[i] = expr.evaluate(assn) ? Entry.ONE : Entry.ZERO;
@@ -406,7 +406,7 @@ public class OutputExpressions {
 
   private OutputData getOutputData(String output, boolean create) {
     if (output == null) throw new IllegalArgumentException("null output name");
-    var ret = outputData.get(output);
+    com.cburch.logisim.analyze.model.OutputExpressions.OutputData ret = outputData.get(output);
     if (ret == null && create) {
       if (!model.getOutputs().bits.contains(output)) {
         throw new IllegalArgumentException("unrecognized output " + output);
@@ -429,7 +429,7 @@ public class OutputExpressions {
   }
 
   public boolean hasExpressions() {
-    var returnValue = false;
+    boolean returnValue = false;
     for (final var output : outputData.keySet()) {
       final var data = outputData.get(output);
       returnValue |= data.getMinimalImplicants().size() != 0;

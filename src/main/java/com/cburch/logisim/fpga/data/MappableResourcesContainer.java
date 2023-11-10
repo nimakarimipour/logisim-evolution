@@ -39,12 +39,12 @@ public class MappableResourcesContainer {
   public MappableResourcesContainer(BoardInformation CurrentBoard, Circuit circ) {
     currentUsedBoard = CurrentBoard;
     myCircuit = circ;
-    var BoardId = new ArrayList<String>();
+    java.util.ArrayList<java.lang.String> BoardId = new ArrayList<String>();
     BoardId.add(CurrentBoard.getBoardName());
     myIOComponents = new ArrayList<>();
-    for (var io : currentUsedBoard.getAllComponents()) {
+    for (com.cburch.logisim.fpga.data.FpgaIoInformationContainer io : currentUsedBoard.getAllComponents()) {
       try {
-        var clone = (FpgaIoInformationContainer) io.clone();
+        com.cburch.logisim.fpga.data.FpgaIoInformationContainer clone = (FpgaIoInformationContainer) io.clone();
         clone.setMapMode();
         myIOComponents.add(clone);
       } catch (CloneNotSupportedException e) {
@@ -91,20 +91,20 @@ public class MappableResourcesContainer {
   }
 
   public void updateMapableComponents() {
-    var cur = new HashSet<ArrayList<String>>();
+    java.util.HashSet<java.util.ArrayList<java.lang.String>> cur = new HashSet<ArrayList<String>>();
     if (myMappableResources == null) myMappableResources = new HashMap<>();
     else cur.addAll(myMappableResources.keySet());
-    var BoardId = new ArrayList<String>();
+    java.util.ArrayList<java.lang.String> BoardId = new ArrayList<String>();
     BoardId.add(currentUsedBoard.getBoardName());
-    var newMappableResources = myCircuit.getNetList().getMappableResources(BoardId, true);
-    for (var key : newMappableResources.keySet()) {
+    java.util.Map<java.util.ArrayList<java.lang.String>,com.cburch.logisim.fpga.designrulecheck.netlistComponent> newMappableResources = myCircuit.getNetList().getMappableResources(BoardId, true);
+    for (java.util.ArrayList<java.lang.String> key : newMappableResources.keySet()) {
       if (cur.contains(key)) {
-        var comp = myMappableResources.get(key);
+        com.cburch.logisim.fpga.data.MapComponent comp = myMappableResources.get(key);
         if (!comp.equalsType(newMappableResources.get(key))) {
           comp.unmap();
           myMappableResources.put(key, new MapComponent(key, newMappableResources.get(key)));
         } else {
-          var newMap = new MapComponent(key, newMappableResources.get(key));
+          com.cburch.logisim.fpga.data.MapComponent newMap = new MapComponent(key, newMappableResources.get(key));
           newMap.copyMapFrom(comp);
           myMappableResources.put(key, newMap);
         }
@@ -113,14 +113,14 @@ public class MappableResourcesContainer {
         myMappableResources.put(key, new MapComponent(key, newMappableResources.get(key)));
       }
     }
-    for (var key : cur) {
+    for (java.util.ArrayList<java.lang.String> key : cur) {
       myMappableResources.get(key).unmap();
       myMappableResources.remove(key);
     }
   }
 
   public void tryMap(String mapKey, CircuitMapInfo cmap) {
-    var key = getHierarchyName(mapKey);
+    java.util.ArrayList<java.lang.String> key = getHierarchyName(mapKey);
     if (!myMappableResources.containsKey(key)) return;
     if (mapKey.contains("#")) myMappableResources.get(key).tryMap(mapKey, cmap, myIOComponents);
     else myMappableResources.get(key).tryMap(cmap, myIOComponents);
@@ -131,25 +131,25 @@ public class MappableResourcesContainer {
   }
 
   public Map<String, CircuitMapInfo> getCircuitMap() {
-    var id = 0;
-    var result = new HashMap<String, CircuitMapInfo>();
-    for (var key : myMappableResources.keySet()) {
+    int id = 0;
+    java.util.HashMap<java.lang.String,com.cburch.logisim.circuit.CircuitMapInfo> result = new HashMap<String, CircuitMapInfo>();
+    for (java.util.ArrayList<java.lang.String> key : myMappableResources.keySet()) {
       result.put(Integer.toString(id++), new CircuitMapInfo(myMappableResources.get(key)));
     }
     return result;
   }
 
   public void unMapAll() {
-    for (var key : myMappableResources.keySet()) myMappableResources.get(key).unmap();
+    for (java.util.ArrayList<java.lang.String> key : myMappableResources.keySet()) myMappableResources.get(key).unmap();
   }
 
   private ArrayList<String> getHierarchyName(String mapKey) {
     final var split1 = mapKey.split(" ");
     final var hier = split1[split1.length - 1];
     final var split2 = hier.split("#");
-    var result = new ArrayList<String>();
+    java.util.ArrayList<java.lang.String> result = new ArrayList<String>();
     result.add(currentUsedBoard.getBoardName());
-    for (var key : split2[0].split("/")) if (!key.isEmpty()) result.add(key);
+    for (java.lang.String key : split2[0].split("/")) if (!key.isEmpty()) result.add(key);
     return result;
   }
 
@@ -158,10 +158,10 @@ public class MappableResourcesContainer {
   }
 
   public boolean isCompletelyMapped() {
-    var result = true;
-    for (var key : myMappableResources.keySet()) {
-      var map = myMappableResources.get(key);
-      for (var i = 0; i < map.getNrOfPins(); i++) result &= map.isMapped(i);
+    boolean result = true;
+    for (java.util.ArrayList<java.lang.String> key : myMappableResources.keySet()) {
+      com.cburch.logisim.fpga.data.MapComponent map = myMappableResources.get(key);
+      for (int i = 0; i < map.getNrOfPins(); i++) result &= map.isMapped(i);
     }
     return result;
   }
@@ -170,7 +170,7 @@ public class MappableResourcesContainer {
     final var result = new ArrayList<String>();
     for (final var key : myMappableResources.keySet()) {
       final var map = myMappableResources.get(key);
-      for (var i = 0; i < map.getNrOfPins(); i++) {
+      for (int i = 0; i < map.getNrOfPins(); i++) {
         if (!map.isIo(i) || map.isInternalMapped(i)) continue;
         if (map.isBoardMapped(i)) {
           final var sb = new StringBuilder();
@@ -187,7 +187,7 @@ public class MappableResourcesContainer {
     final var result = new ArrayList<String>();
     for (final var key : myMappableResources.keySet()) {
       final var map = myMappableResources.get(key);
-      for (var i = 0; i < map.getNrOfPins(); i++) {
+      for (int i = 0; i < map.getNrOfPins(); i++) {
         if (!map.isInput(i) || map.isInternalMapped(i)) continue;
         if (map.isBoardMapped(i)) {
           final var sb = new StringBuilder();
@@ -204,7 +204,7 @@ public class MappableResourcesContainer {
     final var result = new ArrayList<String>();
     for (final var key : myMappableResources.keySet()) {
       final var map = myMappableResources.get(key);
-      for (var i = 0; i < map.getNrOfPins(); i++) {
+      for (int i = 0; i < map.getNrOfPins(); i++) {
         if (!map.isOutput(i) || map.isInternalMapped(i)) continue;
         if (map.isBoardMapped(i)) {
           final var sb = new StringBuilder();

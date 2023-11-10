@@ -97,7 +97,7 @@ public abstract class DynamicElement extends AbstractCanvasObject {
       if (!s.startsWith("/")) throw new IllegalArgumentException("Bad path: " + s);
       final var parts = s.substring(1).split("(?<!\\\\)/");
       final var elt = new InstanceComponent[parts.length];
-      for (var i = 0; i < parts.length; i++) {
+      for (int i = 0; i < parts.length; i++) {
         final var ss = parts[i];
         final var p = ss.lastIndexOf("(");
         final var c = ss.lastIndexOf(",");
@@ -108,7 +108,7 @@ public abstract class DynamicElement extends AbstractCanvasObject {
         final var y = Integer.parseInt(ss.substring(c + 1, e).trim());
         final var loc = Location.create(x, y, false);
         final var name = unescape(ss.substring(0, p));
-        var circ = circuit;
+        com.cburch.logisim.circuit.Circuit circ = circuit;
         if (i > 0) circ = ((SubcircuitFactory) elt[i - 1].getFactory()).getSubcircuit();
         final var ic = find(circ, loc, name);
         if (ic == null) throw new IllegalArgumentException("Missing component: " + ss);
@@ -208,8 +208,8 @@ public abstract class DynamicElement extends AbstractCanvasObject {
   }
 
   protected Object getData(CircuitState state) {
-    var obj = state.getData(path.elt[0]);
-    for (var i = 1; i < path.elt.length && obj != null; i++) {
+    java.lang.Object obj = state.getData(path.elt[0]);
+    for (int i = 1; i < path.elt.length && obj != null; i++) {
       if (!(obj instanceof CircuitState)) {
         throw new IllegalStateException(
             "Expecting CircuitState for path["
@@ -226,9 +226,9 @@ public abstract class DynamicElement extends AbstractCanvasObject {
   }
 
   protected InstanceComponent getComponent(CircuitState state) {
-    var obj = state.getData(path.elt[0]);
-    var comp = path.elt[0];
-    for (var i = 1; i < path.elt.length && obj != null; i++) {
+    java.lang.Object obj = state.getData(path.elt[0]);
+    com.cburch.logisim.instance.InstanceComponent comp = path.elt[0];
+    for (int i = 1; i < path.elt.length && obj != null; i++) {
       if (!(obj instanceof CircuitState)) {
         throw new IllegalStateException(
             "Expecting CircuitState for path["
@@ -308,10 +308,10 @@ public abstract class DynamicElement extends AbstractCanvasObject {
     final var y = bounds.getY();
     final var w = bounds.getWidth();
     final var h = bounds.getHeight();
-    var vAlign = GraphicsUtil.V_CENTER;
-    var hAlign = GraphicsUtil.H_CENTER;
-    var pX = x + w / 2;
-    var pY = y + h / 2;
+    int vAlign = GraphicsUtil.V_CENTER;
+    int hAlign = GraphicsUtil.H_CENTER;
+    int pX = x + w / 2;
+    int pY = y + h / 2;
     if (labelLoc == LABEL_TOP) {
       pY = y - 1;
       vAlign = GraphicsUtil.V_BOTTOM;

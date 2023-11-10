@@ -33,7 +33,7 @@ public class LedBarHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
     final var nrOfSegments =
         componentInfo.getComponent().getAttributeSet().getValue(LedBar.ATTR_MATRIX_COLS).getWidth();
     final var wires = new HashMap<String, String>();
-    for (var pin = 0; pin < nrOfSegments; pin++) {
+    for (int pin = 0; pin < nrOfSegments; pin++) {
       final var destPin =
           LineBuffer.format(
               "{{1}}{{<}}{{2}}{{>}}",

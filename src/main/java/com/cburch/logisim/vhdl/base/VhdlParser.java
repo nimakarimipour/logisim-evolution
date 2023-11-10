@@ -266,7 +266,7 @@ public class VhdlParser {
     final var isOneBit = type.equalsIgnoreCase("std_logic");
     final var isBitVector = type.equalsIgnoreCase("std_logic_vector");
     if (!isOneBit && !isBitVector) throw new IllegalVhdlContentException(S.get("portTypeException", type));
-    var width = 1;
+    int width = 1;
     if (isBitVector) {
       if (!input.next(RANGE)) throw new IllegalVhdlContentException(S.get("portDeclarationException"));
       final var upper = Integer.parseInt(input.match().group(1));

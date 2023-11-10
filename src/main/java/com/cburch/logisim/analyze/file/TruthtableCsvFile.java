@@ -35,28 +35,28 @@ public class TruthtableCsvFile {
     try (PrintStream out = new PrintStream(file)) {
       final var tt = model.getTruthTable();
       tt.compactVisibleRows();
-      for (var i = 0; i < inputs.vars.size(); i++) {
+      for (int i = 0; i < inputs.vars.size(); i++) {
         final var cur = inputs.vars.get(i);
         final var name = cur.width == 1 ? cur.name : cur.name + "[" + (cur.width - 1) + "..0]";
         out.print(DEFAULT_QUOTE + name + DEFAULT_QUOTE + DEFAULT_SEPARATOR);
-        for (var j = 1; j < cur.width; j++) out.print(DEFAULT_SEPARATOR);
+        for (int j = 1; j < cur.width; j++) out.print(DEFAULT_SEPARATOR);
       }
       out.print(DEFAULT_QUOTE + "|" + DEFAULT_QUOTE);
-      for (var i = 0; i < outputs.vars.size(); i++) {
+      for (int i = 0; i < outputs.vars.size(); i++) {
         out.print(DEFAULT_SEPARATOR);
         final var cur = outputs.vars.get(i);
         final var name = cur.width == 1 ? cur.name : cur.name + "[" + (cur.width - 1) + "..0]";
         out.print(DEFAULT_QUOTE + name + DEFAULT_QUOTE);
-        for (var j = 1; j < cur.width; j++) out.print(DEFAULT_SEPARATOR);
+        for (int j = 1; j < cur.width; j++) out.print(DEFAULT_SEPARATOR);
       }
       out.println();
-      for (var row = 0; row < tt.getVisibleRowCount(); row++) {
-        for (var i = 0; i < inputs.bits.size(); i++) {
+      for (int row = 0; row < tt.getVisibleRowCount(); row++) {
+        for (int i = 0; i < inputs.bits.size(); i++) {
           final var entry = tt.getVisibleInputEntry(row, i);
           out.print(entry.getDescription() + DEFAULT_SEPARATOR);
         }
         out.print(DEFAULT_QUOTE + "|" + DEFAULT_QUOTE);
-        for (var i = 0; i < outputs.bits.size(); i++) {
+        for (int i = 0; i < outputs.bits.size(); i++) {
           out.print(DEFAULT_SEPARATOR);
           final var entry = tt.getVisibleOutputEntry(row, i);
           out.print(entry.getDescription());

@@ -56,8 +56,8 @@ public class Rectangle extends Rectangular {
     final var w = getWidth();
     final var h = getHeight();
     final var u = rand.nextInt(2 * w + 2 * h);
-    var x = getX();
-    var y = getY();
+    int x = getX();
+    int y = getY();
     if (u < w) {
       x += u;
     } else if (u < 2 * w) {

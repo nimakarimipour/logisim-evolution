@@ -59,7 +59,7 @@ public class ReplacementMap {
     for (final var e : next.map.entrySet()) {
       final var b = e.getKey();
       final var cs = e.getValue(); // what b is replaced by
-      var as = this.inverse.remove(b); // what was replaced
+      java.util.HashSet<com.cburch.logisim.comp.Component> as = this.inverse.remove(b); // what was replaced
       // to get b
       if (as == null) { // b pre-existed replacements so
         as = new HashSet<>(3); // we say it replaces itself.
@@ -73,7 +73,7 @@ public class ReplacementMap {
       }
 
       for (final var c : cs) {
-        var cSrc = this.inverse.get(c); // should always
+        java.util.HashSet<com.cburch.logisim.comp.Component> cSrc = this.inverse.get(c); // should always
         // be null
         if (cSrc == null) {
           cSrc = new HashSet<>(as.size());
@@ -124,7 +124,7 @@ public class ReplacementMap {
   }
 
   public void print(PrintStream out) {
-    var found = false;
+    boolean found = false;
     for (final var comp : getRemovals()) {
       if (!found) out.println("  removals:");
       found = true;

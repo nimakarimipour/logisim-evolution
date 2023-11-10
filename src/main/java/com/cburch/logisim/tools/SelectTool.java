@@ -169,8 +169,8 @@ public class SelectTool extends Tool {
   @Override
   public void draw(Canvas canvas, ComponentDrawContext context) {
     final var proj = canvas.getProject();
-    var dx = curDx;
-    var dy = curDy;
+    int dx = curDx;
+    int dy = curDy;
     if (state == MOVING) {
       proj.getSelection().drawGhostsShifted(context, dx, dy);
 
@@ -295,10 +295,10 @@ public class SelectTool extends Tool {
   }
 
   private void handleMoveDrag(Canvas canvas, int dx, int dy, int modsEx) {
-    var connect = shouldConnect(modsEx);
+    boolean connect = shouldConnect(modsEx);
     drawConnections = connect;
     if (connect) {
-      var gesture = moveGesture;
+      com.cburch.logisim.tools.move.MoveGesture gesture = moveGesture;
       if (gesture == null) {
         gesture =
             new MoveGesture(
@@ -308,7 +308,7 @@ public class SelectTool extends Tool {
         moveGesture = gesture;
       }
       if (dx != 0 || dy != 0) {
-        var queued = gesture.enqueueRequest(dx, dy);
+        boolean queued = gesture.enqueueRequest(dx, dy);
         if (queued) {
           canvas.setErrorMessage(new ComputingMessage(dx, dy), COLOR_COMPUTING);
           // maybe CPU scheduled led the request to be satisfied
@@ -340,7 +340,7 @@ public class SelectTool extends Tool {
     } else {
       final var comps = AutoLabel.sort(canvas.getProject().getSelection().getComponents());
       final var keybEvent = e.getKeyCode();
-      var keyTaken = false;
+      boolean keyTaken = false;
       for (final var comp : comps) {
         final var act = new SetAttributeAction(canvas.getCircuit(), S.getter("changeComponentAttributesAction"));
         keyTaken |= GateKeyboardModifier.tookKeyboardStrokes(keybEvent, comp, comp.getAttributeSet(), canvas, act, true);
@@ -487,7 +487,7 @@ public class SelectTool extends Tool {
           drawConnections = false;
           ReplacementMap repl;
           if (connect) {
-            var gesture = moveGesture;
+            com.cburch.logisim.tools.move.MoveGesture gesture = moveGesture;
             if (gesture == null) {
               gesture =
                   new MoveGesture(
@@ -554,7 +554,7 @@ public class SelectTool extends Tool {
   }
 
   private void processKeyEvent(Canvas canvas, KeyEvent e, int type) {
-    var handlers = keyHandlers;
+    java.util.HashMap<com.cburch.logisim.comp.Component,com.cburch.logisim.tools.key.KeyConfigurator> handlers = keyHandlers;
     if (handlers == null) {
       handlers = new HashMap<>();
       final var sel = canvas.getSelection();
@@ -571,7 +571,7 @@ public class SelectTool extends Tool {
     }
 
     if (!handlers.isEmpty()) {
-      var consume = false;
+      boolean consume = false;
       ArrayList<KeyConfigurationResult> results;
       results = new ArrayList<>();
       for (final var entry : handlers.entrySet()) {

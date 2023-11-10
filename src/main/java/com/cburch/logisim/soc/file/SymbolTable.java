@@ -43,7 +43,7 @@ public class SymbolTable {
   private String name;
 
   public SymbolTable(byte[] buffer, boolean isLittleEndian, int offset) {
-    var index = offset;
+    int index = offset;
     stName = ElfHeader.getIntValue(buffer, index, 4, isLittleEndian);
     index += 4;
     stValue = ElfHeader.getIntValue(buffer, index, 4, isLittleEndian);

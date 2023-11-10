@@ -44,10 +44,10 @@ public class BinToBcdHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
       case 3 -> 7;
       default -> 11;
     };
-    for (var signal = 0; signal < nrOfSignals; signal++)
+    for (int signal = 0; signal < nrOfSignals; signal++)
       myWires.addWire(String.format("s_level%d", signal), nrOfSignalBits);
     myPorts.add(Port.INPUT, "binValue", NR_OF_BITS_ID, 0);
-    for (var i = 1; i <= nrOfPorts; i++)
+    for (int i = 1; i <= nrOfPorts; i++)
       myPorts.add(Port.OUTPUT, String.format("bcd%d", (int) (Math.pow(10, i - 1))), 4, i);
   }
 

@@ -23,11 +23,11 @@ public final class PolyUtil {
     final var ret = new ClosestResult();
     ret.dist = Double.MAX_VALUE;
     if (hs.length > 0) {
-      var h0 = hs[0];
-      var x0 = h0.getX();
-      var y0 = h0.getY();
+      com.cburch.draw.model.Handle h0 = hs[0];
+      int x0 = h0.getX();
+      int y0 = h0.getY();
       final var stop = closed ? hs.length : (hs.length - 1);
-      for (var i = 0; i < stop; i++) {
+      for (int i = 0; i < stop; i++) {
         final var h1 = hs[(i + 1) % hs.length];
         final var x1 = h1.getX();
         final var y1 = h1.getY();

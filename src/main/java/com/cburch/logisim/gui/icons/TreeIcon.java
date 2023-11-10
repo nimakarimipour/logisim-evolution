@@ -37,9 +37,9 @@ public class TreeIcon extends BaseIcon {
   @Override
   protected void paintIcon(Graphics2D g2) {
     g2.setColor(Color.yellow.darker().darker());
-    var path = new GeneralPath();
+    java.awt.geom.GeneralPath path = new GeneralPath();
     path.moveTo(AppPreferences.getScaled(backsheet[0]), AppPreferences.getScaled(backsheet[1]));
-    for (var i = 2; i < backsheet.length; i += 2)
+    for (int i = 2; i < backsheet.length; i += 2)
       path.lineTo(
           AppPreferences.getScaled(backsheet[i]), AppPreferences.getScaled(backsheet[i + 1]));
     path.closePath();
@@ -72,7 +72,7 @@ public class TreeIcon extends BaseIcon {
     path = new GeneralPath();
     final var frontSheet = closed ? frontsheetClosed : frontsheetOpen;
     path.moveTo(AppPreferences.getScaled(frontSheet[0]), AppPreferences.getScaled(frontSheet[1]));
-    for (var i = 2; i < frontSheet.length; i += 2)
+    for (int i = 2; i < frontSheet.length; i += 2)
       path.lineTo(
           AppPreferences.getScaled(frontSheet[i]), AppPreferences.getScaled(frontSheet[i + 1]));
     path.closePath();

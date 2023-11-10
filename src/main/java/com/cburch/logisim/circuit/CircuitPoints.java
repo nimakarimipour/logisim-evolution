@@ -56,7 +56,7 @@ class CircuitPoints {
   }
 
   private void addSub(Location loc, Component comp, EndData endData) {
-    var locData = map.get(loc);
+    com.cburch.logisim.circuit.CircuitPoints.LocationData locData = map.get(loc);
     if (locData == null) {
       locData = new LocationData();
       map.put(loc, locData);
@@ -69,7 +69,7 @@ class CircuitPoints {
   private void computeIncompatibilityData(Location loc, LocationData locData) {
     WidthIncompatibilityData error = null;
     if (locData != null) {
-      var width = BitWidth.UNKNOWN;
+      com.cburch.logisim.data.BitWidth width = BitWidth.UNKNOWN;
       for (final var endData : locData.ends) {
         if (endData != null) {
           final var endWidth = endData.getWidth();
@@ -101,7 +101,7 @@ class CircuitPoints {
     // first see how many elements we have; we can handle some simple
     // cases without creating any new lists
     final var components = locData.components;
-    var retSize = 0;
+    int retSize = 0;
     Component retValue = null;
     for (final var comp : components) {
       if ((comp instanceof Wire) == isWire) {
@@ -115,7 +115,7 @@ class CircuitPoints {
 
     // otherwise we have to create our own list
     final var ret = new Component[retSize];
-    var retPos = 0;
+    int retPos = 0;
     for (final var comp : components) {
       if ((comp instanceof Wire) == isWire) {
         ret[retPos] = comp;

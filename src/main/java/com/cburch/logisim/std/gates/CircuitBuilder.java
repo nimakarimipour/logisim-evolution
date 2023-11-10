@@ -67,7 +67,7 @@ public class CircuitBuilder {
     }
 
     public int createInvertedLocs(int spineX) {
-      var cur = spineX + SPINE_DISTANCE;
+      int cur = spineX + SPINE_DISTANCE;
       addInput("0", new SingleInput(cur)); // Constant zero line
       cur += 20;
       addInput("1", new SingleInput(cur)); // Constant one line
@@ -198,8 +198,8 @@ public class CircuitBuilder {
     result.clear();
 
     final var layouts = new Layout[model.getOutputs().bits.size()];
-    var maxWidth = 0;
-    for (var i = 0; i < layouts.length; i++) {
+    int maxWidth = 0;
+    for (int i = 0; i < layouts.length; i++) {
       final var output = model.getOutputs().bits.get(i);
       final var expr = model.getOutputExpressions().getExpression(output);
       final var det = CircuitDetermination.create(expr);
@@ -218,9 +218,9 @@ public class CircuitBuilder {
     final var outputData = new InputData();
     outputData.startY = inputData.startY;
     final var x = inputData.getStartX();
-    var y = inputData.getStartY() + inputData.getInverterHeight();
+    int y = inputData.getStartY() + inputData.getInverterHeight();
     final var outputX = x + maxWidth + 20;
-    for (var i = 0; i < layouts.length; i++) {
+    for (int i = 0; i < layouts.length; i++) {
       final var outputName = model.getOutputs().bits.get(i);
       final var layout = layouts[i];
       Location output;
@@ -249,9 +249,9 @@ public class CircuitBuilder {
   private static InputData computeInputData(AnalyzerModel model) {
     final var ret = new InputData();
     final var inputs = model.getInputs();
-    var nameLength = 1;
-    var busLength = 1;
-    var nrOfBusses = 0;
+    int nameLength = 1;
+    int busLength = 1;
+    int nrOfBusses = 0;
     for (int i = 0; i < inputs.vars.size(); i++) {
       if (inputs.vars.get(i).name.length() > nameLength)
         nameLength = inputs.vars.get(i).name.length();
@@ -331,13 +331,13 @@ public class CircuitBuilder {
 
         // determine layout's width
         final var bds = factory.getOffsetBounds(attrs);
-        var betweenWidth = 40;
+        int betweenWidth = 40;
         if (sub[0].width == 0) betweenWidth = 0;
         final var width = sub[0].width + betweenWidth + bds.getWidth();
 
         // determine outputY and layout's height.
-        var outputY = sub[0].y + sub[0].outputY;
-        var height = sub[0].height;
+        int outputY = sub[0].y + sub[0].outputY;
+        int height = sub[0].height;
         final var minOutputY = roundUp(-bds.getY());
         if (minOutputY > outputY) {
           // we have to shift everything down because otherwise
@@ -356,9 +356,9 @@ public class CircuitBuilder {
     }
 
     final var sub = new Layout[inputs.size()];
-    var subWidth = 0; // maximum width of sublayouts
-    var subHeight = 0; // total height of sublayouts
-    for (var i = 0; i < sub.length; i++) {
+    int subWidth = 0; // maximum width of sublayouts
+    int subHeight = 0; // total height of sublayouts
+    for (int i = 0; i < sub.length; i++) {
       sub[i] = layoutGatesSub(inputs.get(i));
       if (sub.length % 2 == 0
           && i == (sub.length + 1) / 2
@@ -386,7 +386,7 @@ public class CircuitBuilder {
 
     // determine layout's width
     final var bds = factory.getOffsetBounds(attrs);
-    var betweenWidth = 40 + 10 * (sub.length / 2 - 1);
+    int betweenWidth = 40 + 10 * (sub.length / 2 - 1);
     if (sub.length == 1) betweenWidth = 20;
     if (subWidth == 0) betweenWidth = 0;
     final var width = subWidth + betweenWidth + bds.getWidth();
@@ -485,13 +485,13 @@ public class CircuitBuilder {
       }
     }
 
-    for (var i = 0; i < layout.subLayouts.length; i++) {
+    for (int i = 0; i < layout.subLayouts.length; i++) {
       final var sub = layout.subLayouts[i];
 
       final var inputIndex = i + 1;
       Location subDest = parent.getEnd(inputIndex).getLocation();
 
-      var subOutputY = y + sub.y + sub.outputY;
+      int subOutputY = y + sub.y + sub.outputY;
       if (sub.inputName != null) {
         final var destY = subDest.getY();
         if (i == 0 && destY < subOutputY
@@ -533,7 +533,7 @@ public class CircuitBuilder {
   }
 
   private static void placeInputInverters(CircuitMutation result, InputData inputData, boolean useNands) {
-    var invPosY = inputData.getStartY() + GATE_HEIGHT / 2;
+    int invPosY = inputData.getStartY() + GATE_HEIGHT / 2;
     for (int i = 0; i < inputData.getNrOfInputs(); i++) {
       final var inputName = inputData.getInputName(i);
       if (inputData.hasInvertedConnections(inputName)) {
@@ -541,11 +541,11 @@ public class CircuitBuilder {
           final var fact = NandGate.FACTORY;
           final var attrs = fact.createAttributeSet();
           attrs.setValue(GateAttributes.ATTR_SIZE, GateAttributes.SIZE_NARROW);
-          var ipLoc1 = Location.create(inputData.getSpineX("1", false), invPosY - 10, true);
+          com.cburch.logisim.data.Location ipLoc1 = Location.create(inputData.getSpineX("1", false), invPosY - 10, true);
           inputData.registerConnection("1", ipLoc1, false);
           final var Ploc = Location.create(inputData.getInverterXLoc(), invPosY, true);
           result.add(fact.createComponent(Ploc, attrs));
-          var ipLoc2 = Location.create(inputData.getInverterXLoc() - NAND_WIDTH, invPosY - 10, true);
+          com.cburch.logisim.data.Location ipLoc2 = Location.create(inputData.getInverterXLoc() - NAND_WIDTH, invPosY - 10, true);
           result.add(Wire.create(ipLoc1, ipLoc2));
           ipLoc1 = Location.create(inputData.getSpineX(inputName, false), invPosY + 10, true);
           ipLoc2 = Location.create(inputData.getInverterXLoc() - NAND_WIDTH, invPosY + 10, true);
@@ -622,7 +622,7 @@ public class CircuitBuilder {
 
         // determine point where we can intersect with spine
         int spineX = singleInput.spineX;
-        var spineLoc = Location.create(spineX, curY, true);
+        com.cburch.logisim.data.Location spineLoc = Location.create(spineX, curY, true);
         if (!singleInput.ys.isEmpty()) {
           // search for a Y that won't intersect with others
           // (we needn't bother if the pin doesn't connect
@@ -657,8 +657,8 @@ public class CircuitBuilder {
         /* create the pin */
         placeInput(result, ploc, name, inp.width);
         /* determine the position of the splitter */
-        var msbName = inputData.getInputName(idx);
-        var singleInput = inputData.getInputLocs(msbName, false);
+        java.lang.String msbName = inputData.getInputName(idx);
+        com.cburch.logisim.std.gates.CircuitBuilder.SingleInput singleInput = inputData.getInputLocs(msbName, false);
         int spineX = singleInput.spineX;
         final var sloc = Location.create(spineX - 10, busY - SPLITTER_HEIGHT, true);
         placeSplitter(result, sloc, inp.width, true);
@@ -693,7 +693,7 @@ public class CircuitBuilder {
 
   private static void createSpine(CircuitMutation result, List<Location> spine, Comparator<Location> compareYs) {
     spine.sort(compareYs);
-    var prev = spine.get(0);
+    com.cburch.logisim.data.Location prev = spine.get(0);
     for (int k = 1, n = spine.size(); k < n; k++) {
       final var cur = spine.get(k);
       if (!cur.equals(prev)) {

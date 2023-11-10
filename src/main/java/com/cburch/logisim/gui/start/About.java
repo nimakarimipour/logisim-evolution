@@ -59,7 +59,7 @@ public class About {
       setLayout(null);
 
       final var prefWidth = PANEL_WIDTH + 2 * PADDING;
-      var prefHeight = LOGO_HEIGHT + 2 * PADDING;
+      int prefHeight = LOGO_HEIGHT + 2 * PADDING;
       if (includeCredits) {
         prefHeight += SCROLLER_HEIGHT;
       }

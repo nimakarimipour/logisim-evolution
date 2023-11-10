@@ -62,7 +62,7 @@ public class ClockTreeFactory {
   }
 
   public int getClockSourceId(List<String> hierarchy, Net selectedNet, byte selectedNetBitIndex) {
-    for (var i = 0; i < sources.getNrofSources(); i++) {
+    for (int i = 0; i < sources.getNrofSources(); i++) {
       for (final var ThisClockNet : sourceTrees) {
         if (ThisClockNet.equals(hierarchy, i)) {
           /*

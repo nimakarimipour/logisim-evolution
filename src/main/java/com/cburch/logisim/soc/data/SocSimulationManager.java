@@ -175,7 +175,7 @@ public class SocSimulationManager implements SocBusMasterInterface {
   }
 
   public int nrOfSocBusses() {
-    var result = 0;
+    int result = 0;
     for (final var s : socBusses.keySet()) {
       if (socBusses.get(s).getComponent() != null) result++;
     }

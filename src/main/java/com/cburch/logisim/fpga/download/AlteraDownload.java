@@ -156,7 +156,7 @@ public class AlteraDownload implements VendorDownload {
   }
 
   private ProcessBuilder stage2SprBit() {
-    var command = new ArrayList<String>();
+    java.util.ArrayList<java.lang.String> command = new ArrayList<String>();
     command.add(alteraVendor.getBinaryPath(0));
     command.add("--flow");
     command.add("compile");
@@ -168,7 +168,7 @@ public class AlteraDownload implements VendorDownload {
 
   @Override
   public boolean createDownloadScripts() {
-    var scriptFile = FileWriter.getFilePointer(scriptPath, alteraTclFile);
+    java.io.File scriptFile = FileWriter.getFilePointer(scriptPath, alteraTclFile);
     if (scriptFile == null) {
       scriptFile = new File(scriptPath + alteraTclFile);
       return scriptFile.exists();
@@ -212,10 +212,10 @@ public class AlteraDownload implements VendorDownload {
                 # Include all entities and gates
 
             """);
-    for (var entity : entities) {
+    for (java.lang.String entity : entities) {
       contents.add("    set_global_assignment -name {{fileType}} \"{{1}}\"", entity);
     }
-    for (var architecture : architectures) {
+    for (java.lang.String architecture : architectures) {
       contents.add("    set_global_assignment -name {{fileType}} \"{{1}}\"", architecture);
     }
     contents.add("");
@@ -244,7 +244,7 @@ public class AlteraDownload implements VendorDownload {
     for (final var key : mapInfo.getMappableResources().keySet()) {
       final var map = mapInfo.getMappableResources().get(key);
 
-      for (var i = 0; i < map.getNrOfPins(); i++) {
+      for (int i = 0; i < map.getNrOfPins(); i++) {
         if (map.isMapped(i) && !map.isOpenMapped(i) && !map.isConstantMapped(i) && !map.isInternalMapped(i)) {
           final var pairs = new LineBuffer.Pairs()
                   .pair("pinLoc", map.getPinLocation(i))
@@ -287,12 +287,12 @@ public class AlteraDownload implements VendorDownload {
 
   @Override
   public boolean isBoardConnected() {
-    var command = new ArrayList<String>();
+    java.util.ArrayList<java.lang.String> command = new ArrayList<String>();
     command.add(alteraVendor.getBinaryPath(1));
     command.add("--list");
     final var detect = new ProcessBuilder(command);
     detect.directory(new File(sandboxPath));
-    var response = new ArrayList<String>();
+    java.util.ArrayList<java.lang.String> response = new ArrayList<String>();
     try {
       Reporter.report.print("");
       Reporter.report.print("===");
@@ -302,13 +302,13 @@ public class AlteraDownload implements VendorDownload {
     } catch (IOException | InterruptedException e) {
       return false;
     }
-    var devices = getDevices(response);
+    java.util.List<java.lang.String> devices = getDevices(response);
     if (devices == null) return false;
     if (devices.size() == 1) {
       cablename = devices.get(0);
       return true;
     }
-    var selection = Download.chooseBoard(devices);
+    java.lang.String selection = Download.chooseBoard(devices);
     if (selection == null) return false;
     cablename = selection;
     return true;
@@ -316,8 +316,8 @@ public class AlteraDownload implements VendorDownload {
 
   private List<String> getDevices(ArrayList<String> lines) {
     final var dev = new ArrayList<String>();
-    for (var line : lines) {
-      var n = dev.size() + 1;
+    for (java.lang.String line : lines) {
+      int n = dev.size() + 1;
       if (!line.matches("^" + n + "\\) .*")) continue;
       line = line.replaceAll("^" + n + "\\) ", "");
       dev.add(line.trim());
@@ -439,7 +439,7 @@ public class AlteraDownload implements VendorDownload {
     Reporter.report.print("==>");
     Reporter.report.print("==> " + S.get("AlteraJicFile"));
     Reporter.report.print("==>");
-    var command = new ArrayList<String>();
+    java.util.ArrayList<java.lang.String> command = new ArrayList<String>();
     command.add(alteraVendor.getBinaryPath(3));
     command.add("-c");
     command.add((scriptPath + AlteraCofFile).replace(projectPath, "../"));

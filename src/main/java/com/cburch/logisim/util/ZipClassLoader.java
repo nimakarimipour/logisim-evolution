@@ -36,7 +36,7 @@ public class ZipClassLoader extends ClassLoader {
 
     @SuppressWarnings("unused")
     void ensureDone() {
-      var aborted = false;
+      boolean aborted = false;
       synchronized (this) {
         if (!responseSent) {
           aborted = true;
@@ -247,7 +247,7 @@ public class ZipClassLoader extends ClassLoader {
   @SuppressWarnings("unused")
   @Override
   public Class<?> findClass(String className) throws ClassNotFoundException {
-    var found = false;
+    boolean found = false;
     Object result = null;
 
     // check whether we have loaded this class before

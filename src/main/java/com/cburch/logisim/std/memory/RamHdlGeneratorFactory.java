@@ -55,7 +55,7 @@ public class RamHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
     if (byteEnables) {
       myWires
           .addRegister("s_byteEnableReg", nrBePorts);
-      for (var idx = 0; idx < nrBePorts; idx++) {
+      for (int idx = 0; idx < nrBePorts; idx++) {
         myWires
             .addWire(String.format("s_byteEnable%d", idx), 1)
             .addWire(String.format("s_we%d", idx), 1);
@@ -63,7 +63,7 @@ public class RamHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
             .add(Port.INPUT, String.format("byteEnable%d", idx), 1, byteEnableOffset + nrBePorts - idx - 1);
       }
       myPorts.add(Port.INPUT, "oe", 1, RamAppearance.getOEIndex(0, attrs));
-      var nrOfMems = nrBePorts;
+      int nrOfMems = nrBePorts;
       if (truncated) {
         myTypedWires
             .addArray(RestArrayId, RestArrayStr, nrOfBits % 8, ramEntries)
@@ -72,7 +72,7 @@ public class RamHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
       }
       myTypedWires
           .addArray(ByteArrayId, ByteArrayStr, 8, ramEntries);
-      for (var mem = 0; mem < nrOfMems; mem++)
+      for (int mem = 0; mem < nrOfMems; mem++)
         myTypedWires
             .addWire(String.format("s_byteMem%dContents", mem), ByteArrayId);
     } else {
@@ -102,7 +102,7 @@ public class RamHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
     if (Hdl.isVhdl()) {
       contents.empty().addVhdlKeywords().addRemarkBlock("The control signals are defined here");
       if (byteEnables) {
-        for (var i = 0; i < RamAppearance.getNrBEPorts(attrs); i++) {
+        for (int i = 0; i < RamAppearance.getNrBEPorts(attrs); i++) {
           contents
               .add("s_byteEnable{{1}} <= s_byteEnableReg({{1}}) {{and}} s_tickDelayLine(2) {{and}} s_oeReg;", i)
               .add("s_we{{1}}         <= s_byteEnableReg({{1}}) {{and}} s_tickDelayLine(0) {{and}} s_weReg;", i);
@@ -127,7 +127,7 @@ public class RamHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
                         s_oeReg      <= oe;
               """);
       if (byteEnables) {
-        for (var i = 0; i < RamAppearance.getNrBEPorts(attrs); i++)
+        for (int i = 0; i < RamAppearance.getNrBEPorts(attrs); i++)
           contents.add("         s_byteEnableReg({{1}}) <= byteEnable{{1}}};", i);
       }
       contents
@@ -150,7 +150,7 @@ public class RamHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
           .addRemarkBlock("The actual memorie(s) is(are) defined here");
       if (byteEnables) {
         final var truncated = (attrs.getValue(Mem.DATA_ATTR).getWidth() % 8) != 0;
-        for (var i = 0; i < RamAppearance.getNrBEPorts(attrs); i++) {
+        for (int i = 0; i < RamAppearance.getNrBEPorts(attrs); i++) {
           contents
               .add("mem{{1}} : {{process}}({{clock}}, s_we{{1}}, s_dataInReg, s_addressReg) {{is}}", i)
               .add("{{begin}}")
@@ -189,7 +189,7 @@ public class RamHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
       }
       contents.empty().addRemarkBlock("The output register is defined here");
       if (byteEnables) {
-        for (var i = 0; i < RamAppearance.getNrBEPorts(attrs); i++) {
+        for (int i = 0; i < RamAppearance.getNrBEPorts(attrs); i++) {
           contents
               .add("res{{1}} : {{process}}({{clock}}, s_byteEnable{{1}}, s_ramdataOut) {{is}}", i)
               .add("{{begin}}")

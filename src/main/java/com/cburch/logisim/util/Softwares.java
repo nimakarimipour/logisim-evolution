@@ -82,7 +82,7 @@ public final class Softwares {
   }
 
   public static String getQuestaPath(Component parent) {
-    var prefPath = AppPreferences.QUESTA_PATH.get();
+    java.lang.String prefPath = AppPreferences.QUESTA_PATH.get();
     if (!validatePath(prefPath, QUESTA)) if ((prefPath = setQuestaPath()) == null) return null;
 
     return prefPath;
@@ -94,7 +94,7 @@ public final class Softwares {
     final var osname = System.getProperty("os.name");
     if (osname == null) throw new IllegalArgumentException("no os.name");
     else if (osname.toLowerCase().contains("windows"))
-      for (var i = 0; i < questaProgs.length; i++) questaProgs[i] += ".exe";
+      for (int i = 0; i < questaProgs.length; i++) questaProgs[i] += ".exe";
 
     return questaProgs;
   }

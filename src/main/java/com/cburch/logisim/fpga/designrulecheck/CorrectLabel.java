@@ -43,7 +43,7 @@ public class CorrectLabel {
 
   public static String nameErrors(String label, String errorIdentifierString) {
     if (label.isEmpty()) return null;
-    for (var i = 0; i < label.length(); i++) {
+    for (int i = 0; i < label.length(); i++) {
       if (!CHARS.contains(label.toLowerCase().substring(i, i + 1))
           && !NUMBERS.contains(label.substring(i, i + 1))) {
         return errorIdentifierString + S.get("IllegalChar", label.substring(i, i + 1));
@@ -72,7 +72,7 @@ public class CorrectLabel {
 
   public static String firstInvalidCharacter(String label) {
     if (label.isEmpty()) return "";
-    for (var i = 0; i < label.length(); i++) {
+    for (int i = 0; i < label.length(); i++) {
       final var str = label.substring(i, i + 1);
       final var low = str.toLowerCase();
       if (!CHARS.contains(low) && !NUMBERS.contains(str)) {
@@ -84,7 +84,7 @@ public class CorrectLabel {
 
   public static boolean isCorrectLabel(String Label) {
     if (Label.isEmpty()) return true;
-    for (var i = 0; i < Label.length(); i++) {
+    for (int i = 0; i < Label.length(); i++) {
       if (!CHARS.contains(Label.toLowerCase().substring(i, i + 1))
           && !NUMBERS.contains(Label.substring(i, i + 1))) {
         return false;

@@ -106,7 +106,7 @@ class MinimizedTab extends AnalyzerTab {
 
     @Override
     public void setSelectedItem(Object value) {
-      for (var i = 0; i < choices.length; i++) {
+      for (int i = 0; i < choices.length; i++) {
         if (choices[i].equals(value)) {
           selected = i;
         }
@@ -197,7 +197,7 @@ class MinimizedTab extends AnalyzerTab {
 
     @Override
     public void setSelectedItem(Object anItem) {
-      for (var i = 0; i < choices.length; i++) {
+      for (int i = 0; i < choices.length; i++) {
         if (choices[i].equals(anItem)) {
           selected = i;
         }

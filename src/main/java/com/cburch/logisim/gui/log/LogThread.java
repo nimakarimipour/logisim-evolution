@@ -49,8 +49,8 @@ class LogThread extends UniquelyNamedThread implements Model.Listener {
       }
     }
     if (modeDirty) {
-      var mode = model.isStepMode() ? "step" : model.isRealMode() ? "real-time" : "clocked";
-      var gran = model.isFine() ? "fine" : "coarse";
+      java.lang.String mode = model.isStepMode() ? "step" : model.isRealMode() ? "real-time" : "clocked";
+      java.lang.String gran = model.isFine() ? "fine" : "coarse";
       writer.println("# mode: " + mode + " granularity: " + gran);
       modeDirty = false;
     }
@@ -76,7 +76,7 @@ class LogThread extends UniquelyNamedThread implements Model.Listener {
     }
     long timeStop = model.getEndTime();
     while (timeNextWrite < timeStop) {
-      var duration = timeStop - timeNextWrite;
+      long duration = timeStop - timeNextWrite;
       final var buf = new StringBuilder();
       for (int i = 0; i < cur.length; i++) {
         if (i > 0) buf.append("\t");

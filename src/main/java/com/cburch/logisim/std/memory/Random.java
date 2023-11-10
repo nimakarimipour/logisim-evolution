@@ -57,7 +57,7 @@ public class Random extends InstanceFactory {
 
     @Override
     public Value getLogValue(InstanceState state, Object option) {
-      var dataWidth = state.getAttributeValue(StdAttr.WIDTH);
+      com.cburch.logisim.data.BitWidth dataWidth = state.getAttributeValue(StdAttr.WIDTH);
       if (dataWidth == null) dataWidth = BitWidth.create(0);
       final var data = (StateData) state.getData();
       if (data == null) return Value.createKnown(dataWidth, 0);
@@ -328,7 +328,7 @@ public class Random extends InstanceFactory {
 
   @Override
   public void propagate(InstanceState state) {
-    var data = (StateData) state.getData();
+    com.cburch.logisim.std.memory.Random.StateData data = (StateData) state.getData();
     if (data == null) {
       data = new StateData(state.getAttributeValue(ATTR_SEED));
       state.setData(data);

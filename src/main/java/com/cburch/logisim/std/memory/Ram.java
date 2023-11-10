@@ -44,7 +44,7 @@ public class Ram extends Mem {
 
     @Override
     public String getLogName(InstanceState state, Object option) {
-      var label = state.getAttributeValue(StdAttr.LABEL);
+      java.lang.String label = state.getAttributeValue(StdAttr.LABEL);
       if (label.equals("")) {
         label = null;
       }
@@ -64,16 +64,16 @@ public class Ram extends Mem {
 
     @Override
     public Object[] getLogOptions(InstanceState state) {
-      var addrBits = state.getAttributeValue(ADDR_ATTR).getWidth();
+      int addrBits = state.getAttributeValue(ADDR_ATTR).getWidth();
       if (addrBits >= logOptions.length) {
         addrBits = logOptions.length - 1;
       }
       synchronized (logOptions) {
-        var ret = logOptions[addrBits];
+        java.lang.Object[] ret = logOptions[addrBits];
         if (ret == null) {
           ret = new Object[1 << addrBits];
           logOptions[addrBits] = ret;
-          for (var i = 0; i < ret.length; i++) {
+          for (int i = 0; i < ret.length; i++) {
             ret[i] = i;
           }
         }
@@ -135,7 +135,7 @@ public class Ram extends Mem {
 
   private static HexFrame getHexFrame(MemContents value, Project proj, Instance instance) {
     synchronized (windowRegistry) {
-      var ret = windowRegistry.get(value);
+      com.cburch.logisim.gui.hex.HexFrame ret = windowRegistry.get(value);
       if (ret == null) {
         ret = new HexFrame(proj, instance, value);
         windowRegistry.put(value, ret);
@@ -186,7 +186,7 @@ public class Ram extends Mem {
 
   @Override
   MemState getState(InstanceState state) {
-    var ret = (RamState) state.getData();
+    com.cburch.logisim.std.memory.RamState ret = (RamState) state.getData();
     if (ret == null) {
       final var instance = state.getInstance();
       ret = new RamState(instance, getNewContents(instance.getAttributeSet()), new MemListener(instance));
@@ -235,7 +235,7 @@ public class Ram extends Mem {
         myState.getContents().clear();
         final var dataBits = state.getAttributeValue(DATA_ATTR);
 
-        for (var i = 0; i < RamAppearance.getNrDataOutPorts(attrs); i++) {
+        for (int i = 0; i < RamAppearance.getNrDataOutPorts(attrs); i++) {
           final var portVal = isSeparate(attrs)
                   ? Value.createKnown(dataBits, 0)
                   : Value.createUnknown(dataBits);
@@ -277,7 +277,7 @@ public class Ram extends Mem {
     final var triggered = myState.setClock(state.getPortValue(RamAppearance.getClkIndex(0, attrs)), trigger);
     final var writeEnabled = triggered && (state.getPortValue(RamAppearance.getWEIndex(0, attrs)) == Value.TRUE);
     if (writeEnabled && goodAddr && !misalignError) {
-      for (var i = 0; i < dataLines; i++) {
+      for (int i = 0; i < dataLines; i++) {
         if (dataLines > 1) {
           final var le = state.getPortValue(RamAppearance.getLEIndex(i, attrs));
           if (le != null && le.equals(Value.FALSE))
@@ -292,15 +292,15 @@ public class Ram extends Mem {
     final var width = state.getAttributeValue(DATA_ATTR);
     final var outputEnabled = separate || !state.getPortValue(RamAppearance.getOEIndex(0, attrs)).equals(Value.FALSE);
     if (outputEnabled && goodAddr && !misalignError) {
-      for (var i = 0; i < dataLines; i++) {
+      for (int i = 0; i < dataLines; i++) {
         long val = myState.getContents().get(addr + i);
         state.setPort(RamAppearance.getDataOutIndex(i, attrs), Value.createKnown(width, val), DELAY);
       }
     } else if (outputEnabled && (errorValue || (goodAddr && misalignError))) {
-      for (var i = 0; i < dataLines; i++)
+      for (int i = 0; i < dataLines; i++)
         state.setPort(RamAppearance.getDataOutIndex(i, attrs), Value.createError(width), DELAY);
     } else {
-      for (var i = 0; i < dataLines; i++)
+      for (int i = 0; i < dataLines; i++)
         state.setPort(RamAppearance.getDataOutIndex(i, attrs), Value.createUnknown(width), DELAY);
     }
   }
@@ -327,7 +327,7 @@ public class Ram extends Mem {
       if (RamAppearance.getNrBEPorts(attrs) == 0) {
         newMemValue = dataInValue;
       } else {
-        for (var i = 0; i < RamAppearance.getNrBEPorts(attrs); i++) {
+        for (int i = 0; i < RamAppearance.getNrBEPorts(attrs); i++) {
           long mask = 0xFF << (i * 8);
           long andMask = ~mask;
           if (state.getPortValue(RamAppearance.getBEIndex(i, attrs)).equals(Value.TRUE)) {

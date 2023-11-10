@@ -84,13 +84,13 @@ public class PlaRomData implements InstanceData {
     final var datas = str.split(" ");
     String[] tmp;
     byte value;
-    var cnt = 0;
+    int cnt = 0;
     for (final var data : datas) {
       // if contains a '*' it has to fill the array with the first value for x (second
       // number) cycles
       if (data.contains("*")) {
         tmp = data.split("\\*");
-        for (var j = 0; j < Integer.parseInt(tmp[1]); j++) {
+        for (int j = 0; j < Integer.parseInt(tmp[1]); j++) {
           value = (byte) Integer.parseInt(tmp[0]);
           writeData(value, cnt);
           cnt++;
@@ -194,10 +194,10 @@ public class PlaRomData implements InstanceData {
     // string to write inside the .circ to not lose data
     int row, column, size1 = getInputs() * getAnd(), size2 = getOutputs() * getAnd(), count = 0;
     char val, last = 'x';
-    var dirty = false;
-    var data = new StringBuilder();
+    boolean dirty = false;
+    java.lang.StringBuilder data = new StringBuilder();
     // input-and matrix
-    for (var i = 0; i < size1; i++) {
+    for (int i = 0; i < size1; i++) {
       row = i / getInputs();
       column = i - row * getInputs();
       // 1= not line selected, 2 = input line selected, 0 = nothing selected in that
@@ -304,7 +304,7 @@ public class PlaRomData implements InstanceData {
   }
 
   private void setOutputValue() {
-    var thereisadot = false;
+    boolean thereisadot = false;
     for (byte i = 0; i < getOutputs(); i++) {
       outputValue[i] = Value.FALSE;
       for (byte j = 0; j < getAnd(); j++) {

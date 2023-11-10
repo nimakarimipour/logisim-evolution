@@ -46,9 +46,9 @@ public class Ttl7474 extends AbstractTtlGate {
 
     private boolean isInside(InstanceState state, MouseEvent e) {
       final var p = getTranslatedTtlXY(state, e);
-      var dx = p.x - 37;
-      var dy = p.y - 35;
-      var d2 = dx * dx + dy * dy;
+      int dx = p.x - 37;
+      int dy = p.y - 35;
+      int d2 = dx * dx + dy * dy;
       dx = p.x - 107;
       dy = p.y - 32;
       final var d3 = dx * dx + dy * dy;
@@ -100,7 +100,7 @@ public class Ttl7474 extends AbstractTtlGate {
 
   @Override
   public void propagateTtl(InstanceState state) {
-    var data = (TtlRegisterData) state.getData();
+    com.cburch.logisim.std.ttl.TtlRegisterData data = (TtlRegisterData) state.getData();
     if (data == null) {
       data = new TtlRegisterData(BitWidth.create(2));
       state.setData(data);

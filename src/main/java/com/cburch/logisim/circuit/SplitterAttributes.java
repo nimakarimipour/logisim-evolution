@@ -42,7 +42,7 @@ public class SplitterAttributes extends AbstractAttributeSet {
     public boolean sameOptions(BitOutAttribute other) {
       if (options.length != other.options.length) return false;
       for (final var a : options) {
-        var found = false;
+        boolean found = false;
         for (final var b : other.options) {
           if (a.toString().equals(b.toString())) {
             found = true;
@@ -109,7 +109,7 @@ public class SplitterAttributes extends AbstractAttributeSet {
       if (value < 0) {
         return S.get("splitterBitNone");
       } else {
-        var ret = "" + value;
+        java.lang.String ret = "" + value;
         Direction noteDir;
         if (value == 0) {
           noteDir = isVertical ? Direction.NORTH : Direction.EAST;
@@ -130,13 +130,13 @@ public class SplitterAttributes extends AbstractAttributeSet {
     final var ret = new byte[bits];
     if (order >= 0) {
       if (fanout >= bits) {
-        for (var i = 0; i < bits; i++) ret[i] = (byte) (i + 1);
+        for (int i = 0; i < bits; i++) ret[i] = (byte) (i + 1);
       } else {
         final var threads_per_end = bits / fanout;
-        var endsWithExtra = bits % fanout;
-        var curEnd = -1; // immediately increments
-        var leftInEnd = 0;
-        for (var i = 0; i < bits; i++) {
+        int endsWithExtra = bits % fanout;
+        int curEnd = -1; // immediately increments
+        int leftInEnd = 0;
+        for (int i = 0; i < bits; i++) {
           if (leftInEnd == 0) {
             ++curEnd;
             leftInEnd = threads_per_end;
@@ -154,9 +154,9 @@ public class SplitterAttributes extends AbstractAttributeSet {
         for (int i = 0; i < bits; i++) ret[i] = (byte) (fanout - i);
       } else {
         final var threads_per_end = bits / fanout;
-        var endsWithExtra = bits % fanout;
-        var curEnd = -1;
-        var leftInEnd = 0;
+        int endsWithExtra = bits % fanout;
+        int curEnd = -1;
+        int leftInEnd = 0;
         for (int i = bits - 1; i >= 0; i--) {
           if (leftInEnd == 0) {
             ++curEnd;
@@ -219,12 +219,12 @@ public class SplitterAttributes extends AbstractAttributeSet {
 
   private void configureDefaults() {
     final var offs = INIT_ATTRIBUTES.size();
-    var curNum = attrs.size() - offs;
+    int curNum = attrs.size() - offs;
 
     // compute default values
     final var dflt = computeDistribution(fanout, bitEnd.length, 1);
 
-    var changed = curNum != bitEnd.length;
+    boolean changed = curNum != bitEnd.length;
 
     // remove excess attributes
     while (curNum > bitEnd.length) {
@@ -233,7 +233,7 @@ public class SplitterAttributes extends AbstractAttributeSet {
     }
 
     // set existing attributes
-    for (var i = 0; i < curNum; i++) {
+    for (int i = 0; i < curNum; i++) {
       if (bitEnd[i] != dflt[i]) {
         final var attr = (BitOutAttribute) attrs.get(offs + i);
         bitEnd[i] = dflt[i];
@@ -242,7 +242,7 @@ public class SplitterAttributes extends AbstractAttributeSet {
     }
 
     // add new attributes
-    for (var i = curNum; i < bitEnd.length; i++) {
+    for (int i = curNum; i < bitEnd.length; i++) {
       final var attr = new BitOutAttribute(i, options);
       bitEnd[i] = dflt[i];
       attrs.add(attr);
@@ -254,15 +254,15 @@ public class SplitterAttributes extends AbstractAttributeSet {
   private void configureOptions() {
     // compute the set of options for BitOutAttributes
     options = new BitOutOption[fanout + 1];
-    var isVertical = facing == Direction.EAST || facing == Direction.WEST;
-    for (var i = -1; i < fanout; i++) {
+    boolean isVertical = facing == Direction.EAST || facing == Direction.WEST;
+    for (int i = -1; i < fanout; i++) {
       options[i + 1] = new BitOutOption(i, isVertical, i == fanout - 1);
     }
 
     // go ahead and set the options for the existing attributes
     final var offs = INIT_ATTRIBUTES.size();
     final var curNum = attrs.size() - offs;
-    for (var i = 0; i < curNum; i++) {
+    for (int i = 0; i < curNum; i++) {
       final var attr = (BitOutAttribute) attrs.get(offs + i);
       attr.options = options;
     }
@@ -332,7 +332,7 @@ public class SplitterAttributes extends AbstractAttributeSet {
     } else if (attr == ATTR_FANOUT) {
       int newValue = (Integer) value;
       final var bits = bitEnd;
-      for (var i = 0; i < bits.length; i++) {
+      for (int i = 0; i < bits.length; i++) {
         if (bits[i] > newValue) bits[i] = (byte) newValue;
       }
       if (fanout == (byte) newValue) return;

@@ -89,13 +89,13 @@ public class TclConsoleReds extends TclComponent {
     final var inputs = new Port[inputsDesc.size()];
     final var outputs = new Port[outputsDesc.size()];
 
-    for (var i = 0; i < inputsDesc.size(); i++) {
+    for (int i = 0; i < inputsDesc.size(); i++) {
       final var desc = inputsDesc.get(i);
       inputs[i] = new Port(0, (i * PORT_GAP) + HEIGHT, desc.getType(), desc.getWidth());
       inputs[i].setToolTip(S.getter(desc.getName()));
     }
 
-    for (var i = 0; i < outputsDesc.size(); i++) {
+    for (int i = 0; i < outputsDesc.size(); i++) {
       final var desc = outputsDesc.get(i);
       outputs[i] = new Port(WIDTH, (i * PORT_GAP) + HEIGHT, desc.getType(), desc.getWidth());
       outputs[i].setToolTip(S.getter(desc.getName()));

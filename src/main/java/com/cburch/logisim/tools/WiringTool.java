@@ -108,8 +108,8 @@ public class WiringTool extends Tool {
   public void draw(Canvas canvas, ComponentDrawContext context) {
     final var g = context.getGraphics();
     if (exists) {
-      var e0 = start;
-      var e1 = cur;
+      com.cburch.logisim.data.Location e0 = start;
+      com.cburch.logisim.data.Location e1 = cur;
       final var shortenBefore = willShorten(start, cur);
       if (shortenBefore != null) {
         final var shorten = getShortenResult(shortenBefore, start, cur);
@@ -303,7 +303,7 @@ public class WiringTool extends Tool {
 
       final var wires = new ArrayList<Wire>(2);
       if (cur.getY() == start.getY() || cur.getX() == start.getX()) {
-        var wire = Wire.create(cur, start);
+        com.cburch.logisim.circuit.Wire wire = Wire.create(cur, start);
         wire = checkForRepairs(canvas, wire, wire.getEnd0());
         wire = checkForRepairs(canvas, wire, wire.getEnd1());
         if (performShortening(canvas, start, cur)) return;
@@ -315,8 +315,8 @@ public class WiringTool extends Tool {
         } else {
           m = Location.create(start.getX(), cur.getY(), true);
         }
-        var wire0 = Wire.create(start, m);
-        var wire1 = Wire.create(m, cur);
+        com.cburch.logisim.circuit.Wire wire0 = Wire.create(start, m);
+        com.cburch.logisim.circuit.Wire wire1 = Wire.create(m, cur);
         wire0 = checkForRepairs(canvas, wire0, start);
         wire1 = checkForRepairs(canvas, wire1, cur);
         if (wire0.getLength() > 0) wires.add(wire0);
@@ -341,7 +341,7 @@ public class WiringTool extends Tool {
     final int[] points = {3, 13, 8, 13, 8, 3, 13, 3};
     g2.setStroke(new BasicStroke(AppPreferences.getScaled(2)));
     g2.setColor(Color.BLACK);
-    for (var i = 0; i < points.length - 2; i += 2)
+    for (int i = 0; i < points.length - 2; i += 2)
       g2.drawLine(
           AppPreferences.getScaled(points[i]),
           AppPreferences.getScaled(points[i + 1]),

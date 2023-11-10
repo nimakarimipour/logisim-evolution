@@ -110,7 +110,7 @@ public class EditTool extends Tool {
     for (final var comp : sel.getComponents()) {
       if (!(comp instanceof Wire)) {
         final var attr = getFacingAttribute(comp);
-        var d = comp.getAttributeSet().getValue(StdAttr.FACING);
+        com.cburch.logisim.data.Direction d = comp.getAttributeSet().getValue(StdAttr.FACING);
         if (d != null) {
           d = d.getRight();
           if (attr != null) {
@@ -362,7 +362,7 @@ public class EditTool extends Tool {
   @Override
   public void mousePressed(Canvas canvas, Graphics g, MouseEvent e) {
     canvas.requestFocusInWindow();
-    var wire = updateLocation(canvas, e);
+    boolean wire = updateLocation(canvas, e);
     final var oldWireLoc = wireLoc;
     wireLoc = NULL_LOCATION;
     lastX = Integer.MIN_VALUE;
@@ -426,11 +426,11 @@ public class EditTool extends Tool {
   }
 
   private boolean updateLocation(Canvas canvas, int mx, int my, int mods) {
-    var snapx = Canvas.snapXToGrid(mx);
-    var snapy = Canvas.snapYToGrid(my);
+    int snapx = Canvas.snapXToGrid(mx);
+    int snapy = Canvas.snapYToGrid(my);
     final var dx = mx - snapx;
     final var dy = my - snapy;
-    var isEligible = dx * dx + dy * dy < 36;
+    boolean isEligible = dx * dx + dy * dy < 36;
     if ((mods & MouseEvent.ALT_DOWN_MASK) != 0) isEligible = true;
     if (!isEligible) {
       snapx = -1;

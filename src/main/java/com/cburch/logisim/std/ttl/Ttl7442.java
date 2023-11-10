@@ -46,7 +46,7 @@ public class Ttl7442 extends AbstractTtlGate {
     super.paintBase(painter, false, false);
     final var g = painter.getGraphics();
     g.drawRect(x + 18, y + 10, 84, 18);
-    var mask = 1;
+    int mask = 1;
     for (int i = 0; i < 10; i++) {
       g.drawOval(x + 22 + i * 8, y + 28, 4, 4);
       g.drawLine(

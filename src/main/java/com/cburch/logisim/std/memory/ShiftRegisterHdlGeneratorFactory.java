@@ -84,22 +84,22 @@ public class ShiftRegisterHdlGeneratorFactory extends AbstractHdlGeneratorFactor
       if (hasParallelLoad) {
         if (nrOfBits == 1) {
           if (Hdl.isVhdl()) {
-            for (var stage = 0; stage < nrOfStages; stage++)
+            for (int stage = 0; stage < nrOfStages; stage++)
               map.putAll(Hdl.getNetMap(String.format("d(%d)", stage), true, comp, 6 + (2 * stage), nets));
             final var nrOfOutStages = attrs.getValue(StdAttr.APPEARANCE) == StdAttr.APPEAR_CLASSIC
                 ? nrOfStages : nrOfStages - 1;
-            for (var stage = 0; stage < nrOfOutStages; stage++)
+            for (int stage = 0; stage < nrOfOutStages; stage++)
               map.putAll(Hdl.getNetMap(String.format("q(%d)", stage), true, comp, 7 + (2 * stage), nets));
             map.put(String.format("q(%d)", nrOfStages - 1), "OPEN");
           } else {
-            for (var stage = nrOfStages - 1; stage >= 0; stage--) {
+            for (int stage = nrOfStages - 1; stage >= 0; stage--) {
               if (vector.length() != 0) vector.append(",");
               vector.append(Hdl.getNetName(comp, 6 + (2 * stage), true, nets));
             }
             map.put("d", vector.toString());
             vector.setLength(0);
             vector.append("open");
-            for (var stage = nrOfStages - 2; stage >= 0; stage--) {
+            for (int stage = nrOfStages - 2; stage >= 0; stage--) {
               if (vector.length() != 0) vector.append(",");
               vector.append(Hdl.getNetName(comp, 7 + (2 * stage), true, nets));
             }
@@ -107,8 +107,8 @@ public class ShiftRegisterHdlGeneratorFactory extends AbstractHdlGeneratorFactor
           }
         } else {
           if (Hdl.isVhdl()) {
-            for (var bit = 0; bit < nrOfBits; bit++) {
-              for (var stage = 0; stage < nrOfStages; stage++) {
+            for (int bit = 0; bit < nrOfBits; bit++) {
+              for (int stage = 0; stage < nrOfStages; stage++) {
                 final var index = (bit * nrOfStages) + stage;
                 final var id = 6 + (2 * stage);
                 map.put(String.format("d(%d)", index), Hdl.getBusEntryName(comp, id, true, bit, nets));
@@ -119,18 +119,18 @@ public class ShiftRegisterHdlGeneratorFactory extends AbstractHdlGeneratorFactor
             }
           } else {
             vector.setLength(0);
-            for (var bit = nrOfBits - 1; bit >= 0; bit--) {
-              for (var stage = nrOfStages - 1; stage >= 0; stage--) {
+            for (int bit = nrOfBits - 1; bit >= 0; bit--) {
+              for (int stage = nrOfStages - 1; stage >= 0; stage--) {
                 if (vector.length() != 0) vector.append(",");
                 vector.append(Hdl.getBusEntryName(comp, 6 + (2 * stage), true, bit, nets));
               }
             }
             map.put("d", vector.toString());
             vector.setLength(0);
-            for (var bit = nrOfBits - 1; bit >= 0; bit--) {
+            for (int bit = nrOfBits - 1; bit >= 0; bit--) {
               if (vector.length() != 0) vector.append(",");
               vector.append("open");
-              for (var stage = nrOfStages - 2; stage >= 0; stage--) {
+              for (int stage = nrOfStages - 2; stage >= 0; stage--) {
                 if (vector.length() != 0) vector.append(",");
                 vector.append(Hdl.getBusEntryName(comp, 7 + (2 * stage), true, bit, nets));
               }

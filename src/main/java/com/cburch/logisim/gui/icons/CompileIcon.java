@@ -24,7 +24,7 @@ public class CompileIcon extends BaseIcon {
     g2.setStroke(new BasicStroke(AppPreferences.getScaled(1F)));
     final var xpos = new int[9];
     final var ypos = new int[9];
-    for (var i = 0; i < 9; i++) {
+    for (int i = 0; i < 9; i++) {
       xpos[i] = AppPreferences.getScaled(page[i * 2]);
       ypos[i] = AppPreferences.getScaled(page[i * 2 + 1]);
     }

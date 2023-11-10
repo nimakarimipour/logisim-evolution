@@ -87,7 +87,7 @@ public class SelectionAttributes extends AbstractAttributeSet {
   public <V> V getValue(Attribute<V> attr) {
     final var attrs = selAttrs;
     final var values = selValues;
-    for (var i = 0; i < attrs.length; i++) {
+    for (int i = 0; i < attrs.length; i++) {
       if (attrs[i] == attr) {
         @SuppressWarnings("unchecked")
         V ret = (V) values[i];
@@ -101,7 +101,7 @@ public class SelectionAttributes extends AbstractAttributeSet {
   public <V> void setValue(Attribute<V> attr, V value) {
     final var attrs = this.selAttrs;
     final var values = this.selValues;
-    for (var i = 0; i < attrs.length; i++) {
+    for (int i = 0; i < attrs.length; i++) {
       if (attrs[i] == attr) {
         final var same = Objects.equals(value, values[i]);
         if (!same) {
@@ -132,7 +132,7 @@ public class SelectionAttributes extends AbstractAttributeSet {
         Attribute<Object> attr = (Attribute<Object>) e.getAttribute();
         final var attrs = SelectionAttributes.this.selAttrs;
         final var values = SelectionAttributes.this.selValues;
-        for (var i = 0; i < attrs.length; i++) {
+        for (int i = 0; i < attrs.length; i++) {
           if (attrs[i] == attr) {
             values[i] = getSelectionValue(attr, selected.keySet());
           }
@@ -154,7 +154,7 @@ public class SelectionAttributes extends AbstractAttributeSet {
 
       final var attrs = new Attribute<?>[attrSet.size()];
       final var values = new Object[attrs.length];
-      var i = 0;
+      int i = 0;
       for (final var attr : attrSet) {
         attrs[i] = attr;
         values[i] = getSelectionValue(attr, attrsSet);
@@ -177,7 +177,7 @@ public class SelectionAttributes extends AbstractAttributeSet {
         if (o != null) newSel.put(o.getAttributeSet(), o);
       }
       selected = newSel;
-      var change = false;
+      boolean change = false;
       for (final var attrs : oldSel.keySet()) {
         if (!newSel.containsKey(attrs)) {
           change = true;

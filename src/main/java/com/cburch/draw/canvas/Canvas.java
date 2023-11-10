@@ -131,7 +131,7 @@ public class Canvas extends JComponent {
       dup.dispose();
     }
     if (tool != null) {
-      var dup = g.create();
+      java.awt.Graphics dup = g.create();
       tool.draw(this, dup);
       dup.dispose();
     }

@@ -148,10 +148,10 @@ public class SubcircuitFactory extends InstanceFactory {
     final var bds = instance.getBounds();
     final var loc = instance.getAttributeValue(CircuitAttributes.LABEL_LOCATION_ATTR);
 
-    var x = bds.getX() + bds.getWidth() / 2;
-    var y = bds.getY() + bds.getHeight() / 2;
-    var ha = GraphicsUtil.H_CENTER;
-    var va = GraphicsUtil.V_CENTER;
+    int x = bds.getX() + bds.getWidth() / 2;
+    int y = bds.getY() + bds.getHeight() / 2;
+    int ha = GraphicsUtil.H_CENTER;
+    int va = GraphicsUtil.V_CENTER;
     if (loc == Direction.EAST) {
       x = bds.getX() + bds.getWidth() + 2;
       ha = GraphicsUtil.H_LEFT;
@@ -211,15 +211,15 @@ public class SubcircuitFactory extends InstanceFactory {
   private void drawCircuitLabel(InstancePainter painter, Bounds bds, Direction facing, Direction defaultFacing) {
     final var staticAttrs = source.getStaticAttributes();
 
-    var label = staticAttrs.getValue(CircuitAttributes.CIRCUIT_LABEL_ATTR);
+    java.lang.String label = staticAttrs.getValue(CircuitAttributes.CIRCUIT_LABEL_ATTR);
 
     if (label != null && !label.equals("")) {
       final var up = staticAttrs.getValue(CircuitAttributes.CIRCUIT_LABEL_FACING_ATTR);
       final var font = staticAttrs.getValue(CircuitAttributes.CIRCUIT_LABEL_FONT_ATTR);
 
-      var back = label.indexOf('\\');
-      var lines = 1;
-      var backs = false;
+      int back = label.indexOf('\\');
+      int lines = 1;
+      boolean backs = false;
       while (back >= 0 && back <= label.length() - 2) {
         final var c = label.charAt(back + 1);
         if (c == 'n') lines++;
@@ -228,7 +228,7 @@ public class SubcircuitFactory extends InstanceFactory {
       }
 
       final var x = bds.getX() + bds.getWidth() / 2;
-      var y = bds.getY() + bds.getHeight() / 2;
+      int y = bds.getY() + bds.getHeight() / 2;
       final var g = painter.getGraphics().create();
       final var angle = Math.PI / 2 - (up.toRadians() - defaultFacing.toRadians()) - facing.toRadians();
       if (g instanceof Graphics2D g2 && Math.abs(angle) > 0.01) {
@@ -307,7 +307,7 @@ public class SubcircuitFactory extends InstanceFactory {
   }
 
   private CircuitState getSubstate(InstanceState instanceState) {
-    var subState = (CircuitState) instanceState.getData();
+    com.cburch.logisim.circuit.CircuitState subState = (CircuitState) instanceState.getData();
     if (subState == null) {
       subState = new CircuitState(instanceState.getProject(), source);
       instanceState.setData(subState);
@@ -388,7 +388,7 @@ public class SubcircuitFactory extends InstanceFactory {
 
     final var attrs = (CircuitAttributes) superState.getAttributeSet();
     final var pins = attrs.getPinInstances();
-    for (var i = 0; i < pins.length; i++) {
+    for (int i = 0; i < pins.length; i++) {
       final var pin = pins[i];
       final var pinState = subState.getInstanceState(pin);
       if (Pin.FACTORY.isInputPin(pin)) {
@@ -435,7 +435,7 @@ public class SubcircuitFactory extends InstanceFactory {
         AppPreferences.getScaled(12),
         AppPreferences.getScaled(14));
     final var wh = AppPreferences.getScaled(3);
-    for (var y = 0; y < 3; y++) {
+    for (int y = 0; y < 3; y++) {
       if (y == 1) g2.setColor(Value.trueColor);
       else g2.setColor(Value.falseColor);
       g2.fillOval(AppPreferences.getScaled(1), AppPreferences.getScaled(y * 4 + 3), wh, wh);

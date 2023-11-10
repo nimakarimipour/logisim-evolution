@@ -105,7 +105,7 @@ public class SoftwaresOptions extends OptionsPanel {
     c.insets = new Insets(2, 4, 4, 2);
     c.anchor = GridBagConstraints.BASELINE_LEADING;
 
-    var gridY = 0;
+    int gridY = 0;
 
     c.gridx = 0;
     c.gridy = gridY++;

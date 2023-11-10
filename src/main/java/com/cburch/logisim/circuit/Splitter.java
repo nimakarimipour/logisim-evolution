@@ -96,7 +96,7 @@ public class Splitter extends ManagedComponent
     bitThread = new byte[bitEnd.length];
     final var endWidth = new byte[fanout + 1];
     endWidth[0] = (byte) bitEnd.length;
-    for (var i = 0; i < bitEnd.length; i++) {
+    for (int i = 0; i < bitEnd.length; i++) {
       final var thr = bitEnd[i];
       if (thr > 0) {
         bitThread[i] = endWidth[thr];
@@ -108,14 +108,14 @@ public class Splitter extends ManagedComponent
 
     // compute end positions
     final var origin = getLocation();
-    var x = origin.getX() + parms.getEnd0X();
-    var y = origin.getY() + parms.getEnd0Y();
+    int x = origin.getX() + parms.getEnd0X();
+    int y = origin.getY() + parms.getEnd0Y();
     final var dx = parms.getEndToEndDeltaX();
     final var dy = parms.getEndToEndDeltaY();
 
     final var ends = new EndData[fanout + 1];
     ends[0] = new EndData(origin, BitWidth.create(bitEnd.length), EndData.INPUT_OUTPUT);
-    for (var i = 0; i < fanout; i++) {
+    for (int i = 0; i < fanout; i++) {
       ends[i + 1] = new EndData(Location.create(x, y, true), BitWidth.create(endWidth[i + 1]), EndData.INPUT_OUTPUT);
       x += dx;
       y += dy;
@@ -196,8 +196,8 @@ public class Splitter extends ManagedComponent
 
   @Override
   public String getToolTip(ComponentUserEvent e) {
-    var end = -1;
-    for (var i = getEnds().size() - 1; i >= 0; i--) {
+    int end = -1;
+    for (int i = getEnds().size() - 1; i >= 0; i--) {
       if (getEndLocation(i).manhattanDistanceTo(e.getX(), e.getY()) < 10) {
         end = i;
         break;
@@ -206,13 +206,13 @@ public class Splitter extends ManagedComponent
 
     if (end == 0) return S.get("splitterCombinedTip");
     if (end < 0) return null;
-    var bits = 0;
+    int bits = 0;
     final var buffer = new StringBuilder();
     final var attrs = (SplitterAttributes) getAttributeSet();
     final var bitEnd = attrs.bitEnd;
-    var inString = false;
-    var beginString = 0;
-    for (var i = 0; i < bitEnd.length; i++) {
+    boolean inString = false;
+    int beginString = 0;
+    for (int i = 0; i < bitEnd.length; i++) {
       if (bitEnd[i] == end) {
         bits++;
         if (!inString) {

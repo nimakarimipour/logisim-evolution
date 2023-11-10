@@ -180,7 +180,7 @@ public class ProjectLibraryActions {
       final var selected = getSelectedValuesList().toArray();
       if (selected != null && selected.length > 0) {
         final var libs = new Library[selected.length];
-        for (var i = 0; i < selected.length; i++) {
+        for (int i = 0; i < selected.length; i++) {
           libs[i] = ((BuiltinOption) selected[i]).lib;
         }
         return libs;

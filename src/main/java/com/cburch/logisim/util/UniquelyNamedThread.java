@@ -25,7 +25,7 @@ public class UniquelyNamedThread extends Thread {
   }
 
   private static String nextName(String prefix) {
-    var id = 0;
+    int id = 0;
     synchronized (lock) {
       final var i = lastID.get(prefix);
       if (i != null) id = i + 1;

@@ -64,8 +64,8 @@ public class Ttl74166 extends AbstractTtlGate {
 
     private boolean isInside(InstanceState state, MouseEvent e) {
       final var p = getTranslatedTtlXY(state, e);
-      var inside = false;
-      for (var i = 0; i < 8; i++) {
+      boolean inside = false;
+      for (int i = 0; i < 8; i++) {
         final var dx = p.x - (40 + i * 10);
         final var dy = p.y - 30;
         final var d2 = dx * dx + dy * dy;
@@ -76,7 +76,7 @@ public class Ttl74166 extends AbstractTtlGate {
 
     private int getIndex(InstanceState state, MouseEvent e) {
       final var p = getTranslatedTtlXY(state, e);
-      for (var i = 0; i < 8; i++) {
+      for (int i = 0; i < 8; i++) {
         final var dx = p.x - (40 + i * 10);
         final var dy = p.y - 30;
         final var d2 = dx * dx + dy * dy;
@@ -113,7 +113,7 @@ public class Ttl74166 extends AbstractTtlGate {
   }
 
   private ShiftRegisterData getData(InstanceState state) {
-    var data = (ShiftRegisterData) state.getData();
+    com.cburch.logisim.std.ttl.ShiftRegisterData data = (ShiftRegisterData) state.getData();
     if (data == null) {
       data = new ShiftRegisterData(BitWidth.ONE, 8);
       state.setData(data);
@@ -139,7 +139,7 @@ public class Ttl74166 extends AbstractTtlGate {
 
   private void drawState(Graphics2D g, int x, int y, int height, ShiftRegisterData state) {
     if (state != null) {
-      for (var i = 0; i < 8; i++) {
+      for (int i = 0; i < 8; i++) {
         g.setColor(state.get(7 - i).getColor());
         g.fillOval(x + 36 + i * 10, y + height / 2 - 4, 8, 8);
         g.setColor(Color.WHITE);

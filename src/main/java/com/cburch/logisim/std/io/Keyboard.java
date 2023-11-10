@@ -57,7 +57,7 @@ public class Keyboard extends InstanceFactory {
       }
 
       final var asc = fm.getAscent();
-      var x = bds.getX() + 8;
+      int x = bds.getX() + 8;
       if (dispStart > 0) {
         x += fm.stringWidth(str.charAt(0) + "m");
         x += fm.stringWidth(str.substring(dispStart, cursor));
@@ -73,8 +73,8 @@ public class Keyboard extends InstanceFactory {
     @Override
     public void keyPressed(InstanceState state, KeyEvent e) {
       final var data = getKeyboardState(state);
-      var changed = false;
-      var used = true;
+      boolean changed = false;
+      boolean used = true;
 
       synchronized (data) {
         switch (e.getKeyCode()) {
@@ -94,7 +94,7 @@ public class Keyboard extends InstanceFactory {
     public void keyTyped(InstanceState state, KeyEvent e) {
       final var data = getKeyboardState(state);
       final var ch = e.getKeyChar();
-      var changed = false;
+      boolean changed = false;
       if (ch != KeyEvent.CHAR_UNDEFINED) {
         if (!Character.isISOControl(ch) || ch == '\b' || ch == '\n' || ch == FORM_FEED) {
           synchronized (data) {
@@ -122,7 +122,7 @@ public class Keyboard extends InstanceFactory {
 
   private static KeyboardData getKeyboardState(InstanceState state) {
     final var bufLen = getBufferLength(state.getAttributeValue(ATTR_BUFFER));
-    var ret = (KeyboardData) state.getData();
+    com.cburch.logisim.std.io.KeyboardData ret = (KeyboardData) state.getData();
     if (ret == null) {
       ret = new KeyboardData(bufLen);
       state.setData(ret);
@@ -221,7 +221,7 @@ public class Keyboard extends InstanceFactory {
   }
 
   private void drawDots(Graphics g, int x, int y, int width, int ascent) {
-    var r = width / 10;
+    int r = width / 10;
     if (r < 1) r = 1;
     final var d = 2 * r;
     if (2 * r + 1 * d <= width) g.fillOval(x + r, y - d, d, d);
@@ -302,7 +302,7 @@ public class Keyboard extends InstanceFactory {
       final var state = getKeyboardState(painter);
       synchronized (state) {
         str = state.toString();
-        for (var i = state.getNextSpecial(0); i >= 0; i = state.getNextSpecial(i + 1)) {
+        for (int i = state.getNextSpecial(0); i >= 0; i = state.getNextSpecial(i + 1)) {
           final var c = state.getChar(i);
           specials.add(c << 16 | i);
         }

@@ -55,7 +55,7 @@ public class Slider extends InstanceFactory {
     @Override
     public void mouseDragged(InstanceState state, MouseEvent e) {
       if (dragging) {
-        var data = (SliderValue) state.getData();
+        com.cburch.logisim.std.io.extra.Slider.SliderValue data = (SliderValue) state.getData();
         if (data == null) {
           data = new SliderValue();
           data.setDirection(state.getAttributeValue(ATTR_DIR) == RIGHT_TO_LEFT);
@@ -254,7 +254,7 @@ public class Slider extends InstanceFactory {
   public void propagate(InstanceState state) {
     final var data = (SliderValue) state.getData();
     final var bitWidth = state.getAttributeValue(WIDTH);
-    var sliderValue = 0;
+    int sliderValue = 0;
     if (data != null) {
       data.setDirection(state.getAttributeValue(ATTR_DIR) == RIGHT_TO_LEFT);
       data.setCurrentBitWidth(bitWidth.getWidth());

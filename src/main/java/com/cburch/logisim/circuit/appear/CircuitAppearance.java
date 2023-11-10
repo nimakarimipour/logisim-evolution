@@ -79,7 +79,7 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
   public boolean hasCustomAppearance() {
     final var currentCustom = new ArrayList<>(getCustomObjectsFromBottom());
     final var defaultCustom = new ArrayList<>(defaultCustomAppearance);
-    var shapeIterator = currentCustom.iterator();
+    java.util.Iterator<com.cburch.draw.model.CanvasObject> shapeIterator = currentCustom.iterator();
     while (shapeIterator.hasNext()) {
       final var shape = shapeIterator.next(); 
       if (shape instanceof AppearancePort || shape instanceof AppearanceAnchor)
@@ -95,7 +95,7 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
     shapeIterator = currentCustom.iterator();
     while (shapeIterator.hasNext()) {
       final var currentShape = shapeIterator.next();
-      var deleteIt = false;
+      boolean deleteIt = false;
       final var shapeDefaultIterator = defaultCustom.iterator();
       while (shapeDefaultIterator.hasNext()) {
         final var defaultShape = shapeDefaultIterator.next();
@@ -249,7 +249,7 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
 
   public SortedMap<Location, Instance> getPortOffsets(Direction facing) {
     Location anchor = null;
-    var defaultFacing = Direction.EAST;
+    com.cburch.logisim.data.Direction defaultFacing = Direction.EAST;
     final var ports = new ArrayList<AppearancePort>();
     for (final var shape : getObjectsFromBottom()) {
       if (shape instanceof AppearancePort appPort) {
@@ -262,7 +262,7 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
 
     final var ret = new TreeMap<Location, Instance>();
     for (final var port : ports) {
-      var loc = port.getLocation();
+      com.cburch.logisim.data.Location loc = port.getLocation();
       if (anchor != null) {
         loc = loc.translate(-anchor.getX(), -anchor.getY());
       }
@@ -296,7 +296,7 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
 
   public void paintSubcircuit(InstancePainter painter, Graphics g, Direction facing) {
     final var defaultFacing = getFacing();
-    var rotate = 0.0D;
+    double rotate = 0.0D;
     if (facing != defaultFacing && g instanceof Graphics2D g2d) {
       rotate = defaultFacing.toRadians() - facing.toRadians();
       g2d.rotate(rotate);
@@ -430,7 +430,7 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
       }
     }
     if (toRemove.isEmpty()) return;
-    var oldSuppress = suppressRecompute;
+    boolean oldSuppress = suppressRecompute;
     try {
       suppressRecompute = true;
       removeObjects(toRemove);
@@ -442,7 +442,7 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
 
   void replaceAutomatically(List<AppearancePort> removes, List<AppearancePort> adds) {
     // this should be called only when substituting ports for the custom appearance
-    var oldSuppress = suppressRecompute;
+    boolean oldSuppress = suppressRecompute;
     try {
       suppressRecompute = true;
       final var hasCustom = hasCustomAppearance(); 
@@ -473,11 +473,11 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
     // final var shapes = new ArrayList<CanvasObject>(shapesBase);
     final var n = shapesBase.size();
     final var shapes = new ArrayList<CanvasObject>(n);
-    for (var i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
       shapes.add(shapesBase.get(i).clone());
     }
-    var ports = 0;
-    for (var i = n - 1; i >= 0; i--) { // count ports, move anchor to end
+    int ports = 0;
+    for (int i = n - 1; i >= 0; i--) { // count ports, move anchor to end
       final var obj = shapes.get(i);
       if (obj instanceof AppearanceAnchor) {
         if (i != n - 1) {
@@ -488,7 +488,7 @@ public class CircuitAppearance extends Drawing implements AttributeListener {
         ports++;
       }
     }
-    for (var i = (n - ports - 1) - 1; i >= 0; i--) { // move ports to top
+    for (int i = (n - ports - 1) - 1; i >= 0; i--) { // move ports to top
       final var obj = shapes.get(i);
       if (obj instanceof AppearancePort) {
         shapes.remove(i);

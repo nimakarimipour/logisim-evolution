@@ -145,8 +145,8 @@ public class AppearanceSvgReader {
 
   private static Location getLocation(Element elt, boolean hasToSnap) {
     // for backward compatability
-    var px = 0;
-    var py = 0;
+    int px = 0;
+    int py = 0;
     if (elt.hasAttribute("width") && elt.hasAttribute("height")) {
       final var x = Double.parseDouble(elt.getAttribute("x"));
       final var y = Double.parseDouble(elt.getAttribute("y"));

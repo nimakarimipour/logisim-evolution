@@ -58,7 +58,7 @@ public class BinToBcd extends InstanceFactory {
     gfx.setColor(Color.GRAY);
     painter.drawBounds();
     painter.drawPort(BINin, "Bin", Direction.EAST);
-    for (var i = nrOfPorts; i > 0; i--)
+    for (int i = nrOfPorts; i > 0; i--)
       painter.drawPort(
           (nrOfPorts - i) + 1,
           Integer.toString((int) Math.pow(10.0, nrOfPorts - i)),
@@ -96,7 +96,7 @@ public class BinToBcd extends InstanceFactory {
             : -1);
     final var nrOfBits = state.getAttributeValue(BinToBcd.ATTR_BinBits);
     final var nrOfPorts = (int) (Math.log10(Math.pow(2.0, nrOfBits.getWidth())) + 1.0);
-    for (var i = nrOfPorts; i > 0; i--) {
+    for (int i = nrOfPorts; i > 0; i--) {
       final var value = (int) (Math.pow(10, i - 1));
       final var number = binValue / value;
       state.setPort(i, Value.createKnown(BitWidth.create(4), number), PER_DELAY);

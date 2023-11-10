@@ -39,7 +39,7 @@ public class Dependencies {
         case CircuitEvent.ACTION_REMOVE -> {
           comp = (Component) e.getData();
           if (comp.getFactory() instanceof SubcircuitFactory factory) {
-            var found = false;
+            boolean found = false;
             for (final var o : e.getCircuit().getNonWires()) {
               if (o.getFactory() == factory) {
                 found = true;
@@ -49,7 +49,7 @@ public class Dependencies {
             if (!found)
               depends.removeEdge(e.getCircuit(), factory.getSubcircuit());
           } else if (comp.getFactory() instanceof VhdlEntity factory) {
-            var found = false;
+            boolean found = false;
             for (final var o : e.getCircuit().getNonWires()) {
               if (o.getFactory() == factory) {
                 found = true;

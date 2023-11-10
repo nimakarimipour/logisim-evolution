@@ -248,7 +248,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
     //  Determine the rows to draw within the clipped bounds.
 
     final var clip = g.getClipBounds();
-    var rowStartOffset = component.viewToModel2D(new Point(0, clip.y));
+    int rowStartOffset = component.viewToModel2D(new Point(0, clip.y));
     final var endOffset = component.viewToModel2D(new Point(0, clip.y + clip.height));
 
     while (rowStartOffset <= endOffset) {
@@ -314,7 +314,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
     Rectangle r = component.modelToView2D(rowStartOffset).getBounds();
     final var lineHeight = fontMetrics.getHeight();
     final var y = r.y + r.height;
-    var descent = 0;
+    int descent = 0;
 
     //  The text needs to be positioned above the bottom of the bounding
     //  rectangle based on the descent of the font(s) contained on the row.
@@ -329,14 +329,14 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
       final var index = root.getElementIndex(rowStartOffset);
       final var line = root.getElement(index);
 
-      for (var i = 0; i < line.getElementCount(); i++) {
+      for (int i = 0; i < line.getElementCount(); i++) {
         final var child = line.getElement(i);
         final var as = child.getAttributes();
         final var fontFamily = (String) as.getAttribute(StyleConstants.FontFamily);
         final var fontSize = (Integer) as.getAttribute(StyleConstants.FontSize);
         final var key = fontFamily + fontSize;
 
-        var fm = fonts.get(key);
+        java.awt.FontMetrics fm = fonts.get(key);
         if (fm == null) {
           final var font = new Font(fontFamily, Font.PLAIN, fontSize);
           fm = component.getFontMetrics(font);

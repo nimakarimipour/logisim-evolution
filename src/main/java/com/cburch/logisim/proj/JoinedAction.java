@@ -63,7 +63,7 @@ public class JoinedAction extends Action {
 
   @Override
   public void undo(Project proj) {
-    for (var i = todo.length - 1; i >= 0; i--) {
+    for (int i = todo.length - 1; i >= 0; i--) {
       todo[i].undo(proj);
     }
   }

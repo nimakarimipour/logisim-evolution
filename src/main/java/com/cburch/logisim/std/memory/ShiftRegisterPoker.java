@@ -29,7 +29,7 @@ public class ShiftRegisterPoker extends InstancePoker {
       final var lenObj = state.getAttributeValue(ShiftRegister.ATTR_LENGTH);
       final var loadObj = state.getAttributeValue(ShiftRegister.ATTR_LOAD);
 
-      var y = bds.getY();
+      int y = bds.getY();
       final var label = state.getAttributeValue(StdAttr.LABEL);
       if (label == null || label.equals("")) y += bds.getHeight() / 2;
       else y += 3 * bds.getHeight() / 4;
@@ -79,7 +79,7 @@ public class ShiftRegisterPoker extends InstancePoker {
         final var widObj = state.getAttributeValue(StdAttr.WIDTH);
         final var data = (ShiftRegisterData) state.getData();
         final var i = data.getLength() - 1 - loc;
-        var value = data.get(i).toLongValue();
+        long value = data.get(i).toLongValue();
         value = ((value * 16) + val) & widObj.getMask();
         final var valObj = Value.createKnown(widObj, value);
         data.set(i, valObj);
@@ -94,11 +94,11 @@ public class ShiftRegisterPoker extends InstancePoker {
   public void keyPressed(InstanceState state, KeyEvent e) {
     final var loc = this.loc;
     if (loc < 0) return;
-    var dataWidth = state.getAttributeValue(StdAttr.WIDTH);
+    com.cburch.logisim.data.BitWidth dataWidth = state.getAttributeValue(StdAttr.WIDTH);
     if (dataWidth == null) dataWidth = BitWidth.create(8);
     final var data = (ShiftRegisterData) state.getData();
     final var i = data.getLength() - 1 - loc;
-    var curValue = data.get(i).toLongValue();
+    long curValue = data.get(i).toLongValue();
     if (e.getKeyCode() == KeyEvent.VK_UP) {
       final var maxVal = dataWidth.getMask();
       if (curValue != maxVal) {
@@ -130,7 +130,7 @@ public class ShiftRegisterPoker extends InstancePoker {
       if (oldLoc == newLoc) {
         final var data = (ShiftRegisterData) state.getData();
         final var i = data.getLength() - 1 - loc;
-        var v = data.get(i);
+        com.cburch.logisim.data.Value v = data.get(i);
         v = (v == Value.FALSE) ? Value.TRUE : Value.FALSE;
         data.set(i, v);
         state.fireInvalidated();
@@ -146,7 +146,7 @@ public class ShiftRegisterPoker extends InstancePoker {
     final var bds = painter.getInstance().getBounds();
     if (painter.getAttributeValue(StdAttr.APPEARANCE) == StdAttr.APPEAR_CLASSIC) {
       final var x = bds.getX() + 15 + loc * 10;
-      var y = bds.getY();
+      int y = bds.getY();
       final var label = painter.getAttributeValue(StdAttr.LABEL);
       if (label == null || label.equals("")) y += bds.getHeight() / 2;
       else y += 3 * bds.getHeight() / 4;

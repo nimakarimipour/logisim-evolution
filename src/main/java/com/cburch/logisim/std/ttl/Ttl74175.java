@@ -45,13 +45,13 @@ public class Ttl74175 extends AbstractTtlGate {
 
   @Override
   public void propagateTtl(InstanceState state) {
-    var data = (TtlRegisterData) state.getData();
+    com.cburch.logisim.std.ttl.TtlRegisterData data = (TtlRegisterData) state.getData();
     if (data == null) {
       // changed = true;
       data = new TtlRegisterData(BitWidth.create(4));
       state.setData(data);
     }
-    var triggered = data.updateClock(state.getPortValue(7));
+    boolean triggered = data.updateClock(state.getPortValue(7));
     if (state.getPortValue(0) == Value.FALSE) {
       data.setValue(Value.createKnown(data.getWidth(), 0));
     } else if (triggered) {

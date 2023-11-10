@@ -41,7 +41,7 @@ public class FlipFlopIcon extends BaseIcon {
 
   private void paintClassicIcon(Graphics2D g2) {
     g2.drawRect(scale(2), scale(2), scale(12), scale(12));
-    var str = "";
+    java.lang.String str = "";
     switch (type) {
       case D_FLIPFLOP -> str = "D";
       case T_FLIPFLOP -> str = "T";
@@ -115,7 +115,7 @@ public class FlipFlopIcon extends BaseIcon {
   }
 
   private void paintRegisterIcon(Graphics2D g2) {
-    for (var i = 2; i >= 0; i--) {
+    for (int i = 2; i >= 0; i--) {
       g2.setColor(Color.WHITE);
       g2.fillRect(scale((i + 1) * 2), scale(4 - i * 2), scale(8), scale(12));
       g2.setColor(Color.BLACK);

@@ -34,7 +34,7 @@ public class FatArrowIcon extends BaseIcon {
     g2.setColor(Color.blue);
     final var path = new GeneralPath();
     path.moveTo(AppPreferences.getScaled(points[0]), AppPreferences.getScaled(points[1]));
-    for (var i = 2; i < points.length; i += 2)
+    for (int i = 2; i < points.length; i += 2)
       path.lineTo(AppPreferences.getScaled(points[i]), AppPreferences.getScaled(points[i + 1]));
     path.closePath();
     g2.fill(path);

@@ -175,7 +175,7 @@ public class VhdlContentComponent extends HdlContent {
     inputs = new Port[inputsDesc.size()];
     outputs = new Port[outputsDesc.size()];
 
-    for (var i = 0; i < inputsDesc.size(); i++) {
+    for (int i = 0; i < inputsDesc.size(); i++) {
       final var desc = inputsDesc.get(i);
       inputs[i] =
           new Port(

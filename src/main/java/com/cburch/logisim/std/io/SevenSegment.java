@@ -265,9 +265,9 @@ public class SevenSegment extends InstanceFactory implements DynamicElementProvi
 
   @Override
   public void propagate(InstanceState state) {
-    var summary = 0;
+    int summary = 0;
     final var max = state.getAttributeValue(ATTR_DP) ? 8 : 7;
-    for (var i = 0; i < max; i++) {
+    for (int i = 0; i < max; i++) {
       Value val = state.getPortValue(i);
       if (val == Value.TRUE) summary |= 1 << i;
     }

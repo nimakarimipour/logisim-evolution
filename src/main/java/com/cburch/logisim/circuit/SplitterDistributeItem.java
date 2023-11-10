@@ -32,8 +32,8 @@ class SplitterDistributeItem extends JMenuItem implements ActionListener {
     final var attrs = (SplitterAttributes) splitter.getAttributeSet();
     final var actual = attrs.bitEnd;
     final var desired = SplitterAttributes.computeDistribution(attrs.fanout, actual.length, order);
-    var same = actual.length == desired.length;
-    for (var i = 0; same && i < desired.length; i++) {
+    boolean same = actual.length == desired.length;
+    for (int i = 0; same && i < desired.length; i++) {
       if (actual[i] != desired[i]) {
         same = false;
       }

@@ -35,14 +35,14 @@ public class ArgonXml {
     this.content = element.getTextContent();
     final var namedNodeMap = element.getAttributes();
     int n = namedNodeMap.getLength();
-    for (var i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
       final var node = namedNodeMap.item(i);
       final var name = node.getNodeName();
       addAttribute(name, node.getNodeValue());
     }
     final var nodes = element.getChildNodes();
     n = nodes.getLength();
-    for (var i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
       final var node = nodes.item(i);
       int type = node.getNodeType();
       if (type == Node.ELEMENT_NODE) {

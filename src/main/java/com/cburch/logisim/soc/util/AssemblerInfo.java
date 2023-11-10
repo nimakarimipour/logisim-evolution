@@ -76,7 +76,7 @@ public class AssemblerInfo {
 
     public long getEntryPoint() {
       if (instructions.isEmpty()) return -1;
-      var result = -1L;
+      long result = -1L;
       for (final var x : instructions.keySet()) {
         if (result < 0 || x < result) result = x;
       }
@@ -96,7 +96,7 @@ public class AssemblerInfo {
     }
 
     public void addString(String str) {
-      for (var i = 0; i < str.length(); i++) {
+      for (int i = 0; i < str.length(); i++) {
         if (str.charAt(i) == '\\') {
           i++;
           if (i < str.length()) {
@@ -133,7 +133,7 @@ public class AssemblerInfo {
     }
 
     public boolean replaceLabels(Map<String, Long> labels, Map<AssemblerToken, StringGetter> errors) {
-      var hasError = false;
+      boolean hasError = false;
       for (final var addr : instructions.keySet())
         hasError |= !instructions.get(addr).replaceLabels(labels, errors);
       for (String label : labels.keySet()) {
@@ -147,7 +147,7 @@ public class AssemblerInfo {
     }
 
     public boolean replaceDefines(Map<String, Integer> defines, Map<AssemblerToken, StringGetter> errors) {
-      var errorsFound = false;
+      boolean errorsFound = false;
       for (final var addr : instructions.keySet()) {
         errorsFound |= !instructions.get(addr).replaceDefines(defines, errors);
       }
@@ -171,7 +171,7 @@ public class AssemblerInfo {
     }
 
     public boolean download(SocProcessorInterface cpu, CircuitState state) {
-      for (var i = sectionStart; i < sectionEnd; i++) {
+      for (long i = sectionStart; i < sectionEnd; i++) {
         final var datab = data.containsKey(i) ? data.get(i) : 0;
         final var trans =
             new SocBusTransaction(
@@ -242,7 +242,7 @@ public class AssemblerInfo {
     final var defines = new HashMap<String, Integer>();
     currentSection = -1;
     /* first pass: go through all tokens and mark the labels */
-    for (var i = 0; i < tokens.size(); i++) {
+    for (int i = 0; i < tokens.size(); i++) {
       final var asm = tokens.get(i);
       switch (asm.getType()) {
         case AssemblerToken.ASM_INSTRUCTION -> i += handleAsmInstructions(tokens, i, asm, defines);
@@ -520,7 +520,7 @@ public class AssemblerInfo {
           errors.put(next, S.getter("AssemblerExpectingNumber"));
           return skip;
         }
-        var value = next.getLongValue();
+        long value = next.getLongValue();
         if (maxRange > 0 &&  value >= (1L << maxRange)) {
           errors.put(next, S.getter("AssemblerValueOutOfRange"));
           return skip;

@@ -74,7 +74,7 @@ public class PrefOptionList implements ActionListener, PropertyChangeListener {
   }
 
   private void selectOption(Object value) {
-    for (var i = combo.getItemCount() - 1; i >= 0; i--) {
+    for (int i = combo.getItemCount() - 1; i >= 0; i--) {
       final var opt = combo.getItemAt(i);
       if (opt.getValue().equals(value)) {
         combo.setSelectedItem(opt);

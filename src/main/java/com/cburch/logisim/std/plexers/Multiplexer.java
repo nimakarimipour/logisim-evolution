@@ -131,7 +131,7 @@ public class Multiplexer extends InstanceFactory {
     } else {
       final var w = (wide ? 40 : 20);
       final var lengthAdjust = (wide ? 0 : -5);
-      var offs = -(inputs / 2) * 10 - 10;
+      int offs = -(inputs / 2) * 10 - 10;
       final var length = inputs * 10 + 20 + lengthAdjust;
       // narrow isn't symmetrical when switchinng selector sides, rotating
       if (!wide && (dir == Direction.SOUTH || dir == Direction.WEST)) offs += 5;
@@ -329,10 +329,10 @@ public class Multiplexer extends InstanceFactory {
     } else {
       w = (size == PlexersLibrary.SIZE_NARROW ? 20 : 40);
       s = (size == PlexersLibrary.SIZE_NARROW ? 10 : 20);
-      var dx = -(inputs / 2) * 10;
-      var ddx = 10;
-      var dy = -(inputs / 2) * 10;
-      var ddy = 10;
+      int dx = -(inputs / 2) * 10;
+      int ddx = 10;
+      int dy = -(inputs / 2) * 10;
+      int ddy = 10;
       if (dir == Direction.WEST) {
         dx = w;
         ddx = 0;
@@ -350,7 +350,7 @@ public class Multiplexer extends InstanceFactory {
         ddx = 0;
         sel = Location.create(-s, selMult * (dy + 10 * inputs), true);
       }
-      for (var i = 0; i < inputs; i++) {
+      for (int i = 0; i < inputs; i++) {
         ps[i] = new Port(dx, dy, Port.INPUT, data.getWidth());
         dx += ddx;
         dy += ddy;
@@ -367,7 +367,7 @@ public class Multiplexer extends InstanceFactory {
     }
     ps[ps.length - 1] = new Port(0, 0, Port.OUTPUT, data.getWidth());
 
-    for (var i = 0; i < inputs; i++) {
+    for (int i = 0; i < inputs; i++) {
       ps[i].setToolTip(S.getter("multiplexerInTip", "" + i));
     }
     ps[inputs].setToolTip(S.getter("multiplexerSelectTip"));

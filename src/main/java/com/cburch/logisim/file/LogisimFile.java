@@ -87,7 +87,7 @@ public class LogisimFile extends Library implements LibraryEventSource, CircuitL
     // Creates the default project name, adding an underscore if needed
     name = S.get("defaultProjectName");
     if (Projects.windowNamed(name)) {
-      for (var i = 2; true; i++) {
+      for (int i = 2; true; i++) {
         if (!Projects.windowNamed(name + "_" + i)) {
           name += "_" + i;
           break;
@@ -155,7 +155,7 @@ public class LogisimFile extends Library implements LibraryEventSource, CircuitL
     in.reset();
 
     int lineBreak = first.length;
-    for (var i = 0; i < lineBreak; i++) {
+    for (int i = 0; i < lineBreak; i++) {
       if (first[i] == '\n') {
         lineBreak = i;
       }
@@ -411,7 +411,7 @@ public class LogisimFile extends Library implements LibraryEventSource, CircuitL
   }
 
   public int indexOfCircuit(Circuit circ) {
-    for (var i = 0; i < tools.size(); i++) {
+    for (int i = 0; i < tools.size(); i++) {
       final var tool = tools.get(i);
       if (tool.getFactory() instanceof SubcircuitFactory factory) {
         if (factory.getSubcircuit() == circ) {
@@ -433,7 +433,7 @@ public class LogisimFile extends Library implements LibraryEventSource, CircuitL
   }
 
   public int indexOfVhdl(VhdlContent vhdl) {
-    for (var i = 0; i < tools.size(); i++) {
+    for (int i = 0; i < tools.size(); i++) {
       final var tool = tools.get(i);
       if (tool.getFactory() instanceof VhdlEntity factory) {
         if (factory.getContent() == vhdl) {
@@ -608,7 +608,7 @@ public class LogisimFile extends Library implements LibraryEventSource, CircuitL
       loader.showError("internal error configuring parser");
     } catch (TransformerException e) {
       final var msg = e.getMessage();
-      var err = S.get("xmlConversionError");
+      java.lang.String err = S.get("xmlConversionError");
       if (msg == null) err += ": " + msg;
       loader.showError(err);
     }

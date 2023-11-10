@@ -118,7 +118,7 @@ public class TextTool extends AbstractTool {
     }
 
     Text clicked = null;
-    var found = false;
+    boolean found = false;
     final var mx = e.getX();
     final var my = e.getY();
     final var mloc = Location.create(mx, my, false);

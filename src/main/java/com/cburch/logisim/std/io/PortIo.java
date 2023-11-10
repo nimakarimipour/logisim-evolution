@@ -50,7 +50,7 @@ public class PortIo extends InstanceFactory {
 
   public static List<String> getLabels(int size) {
     List<String> labelNames = new ArrayList<>();
-    for (var i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
       labelNames.add("pin_" + (i + 1));
     }
     return labelNames;
@@ -75,7 +75,7 @@ public class PortIo extends InstanceFactory {
       inputState = new ArrayList<>();
       pokeState = new ArrayList<>();
       enableState = new ArrayList<>();
-      for (var pin = 0; pin < size; pin++) {
+      for (int pin = 0; pin < size; pin++) {
         inputState.add(Value.createUnknown(BIT_WIDTH));
         pokeState.add(Value.createUnknown(BIT_WIDTH));
         enableState.add(Value.createKnown(BIT_WIDTH, 0L));
@@ -85,7 +85,7 @@ public class PortIo extends InstanceFactory {
     public void resize(int newSize) {
       if (newSize == size) return;
       if (newSize > size) {
-        for (var newPin = size; newPin < newSize; newPin++) {
+        for (int newPin = size; newPin < newSize; newPin++) {
           inputState.add(Value.createUnknown(BIT_WIDTH));
           pokeState.add(Value.createUnknown(BIT_WIDTH));
           enableState.add(Value.createKnown(BIT_WIDTH, 0L));
@@ -256,17 +256,17 @@ public class PortIo extends InstanceFactory {
     final var size = instance.getAttributeValue(ATTR_SIZE).getWidth();
     // logisim max bus size is BitWidth.MAXWIDTH, so use multiple buses if needed
     final var nBus = (((size - 1) / BitWidth.MAXWIDTH) + 1);
-    var nPorts = -1;
+    int nPorts = -1;
     if (dir == INPUT || dir == OUTPUT) nPorts = nBus;
     else if (dir == INOUTME) nPorts = 3 * nBus;
     else if (dir == INOUTSE) nPorts = 2 * nBus + 1;
     Port[] ps = new Port[nPorts];
-    var p = 0;
+    int p = 0;
 
-    var x = 0;
-    var y = 0;
-    var dx = 0;
-    var dy = 0;
+    int x = 0;
+    int y = 0;
+    int dx = 0;
+    int dy = 0;
     if (facing == Direction.NORTH) dy = -10;
     else if (facing == Direction.SOUTH) dy = 10;
     else if (facing == Direction.WEST) dx = -10;
@@ -282,8 +282,8 @@ public class PortIo extends InstanceFactory {
       x += dx;
       y += dy;
     }
-    var n = size;
-    var i = 0;
+    int n = size;
+    int i = 0;
     while (n > 0) {
       final var e = Math.min(n, BitWidth.MAXWIDTH);
       final var range = "[" + i + "..." + (i + e - 1) + "]";
@@ -325,7 +325,7 @@ public class PortIo extends InstanceFactory {
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
     final var facing = attrs.getValue(StdAttr.FACING);
-    var n = attrs.getValue(ATTR_SIZE).getWidth();
+    int n = attrs.getValue(ATTR_SIZE).getWidth();
     if (n < 8) n = 8;
     return Bounds.create(0, 0, 10 + (n + 1) / 2 * 10, 50).rotate(Direction.EAST, facing, 0, 0);
   }
@@ -345,9 +345,9 @@ public class PortIo extends InstanceFactory {
       ComponentMapInformationContainer map = instance.getAttributeValue(StdAttr.MAPINFO);
       if (map != null) {
         final var nrPins = instance.getAttributeValue(ATTR_SIZE).getWidth();
-        var inputs = 0;
-        var outputs = 0;
-        var ios = 0;
+        int inputs = 0;
+        int outputs = 0;
+        int ios = 0;
         final var labels = getLabels(nrPins);
         if (instance.getAttributeValue(ATTR_DIR) == INPUT) {
           inputs = nrPins;
@@ -388,7 +388,7 @@ public class PortIo extends InstanceFactory {
     final var y = painter.getLocation().getY();
     final var g = painter.getGraphics();
     g.translate(x, y);
-    var rotate = 0.0;
+    double rotate = 0.0;
     if (facing != Direction.EAST) {
       rotate = -facing.toRadians();
       ((Graphics2D) g).rotate(rotate);
@@ -407,19 +407,19 @@ public class PortIo extends InstanceFactory {
     final var nBus = (((size - 1) / BitWidth.MAXWIDTH) + 1);
     if (!painter.getShowState()) {
       g.setColor(Color.LIGHT_GRAY);
-      for (var i = 0; i < size; i++) g.fillRect(7 + ((i / 2) * 10), 25 + (i % 2) * 10, 6, 6);
+      for (int i = 0; i < size; i++) g.fillRect(7 + ((i / 2) * 10), 25 + (i % 2) * 10, 6, 6);
     } else {
       PortState data = getState(painter);
-      for (var i = 0; i < size; i++) {
+      for (int i = 0; i < size; i++) {
         g.setColor(data.getPinColor(i, painter.getAttributeValue(ATTR_DIR)));
         g.fillRect(7 + ((i / 2) * 10), 25 + (i % 2) * 10, 6, 6);
       }
     }
     g.setColor(Color.BLACK);
     AttributeOption dir = painter.getAttributeValue(ATTR_DIR);
-    var px = ((dir == INOUTSE || dir == INOUTME) ? 0 : 10);
+    int px = ((dir == INOUTSE || dir == INOUTME) ? 0 : 10);
     final var py = 0;
-    for (var p = 0; p < nBus; p++) {
+    for (int p = 0; p < nBus; p++) {
       if (dir == INOUTSE) {
         GraphicsUtil.switchToWidth(g, 3);
         if (p == 0) {
@@ -446,7 +446,7 @@ public class PortIo extends InstanceFactory {
       }
     }
 
-    for (var p = 0; p < nBus; p++) {
+    for (int p = 0; p < nBus; p++) {
       if (dir == INPUT || dir == INOUTSE || dir == INOUTME) {
         GraphicsUtil.switchToWidth(g, 3);
         g.drawLine(px, py, px, py + 5);
@@ -470,7 +470,7 @@ public class PortIo extends InstanceFactory {
 
   private static PortState getState(InstanceState state) {
     final var size = state.getAttributeValue(ATTR_SIZE).getWidth();
-    var data = (PortState) state.getData();
+    com.cburch.logisim.std.io.PortIo.PortState data = (PortState) state.getData();
     if (data == null) {
       data = new PortState(size);
       state.setData(data);
@@ -486,14 +486,14 @@ public class PortIo extends InstanceFactory {
     final var nrOfPins = state.getAttributeValue(ATTR_SIZE).getWidth();
     final var stateData = getState(state);
 
-    var currentPortIndex = 0;
+    int currentPortIndex = 0;
     // first we update the state data
     if (portType.equals(INOUTSE) || portType.equals(INOUTME) || portType.equals(OUTPUT)) {
-      var enableValue = state.getPortValue(currentPortIndex);
+      com.cburch.logisim.data.Value enableValue = state.getPortValue(currentPortIndex);
       if (portType.equals(INOUTSE) || portType.equals(INOUTME)) currentPortIndex++;
-      var inputValue = state.getPortValue(currentPortIndex);
-      var pinIndexCorrection = -BitWidth.MAXWIDTH;
-      for (var pinIndex = 0; pinIndex < nrOfPins; pinIndex++) {
+      com.cburch.logisim.data.Value inputValue = state.getPortValue(currentPortIndex);
+      int pinIndexCorrection = -BitWidth.MAXWIDTH;
+      for (int pinIndex = 0; pinIndex < nrOfPins; pinIndex++) {
         if ((pinIndex % BitWidth.MAXWIDTH) == 0) {
           if ((portType.equals(INOUTME)) && (pinIndex > 0))
             enableValue = state.getPortValue(currentPortIndex++);
@@ -509,12 +509,12 @@ public class PortIo extends InstanceFactory {
     }
     // now we force the outputs
     if (!portType.equals(OUTPUT)) {
-      var nrOfRemainingPins = nrOfPins;
-      var nrOfPinsInCurrentBus = Math.min(nrOfRemainingPins, BitWidth.MAXWIDTH);
+      int nrOfRemainingPins = nrOfPins;
+      int nrOfPinsInCurrentBus = Math.min(nrOfRemainingPins, BitWidth.MAXWIDTH);
       nrOfRemainingPins -= nrOfPinsInCurrentBus;
-      var outputValue = new Value[nrOfPinsInCurrentBus];
-      var pinIndexCorrection = 0;
-      for (var pinIndex = 0; pinIndex < nrOfPins; pinIndex++) {
+      com.cburch.logisim.data.Value[] outputValue = new Value[nrOfPinsInCurrentBus];
+      int pinIndexCorrection = 0;
+      for (int pinIndex = 0; pinIndex < nrOfPins; pinIndex++) {
         if ((pinIndex > 0) && ((pinIndex % BitWidth.MAXWIDTH) == 0)) {
           state.setPort(currentPortIndex++, Value.create(outputValue), DELAY);
           nrOfPinsInCurrentBus = Math.min(nrOfRemainingPins, BitWidth.MAXWIDTH);

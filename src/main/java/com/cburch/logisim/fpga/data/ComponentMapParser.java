@@ -80,10 +80,10 @@ public class ComponentMapParser {
     final var circuitInfo = nodeList.item(0);
     final var circuitInfoDetails = circuitInfo.getChildNodes();
 
-    for (var i = 0; i < circuitInfoDetails.getLength(); i++) {
+    for (int i = 0; i < circuitInfoDetails.getLength(); i++) {
       if (circuitInfoDetails.item(i).getNodeName().equals("GlobalMapInformation")) {
         final var attrs = circuitInfoDetails.item(i).getAttributes();
-        for (var j = 0; j < attrs.getLength(); j++) {
+        for (int j = 0; j < attrs.getLength(); j++) {
           if (attrs.item(j).getNodeName().equals("BoardName")) {
             if (!boardInfo.getBoardName().equals(attrs.item(j).getNodeValue())) {
               return WrongBoard;
@@ -100,15 +100,15 @@ public class ComponentMapParser {
 
     /* cleanup the current map */
     unMapAll();
-    for (var i = 0; i < circuitInfoDetails.getLength(); i++) {
+    for (int i = 0; i < circuitInfoDetails.getLength(); i++) {
       if (circuitInfoDetails.item(i).getNodeName().startsWith("MAPPEDCOMPONENT")) {
-        var x = -1;
-        var y = -1;
-        var width = -1;
-        var height = -1;
-        var key = "";
+        int x = -1;
+        int y = -1;
+        int width = -1;
+        int height = -1;
+        java.lang.String key = "";
         final var attrs = circuitInfoDetails.item(i).getAttributes();
-        for (var j = 0; j < attrs.getLength(); j++) {
+        for (int j = 0; j < attrs.getLength(); j++) {
           if (attrs.item(j).getNodeName().equals(MapSectionStrings[0])) {
             key = attrs.item(j).getNodeValue();
           }

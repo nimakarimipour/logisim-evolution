@@ -43,7 +43,7 @@ public class ModelChangeAttributeAction extends ModelAction {
   public String getName() {
     Attribute<?> a = attr;
     if (a == null) {
-      var found = false;
+      boolean found = false;
       for (final var key : newValues.keySet()) {
         final var at = key.getAttribute();
         if (found) {

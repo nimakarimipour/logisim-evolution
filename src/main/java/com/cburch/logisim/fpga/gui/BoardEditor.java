@@ -134,8 +134,8 @@ public class BoardEditor implements ActionListener, BaseComponentListenerContrac
 
     panel.setLocationRelativeTo(null);
     panel.setVisible(true);
-    var screenWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-    var screenHeight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+    int screenWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+    int screenHeight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
     final var imageWidth = picturepanel.getWidth();
     final var imageHeight = picturepanel.getHeight();
     final var imageBorderX = panel.getWidth() - imageWidth;

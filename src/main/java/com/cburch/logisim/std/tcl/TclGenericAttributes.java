@@ -34,7 +34,7 @@ public class TclGenericAttributes extends TclComponentAttributes {
 
   public static HdlContentEditor getContentEditor(Window source, HdlContent value, Project proj) {
     synchronized (windowRegistry) {
-      var ret = windowRegistry.get(value);
+      com.cburch.logisim.std.hdl.HdlContentEditor ret = windowRegistry.get(value);
       if (ret == null) {
         ret =
             (source instanceof Frame)

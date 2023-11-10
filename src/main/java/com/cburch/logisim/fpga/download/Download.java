@@ -125,7 +125,7 @@ public class Download extends DownloadBase implements Runnable, BaseWindowListen
     this.mapFileName = mapFileName;
     final var rootSheet = myProject.getLogisimFile().getCircuit(topLevelSheet);
     if (rootSheet == null) return;
-    var steps = basicSteps;
+    int steps = basicSteps;
     if (!this.generateHdlOnly && useGui) rootSheet.setDownloadBoard(myBoardInformation.getBoardName());
     switch (vendor) {
       case VendorSoftware.VENDOR_ALTERA -> downloader =
@@ -189,7 +189,7 @@ public class Download extends DownloadBase implements Runnable, BaseWindowListen
   }
 
   private void fireEvent(ActionEvent e) {
-    for (var listener : listeners) {
+    for (java.awt.event.ActionListener listener : listeners) {
       listener.actionPerformed(e);
     }
   }
@@ -198,7 +198,7 @@ public class Download extends DownloadBase implements Runnable, BaseWindowListen
   public void run() {
     if (prepareDownload() && isVendorSoftwarePresent() && !generateHdlOnly) {
       try {
-        var error = download();
+        java.lang.String error = download();
         if (error != null) Reporter.report.addFatalError(error);
       } catch (IOException e) {
         Reporter.report.addFatalError(S.get("FPGAIOError", VendorSoftware.getVendorString(vendor)));
@@ -222,7 +222,7 @@ public class Download extends DownloadBase implements Runnable, BaseWindowListen
     if (generateHdlOnly) return true;
     if (!isVendorSoftwarePresent()) return false;
     try {
-      var error = download();
+      java.lang.String error = download();
       if (error != null) {
         Reporter.report.addFatalError(error);
         return false;
@@ -241,7 +241,7 @@ public class Download extends DownloadBase implements Runnable, BaseWindowListen
   private String download() throws IOException, InterruptedException {
     Reporter.report.clearConsole();
     if (!downloadOnly || !downloader.readyForDownload()) {
-      for (var stages = 0; stages < downloader.getNumberOfStages(); stages++) {
+      for (int stages = 0; stages < downloader.getNumberOfStages(); stages++) {
         if (stopRequested) return S.get("FPGAInterrupted");
         final var currentStage = downloader.performStep(stages);
         if (currentStage != null) {
@@ -269,17 +269,17 @@ public class Download extends DownloadBase implements Runnable, BaseWindowListen
         return S.get("FPGADownloadAborted");
       }
     if (!downloader.isBoardConnected()) return S.get("FPGABoardNotConnected");
-    var DownloadBitfile = downloader.downloadToBoard();
+    java.lang.ProcessBuilder DownloadBitfile = downloader.downloadToBoard();
     if (DownloadBitfile != null) return execute(S.get("FPGADownloadBitfile"), DownloadBitfile);
     else return null;
   }
 
   public static String execute(ProcessBuilder process, List<String> report) throws IOException, InterruptedException {
-    var executable = process.start();
-    var is = executable.getInputStream();
-    var isr = new InputStreamReader(is);
-    var br = new BufferedReader(isr);
-    var line = "";
+    java.lang.Process executable = process.start();
+    java.io.InputStream is = executable.getInputStream();
+    java.io.InputStreamReader isr = new InputStreamReader(is);
+    java.io.BufferedReader br = new BufferedReader(isr);
+    java.lang.String line = "";
     while ((line = br.readLine()) != null) {
       Reporter.report.print(line);
       if (report != null) report.add(line);
@@ -300,10 +300,10 @@ public class Download extends DownloadBase implements Runnable, BaseWindowListen
     synchronized (lock) {
       executable = process.start();
     }
-    var is = executable.getInputStream();
-    var isr = new InputStreamReader(is);
-    var br = new BufferedReader(isr);
-    var line = "";
+    java.io.InputStream is = executable.getInputStream();
+    java.io.InputStreamReader isr = new InputStreamReader(is);
+    java.io.BufferedReader br = new BufferedReader(isr);
+    java.lang.String line = "";
     while ((line = br.readLine()) != null) {
       Reporter.report.print(line);
     }
@@ -354,9 +354,9 @@ public class Download extends DownloadBase implements Runnable, BaseWindowListen
       }
     } else {
       if (mapFileName != null) {
-        var mapFile = new File(mapFileName);
+        java.io.File mapFile = new File(mapFileName);
         if (!mapFile.exists()) return false;
-        var cmp = new ComponentMapParser(mapFile, myMappableResources, myBoardInformation);
+        com.cburch.logisim.fpga.data.ComponentMapParser cmp = new ComponentMapParser(mapFile, myMappableResources, myBoardInformation);
         cmp.parseFile();
       }
     }
@@ -399,7 +399,7 @@ public class Download extends DownloadBase implements Runnable, BaseWindowListen
   }
 
   public static String getClockFrequencyString(BoardInformation currentBoard) {
-    var clkfreq = currentBoard.fpga.getClockFrequency();
+    long clkfreq = currentBoard.fpga.getClockFrequency();
     if (clkfreq % 1000000 == 0) {
       clkfreq /= 1000000;
       return clkfreq + " MHz ";
@@ -413,8 +413,8 @@ public class Download extends DownloadBase implements Runnable, BaseWindowListen
   public static String chooseBoard(List<String> devices) {
     /* This code is based on the version of Kevin Walsh */
     if (Main.hasGui()) {
-      var choices = new String[devices.size()];
-      for (var i = 0; i < devices.size(); i++) choices[i] = devices.get(i);
+      java.lang.String[] choices = new String[devices.size()];
+      for (int i = 0; i < devices.size(); i++) choices[i] = devices.get(i);
       return (String)
           OptionPane.showInputDialog(
               null,

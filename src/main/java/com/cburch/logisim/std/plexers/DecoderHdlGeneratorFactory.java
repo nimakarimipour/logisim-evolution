@@ -27,7 +27,7 @@ public class DecoderHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
   public void getGenerationTimeWiresPorts(Netlist theNetlist, AttributeSet attrs) {
     final var nrOfselectBits = attrs.getValue(PlexersLibrary.ATTR_SELECT).getWidth();
     final var selectInputIndex = (1 << nrOfselectBits);
-    for (var outp = 0; outp < selectInputIndex; outp++) {
+    for (int outp = 0; outp < selectInputIndex; outp++) {
       myPorts.add(Port.OUTPUT, String.format("decoderOut_%d", outp), 1, outp);
     }
     myPorts.add(Port.INPUT, "sel", nrOfselectBits, selectInputIndex);
@@ -40,8 +40,8 @@ public class DecoderHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
     final var contents = LineBuffer.getBuffer();
     final var nrOfselectBits = attrs.getValue(PlexersLibrary.ATTR_SELECT).getWidth();
     final var numOutputs = (1 << nrOfselectBits);
-    var space = " ";
-    for (var i = 0; i < numOutputs; i++) {
+    java.lang.String space = " ";
+    for (int i = 0; i < numOutputs; i++) {
       if (i == 10) space = "";
       contents.pair("bin", Hdl.getConstantVector(i, nrOfselectBits))
               .pair("i", i);

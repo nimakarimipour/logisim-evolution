@@ -29,7 +29,7 @@ public final class InputEventUtil {
   }
 
   public static int fromDisplayString(String str) {
-    var ret = 0;
+    int ret = 0;
     final var toks = new StringTokenizer(str);
     while (toks.hasMoreTokens()) {
       final var s = toks.nextToken();
@@ -57,7 +57,7 @@ public final class InputEventUtil {
   }
 
   public static int fromString(String str) {
-    var ret = 0;
+    int ret = 0;
     final var toks = new StringTokenizer(str);
     while (toks.hasMoreTokens()) {
       final var s = toks.nextToken();

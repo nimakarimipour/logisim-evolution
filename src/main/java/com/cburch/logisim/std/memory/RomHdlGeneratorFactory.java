@@ -35,7 +35,7 @@ public class RomHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
                 Hdl.getBusName(componentInfo, RamAppearance.getDataOutIndex(0, attrs), nets),
                 dataWidth))
             .setDefault(0L);
-    for (var addr = 0L; addr < (1L << addressWidth); addr++) {
+    for (long addr = 0L; addr < (1L << addressWidth); addr++) {
       final var romValue = romContents.get(addr);
       if (romValue != 0L) generator.add(addr, romValue);
     }

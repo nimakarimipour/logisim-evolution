@@ -46,8 +46,8 @@ class FilePanel extends LogPanel {
     chooser.setFileFilter(TestVector.FILE_FILTER);
 
     final var filePanel = new JPanel(new GridBagLayout());
-    var gb = (GridBagLayout) filePanel.getLayout();
-    var gc = new GridBagConstraints();
+    java.awt.GridBagLayout gb = (GridBagLayout) filePanel.getLayout();
+    java.awt.GridBagConstraints gc = new GridBagConstraints();
     gc.fill = GridBagConstraints.HORIZONTAL;
     gb.setConstraints(fileLabel, gc);
     filePanel.add(fileLabel);
@@ -66,7 +66,7 @@ class FilePanel extends LogPanel {
     gc.gridx = 0;
     gc.weightx = 1.0;
     gc.gridy = GridBagConstraints.RELATIVE;
-    var glue = new JPanel();
+    javax.swing.JPanel glue = new JPanel();
     gc.weighty = 1.0;
     gb.setConstraints(glue, gc);
     add(glue);

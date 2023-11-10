@@ -110,8 +110,8 @@ public class Curve extends FillableCanvasObject {
     }
 
     final var g = gesture.getHandle();
-    var gx = g.getX() + gesture.getDeltaX();
-    var gy = g.getY() + gesture.getDeltaY();
+    int gx = g.getX() + gesture.getDeltaX();
+    int gy = g.getY() + gesture.getDeltaY();
     Handle[] ret = {new Handle(this, p0), new Handle(this, p1), new Handle(this, p2)};
     if (g.isAt(p0)) {
       ret[0] =
@@ -168,7 +168,7 @@ public class Curve extends FillableCanvasObject {
 
   @Override
   public int matchesHashCode() {
-    var ret = p0.hashCode();
+    int ret = p0.hashCode();
     ret = ret * 31 * 31 + p1.hashCode();
     ret = ret * 31 * 31 + p2.hashCode();
     ret = ret * 31 + super.matchesHashCode();

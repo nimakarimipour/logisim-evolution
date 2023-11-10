@@ -30,8 +30,8 @@ public class PlexerIcon extends BaseIcon {
     g2.setStroke(new BasicStroke(scale(2)));
     final var realPosX = new int[4];
     final var realPosY = new int[4];
-    var xOffset = inverted ? 2 : 0;
-    for (var i = 0; i < 4; i++) {
+    int xOffset = inverted ? 2 : 0;
+    for (int i = 0; i < 4; i++) {
       realPosX[i] = scale(xpos[(i + xOffset) & 3]);
       realPosY[i] = scale(ypos[i]);
     }
@@ -40,7 +40,7 @@ public class PlexerIcon extends BaseIcon {
     g2.drawLine(xOffset, scale(11), xOffset, scale(15));
     /* draw output */
     xOffset = inverted ? scale(xpos[0] - 1) : scale(xpos[2] - 1);
-    var yOffset = scale(ypos[3] + 1);
+    int yOffset = scale(ypos[3] + 1);
     g2.setColor(Value.trueColor);
     g2.fillOval(xOffset, yOffset, scale(3), scale(3));
     xOffset = inverted ? scale(xpos[2] - 1) : scale(xpos[0] - 1);

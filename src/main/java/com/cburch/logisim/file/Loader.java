@@ -130,11 +130,11 @@ public class Loader implements LibraryLoader {
 
   private static File determineBackupName(File base) {
     final var dir = base.getParentFile();
-    var name = base.getName();
+    java.lang.String name = base.getName();
     if (name.endsWith(LOGISIM_EXTENSION)) {
       name = name.substring(0, name.length() - LOGISIM_EXTENSION.length());
     }
-    for (var i = 1; i <= 20; i++) {
+    for (int i = 1; i <= 20; i++) {
       final var ext = i == 1 ? ".bak" : (".bak" + i);
       final var candidate = new File(dir, name + ext);
       if (!candidate.exists()) return candidate;
@@ -183,7 +183,7 @@ public class Loader implements LibraryLoader {
   //
   File getFileFor(String name, FileFilter filter) {
     // Determine the actual file name.
-    var file = new File(name);
+    java.io.File file = new File(name);
     if (!file.isAbsolute()) {
       final var currentDirectory = getCurrentDirectory();
       if (currentDirectory != null) file = new File(currentDirectory, name);
@@ -440,8 +440,8 @@ public class Loader implements LibraryLoader {
     }
 
     if (description.contains("\n") || description.length() > 60) {
-      var lines = 1;
-      for (var pos = description.indexOf('\n');
+      int lines = 1;
+      for (int pos = description.indexOf('\n');
           pos >= 0;
           pos = description.indexOf('\n', pos + 1)) {
         lines++;
@@ -465,7 +465,7 @@ public class Loader implements LibraryLoader {
 
   private void showMessages(LogisimFile source) {
     if (source == null) return;
-    var message = source.getMessage();
+    java.lang.String message = source.getMessage();
     while (message != null) {
       OptionPane.showMessageDialog(
           parent, message, S.get("fileMessageTitle"), OptionPane.INFORMATION_MESSAGE);

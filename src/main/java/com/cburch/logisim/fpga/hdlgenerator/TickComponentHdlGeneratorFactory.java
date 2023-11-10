@@ -36,10 +36,10 @@ public class TickComponentHdlGeneratorFactory extends AbstractHdlGeneratorFactor
     fpgaClockFrequency = fpga_clock_frequency;
     tickFrequency = tick_frequency;
     final var reloadValueAcc = ((double) fpgaClockFrequency) / tickFrequency;
-    var reloadValue = (long) reloadValueAcc;
-    var nrOfBits = 0;
+    long reloadValue = (long) reloadValueAcc;
+    int nrOfBits = 0;
     if ((reloadValue > 0x7FFFFFFFL) | (reloadValue < 0)) reloadValue = 0x7FFFFFFFL;
-    var calcValue = reloadValue;
+    long calcValue = reloadValue;
     while (calcValue != 0) {
       nrOfBits++;
       calcValue /= 2;
@@ -60,7 +60,7 @@ public class TickComponentHdlGeneratorFactory extends AbstractHdlGeneratorFactor
   @Override
   public SortedMap<String, String> getPortMap(Netlist nets, Object mapInfo) {
     final var res = new TreeMap<String, String>();
-    for (var port : myPorts.keySet())
+    for (java.lang.String port : myPorts.keySet())
       res.put(port, myPorts.getFixedMap(port));
     return res;
   }

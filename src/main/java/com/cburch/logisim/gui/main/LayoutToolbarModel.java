@@ -188,8 +188,8 @@ class LayoutToolbarModel extends AbstractToolbarModel {
 
     @Override
     public String getToolTip() {
-      var ret = tool.getDescription();
-      var index = 1;
+      java.lang.String ret = tool.getDescription();
+      int index = 1;
       for (final var item : items) {
         if (item == this) break;
         if (item instanceof ToolItem) ++index;

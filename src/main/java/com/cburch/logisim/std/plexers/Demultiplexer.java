@@ -282,7 +282,7 @@ public class Demultiplexer extends InstanceFactory {
     }
 
     // now propagate them
-    for (var i = 0; i < outputs; i++) {
+    for (int i = 0; i < outputs; i++) {
       state.setPort(i, i == outIndex ? out : others, PlexersLibrary.DELAY);
     }
   }
@@ -293,7 +293,7 @@ public class Demultiplexer extends InstanceFactory {
     final var data = instance.getAttributeValue(StdAttr.WIDTH);
     final var select = instance.getAttributeValue(PlexersLibrary.ATTR_SELECT);
     final var enable = instance.getAttributeValue(PlexersLibrary.ATTR_ENABLE);
-    var outputs = 1 << select.getWidth();
+    int outputs = 1 << select.getWidth();
     final var ps = new Port[outputs + (enable ? 3 : 2)];
     Location sel;
     int selMult = selectLoc == StdAttr.SELECT_BOTTOM_LEFT ? 1 : -1;
@@ -321,9 +321,9 @@ public class Demultiplexer extends InstanceFactory {
       ps[1] = new Port(end1.getX(), end1.getY(), Port.OUTPUT, data.getWidth());
     } else {
       int dx = -(outputs / 2) * 10;
-      var ddx = 10;
-      var dy = dx;
-      var ddy = 10;
+      int ddx = 10;
+      int dy = dx;
+      int ddy = 10;
       if (facing == Direction.WEST) {
         dx = -40;
         ddx = 0;
@@ -341,7 +341,7 @@ public class Demultiplexer extends InstanceFactory {
         ddx = 0;
         sel = Location.create(20, selMult * (dy + 10 * outputs), true);
       }
-      for (var i = 0; i < outputs; i++) {
+      for (int i = 0; i < outputs; i++) {
         ps[i] = new Port(dx, dy, Port.OUTPUT, data.getWidth());
         dx += ddx;
         dy += ddy;
@@ -354,7 +354,7 @@ public class Demultiplexer extends InstanceFactory {
     }
     ps[ps.length - 1] = new Port(0, 0, Port.INPUT, data.getWidth());
 
-    for (var i = 0; i < outputs; i++) {
+    for (int i = 0; i < outputs; i++) {
       ps[i].setToolTip(S.getter("demultiplexerOutTip", "" + i));
     }
     ps[outputs].setToolTip(S.getter("demultiplexerSelectTip"));

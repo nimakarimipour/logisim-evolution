@@ -68,7 +68,7 @@ public class RgbLed extends InstanceFactory implements DynamicElementProvider {
 
   public static List<String> getLabels() {
     final var labelNames = new ArrayList<String>();
-    for (var i = 0; i < 3; i++) labelNames.add("");
+    for (int i = 0; i < 3; i++) labelNames.add("");
     labelNames.set(RED, "RED");
     labelNames.set(GREEN, "GREEN");
     labelNames.set(BLUE, "BLUE");
@@ -208,7 +208,7 @@ public class RgbLed extends InstanceFactory implements DynamicElementProvider {
   @Override
   public void propagate(InstanceState state) {
     int summary = 0;
-    for (var i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {
       final var val = state.getPortValue(i);
       if (val == Value.TRUE) summary |= 1 << i;
     }

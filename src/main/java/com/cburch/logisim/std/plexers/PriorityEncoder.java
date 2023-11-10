@@ -129,7 +129,7 @@ public class PriorityEncoder extends InstanceFactory {
   @Override
   public void propagate(InstanceState state) {
     final var select = state.getAttributeValue(PlexersLibrary.ATTR_SELECT);
-    var n = 1 << select.getWidth();
+    int n = 1 << select.getWidth();
     final var enabled = state.getPortValue(n + EN_IN) != Value.FALSE;
 
     int out = -1;
@@ -161,12 +161,12 @@ public class PriorityEncoder extends InstanceFactory {
   private void updatePorts(Instance instance) {
     Object dir = instance.getAttributeValue(StdAttr.FACING);
     final var select = instance.getAttributeValue(PlexersLibrary.ATTR_SELECT);
-    var n = 1 << select.getWidth();
+    int n = 1 << select.getWidth();
     final var ps = new Port[n + 4];
     if (dir == Direction.NORTH || dir == Direction.SOUTH) {
       int x = -5 * n + 10;
       int y = dir == Direction.NORTH ? 40 : -40;
-      for (var i = 0; i < n; i++) {
+      for (int i = 0; i < n; i++) {
         ps[i] = new Port(x + 10 * i, y, Port.INPUT, 1);
       }
       ps[n + OUT] = new Port(0, 0, Port.OUTPUT, select.getWidth());
@@ -176,7 +176,7 @@ public class PriorityEncoder extends InstanceFactory {
     } else {
       int x = dir == Direction.EAST ? -40 : 40;
       int y = -5 * n + 10;
-      for (var i = 0; i < n; i++) {
+      for (int i = 0; i < n; i++) {
         ps[i] = new Port(x, y + 10 * i, Port.INPUT, 1);
       }
       ps[n + OUT] = new Port(0, 0, Port.OUTPUT, select.getWidth());
@@ -185,7 +185,7 @@ public class PriorityEncoder extends InstanceFactory {
       ps[n + GS] = new Port(0, 10, Port.OUTPUT, 1);
     }
 
-    for (var i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
       ps[i].setToolTip(S.getter("priorityEncoderInTip", "" + i));
     }
     ps[n + OUT].setToolTip(S.getter("priorityEncoderOutTip"));

@@ -29,7 +29,7 @@ public class RegisterLogger extends InstanceLogger {
 
   @Override
   public Value getLogValue(InstanceState state, Object option) {
-    var dataWidth = state.getAttributeValue(StdAttr.WIDTH);
+    com.cburch.logisim.data.BitWidth dataWidth = state.getAttributeValue(StdAttr.WIDTH);
     if (dataWidth == null) dataWidth = BitWidth.create(0);
     final var data = (RegisterData) state.getData();
     if (data == null) return Value.createKnown(dataWidth, 0);

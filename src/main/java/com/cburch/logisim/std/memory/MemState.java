@@ -63,7 +63,7 @@ class MemState implements InstanceData, Cloneable, HexModelListener {
         DisplayHeight
             / (fm.getHeight() + 2); // (dataBits == 1) ? 1 : TotalHeight / (fm.getHeight() + 2);
     if (NrOfLines == 0) NrOfLines = 1;
-    var totalShowableEntries = nrDataSymbolsEachLine * NrOfLines;
+    int totalShowableEntries = nrDataSymbolsEachLine * NrOfLines;
     final var totalNrOfEntries = (1 << addrBits);
     while (totalShowableEntries > (totalNrOfEntries + nrDataSymbolsEachLine - 1)) {
       NrOfLines--;
@@ -131,9 +131,9 @@ class MemState implements InstanceData, Cloneable, HexModelListener {
   }
 
   public Bounds getDataBounds(long addr, Bounds bds) {
-    var curAddr = (int) curScroll;
-    for (var row = 0; row < NrOfLines; row++) {
-      for (var column = 0; column < nrDataSymbolsEachLine; column++) {
+    int curAddr = (int) curScroll;
+    for (int row = 0; row < NrOfLines; row++) {
+      for (int column = 0; column < nrDataSymbolsEachLine; column++) {
         if ((curAddr + column) == addr && isValidAddr(curAddr + column))
           return getDataBound(bds.getX(), bds.getY(), row, column);
       }
@@ -227,7 +227,7 @@ class MemState implements InstanceData, Cloneable, HexModelListener {
     int firsty = topY + getFirstYoffset();
     int yinc = getDataBlockHeight();
     int firstx = leftX + getFirstXoffset();
-    for (var i = 0; i < NrOfLines; i++) {
+    for (int i = 0; i < NrOfLines; i++) {
       /* Draw address */
       GraphicsUtil.drawText(
           g,
@@ -237,7 +237,7 @@ class MemState implements InstanceData, Cloneable, HexModelListener {
           GraphicsUtil.H_CENTER,
           GraphicsUtil.V_CENTER);
       /* Draw data */
-      for (var j = 0; j < nrDataSymbolsEachLine; j++) {
+      for (int j = 0; j < nrDataSymbolsEachLine; j++) {
         long value = contents.get(addr + j);
         if (isValidAddr(addr + j)) {
 

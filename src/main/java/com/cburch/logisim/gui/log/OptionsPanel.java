@@ -540,7 +540,7 @@ class OptionsPanel extends LogPanel implements ActionListener, ChangeListener, M
 
     @Override
     String renderAsText(Long v) {
-      var s = Model.formatDuration(v);
+      java.lang.String s = Model.formatDuration(v);
       if (suffix != null) s = s + " " + S.get(suffix);
       return s;
     }
@@ -694,7 +694,7 @@ class OptionsPanel extends LogPanel implements ActionListener, ChangeListener, M
     else if (m.isRealMode()) realTime.setSelected(true);
     else clockTime.setSelected(true);
     int discipline = m.getClockDiscipline();
-    for (var i = 0; i < clockDisciplines.length; i++)
+    for (int i = 0; i < clockDisciplines.length; i++)
       if (discipline == clockDisciplines[i])
         clockDiscipline.setSelectedItem(clockDisciplineNames[i]);
   }

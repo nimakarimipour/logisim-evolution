@@ -43,7 +43,7 @@ public class SetAttributeAction extends Action {
     final var xn = new CircuitMutation(circuit);
     final var len = values.size();
     oldValues.clear();
-    for (var i = 0; i < len; i++) {
+    for (int i = 0; i < len; i++) {
       final var comp = comps.get(i);
       final var attr = attrs.get(i);
       final var value = values.get(i);
@@ -83,7 +83,7 @@ public class SetAttributeAction extends Action {
   @Override
   public void undo(Project proj) {
     if (xnReverse != null) xnReverse.execute();
-    for (var i = oldValues.size() - 1; i >= 0; i--) {
+    for (int i = oldValues.size() - 1; i >= 0; i--) {
       final var comp = comps.get(i);
       final var attr = attrs.get(i);
       final var value = oldValues.get(i);

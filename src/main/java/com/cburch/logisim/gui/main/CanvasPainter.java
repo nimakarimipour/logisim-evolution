@@ -60,8 +60,8 @@ class CanvasPainter implements PropertyChangeListener {
         final var w = ex.getBitWidth(i);
 
         // ensure it hasn't already been drawn
-        var drawn = false;
-        for (var j = 0; j < i; j++) {
+        boolean drawn = false;
+        for (int j = 0; j < i; j++) {
           if (ex.getPoint(j).equals(p)) {
             drawn = true;
             break;
@@ -70,8 +70,8 @@ class CanvasPainter implements PropertyChangeListener {
         if (drawn) continue;
 
         // compute the caption combining all similar points
-        var caption = "" + w.getWidth();
-        for (var j = i + 1; j < ex.size(); j++) {
+        java.lang.String caption = "" + w.getWidth();
+        for (int j = i + 1; j < ex.size(); j++) {
           if (ex.getPoint(j).equals(p)) {
             caption += "/" + ex.getBitWidth(j);
             break;
@@ -103,7 +103,7 @@ class CanvasPainter implements PropertyChangeListener {
   private void drawWithUserState(Graphics base, Graphics g, Project proj) {
     final var circ = proj.getCurrentCircuit();
     final var sel = proj.getSelection();
-    var dragTool = canvas.getDragTool();
+    com.cburch.logisim.tools.Tool dragTool = canvas.getDragTool();
     Set<Component> hidden;
     if (dragTool == null) {
       hidden = NO_COMPONENTS;
@@ -181,8 +181,8 @@ class CanvasPainter implements PropertyChangeListener {
   // painting methods
   //
   void paintContents(Graphics g, Project proj) {
-    var clip = g.getClipBounds();
-    var size = canvas.getSize();
+    java.awt.Rectangle clip = g.getClipBounds();
+    java.awt.Dimension size = canvas.getSize();
     final double zoomFactor = canvas.getZoomFactor();
     if (canvas.ifPaintDirtyReset() || clip == null) {
       clip = new Rectangle(0, 0, size.width, size.height);
@@ -191,16 +191,16 @@ class CanvasPainter implements PropertyChangeListener {
     grid.paintGrid(g);
     g.setColor(Color.black);
 
-    var gfxScaled = g.create();
+    java.awt.Graphics gfxScaled = g.create();
     if (zoomFactor != 1.0 && gfxScaled instanceof Graphics2D g2d) {
       g2d.scale(zoomFactor, zoomFactor);
     }
     drawWithUserState(g, gfxScaled, proj);
     drawWidthIncompatibilityData(g, gfxScaled, proj);
-    var circ = proj.getCurrentCircuit();
+    com.cburch.logisim.circuit.Circuit circ = proj.getCurrentCircuit();
 
-    var circState = proj.getCircuitState();
-    var ptContext = new ComponentDrawContext(canvas, circ, circState, g, gfxScaled);
+    com.cburch.logisim.circuit.CircuitState circState = proj.getCircuitState();
+    com.cburch.logisim.comp.ComponentDrawContext ptContext = new ComponentDrawContext(canvas, circ, circState, g, gfxScaled);
     ptContext.setHighlightedWires(highlightedWires);
     gfxScaled.setColor(Color.RED);
     circState.drawOscillatingPoints(ptContext);

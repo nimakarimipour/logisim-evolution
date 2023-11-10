@@ -184,7 +184,7 @@ public abstract class ManagedComponent extends AbstractComponent {
     final var minLen = Math.min(oldEnds.size(), newEnds.length);
     final var changesOld = new ArrayList<EndData>();
     final var changesNew = new ArrayList<EndData>();
-    for (var i = 0; i < minLen; i++) {
+    for (int i = 0; i < minLen; i++) {
       final var old = oldEnds.get(i);
       if (newEnds[i] != null && !newEnds[i].equals(old)) {
         changesOld.add(old);
@@ -192,11 +192,11 @@ public abstract class ManagedComponent extends AbstractComponent {
         oldEnds.set(i, newEnds[i]);
       }
     }
-    for (var i = oldEnds.size() - 1; i >= minLen; i--) {
+    for (int i = oldEnds.size() - 1; i >= minLen; i--) {
       changesOld.add(oldEnds.remove(i));
       changesNew.add(null);
     }
-    for (var i = minLen; i < newEnds.length; i++) {
+    for (int i = minLen; i < newEnds.length; i++) {
       oldEnds.add(newEnds[i]);
       changesOld.add(null);
       changesNew.add(newEnds[i]);

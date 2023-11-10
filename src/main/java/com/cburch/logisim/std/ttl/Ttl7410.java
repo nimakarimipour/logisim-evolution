@@ -60,8 +60,8 @@ public class Ttl7410 extends AbstractTtlGate {
       Drawgates.paintOr(g, x + 105, y + 40, 10, 10, inverted, false);
     }
     final var offset = inverted ? 0 : -4;
-    var xpos = new int[] {x + 49 + offset, x + 50, x + 50};
-    var ypos = new int[] {y + 20, y + 20, y + AbstractTtlGate.PIN_HEIGHT};
+    int[] xpos = new int[] {x + 49 + offset, x + 50, x + 50};
+    int[] ypos = new int[] {y + 20, y + 20, y + AbstractTtlGate.PIN_HEIGHT};
     g.drawPolyline(xpos, ypos, 3);
     xpos[0] = x + 129 + offset;
     xpos[1] = xpos[2] = x + 130;
@@ -81,7 +81,7 @@ public class Ttl7410 extends AbstractTtlGate {
     ypos = new int[] {y + height - AbstractTtlGate.PIN_HEIGHT, y + 23, y + 23};
     g.drawPolyline(xpos, ypos, 3);
 
-    for (var i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {
       xpos = new int[] {x + 70 + i * 20, x + 70 + i * 20, x + 115 + LineOffset};
       ypos = new int[] {y + AbstractTtlGate.PIN_HEIGHT, y + 23 - i * 3, y + 23 - i * 3};
       g.drawPolyline(xpos, ypos, 3);
@@ -93,7 +93,7 @@ public class Ttl7410 extends AbstractTtlGate {
 
   @Override
   public void propagateTtl(InstanceState state) {
-    var val =
+    com.cburch.logisim.data.Value val =
         (isAND)
             ? state.getPortValue(2).and(state.getPortValue(3).and(state.getPortValue(4)))
             : state.getPortValue(2).or(state.getPortValue(3).or(state.getPortValue(4)));

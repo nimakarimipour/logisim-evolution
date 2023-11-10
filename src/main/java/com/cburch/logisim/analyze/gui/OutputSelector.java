@@ -169,7 +169,7 @@ class OutputSelector {
   }
 
   public String getSelectedOutput() {
-    var value = (String) select.getSelectedItem();
+    java.lang.String value = (String) select.getSelectedItem();
     if (value != null && !source.bits.contains(value)) {
       if (source.bits.isEmpty()) {
         value = null;

@@ -80,8 +80,8 @@ public class Ttl74161 extends AbstractTtlGate {
 
     private boolean isInside(InstanceState state, MouseEvent e) {
       final var p = getTranslatedTtlXY(state, e);
-      var inside = false;
-      for (var i = 0; i < 4; i++) {
+      boolean inside = false;
+      for (int i = 0; i < 4; i++) {
         final var dx = p.x - (56 + i * 10);
         final var dy = p.y - 30;
         final var d2 = dx * dx + dy * dy;
@@ -92,7 +92,7 @@ public class Ttl74161 extends AbstractTtlGate {
 
     private int getIndex(InstanceState state, MouseEvent e) {
       final var p = getTranslatedTtlXY(state, e);
-      for (var i = 0; i < 4; i++) {
+      for (int i = 0; i < 4; i++) {
         int dx = p.x - (56 + i * 10);
         int dy = p.y - 30;
         int d2 = dx * dx + dy * dy;
@@ -110,10 +110,10 @@ public class Ttl74161 extends AbstractTtlGate {
     public void mouseReleased(InstanceState state, MouseEvent e) {
       if (!state.getAttributeValue(TtlLibrary.DRAW_INTERNAL_STRUCTURE)) return;
       if (isPressed && isInside(state, e)) {
-        var index = getIndex(state, e);
+        int index = getIndex(state, e);
         final var data = (TtlRegisterData) state.getData();
         if (data == null) return;
-        var current = data.getValue().toLongValue();
+        long current = data.getValue().toLongValue();
         final var bitValue = 1L << index;
         current ^= bitValue;
         updateState(state, current);
@@ -141,7 +141,7 @@ public class Ttl74161 extends AbstractTtlGate {
   private void drawState(Graphics2D gfx, int x, int y, int height, TtlRegisterData state) {
     if (state == null) return;
     final var value = state.getValue().toLongValue();
-    for (var i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
       final var isSetBitValue = (value & (1 << (3 - i))) != 0;
       gfx.setColor(isSetBitValue ? trueColor : falseColor);
       gfx.fillOval(x + 52 + i * 10, y + height / 2 - 4, 8, 8);
@@ -152,7 +152,7 @@ public class Ttl74161 extends AbstractTtlGate {
   }
 
   public static void updateState(InstanceState state, Long value) {
-    var data = getStateData(state);
+    com.cburch.logisim.std.ttl.TtlRegisterData data = getStateData(state);
 
     data.setValue(Value.createKnown(BitWidth.create(4), value));
     final var vA = data.getValue().get(0);
@@ -171,7 +171,7 @@ public class Ttl74161 extends AbstractTtlGate {
   }
 
   public static TtlRegisterData getStateData(InstanceState state) {
-    var data = (TtlRegisterData) state.getData();
+    com.cburch.logisim.std.ttl.TtlRegisterData data = (TtlRegisterData) state.getData();
     if (data == null) {
       data = new TtlRegisterData(BitWidth.create(4));
       state.setData(data);
@@ -181,10 +181,10 @@ public class Ttl74161 extends AbstractTtlGate {
 
   @Override
   public void propagateTtl(InstanceState state) {
-    var data = getStateData(state);
+    com.cburch.logisim.std.ttl.TtlRegisterData data = getStateData(state);
     final var triggered = data.updateClock(state.getPortValue(PORT_INDEX_CLK), StdAttr.TRIG_RISING);
     final var nClear = state.getPortValue(PORT_INDEX_nCLR).toLongValue();
-    var counter = data.getValue().toLongValue();
+    long counter = data.getValue().toLongValue();
 
     if (nClear == 0) {
       counter = 0;

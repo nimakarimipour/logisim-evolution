@@ -61,9 +61,9 @@ public class Oval extends Rectangular {
     final var rx = getWidth() / 2.0;
     final var ry = getHeight() / 2.0;
     final var u = 2 * Math.PI * rand.nextDouble();
-    var x = (int) Math.round(getX() + rx + rx * Math.cos(u));
-    var y = (int) Math.round(getY() + ry + ry * Math.sin(u));
-    var d = getStrokeWidth();
+    int x = (int) Math.round(getX() + rx + rx * Math.cos(u));
+    int y = (int) Math.round(getY() + ry + ry * Math.sin(u));
+    int d = getStrokeWidth();
     if (d > 1) {
       x += rand.nextInt(d) - d / 2;
       y += rand.nextInt(d) - d / 2;

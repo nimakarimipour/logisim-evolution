@@ -64,7 +64,7 @@ class GateAttributeList extends AbstractList<Attribute<?>> {
 
   @Override
   public int size() {
-    var ret = BASE_ATTRIBUTES.length;
+    int ret = BASE_ATTRIBUTES.length;
     if (attrs.xorBehave != null) ret++;
     ret += attrs.inputs;
     return ret;

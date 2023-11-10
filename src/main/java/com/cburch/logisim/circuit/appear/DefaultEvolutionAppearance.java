@@ -35,8 +35,8 @@ public class DefaultEvolutionAppearance {
     final var edge = new HashMap<Direction, List<Instance>>();
     edge.put(Direction.EAST, new ArrayList<>());
     edge.put(Direction.WEST, new ArrayList<>());
-    var maxLeftLabelLength = 0;
-    var maxRightLabelLength = 0;
+    int maxLeftLabelLength = 0;
+    int maxRightLabelLength = 0;
     final var TitleWidth =
         (circuitName == null)
             ? 14 * DrawAttr.FIXED_FONT_CHAR_WIDTH
@@ -98,7 +98,7 @@ public class DefaultEvolutionAppearance {
     final var ret = new ArrayList<CanvasObject>();
     placePins(ret, edge.get(Direction.WEST), rx, ry + 10, 0, dy, true, sdy, fixedSize);
     placePins(ret, edge.get(Direction.EAST), rx + width, ry + 10, 0, dy, false, sdy, fixedSize);
-    var rect = new Rectangle(rx + 10, ry + height - thight, width - 20, thight);
+    com.cburch.draw.shapes.Rectangle rect = new Rectangle(rx + 10, ry + height - thight, width - 20, thight);
     rect.setValue(DrawAttr.STROKE_WIDTH, 1);
     rect.setValue(DrawAttr.PAINT_TYPE, DrawAttr.PAINT_FILL);
     rect.setValue(DrawAttr.FILL_COLOR, Color.BLACK);
@@ -106,7 +106,7 @@ public class DefaultEvolutionAppearance {
     rect = new Rectangle(rx + 10, ry, width - 20, height);
     rect.setValue(DrawAttr.STROKE_WIDTH, 2);
     ret.add(rect);
-    var label = circuitName == null ? "VHDL Component" : circuitName;
+    java.lang.String label = circuitName == null ? "VHDL Component" : circuitName;
     final var maxLength = 23;
     final var ellipsis = "...";
     if (fixedSize && label.length() > maxLength) {
@@ -158,7 +158,7 @@ public class DefaultEvolutionAppearance {
       dest.add(rect);
       dest.add(new AppearancePort(Location.create(x, y, true), pin));
       if (pin.getAttributeSet().containsAttribute(StdAttr.LABEL)) {
-        var label = pin.getAttributeValue(StdAttr.LABEL);
+        java.lang.String label = pin.getAttributeValue(StdAttr.LABEL);
         final var maxLength = 12;
         final var ellipsis = "...";
         if (isFixedSize && label.length() > maxLength) {

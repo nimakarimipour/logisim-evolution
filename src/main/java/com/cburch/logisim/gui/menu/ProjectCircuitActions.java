@@ -158,8 +158,8 @@ public class ProjectCircuitActions {
     final var pinNames = Analyze.getPinLabels(circuit);
     final var inputVars = new ArrayList<Var>();
     final var outputVars = new ArrayList<Var>();
-    var numInputs = 0;
-    var numOutputs = 0;
+    int numInputs = 0;
+    int numOutputs = 0;
     for (final var entry : pinNames.entrySet()) {
       final var pin = entry.getKey();
       final var isInput = Pin.FACTORY.isInputPin(pin);

@@ -83,7 +83,7 @@ public class FpgaReportTabbedPane extends JTabbedPane
     textAreaInfo.setFont(new Font("monospaced", Font.PLAIN, fontSize));
     textAreaInfo.setEditable(false);
     textAreaInfo.setText(null);
-    var caret = (DefaultCaret) textAreaInfo.getCaret();
+    javax.swing.text.DefaultCaret caret = (DefaultCaret) textAreaInfo.getCaret();
     caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
     final var textMessages = new JScrollPane(textAreaInfo);
     textMessages.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -404,7 +404,7 @@ public class FpgaReportTabbedPane extends JTabbedPane
         errorsWindow != null && e.getSource().equals(errorsWindow.getListObject());
     if (e.getSource().equals(errors) || sourceIsErrorsWindow) {
       clearDrcTrace();
-      var idx = -1;
+      int idx = -1;
       if (e.getSource().equals(errors)) idx = errors.getSelectedIndex();
       else if (sourceIsErrorsWindow) idx = errorsWindow.getListObject().getSelectedIndex();
       if (idx >= 0) {
@@ -414,7 +414,7 @@ public class FpgaReportTabbedPane extends JTabbedPane
       }
     } else if (e.getSource().equals(warnings) || sourceIsWarningsWindow) {
       clearDrcTrace();
-      var idx = -1;
+      int idx = -1;
       if (e.getSource().equals(warnings)) idx = warnings.getSelectedIndex();
       else if (sourceIsWarningsWindow) idx = warningsWindow.getListObject().getSelectedIndex();
       if (idx >= 0)
@@ -434,7 +434,7 @@ public class FpgaReportTabbedPane extends JTabbedPane
       updateConsoleTab();
     }
     if (e.getSource().equals(warningsWindow)) {
-      var idx = getComponentCount();
+      int idx = getComponentCount();
       HashSet<Component> comps = new HashSet<>(Arrays.asList(getComponents()));
       if (comps.contains(panelConsole)) idx = indexOfComponent(panelConsole);
       if (comps.contains(panelErrors)) idx = indexOfComponent(panelErrors);
@@ -444,7 +444,7 @@ public class FpgaReportTabbedPane extends JTabbedPane
       clearDrcTrace();
     }
     if (e.getSource().equals(errorsWindow)) {
-      var idx = getComponentCount();
+      int idx = getComponentCount();
       final var comps = new HashSet<>(Arrays.asList(getComponents()));
       if (comps.contains(panelConsole)) idx = indexOfComponent(panelConsole);
       add(panelErrors, idx);

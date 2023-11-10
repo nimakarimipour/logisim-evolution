@@ -172,13 +172,13 @@ public class PlaTable {
       throw new IOException(
           "PLA row '" + line + "' must have exactly " + tt.outSize + " output bits.");
     final var r = tt.addTableRow();
-    for (var i = 0; i < andBits.length(); i++) {
+    for (int i = 0; i < andBits.length(); i++) {
       final var s = andBits.charAt(i);
       if (s != ONE && s != ZERO && s != DONTCARE)
         throw new IOException("PLA row '" + line + "' contains invalid input bit '" + s + "'.");
       r.inBits[andBits.length() - i - 1] = s;
     }
-    for (var i = 0; i < orBits.length(); i++) {
+    for (int i = 0; i < orBits.length(); i++) {
       final var s = orBits.charAt(i);
       if (s != ONE && s != ZERO)
         throw new IOException("PLA row '" + line + "' contains invalid output bit '" + s + "'.");
@@ -197,7 +197,7 @@ public class PlaTable {
     }
     PlaTable tt = null;
     try {
-      var line = in.readLine();
+      java.lang.String line = in.readLine();
       while (line != null) {
         tt = parseOneLine(tt, line);
         line = in.readLine();
@@ -242,8 +242,8 @@ public class PlaTable {
     public Row(int inSize, int outSize) {
       inBits = new char[inSize];
       outBits = new char[outSize];
-      for (var i = 0; i < inSize; i++) inBits[i] = ZERO;
-      for (var i = 0; i < outSize; i++) outBits[i] = ZERO;
+      for (int i = 0; i < inSize; i++) inBits[i] = ZERO;
+      for (int i = 0; i < outSize; i++) outBits[i] = ZERO;
     }
 
     public void copyFrom(Row other) {
@@ -273,8 +273,8 @@ public class PlaTable {
     static char[] truncate(char[] b, int n) {
       if (b.length == n) return b;
       final var a = new char[n];
-      for (var i = 0; i < n && i < b.length; i++) a[i] = b[i];
-      for (var i = b.length; i < n; i++) a[i] = ZERO;
+      for (int i = 0; i < n && i < b.length; i++) a[i] = b[i];
+      for (int i = b.length; i < n; i++) a[i] = ZERO;
       return a;
     }
 
@@ -288,7 +288,7 @@ public class PlaTable {
       for (char inBit : inBits) i.insert(0, inBit);
       final var o = new StringBuilder();
       for (char outBit : outBits) o.insert(0, outBit);
-      var ret = i + " " + o;
+      java.lang.String ret = i + " " + o;
       if (!comment.trim().equals("")) ret += " # " + comment.trim();
       return ret;
     }
@@ -582,7 +582,7 @@ public class PlaTable {
 
           bitPanel.add(new Box(BoxLayout.X_AXIS));
 
-          for (var i = inSz - 1; i >= 0; i--) {
+          for (int i = inSz - 1; i >= 0; i--) {
             final var ii = i;
             bitPanel.add(
                 new BitStateButton(row.inBits[ii]) {
@@ -597,8 +597,8 @@ public class PlaTable {
 
           bitPanel.add(new Box(BoxLayout.X_AXIS));
 
-          for (var i = outSz; i < 2; i++) bitPanel.add(new Box(BoxLayout.X_AXIS));
-          for (var i = outSz - 1; i >= 0; i--) {
+          for (int i = outSz; i < 2; i++) bitPanel.add(new Box(BoxLayout.X_AXIS));
+          for (int i = outSz - 1; i >= 0; i--) {
             final var ii = i;
             bitPanel.add(
                 new BitStateButton(row.outBits[ii]) {
@@ -663,7 +663,7 @@ public class PlaTable {
                     AppPreferences.getScaled(15)))); // space for remove button
         final var dim = new Dimension(AppPreferences.getScaled(BS), AppPreferences.getScaled(15));
 
-        for (var i = inSz - 1; i >= 0; i--) {
+        for (int i = inSz - 1; i >= 0; i--) {
           final var l = new JLabel("" + i, SwingConstants.CENTER);
           l.setFont(AppPreferences.getScaledFont(l.getFont().deriveFont(tinyFont)));
           l.setPreferredSize(dim);
@@ -672,8 +672,8 @@ public class PlaTable {
 
         add(Box.createRigidArea(dim));
 
-        for (var i = outSz; i < 2; i++) add(Box.createRigidArea(dim));
-        for (var i = outSz - 1; i >= 0; i--) {
+        for (int i = outSz; i < 2; i++) add(Box.createRigidArea(dim));
+        for (int i = outSz - 1; i >= 0; i--) {
           final var l = new JLabel("" + i, SwingConstants.CENTER);
           l.setFont(AppPreferences.getScaledFont(l.getFont().deriveFont(tinyFont)));
           l.setPreferredSize(dim);

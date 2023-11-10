@@ -62,7 +62,7 @@ public class FontSelector extends JPanel implements JInputComponent, ActionListe
     selectableFontFamilies = new JList(fontNames.toArray());
     selectableFontFamilies.addListSelectionListener(this);
     final var selections = new TreeSet<Integer>();
-    for (var size = 2; size < 65; size++) {
+    for (int size = 2; size < 65; size++) {
       selections.add(size);
     }
     selectableFontSize = new JList(selections.toArray());
@@ -140,7 +140,7 @@ public class FontSelector extends JPanel implements JInputComponent, ActionListe
   public void valueChanged(ListSelectionEvent e) {
     final var selectedFont = selectableFontFamilies.getSelectedValue();
     final var selectedFontSize = selectableFontSize.getSelectedValue();
-    var change = (selectedFontSize != null) && (selectedFontSize != fontSize);
+    boolean change = (selectedFontSize != null) && (selectedFontSize != fontSize);
     if ((selectedFont != null) && fontNames.contains(selectedFont)) {
       change |= !selectedFont.equals(currentFont.getFamily());
     }

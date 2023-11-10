@@ -30,7 +30,7 @@ public class DrcIcon extends BaseIcon {
     g2.setColor(Color.WHITE);
     g2.fillRect(0, 0, getIconWidth(), getIconHeight());
 
-    var p = new GeneralPath();
+    java.awt.geom.GeneralPath p = new GeneralPath();
     p.moveTo(scale(15), 0);
     p.quadTo(scale(7), scale(7), 0, scale(6));
     p.lineTo(0, scale(8));

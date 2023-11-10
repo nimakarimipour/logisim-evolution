@@ -176,7 +176,7 @@ public class Counter extends InstanceFactory implements DynamicElementProvider {
     /* Draw Label */
 
     long max = painter.getAttributeValue(ATTR_MAX);
-    var isCTRm = (max == painter.getAttributeValue(StdAttr.WIDTH).getMask());
+    boolean isCTRm = (max == painter.getAttributeValue(StdAttr.WIDTH).getMask());
     Object onGoal = painter.getAttributeValue(ATTR_ON_GOAL);
     isCTRm |= onGoal == ON_GOAL_CONT;
     final var label =
@@ -267,13 +267,13 @@ public class Counter extends InstanceFactory implements DynamicElementProvider {
       else if (val.isErrorValue()) g.setColor(Color.RED);
       else g.setColor(Color.BLUE);
       g.fillRect(xpos + xcenter - len * 4, ypos + 22, len * 8, 16);
-      var value = "";
+      java.lang.String value = "";
       if (val.isFullyDefined()) {
         g.setColor(Color.DARK_GRAY);
         value = StringUtil.toHexString(width, val.toLongValue()).toUpperCase();
       } else {
         g.setColor(Color.YELLOW);
-        for (var i = 0; i < StringUtil.toHexString(width, val.toLongValue()).length(); i++)
+        for (int i = 0; i < StringUtil.toHexString(width, val.toLongValue()).length(); i++)
           value = (val.isUnknown()) ? value.concat("?") : value.concat("!");
       }
       GraphicsUtil.drawText(
@@ -384,9 +384,9 @@ public class Counter extends InstanceFactory implements DynamicElementProvider {
       /* Here we draw the bit value */
       final var val = state.value;
       final var widthVal = painter.getAttributeValue(StdAttr.WIDTH);
-      var width = widthVal == null ? 8 : widthVal.getWidth();
-      var xcenter = (getSymbolWidth(width) / 2) + 10;
-      var value = "";
+      int width = widthVal == null ? 8 : widthVal.getWidth();
+      int xcenter = (getSymbolWidth(width) / 2) + 10;
+      java.lang.String value = "";
       if (val.isFullyDefined()) {
         g.setColor(Color.LIGHT_GRAY);
         value = ((1L << bitNr) & val.toLongValue()) != 0 ? "1" : "0";
@@ -507,14 +507,14 @@ public class Counter extends InstanceFactory implements DynamicElementProvider {
     drawControl(painter, Xpos, Ypos);
     final var widthVal = painter.getAttributeValue(StdAttr.WIDTH);
     final var width = widthVal == null ? 8 : widthVal.getWidth();
-    for (var bit = 0; bit < width; bit++) {
+    for (int bit = 0; bit < width; bit++) {
       drawDataBlock(painter, Xpos, Ypos + 110, bit, width);
     }
   }
 
   @Override
   public void propagate(InstanceState state) {
-    var data = (RegisterData) state.getData();
+    com.cburch.logisim.std.memory.RegisterData data = (RegisterData) state.getData();
     if (data == null) {
       data = new RegisterData(state.getAttributeValue(StdAttr.WIDTH));
       state.setData(data);

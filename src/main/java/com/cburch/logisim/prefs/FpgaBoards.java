@@ -76,7 +76,7 @@ public class FpgaBoards implements ActionListener {
 
     public int nrOfExternalBoards() {
       final var iter = externalBoards.iterator();
-      var removed = false;
+      boolean removed = false;
       while (iter.hasNext()) {
         final var file = iter.next();
         final var f = new File(file);
@@ -139,7 +139,7 @@ public class FpgaBoards implements ActionListener {
     public void insertSorted(String value) {
       add(value);
       Comparable<String> cmp = BoardList.getBoardName(value);
-      for (var i = size() - 1; i > 0 && cmp.compareTo(BoardList.getBoardName(get(i - 1))) < 0; i--)
+      for (int i = size() - 1; i > 0 && cmp.compareTo(BoardList.getBoardName(get(i - 1))) < 0; i--)
         Collections.swap(this, i, i - 1);
     }
   }
@@ -190,7 +190,7 @@ public class FpgaBoards implements ActionListener {
 
   public FpgaBoards() {
     final var prefs = AppPreferences.getPrefs();
-    for (var i = 0; i < MaxBoards; i++) {
+    for (int i = 0; i < MaxBoards; i++) {
       final var encoding = prefs.get(ExtBoard + i, null);
       if (encoding != null) addExternalBoard(encoding, i, prefs);
     }
@@ -305,8 +305,8 @@ public class FpgaBoards implements ActionListener {
     boardSelector.removeActionListener(this);
     boardSelector.removeAllItems();
     boardSelector.addItem("Other");
-    var index = 1;
-    var found = false;
+    int index = 1;
+    boolean found = false;
     if (update) AppPreferences.SelectedBoard.set(board);
     for (String item : buildInBoards.getBoardNames()) {
       boardSelector.addItem(item);
@@ -326,7 +326,7 @@ public class FpgaBoards implements ActionListener {
 
   private void removeFromPrefs(String fname) {
     final var prefs = AppPreferences.getPrefs();
-    for (var i = 0; i < MaxBoards; i++) {
+    for (int i = 0; i < MaxBoards; i++) {
       final var name = prefs.get(ExtBoard + i, null);
       if ((name != null) && (name.equals(fname))) prefs.remove(ExtBoard + i);
     }
@@ -345,7 +345,7 @@ public class FpgaBoards implements ActionListener {
 
   private void rebuildPrefsTree() {
     final var prefs = AppPreferences.getPrefs();
-    for (var i = 0; i < extBoardModel.getSize(); i++) {
+    for (int i = 0; i < extBoardModel.getSize(); i++) {
       prefs.put(ExtBoard + i, extBoardModel.get(i));
     }
     for (int i = extBoardModel.getSize(); i < MaxBoards; i++) {
@@ -359,9 +359,9 @@ public class FpgaBoards implements ActionListener {
           null, S.get("MaxBoardsReached"), S.get("AddExternalBoards"), OptionPane.ERROR_MESSAGE);
       return false;
     }
-    var boardFileName = getBoardFile();
+    java.lang.String boardFileName = getBoardFile();
     if (boardFileName == null) return false;
-    var test = new BoardReaderClass(boardFileName);
+    com.cburch.logisim.fpga.file.BoardReaderClass test = new BoardReaderClass(boardFileName);
     if (test.getBoardInformation() == null) {
       OptionPane.showMessageDialog(
           null, S.get("InvalidFileFormat"), S.get("AddExternalBoards"), OptionPane.ERROR_MESSAGE);

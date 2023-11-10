@@ -241,7 +241,7 @@ public class SocBusStateInfo extends JDialog
 
   @Override
   public String getName() {
-    var name = myComp.getAttributeSet().getValue(StdAttr.LABEL);
+    java.lang.String name = myComp.getAttributeSet().getValue(StdAttr.LABEL);
     if (StringUtil.isNullOrEmpty(name)) {
       final var loc = myComp.getLocation();
       name = myComp.getFactory().getDisplayName() + "@" + loc.getX() + "," + loc.getY();

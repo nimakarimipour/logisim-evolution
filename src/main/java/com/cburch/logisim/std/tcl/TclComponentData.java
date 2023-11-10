@@ -77,8 +77,8 @@ public class TclComponentData implements InstanceData {
   }
 
   public boolean isNewTick() {
-    var newTick = false;
-    var found = false;
+    boolean newTick = false;
+    boolean found = false;
 
     for (final var p : instanceState.getInstance().getPorts()) {
       if (p.getToolTip().equals("sysclk_i")) {

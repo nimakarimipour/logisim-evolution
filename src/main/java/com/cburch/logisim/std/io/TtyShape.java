@@ -40,9 +40,9 @@ public class TtyShape extends DynamicElement {
     if (data != null) {
       final var rows = data.getNrRows();
       final var cols = data.getNrCols();
-      var width = 2 * Tty.BORDER + cols * Tty.COL_WIDTH;
+      int width = 2 * Tty.BORDER + cols * Tty.COL_WIDTH;
       if (width < 30) width = 30;
-      var height = 2 * Tty.BORDER + rows * Tty.ROW_HEIGHT;
+      int height = 2 * Tty.BORDER + rows * Tty.ROW_HEIGHT;
       if (height < 30) height = 30;
       setBounds(width, height);
     }
@@ -67,13 +67,13 @@ public class TtyShape extends DynamicElement {
       final var rows = data.getNrRows();
       final var rowData = new String[rows];
       synchronized (data) {
-        for (var i = 0; i < rows; i++) rowData[i] = data.getRowString(i);
+        for (int i = 0; i < rows; i++) rowData[i] = data.getRowString(i);
       }
       g.setFont(Tty.DEFAULT_FONT);
       final var fm = g.getFontMetrics();
       final var x = bounds.getX() + Tty.BORDER;
-      var y = bounds.getY() + Tty.BORDER + (Tty.ROW_HEIGHT + fm.getAscent()) / 2;
-      for (var i = 0; i < rows; i++) {
+      int y = bounds.getY() + Tty.BORDER + (Tty.ROW_HEIGHT + fm.getAscent()) / 2;
+      for (int i = 0; i < rows; i++) {
         g.drawString(rowData[i], x, y);
         y += Tty.ROW_HEIGHT;
       }

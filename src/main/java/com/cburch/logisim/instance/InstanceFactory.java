@@ -174,14 +174,14 @@ public abstract class InstanceFactory extends AbstractComponentFactory {
   public Object getDefaultAttributeValue(Attribute<?> attr, LogisimVersion ver) {
     final var as = attrs;
     if (as != null) {
-      for (var i = 0; i < as.length; i++) {
+      for (int i = 0; i < as.length; i++) {
         if (as[i] == attr) {
           return defaults[i];
         }
       }
       return null;
     } else {
-      var dfltSet = defaultSet;
+      com.cburch.logisim.data.AttributeSet dfltSet = defaultSet;
       if (dfltSet == null) {
         dfltSet = createAttributeSet();
         defaultSet = dfltSet;
@@ -288,9 +288,9 @@ public abstract class InstanceFactory extends AbstractComponentFactory {
     gfx.translate(-x, -y);
 
     if (painter.getFactory() == null) {
-      var i = icon;
+      javax.swing.Icon i = icon;
       if (i == null) {
-        var n = iconName;
+        java.lang.String n = iconName;
         if (n != null) {
           i = IconsUtil.getIcon(n);
           if (i == null) {

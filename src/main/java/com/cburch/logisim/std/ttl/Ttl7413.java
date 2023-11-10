@@ -54,7 +54,7 @@ public class Ttl7413 extends AbstractTtlGate {
     g.drawLine(x + 130, y + AbstractTtlGate.PIN_HEIGHT, x + 130, y + 20);
     g.drawLine(x + 109 + offset, y + 40, x + 110, y + 40);
     g.drawLine(x + 110, y + height - AbstractTtlGate.PIN_HEIGHT, x + 110, y + 40);
-    for (var i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++) {
       if (i != 2) {
         g.drawLine(
             x + 10 + i * 20,
@@ -71,7 +71,7 @@ public class Ttl7413 extends AbstractTtlGate {
 
   @Override
   public void propagateTtl(InstanceState state) {
-    var val =
+    com.cburch.logisim.data.Value val =
         state
             .getPortValue(0)
             .and(state.getPortValue(1).and(state.getPortValue(2).and(state.getPortValue(3))));

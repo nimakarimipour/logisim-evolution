@@ -56,7 +56,7 @@ class RecentProjects implements PreferenceChangeListener {
     final var prefs = AppPreferences.getPrefs();
     prefs.addPreferenceChangeListener(this);
 
-    for (var index = 0; index < NUM_RECENT; index++) {
+    for (int index = 0; index < NUM_RECENT; index++) {
       getAndDecode(prefs, index);
     }
   }
@@ -78,7 +78,7 @@ class RecentProjects implements PreferenceChangeListener {
     final var now = System.currentTimeMillis();
     final var ages = new long[NUM_RECENT];
     final var toSort = new long[NUM_RECENT];
-    for (var i = 0; i < NUM_RECENT; i++) {
+    for (int i = 0; i < NUM_RECENT; i++) {
       if (recentFiles[i] == null) {
         ages[i] = -1;
       } else {
@@ -91,8 +91,8 @@ class RecentProjects implements PreferenceChangeListener {
     final var ret = new ArrayList<File>();
     for (final var age : toSort) {
       if (age >= 0) {
-        var index = -1;
-        for (var i = 0; i < NUM_RECENT; i++) {
+        int index = -1;
+        for (int i = 0; i < NUM_RECENT; i++) {
           if (ages[i] == age) {
             index = i;
             ages[i] = -1;
@@ -109,9 +109,9 @@ class RecentProjects implements PreferenceChangeListener {
 
   private int getReplacementIndex(long now, File f) {
     long oldestAge = -1;
-    var oldestIndex = 0;
-    var nullIndex = -1;
-    for (var i = 0; i < NUM_RECENT; i++) {
+    int oldestIndex = 0;
+    int nullIndex = -1;
+    for (int i = 0; i < NUM_RECENT; i++) {
       if (f.equals(recentFiles[i])) {
         return i;
       }
@@ -180,7 +180,7 @@ class RecentProjects implements PreferenceChangeListener {
   }
 
   public void updateRecent(File file) {
-    var fileToSave = file;
+    java.io.File fileToSave = file;
     try {
       fileToSave = file.getCanonicalFile();
     } catch (IOException ignored) {

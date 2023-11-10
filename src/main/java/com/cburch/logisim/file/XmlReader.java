@@ -133,7 +133,7 @@ class XmlReader {
             attrVal = attrElt.getAttribute("val");
             if ("filePath".equals(attrName)) {
               /* De-relativize the path */
-              var dirPath = "";
+              java.lang.String dirPath = "";
               if (srcFilePath != null)
                 dirPath = srcFilePath.substring(0, srcFilePath.lastIndexOf(File.separator));
               final var tmp = Paths.get(dirPath, attrVal);
@@ -153,7 +153,7 @@ class XmlReader {
       // We need to process this in order, and we have to refetch the
       // attribute list each time because it may change as we iterate
       // (as it will for a splitter).
-      for (var i = 0; true; i++) {
+      for (int i = 0; true; i++) {
         final var attrList = attrs.getAttributes();
         if (i >= attrList.size()) break;
         @SuppressWarnings("unchecked")
@@ -385,8 +385,8 @@ class XmlReader {
     private void toLogisimFile(Element elt, Project proj) {
       // determine the version producing this file
       final var versionString = elt.getAttribute("source");
-      var isHolyCrossFile = false;
-      var isEvolutionFile = true;
+      boolean isHolyCrossFile = false;
+      boolean isEvolutionFile = true;
       if ("".equals(versionString)) {
         sourceVersion = BuildInfo.version;
       } else {
@@ -624,7 +624,7 @@ class XmlReader {
   }
 
   public static Element ensureLogisimCompatibility(Element elt) {
-    var validLabels = findValidLabels(elt, "circuit", "name");
+    java.util.Map<java.lang.String,java.lang.String> validLabels = findValidLabels(elt, "circuit", "name");
     applyValidLabels(elt, "circuit", "name", validLabels);
     validLabels = findValidLabels(elt, "circuit", "label");
     applyValidLabels(elt, "circuit", "label", validLabels);
@@ -668,7 +668,7 @@ class XmlReader {
 
     final var initialLabels = getXMLLabels(root, nodeType, attrType);
 
-    for (var label : initialLabels) {
+    for (java.lang.String label : initialLabels) {
       if (!validLabels.containsKey(label)) {
         // Check if the name is invalid, in which case create
         // a valid version and put it in the map
@@ -734,7 +734,7 @@ class XmlReader {
     // to append the suffix if that was the only change)
     initialLabel = initialLabel.trim();
 
-    var label = initialLabel;
+    java.lang.String label = initialLabel;
     if (label.isEmpty()) {
       logger.warn("Empty label is not a valid VHDL label");
       label = "L_";
@@ -1052,7 +1052,7 @@ class XmlReader {
 
   LogisimFile readLibrary(InputStream is, Project proj) throws IOException, SAXException {
     final var doc = loadXmlFrom(is);
-    var elt = doc.getDocumentElement();
+    org.w3c.dom.Element elt = doc.getDocumentElement();
     elt = ensureLogisimCompatibility(elt);
 
     considerRepairs(doc, elt);
@@ -1111,7 +1111,7 @@ class XmlReader {
 
       final var toRemove = new ArrayList<Element>();
       findLibraryUses(toRemove, legacyLabel, XmlIterator.forDescendantElements(root, "comp"));
-      var componentsRemoved = !toRemove.isEmpty();
+      boolean componentsRemoved = !toRemove.isEmpty();
       findLibraryUses(toRemove, legacyLabel, XmlIterator.forDescendantElements(root, "tool"));
       for (final var elt : toRemove) {
         elt.getParentNode().removeChild(elt);

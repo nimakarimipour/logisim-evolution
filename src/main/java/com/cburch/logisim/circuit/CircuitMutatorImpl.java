@@ -55,7 +55,7 @@ class CircuitMutatorImpl implements CircuitMutator {
   }
 
   private ReplacementMap getMap(Circuit circuit) {
-    var ret = replacements.get(circuit);
+    com.cburch.logisim.circuit.ReplacementMap ret = replacements.get(circuit);
     if (ret == null) {
       ret = new ReplacementMap();
       replacements.put(circuit, ret);
@@ -74,7 +74,7 @@ class CircuitMutatorImpl implements CircuitMutator {
   CircuitTransaction getReverseTransaction() {
     final var ret = new CircuitMutation();
     final var log = this.log;
-    for (var i = log.size() - 1; i >= 0; i--) {
+    for (int i = log.size() - 1; i >= 0; i--) {
       ret.change(log.get(i).getReverseChange());
     }
     return ret;

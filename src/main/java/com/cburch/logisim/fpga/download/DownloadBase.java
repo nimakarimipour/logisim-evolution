@@ -110,7 +110,7 @@ public abstract class DownloadBase {
   protected boolean performDrc(String circuitName, String HDLType) {
     final var root = myProject.getLogisimFile().getCircuit(circuitName);
     final var sheetNames = new ArrayList<String>();
-    var drcResult = Netlist.DRC_PASSED;
+    int drcResult = Netlist.DRC_PASSED;
     if (root == null) {
       drcResult |= Netlist.DRC_ERROR;
     } else {
@@ -121,7 +121,7 @@ public abstract class DownloadBase {
   }
 
   protected String getProjDir(String selectedCircuit) {
-    var projectDir =
+    java.lang.String projectDir =
         AppPreferences.FPGA_Workspace.get() + File.separator + myProject.getLogisimFile().getName();
     if (!projectDir.endsWith(File.separator)) {
       projectDir += File.separator;
@@ -163,7 +163,7 @@ public abstract class DownloadBase {
     }
 
     final var generatedHDLComponents = new HashSet<String>();
-    var worker = rootSheet.getSubcircuitFactory().getHDLGenerator(rootSheet.getStaticAttributes());
+    com.cburch.logisim.fpga.hdlgenerator.HdlGeneratorFactory worker = rootSheet.getSubcircuitFactory().getHDLGenerator(rootSheet.getStaticAttributes());
     if (worker == null) {
       Reporter.report.addFatalError("Internal error on HDL generation, null pointer exception");
       return false;
@@ -219,7 +219,7 @@ public abstract class DownloadBase {
         new ToplevelHdlGeneratorFactory(
             myBoardInformation.fpga.getClockFrequency(), frequency, rootSheet, myMappableResources);
     if (top.hasLedArray()) {
-      for (var type : LedArrayDriving.DRIVING_STRINGS) {
+      for (java.lang.String type : LedArrayDriving.DRIVING_STRINGS) {
         if (top.hasLedArrayType(type)) {
           worker = LedArrayGenericHdlGeneratorFactory.getSpecificHDLGenerator(type);
           final var name = LedArrayGenericHdlGeneratorFactory.getSpecificHDLName(type);
@@ -256,7 +256,7 @@ public abstract class DownloadBase {
 
   protected boolean genDirectory(String dirPath) {
     try {
-      var dir = new File(dirPath);
+      java.io.File dir = new File(dirPath);
       return dir.exists() ? true : dir.mkdirs();
     } catch (Exception e) {
       Reporter.report.addFatalError("Could not check/create directory :" + dirPath);
@@ -307,7 +307,7 @@ public abstract class DownloadBase {
     try {
       final var thisDir = new File(dir);
       if (!thisDir.exists()) return true;
-      for (var theFiles : thisDir.listFiles()) {
+      for (java.io.File theFiles : thisDir.listFiles()) {
         if (theFiles.isDirectory()) {
           if (!cleanDirectory(theFiles.getPath())) return false;
         } else {
@@ -324,13 +324,13 @@ public abstract class DownloadBase {
   public static Map<String, String> getLedArrayMaps(
       MappableResourcesContainer maps, Netlist nets, BoardInformation board) {
     final var ledArrayMaps = new HashMap<String, String>();
-    var hasMappedClockedArray = false;
+    boolean hasMappedClockedArray = false;
     for (final var comp : maps.getIoComponentInformation().getComponents()) {
       if (comp.getType().equals(IoComponentTypes.LedArray)) {
         if (comp.hasMap()) {
           hasMappedClockedArray |=
               LedArrayGenericHdlGeneratorFactory.requiresClock(comp.getArrayDriveMode());
-          for (var pin = 0; pin < comp.getExternalPinCount(); pin++) {
+          for (int pin = 0; pin < comp.getExternalPinCount(); pin++) {
             ledArrayMaps.put(
                 LedArrayGenericHdlGeneratorFactory.getExternalSignalName(
                     comp.getArrayDriveMode(),

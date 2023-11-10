@@ -115,12 +115,12 @@ public class SocUpMenuProvider implements ActionListener {
     @Override
     public void configureMenu(JPopupMenu menu, Project proj) {
       setParentFrame(instance, proj.getFrame());
-      var instName = instance.getAttributeValue(StdAttr.LABEL);
+      java.lang.String instName = instance.getAttributeValue(StdAttr.LABEL);
       if (StringUtil.isNullOrEmpty(instName)) {
         final var loc = instance.getLocation();
         instName = instance.getFactory().getHDLName(instance.getAttributeSet()) + "@" + loc.getX() + "," + loc.getY();
       }
-      var name = circuitState != null ? instName + " : " + S.get("SocUpMenuAsmWindow") : S.get("SocUpMenuAsmWindow");
+      java.lang.String name = circuitState != null ? instName + " : " + S.get("SocUpMenuAsmWindow") : S.get("SocUpMenuAsmWindow");
       final var state = circuitState == null ? proj.getCircuitState() : circuitState;
       menu.addSeparator();
       HierarchyInfo hinfo;
@@ -236,7 +236,7 @@ public class SocUpMenuProvider implements ActionListener {
         if (myStates.get(data) != null) {
           final var frame = myStates.get(data);
           frame.setVisible(true);
-          var state = frame.getExtendedState();
+          int state = frame.getExtendedState();
           state &= ~Frame.ICONIFIED;
           frame.setExtendedState(state);
           return;
@@ -258,7 +258,7 @@ public class SocUpMenuProvider implements ActionListener {
         if (myPrograms.get(data) != null) {
           final var frame = myPrograms.get(data);
           frame.setVisible(true);
-          var frameState = frame.getExtendedState();
+          int frameState = frame.getExtendedState();
           frameState &= ~Frame.ICONIFIED;
           frame.setExtendedState(frameState);
           return;
@@ -279,7 +279,7 @@ public class SocUpMenuProvider implements ActionListener {
         if (myAsmWindows.get(data) != null) {
           final var frame = myAsmWindows.get(data);
           frame.setVisible(true);
-          var fstate = frame.getExtendedState();
+          int fstate = frame.getExtendedState();
           fstate &= ~Frame.ICONIFIED;
           frame.setExtendedState(fstate);
           return;

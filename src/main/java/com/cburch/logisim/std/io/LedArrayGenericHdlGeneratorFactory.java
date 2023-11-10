@@ -273,7 +273,7 @@ public class LedArrayGenericHdlGeneratorFactory {
   public static List<String> getLedArrayConnections(FpgaIoInformationContainer info, int id) {
     final var connections = LineBuffer.getHdlBuffer();
     final var wires = new HashMap<String, String>();
-    for (var pin = 0; pin < info.getNrOfPins(); pin++) {
+    for (int pin = 0; pin < info.getNrOfPins(); pin++) {
       final var led = LineBuffer.formatHdl("s_{{1}}{{2}}{{<}}{{3}}{{>}}", LedArrayInputs, id, pin);
       if (!info.isPinMapped(pin)) {
         wires.put(led, Hdl.zeroBit());
@@ -294,7 +294,7 @@ public class LedArrayGenericHdlGeneratorFactory {
            .pair("insG", LedArrayGreenInputs)
            .pair("insB", LedArrayBlueInputs);
 
-    for (var pin = 0; pin < array.getNrOfPins(); pin++) {
+    for (int pin = 0; pin < array.getNrOfPins(); pin++) {
       final var red = LineBuffer.formatHdl("s_{{1}}{{2}}{{<}}{{3}}{{>}}", LedArrayRedInputs, id, pin);
       final var green = LineBuffer.formatHdl("s_{{1}}{{2}}{{<}}{{3}}{{>}}", LedArrayGreenInputs, id, pin);
       final var blue = LineBuffer.formatHdl("s_{{1}}{{2}}{{<}}{{3}}{{>}}", LedArrayBlueInputs, id, pin);
@@ -346,12 +346,12 @@ public class LedArrayGenericHdlGeneratorFactory {
   }
 
   public static LineBuffer getGenericPortMapAlligned(Map<String, String> generics, boolean isGeneric) {
-    var preamble = Hdl.isVhdl() ? LineBuffer.formatVhdl("{{port}} {{map}} ( ") : "( ";
+    java.lang.String preamble = Hdl.isVhdl() ? LineBuffer.formatVhdl("{{port}} {{map}} ( ") : "( ";
     if (isGeneric) preamble = Hdl.isVhdl() ? LineBuffer.formatVhdl("{{generic}} {{map}} ( ") : "#( ";
     final var contents = LineBuffer.getHdlBuffer();
-    var maxNameLength = 0;
-    var first = true;
-    var nrOfGenerics = 0;
+    int maxNameLength = 0;
+    boolean first = true;
+    int nrOfGenerics = 0;
     for (final var generic : generics.keySet()) {
       maxNameLength = Math.max(maxNameLength, generic.length());
       nrOfGenerics++;

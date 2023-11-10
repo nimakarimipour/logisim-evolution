@@ -119,7 +119,7 @@ public class XilinxDownload implements VendorDownload {
   @Override
   public ProcessBuilder downloadToBoard() {
     if (!boardInfo.fpga.isUsbTmcDownloadRequired()) {
-      var command = new ArrayList<String>();
+      java.util.ArrayList<java.lang.String> command = new ArrayList<String>();
       command.add(xilinxVendor.getBinaryPath(5));
       command.add("-batch");
       command.add(scriptPath.replace(projectPath, "../") + File.separator + DOWNLOAD_FILE);
@@ -129,14 +129,14 @@ public class XilinxDownload implements VendorDownload {
     } else {
       Reporter.report.clearConsole();
       /* Here we do the USBTMC Download */
-      var usbtmcdevice = new File("/dev/usbtmc0").exists();
+      boolean usbtmcdevice = new File("/dev/usbtmc0").exists();
       if (!usbtmcdevice) {
         Reporter.report.addFatalError(S.get("XilinxUsbTmc"));
         return null;
       }
-      var bitfile = new File(sandboxPath + ToplevelHdlGeneratorFactory.FPGA_TOP_LEVEL_NAME + "." + bitfileExt);
-      var bitfileBuffer = new byte[BUFFER_SIZE];
-      var bitfileBufferSize = 0;
+      java.io.File bitfile = new File(sandboxPath + ToplevelHdlGeneratorFactory.FPGA_TOP_LEVEL_NAME + "." + bitfileExt);
+      byte[] bitfileBuffer = new byte[BUFFER_SIZE];
+      int bitfileBufferSize = 0;
       BufferedInputStream bitfileIn;
       try {
         bitfileIn = new BufferedInputStream(new FileInputStream(bitfile));
@@ -144,7 +144,7 @@ public class XilinxDownload implements VendorDownload {
         Reporter.report.addFatalError(S.get("XilinxOpenFailure", bitfile));
         return null;
       }
-      var usbtmc = new File("/dev/usbtmc0");
+      java.io.File usbtmc = new File("/dev/usbtmc0");
       BufferedOutputStream usbtmcOut;
       try {
         usbtmcOut = new BufferedOutputStream(new FileOutputStream(usbtmc));
@@ -166,10 +166,10 @@ public class XilinxDownload implements VendorDownload {
   @Override
   public boolean createDownloadScripts() {
     final var jtagPos = String.valueOf(boardInfo.fpga.getFpgaJTAGChainPosition());
-    var scriptFile = FileWriter.getFilePointer(scriptPath, SCRIPT_FILE);
-    var vhdlListFile = FileWriter.getFilePointer(scriptPath, VHDL_LIST_FILE);
-    var ucfFile = FileWriter.getFilePointer(ucfPath, UCF_FILE);
-    var downloadFile = FileWriter.getFilePointer(scriptPath, DOWNLOAD_FILE);
+    java.io.File scriptFile = FileWriter.getFilePointer(scriptPath, SCRIPT_FILE);
+    java.io.File vhdlListFile = FileWriter.getFilePointer(scriptPath, VHDL_LIST_FILE);
+    java.io.File ucfFile = FileWriter.getFilePointer(ucfPath, UCF_FILE);
+    java.io.File downloadFile = FileWriter.getFilePointer(scriptPath, DOWNLOAD_FILE);
     if (scriptFile == null || vhdlListFile == null || ucfFile == null || downloadFile == null) {
       scriptFile = new File(scriptPath + SCRIPT_FILE);
       vhdlListFile = new File(scriptPath + VHDL_LIST_FILE);
@@ -187,8 +187,8 @@ public class XilinxDownload implements VendorDownload {
             .pair("mcsFile", scriptPath + File.separator + MCS_FILE)
             .pair("hdlType", HdlType.toUpperCase());
 
-    for (var entity : entities) contents.add("{{hdlType}} work \"{{1}}\"", entity);
-    for (var arch : architectures) contents.add("{{hdlType}} work \"{{1}}\"", arch);
+    for (java.lang.String entity : entities) contents.add("{{hdlType}} work \"{{1}}\"", entity);
+    for (java.lang.String arch : architectures) contents.add("{{hdlType}} work \"{{1}}\"", arch);
     if (!FileWriter.writeContents(vhdlListFile, contents.get())) return false;
 
     contents
@@ -260,11 +260,11 @@ public class XilinxDownload implements VendorDownload {
   }
 
   private ArrayList<String> getPinLocStrings() {
-    var contents = new ArrayList<String>();
-    var temp = new StringBuilder();
-    for (var key : mapInfo.getMappableResources().keySet()) {
-      var map = mapInfo.getMappableResources().get(key);
-      for (var i = 0; i < map.getNrOfPins(); i++) {
+    java.util.ArrayList<java.lang.String> contents = new ArrayList<String>();
+    java.lang.StringBuilder temp = new StringBuilder();
+    for (java.util.ArrayList<java.lang.String> key : mapInfo.getMappableResources().keySet()) {
+      com.cburch.logisim.fpga.data.MapComponent map = mapInfo.getMappableResources().get(key);
+      for (int i = 0; i < map.getNrOfPins(); i++) {
         if (map.isMapped(i) && !map.isOpenMapped(i) && !map.isConstantMapped(i) && !map.isInternalMapped(i)) {
           temp.setLength(0);
           temp.append("NET \"");
@@ -297,7 +297,7 @@ public class XilinxDownload implements VendorDownload {
       }
     }
     final var LedArrayMap = DownloadBase.getLedArrayMaps(mapInfo, rootNetList, boardInfo);
-    for (var key : LedArrayMap.keySet()) {
+    for (java.lang.String key : LedArrayMap.keySet()) {
       contents.add("NET \"" + LedArrayMap.get(key) + "\" LOC=\"" + key + "\";");
     }
     return contents;

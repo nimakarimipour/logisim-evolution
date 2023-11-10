@@ -49,11 +49,11 @@ abstract class AbstractGate extends InstanceFactory {
     } else {
       final var v = value.getAll();
       if (outType == GateAttributes.OUTPUT_0Z) {
-        for (var i = 0; i < v.length; i++) {
+        for (int i = 0; i < v.length; i++) {
           if (v[i] == Value.TRUE) v[i] = Value.UNKNOWN;
         }
       } else if (outType == GateAttributes.OUTPUT_Z1) {
-        for (var i = 0; i < v.length; i++) {
+        for (int i = 0; i < v.length; i++) {
           if (v[i] == Value.FALSE) v[i] = Value.UNKNOWN;
         }
       }
@@ -90,7 +90,7 @@ abstract class AbstractGate extends InstanceFactory {
     final var baseWidth = (Integer) attrs.size.getValue();
 
     final var axis = baseWidth / 2 + (negateOutput ? 10 : 0);
-    var perp = 0;
+    int perp = 0;
     if (AppPreferences.GATE_SHAPE.get().equals(AppPreferences.SHAPE_RECTANGULAR)) {
       perp += 6;
     }
@@ -122,7 +122,7 @@ abstract class AbstractGate extends InstanceFactory {
 
     final var ports = new Port[inputs + 1];
     ports[0] = new Port(0, 0, Port.OUTPUT, StdAttr.WIDTH);
-    for (var i = 0; i < inputs; i++) {
+    for (int i = 0; i < inputs; i++) {
       final var offs = getInputOffset(attrs, i);
       ports[i + 1] = new Port(offs.getX(), offs.getY(), Port.INPUT, StdAttr.WIDTH);
     }
@@ -162,7 +162,7 @@ abstract class AbstractGate extends InstanceFactory {
           return true;
         } else {
           int inputs = attrs.inputs;
-          for (var i = 1; i <= inputs; i++) {
+          for (int i = 1; i <= inputs; i++) {
             Location offs = getInputOffset(attrs, i);
             if (loc.manhattanDistanceTo(offs) <= 5) return true;
           }
@@ -283,10 +283,10 @@ abstract class AbstractGate extends InstanceFactory {
             final var negated = attrs.negated;
             final var width = attrs.width.getWidth();
 
-            for (var b = 0; b < width; b++) {
+            for (int b = 0; b < width; b++) {
               final var inputs = new Expression[inputCount];
-              var numInputs = 0;
-              for (var i = 1; i <= inputCount; i++) {
+              int numInputs = 0;
+              for (int i = 1; i <= inputCount; i++) {
                 Expression e = expressionMap.get(instance.getPortLocation(i), b);
                 if (e != null) {
                   final var negatedBit = (int) (negated >> (i - 1)) & 1;
@@ -312,13 +312,13 @@ abstract class AbstractGate extends InstanceFactory {
     final var attrs = (GateAttributes) attrsBase;
     final var facing = attrs.facing;
     final var size = (Integer) attrs.size.getValue();
-    var inputs = attrs.inputs;
+    int inputs = attrs.inputs;
     if (inputs % 2 == 0) {
       inputs++;
     }
     final var negated = attrs.negated;
 
-    var width = size + bonusWidth + (negateOutput ? 10 : 0);
+    int width = size + bonusWidth + (negateOutput ? 10 : 0);
     if (negated != 0) {
       width += 10;
     }
@@ -368,8 +368,8 @@ abstract class AbstractGate extends InstanceFactory {
     Object shape = painter.getGateShape();
     final var loc = painter.getLocation();
     final var bds = painter.getOffsetBounds();
-    var width = bds.getWidth();
-    var height = bds.getHeight();
+    int width = bds.getWidth();
+    int height = bds.getHeight();
     if (facing == Direction.NORTH || facing == Direction.SOUTH) {
       int t = width;
       width = height;
@@ -396,7 +396,7 @@ abstract class AbstractGate extends InstanceFactory {
 
     g.setColor(baseColor);
     g.translate(loc.getX(), loc.getY());
-    var rotate = 0.0;
+    double rotate = 0.0;
     if (facing != Direction.EAST && g instanceof Graphics2D g2) {
       rotate = -facing.toRadians();
       g2.rotate(rotate);
@@ -468,7 +468,7 @@ abstract class AbstractGate extends InstanceFactory {
       float ypos = ((float) iconSize) / 2 - (float) txt.getBounds().getCenterY();
       txt.draw(g, xpos, ypos);
     } else {
-      var txt = new TextLayout(label.substring(0, 2), iconFont, g.getFontRenderContext());
+      java.awt.font.TextLayout txt = new TextLayout(label.substring(0, 2), iconFont, g.getFontRenderContext());
       float xpos =
           ((float) iconSize - (float) negateDiameter) / 2 - (float) txt.getBounds().getCenterX();
       float ypos = ((float) iconSize) / 4 - (float) txt.getBounds().getCenterY();
@@ -550,9 +550,9 @@ abstract class AbstractGate extends InstanceFactory {
         opts.getValue(Options.ATTR_GATE_UNDEFINED).equals(Options.GATE_UNDEFINED_ERROR);
 
     final var inputs = new Value[inputCount];
-    var numInputs = 0;
-    var error = false;
-    for (var i = 1; i <= inputCount; i++) {
+    int numInputs = 0;
+    boolean error = false;
+    for (int i = 1; i <= inputCount; i++) {
       if (state.isPortConnected(i)) {
         final var negatedBit = (int) (negated >> (i - 1)) & 1;
         if (negatedBit == 1) {

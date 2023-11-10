@@ -121,7 +121,7 @@ public final class LibraryManager {
 
   private static String toRelative(Loader loader, File file) {
     final var currentDirectory = loader.getCurrentDirectory();
-    var fileName = file.toString();
+    java.lang.String fileName = file.toString();
     try {
       fileName = file.getCanonicalPath();
     } catch (IOException e) {
@@ -132,7 +132,7 @@ public final class LibraryManager {
       final var newParts = fileName.split(Pattern.quote(File.separator));
       final var nrOfNewParts = newParts.length;
       // note that the newParts includes the filename, whilst the old doesn't
-      var nrOfPartsEqual = 0;
+      int nrOfPartsEqual = 0;
       while ((nrOfPartsEqual < currentParts.length) && (nrOfPartsEqual < (nrOfNewParts - 1))
           && (currentParts[nrOfPartsEqual].equals(newParts[nrOfPartsEqual]))) {
         nrOfPartsEqual++;
@@ -140,7 +140,7 @@ public final class LibraryManager {
       final var nrOfLevelsToGoDown = currentParts.length - nrOfPartsEqual;
       final var relativeFile = new StringBuilder();
       relativeFile.append(String.format("..%s", File.separator).repeat(nrOfLevelsToGoDown));
-      for (var restingPartId = nrOfPartsEqual; restingPartId < nrOfNewParts; restingPartId++) {
+      for (int restingPartId = nrOfPartsEqual; restingPartId < nrOfNewParts; restingPartId++) {
         relativeFile.append(newParts[restingPartId]);
         if (restingPartId < (nrOfNewParts - 1)) relativeFile.append(File.separator);
       }
@@ -222,7 +222,7 @@ public final class LibraryManager {
 
   public LoadedLibrary loadJarLibrary(Loader loader, File toRead, String className) {
     final var jarDescriptor = new JarDescriptor(toRead, className);
-    var ret = findKnown(jarDescriptor);
+    com.cburch.logisim.file.LoadedLibrary ret = findKnown(jarDescriptor);
     if (ret != null) return ret;
 
     try {
@@ -314,7 +314,7 @@ public final class LibraryManager {
   }
 
   public LoadedLibrary loadLogisimLibrary(Loader loader, File toRead) {
-    var ret = findKnown(toRead);
+    com.cburch.logisim.file.LoadedLibrary ret = findKnown(toRead);
     if (ret != null) return ret;
 
     try {
@@ -362,7 +362,7 @@ public final class LibraryManager {
     if (logiLib == null) return;
     final var toBeRemoved = new HashSet<String>();
     for (final var library : logiLib.getLibraries()) {
-      var isUsed = false;
+      boolean isUsed = false;
       for (final var circ : logiLib.getCircuits()) {
         for (final var tool : circ.getNonWires()) {
           isUsed |= library.contains(tool.getFactory());

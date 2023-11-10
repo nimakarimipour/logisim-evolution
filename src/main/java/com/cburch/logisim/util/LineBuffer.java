@@ -404,7 +404,7 @@ public class LineBuffer implements RandomAccess {
    * @return Instance of self for easy chaining.
    */
   public LineBuffer repeat(int count, String line) {
-    for (var i = 0; i < count; i++) add(line);
+    for (int i = 0; i < count; i++) add(line);
     return this;
   }
 
@@ -839,8 +839,8 @@ public class LineBuffer implements RandomAccess {
     while (matcher.find()) {
       // Extract key from between the brackets:
       final var bracketsCharCount = 2;
-      for (var i = 1; i <= matcher.groupCount(); i++) {
-        var keyStr = matcher.group(i);
+      for (int i = 1; i <= matcher.groupCount(); i++) {
+        java.lang.String keyStr = matcher.group(i);
         keyStr = keyStr.substring(bracketsCharCount, keyStr.length() - bracketsCharCount).strip();
         // FIXME: we shall overwrite old ph or fail?
         if (!keys.contains(keyStr)) keys.add(keyStr);
@@ -860,7 +860,7 @@ public class LineBuffer implements RandomAccess {
   @Override
   public boolean equals(Object other) {
     if (!(other instanceof LineBuffer && size() == ((LineBuffer) other).size())) return false;
-    for (var i = 0; i < size(); i++) {
+    for (int i = 0; i < size(); i++) {
       final var thisLine = get().get(i);
       final var otherLine = ((LineBuffer) other).get().get(i);
       if (!(thisLine.equals(otherLine))) return false;
@@ -918,7 +918,7 @@ public class LineBuffer implements RandomAccess {
      */
     public static Pairs fromArgs(Object... args) {
       final var map = new Pairs();
-      var idx = 1;
+      int idx = 1;
       for (final var arg : args) {
         map.addPositionalPair(String.valueOf(idx++), arg.toString());
       }

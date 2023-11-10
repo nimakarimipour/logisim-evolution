@@ -32,8 +32,8 @@ public class DefaultCustomAppearance {
     final var edge = new HashMap<Direction, List<Instance>>();
     edge.put(Direction.EAST, new ArrayList<>());
     edge.put(Direction.WEST, new ArrayList<>());
-    var maxLeftLabelLength = 0;
-    var maxRightLabelLength = 0;
+    int maxLeftLabelLength = 0;
+    int maxRightLabelLength = 0;
 
     if (!pins.isEmpty()) {
       for (final var pin : pins) {

@@ -252,8 +252,8 @@ public class Hdl {
   public static String getZeroVector(int nrOfBits, boolean floatingPinTiedToGround) {
     final var contents = new StringBuilder();
     if (isVhdl()) {
-      var fillValue = (floatingPinTiedToGround) ? "0" : "1";
-      var hexFillValue = (floatingPinTiedToGround) ? "0" : "F";
+      java.lang.String fillValue = (floatingPinTiedToGround) ? "0" : "1";
+      java.lang.String hexFillValue = (floatingPinTiedToGround) ? "0" : "F";
       if (nrOfBits == 1) {
         contents.append("'").append(fillValue).append("'");
       } else {
@@ -283,17 +283,17 @@ public class Hdl {
     final var nrSingleBits = nrOfBits % 4;
     final var hexDigits = new String[nrHexDigits];
     final var singleBits = new StringBuilder();
-    var shiftValue = value;
-    for (var hexIndex = nrHexDigits - 1; hexIndex >= 0; hexIndex--) {
-      var hexValue = shiftValue & 0xFL;
+    long shiftValue = value;
+    for (int hexIndex = nrHexDigits - 1; hexIndex >= 0; hexIndex--) {
+      long hexValue = shiftValue & 0xFL;
       shiftValue >>= 4L;
       hexDigits[hexIndex] = String.format("%1X", hexValue);
     }
     final var hexValue = new StringBuilder();
-    for (var hexIndex = 0; hexIndex < nrHexDigits; hexIndex++) {
+    for (int hexIndex = 0; hexIndex < nrHexDigits; hexIndex++) {
       hexValue.append(hexDigits[hexIndex]);
     }
-    var mask = (nrSingleBits == 0) ? 0 : 1L << (nrSingleBits - 1);
+    long mask = (nrSingleBits == 0) ? 0 : 1L << (nrSingleBits - 1);
     while (mask > 0) {
       singleBits.append((shiftValue & mask) == 0 ? "0" : "1");
       mask >>= 1L;
@@ -320,7 +320,7 @@ public class Hdl {
   }
 
   public static String getNetName(netlistComponent comp, int endIndex, boolean floatingNetTiedToGround, Netlist myNetlist) {
-    var netName = "";
+    java.lang.String netName = "";
     if ((endIndex >= 0) && (endIndex < comp.nrOfEnds())) {
       final var floatingValue = floatingNetTiedToGround ? zeroBit() : oneBit();
       final var thisEnd = comp.getEnd(endIndex);
@@ -345,7 +345,7 @@ public class Hdl {
   }
 
   public static String getBusEntryName(netlistComponent comp, int endIndex, boolean floatingNetTiedToGround, int bitindex, Netlist theNets) {
-    var busName = "";
+    java.lang.String busName = "";
     if ((endIndex >= 0) && (endIndex < comp.nrOfEnds())) {
       final var thisEnd = comp.getEnd(endIndex);
       final var isOutput = thisEnd.isOutputEnd();
@@ -395,7 +395,7 @@ public class Hdl {
   }
 
   public static String getClockNetName(netlistComponent comp, int endIndex, Netlist theNets) {
-    var contents = new StringBuilder();
+    java.lang.StringBuilder contents = new StringBuilder();
     if ((theNets.getCurrentHierarchyLevel() != null) && (endIndex >= 0) && (endIndex < comp.nrOfEnds())) {
       final var endData = comp.getEnd(endIndex);
       if (endData.getNrOfBits() == 1) {
@@ -454,8 +454,8 @@ public class Hdl {
        * be mapped
        */
       /* First we check if the bus has a connection */
-      var connected = false;
-      for (var bit = 0; bit < nrOfBits; bit++) {
+      boolean connected = false;
+      for (int bit = 0; bit < nrOfBits; bit++) {
         if (connectionInformation.get((byte) bit).getParentNet() != null)
           connected = true;
       }
@@ -474,7 +474,7 @@ public class Hdl {
           /* The last case, we have to enumerate through each bit */
           if (isVhdl()) {
             final var sourceNetName = new StringBuilder();
-            for (var bit = 0; bit < nrOfBits; bit++) {
+            for (int bit = 0; bit < nrOfBits; bit++) {
               /* First we build the Line information */
               sourceNetName.setLength(0);
               sourceNetName.append(String.format("%s(%d) ", sourceName, bit));
@@ -504,7 +504,7 @@ public class Hdl {
              * First we build an array with all the signals that
              * need to be concatenated
              */
-            for (var bit = 0; bit < nrOfBits; bit++) {
+            for (int bit = 0; bit < nrOfBits; bit++) {
               final var solderPoint = connectionInformation.get((byte) bit);
               if (solderPoint.getParentNet() == null) {
                 /* this entry is not connected */
@@ -528,7 +528,7 @@ public class Hdl {
             /* Finally we can put all together */
             final var vector = new StringBuilder();
             vector.append("{");
-            for (var bit = nrOfBits; bit > 0; bit--) {
+            for (int bit = nrOfBits; bit > 0; bit--) {
               vector.append(seperateSignals.get(bit - 1));
               if (bit != 1) {
                 vector.append(",");
@@ -544,11 +544,11 @@ public class Hdl {
   }
 
   public static void addAllWiresSorted(LineBuffer contents, Map<String, String> wires) {
-    var maxNameLength = 0;
-    for (var wire : wires.keySet())
+    int maxNameLength = 0;
+    for (java.lang.String wire : wires.keySet())
       maxNameLength = Math.max(maxNameLength, wire.length());
     final var sortedWires = new TreeSet<>(wires.keySet());
-    for (var wire : sortedWires)
+    for (java.lang.String wire : sortedWires)
       contents.add("{{assign}}{{1}}{{2}}{{=}}{{3}};", wire, " ".repeat(maxNameLength - wire.length()), wires.get(wire));
     wires.clear();
   }

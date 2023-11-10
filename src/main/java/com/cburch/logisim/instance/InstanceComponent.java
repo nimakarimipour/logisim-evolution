@@ -109,7 +109,7 @@ public final class InstanceComponent implements Component, AttributeListener, To
   //
   @Override
   public void addComponentListener(ComponentListener l) {
-    var ls = listeners;
+    com.cburch.logisim.util.EventSourceWeakSupport<com.cburch.logisim.comp.ComponentListener> ls = listeners;
     if (ls == null) {
       ls = new EventSourceWeakSupport<>();
       ls.add(l);
@@ -154,7 +154,7 @@ public final class InstanceComponent implements Component, AttributeListener, To
     final var ports = portList;
     final var esOld = endArray;
     final var esOldLength = esOld == null ? 0 : esOld.length;
-    var es = esOld;
+    com.cburch.logisim.comp.EndData[] es = esOld;
     if (es == null || es.length != ports.size()) {
       es = new EndData[ports.size()];
       if (esOldLength > 0) {
@@ -163,11 +163,11 @@ public final class InstanceComponent implements Component, AttributeListener, To
       }
     }
     HashSet<Attribute<BitWidth>> wAttrs = null;
-    var toolTipFound = false;
+    boolean toolTipFound = false;
     ArrayList<EndData> endsChangedOld = null;
     ArrayList<EndData> endsChangedNew = null;
     final var portIt = ports.iterator();
-    for (var i = 0; portIt.hasNext() || i < esOldLength; i++) {
+    for (int i = 0; portIt.hasNext() || i < esOldLength; i++) {
       final var p = portIt.hasNext() ? portIt.next() : null;
       final var oldEnd = i < esOldLength ? esOld[i] : null;
       final var newEnd = p == null ? null : p.toEnd(loc, attrs);
@@ -328,7 +328,7 @@ public final class InstanceComponent implements Component, AttributeListener, To
 
   @Override
   public Bounds getBounds(Graphics g) {
-    var ret = bounds;
+    com.cburch.logisim.data.Bounds ret = bounds;
     if (textField != null) ret = ret.add(textField.getBounds(g));
     return ret;
   }
@@ -398,7 +398,7 @@ public final class InstanceComponent implements Component, AttributeListener, To
 
   @Override
   public String getToolTip(ComponentUserEvent e) {
-    var i = 0;
+    int i = 0;
     for (final var end : endArray) {
       if (end.getLocation().manhattanDistanceTo(e.getX(), e.getY()) < 10) {
         return portList.get(i).getToolTip();
@@ -439,7 +439,7 @@ public final class InstanceComponent implements Component, AttributeListener, To
 
   void setTextField(
       Attribute<String> labelAttr, Attribute<Font> fontAttr, int x, int y, int halign, int valign) {
-    var field = textField;
+    com.cburch.logisim.instance.InstanceTextField field = textField;
     if (field == null) {
       field = new InstanceTextField(this);
       field.update(labelAttr, fontAttr, x, y, halign, valign);

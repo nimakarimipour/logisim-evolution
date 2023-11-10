@@ -142,7 +142,7 @@ public class TclGeneric extends TclComponent {
   public void paintInstance(InstancePainter painter) {
     final var g = painter.getGraphics();
     final var content = painter.getAttributeValue(CONTENT_ATTR);
-    var metric = g.getFontMetrics();
+    java.awt.FontMetrics metric = g.getFontMetrics();
 
     final var bds = painter.getBounds();
     final var x0 = bds.getX() + (bds.getWidth() / 2);
@@ -170,7 +170,7 @@ public class TclGeneric extends TclComponent {
     final var inputs = content.getInputs();
     final var outputs = content.getOutputs();
 
-    for (var i = 0; i < inputs.length; i++)
+    for (int i = 0; i < inputs.length; i++)
       GraphicsUtil.drawText(
           g,
           StringUtil.resizeString(inputs[i].getToolTip(), metric, (WIDTH / 2) - X_PADDING),
@@ -178,7 +178,7 @@ public class TclGeneric extends TclComponent {
           bds.getY() + HEIGHT - 2 + (i * PORT_GAP),
           GraphicsUtil.H_LEFT,
           GraphicsUtil.V_CENTER);
-    for (var i = 0; i < outputs.length; i++)
+    for (int i = 0; i < outputs.length; i++)
       GraphicsUtil.drawText(
           g,
           StringUtil.resizeString(outputs[i].getToolTip(), metric, (WIDTH / 2) - X_PADDING),

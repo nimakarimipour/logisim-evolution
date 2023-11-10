@@ -39,10 +39,10 @@ abstract class RectangularTool extends AbstractTool {
     if (!active) return Bounds.EMPTY_BOUNDS;
 
     final var start = dragStart;
-    var x0 = start.getX();
-    var y0 = start.getY();
-    var x1 = mx;
-    var y1 = my;
+    int x0 = start.getX();
+    int y0 = start.getY();
+    int x1 = mx;
+    int y1 = my;
     if (x0 == x1 && y0 == y1) {
       return Bounds.EMPTY_BOUNDS;
     }
@@ -76,10 +76,10 @@ abstract class RectangularTool extends AbstractTool {
       }
     }
 
-    var x = x0;
-    var y = y0;
-    var w = x1 - x0;
-    var h = y1 - y0;
+    int x = x0;
+    int y = y0;
+    int w = x1 - x0;
+    int h = y1 - y0;
     if (w < 0) {
       x = x1;
       w = -w;

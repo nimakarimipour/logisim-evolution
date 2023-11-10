@@ -48,7 +48,7 @@ public class LayoutEditHandler extends EditHandler
     final var selEmpty = (sel == null || sel.isEmpty());
     final var canChange = proj != null && proj.getLogisimFile().contains(proj.getCurrentCircuit());
 
-    var selectAvailable = false;
+    boolean selectAvailable = false;
     for (final var lib : proj.getLogisimFile().getLibraries()) {
       if (lib instanceof BaseLibrary) {
         selectAvailable = true;

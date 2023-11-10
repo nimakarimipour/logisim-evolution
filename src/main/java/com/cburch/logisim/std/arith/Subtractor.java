@@ -101,7 +101,7 @@ public class Subtractor extends InstanceFactory {
     // compute outputs
     final var a = state.getPortValue(IN0);
     final var b = state.getPortValue(IN1);
-    var bIn = state.getPortValue(B_IN);
+    com.cburch.logisim.data.Value bIn = state.getPortValue(B_IN);
     if (bIn == Value.UNKNOWN || bIn == Value.NIL) bIn = Value.FALSE;
     final var outs = Adder.computeSum(data, a, b.not(), bIn.not());
 

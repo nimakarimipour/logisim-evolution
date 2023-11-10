@@ -231,11 +231,11 @@ public class LeftPanel extends JTable {
         });
 
     // calculate default sizes
-    var nameWidth = 0;
-    var valueWidth = 0;
+    int nameWidth = 0;
+    int valueWidth = 0;
     final var render = getDefaultRenderer(String.class);
     final var n = model.getSignalCount();
-    for (var i = -1; i < n; i++) {
+    for (int i = -1; i < n; i++) {
       String name;
       String val;
       if (i < 0) {
@@ -246,7 +246,7 @@ public class LeftPanel extends JTable {
         name = s.getName();
         val = s.getFormattedMaxValue();
       }
-      var c = render.getTableCellRendererComponent(this, name, false, false, i, 0);
+      java.awt.Component c = render.getTableCellRendererComponent(this, name, false, false, i, 0);
       nameWidth = Math.max(nameWidth, c.getPreferredSize().width);
       c = render.getTableCellRendererComponent(this, val, false, false, i, 1);
       valueWidth = Math.max(valueWidth, c.getPreferredSize().width);
@@ -254,7 +254,7 @@ public class LeftPanel extends JTable {
 
     setRowHeight(ChronoPanel.SIGNAL_HEIGHT);
     // table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-    var col = getColumnModel().getColumn(0);
+    javax.swing.table.TableColumn col = getColumnModel().getColumn(0);
     col.setMinWidth(20);
     col.setPreferredWidth(nameWidth + 10);
 
@@ -307,8 +307,8 @@ public class LeftPanel extends JTable {
 
   void raiseOrLower(int d) {
     final var sel = getSelectedValuesList();
-    var first = Integer.MAX_VALUE;
-    var last = -1;
+    int first = Integer.MAX_VALUE;
+    int last = -1;
     for (final var s : sel) {
       first = Math.min(first, s.idx);
       last = Math.max(last, s.idx);
@@ -326,7 +326,7 @@ public class LeftPanel extends JTable {
   }
 
   void removeSelected() {
-    var idx = 0;
+    int idx = 0;
     final var signals = getSelectedValuesList();
     final var items = new SignalInfo.List();
     for (final var s : signals) {
@@ -377,7 +377,7 @@ public class LeftPanel extends JTable {
       removing = null;
       try {
         final var incoming = (Signal.List) support.getTransferable().getTransferData(Signal.List.dataFlavor);
-        var newIdx = model.getSignalCount();
+        int newIdx = model.getSignalCount();
         if (support.isDrop()) {
           try {
             final var dl = (JTable.DropLocation) support.getDropLocation();

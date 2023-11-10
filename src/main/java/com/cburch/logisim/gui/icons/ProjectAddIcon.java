@@ -49,9 +49,9 @@ public class ProjectAddIcon extends BaseIcon {
           g2.getFont()
               .deriveFont((float) AppPreferences.getIconSize() / (float) 1.6)
               .deriveFont(Font.BOLD);
-      var l1 = new TextLayout("VH", f, g2.getFontRenderContext());
-      var top = AppPreferences.getIconSize() / 4 - l1.getBounds().getCenterY();
-      var left = AppPreferences.getIconSize() / 2 - l1.getBounds().getCenterX();
+      java.awt.font.TextLayout l1 = new TextLayout("VH", f, g2.getFontRenderContext());
+      double top = AppPreferences.getIconSize() / 4 - l1.getBounds().getCenterY();
+      double left = AppPreferences.getIconSize() / 2 - l1.getBounds().getCenterX();
       l1.draw(g2, (float) left, (float) top);
       l1 = new TextLayout("DL", f, g2.getFontRenderContext());
       top = (3 * AppPreferences.getIconSize()) / 4 - l1.getBounds().getCenterY();
@@ -68,7 +68,7 @@ public class ProjectAddIcon extends BaseIcon {
     } else g2.setColor(Color.GREEN.darker());
     final var path = new GeneralPath();
     path.moveTo(AppPreferences.getScaled(points[0]), AppPreferences.getScaled(points[1]));
-    for (var i = 2; i < points.length; i += 2)
+    for (int i = 2; i < points.length; i += 2)
       path.lineTo(AppPreferences.getScaled(points[i]), AppPreferences.getScaled(points[i + 1]));
     path.closePath();
     g2.fill(path);

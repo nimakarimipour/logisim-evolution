@@ -73,7 +73,7 @@ class BuildCircuitButton extends JButton {
       }
 
       final var outputs = model.getOutputs();
-      var enableNands = true;
+      boolean enableNands = true;
       for (String output : outputs.bits) {
         final var expr = model.getOutputExpressions().getExpression(output);
         if (expr != null && (expr.contains(Expression.Op.XOR) || expr.contains(Expression.Op.EQ))) {
@@ -122,9 +122,9 @@ class BuildCircuitButton extends JButton {
     public void actionPerformed(ActionEvent event) {
       Project dest = null;
       String name = null;
-      var twoInputs = false;
-      var useNands = false;
-      var replace = false;
+      boolean twoInputs = false;
+      boolean useNands = false;
+      boolean replace = false;
 
       if (!model.getOutputExpressions().hasExpressions()) {
         OptionPane.showMessageDialog(
@@ -135,10 +135,10 @@ class BuildCircuitButton extends JButton {
         return;
       }
 
-      var ok = false;
+      boolean ok = false;
       while (!ok) {
         DialogPanel dlog = new DialogPanel();
-        var action =
+        int action =
             OptionPane.showConfirmDialog(
                 parent,
                 dlog,

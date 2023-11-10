@@ -151,10 +151,10 @@ public class HexEditor extends JComponent implements Scrollable {
       gfx.fillRect(clip.x, clip.y, clip.width, clip.height);
     }
 
-    var addr0 = model.getFirstOffset();
-    var addr1 = model.getLastOffset();
+    long addr0 = model.getFirstOffset();
+    long addr1 = model.getLastOffset();
 
-    var xaddr0 = measures.toAddress(0, clip.y);
+    long xaddr0 = measures.toAddress(0, clip.y);
     if (xaddr0 == addr0) xaddr0 = measures.getBaseAddress(model);
     long xaddr1 = measures.toAddress(getWidth(), clip.y + clip.height) + 1;
     highlighter.paint(gfx, xaddr0, xaddr1);
@@ -164,22 +164,22 @@ public class HexEditor extends JComponent implements Scrollable {
     final var baseFm = gfx.getFontMetrics(baseFont);
     final var labelFont = baseFont.deriveFont(Font.ITALIC);
     final var labelFm = gfx.getFontMetrics(labelFont);
-    var cols = measures.getColumnCount();
-    var baseX = measures.getBaseX();
-    var baseY = measures.toY(xaddr0) + baseFm.getAscent() + baseFm.getLeading() / 2;
-    var dy = measures.getCellHeight();
-    var labelWidth = measures.getLabelWidth();
-    var labelChars = measures.getLabelChars();
-    var cellWidth = measures.getCellWidth();
-    var cellChars = measures.getCellChars();
-    for (var a = xaddr0; a < xaddr1; a += cols, baseY += dy) {
+    int cols = measures.getColumnCount();
+    int baseX = measures.getBaseX();
+    int baseY = measures.toY(xaddr0) + baseFm.getAscent() + baseFm.getLeading() / 2;
+    int dy = measures.getCellHeight();
+    int labelWidth = measures.getLabelWidth();
+    int labelChars = measures.getLabelChars();
+    int cellWidth = measures.getCellWidth();
+    int cellChars = measures.getCellChars();
+    for (long a = xaddr0; a < xaddr1; a += cols, baseY += dy) {
       final var label = toHex(a, labelChars);
       gfx.setFont(labelFont);
       gfx.drawString(
           label, baseX - labelWidth + (labelWidth - labelFm.stringWidth(label)) / 2, baseY);
       gfx.setFont(baseFont);
-      var b = a;
-      for (var j = 0; j < cols; j++, b++) {
+      long b = a;
+      for (int j = 0; j < cols; j++, b++) {
         if (b >= addr0 && b <= addr1) {
           final var val = toHex(model.get(b), cellChars);
           final var x = measures.toX(b) + (cellWidth - baseFm.stringWidth(val)) / 2;

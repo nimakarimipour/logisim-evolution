@@ -20,8 +20,8 @@ class SplitterPainter {
   static void drawLabels(ComponentDrawContext context, SplitterAttributes attrs, Location origin) {
     // compute labels
     final var ends = new String[attrs.fanout + 1];
-    var curEnd = -1;
-    var cur0 = 0;
+    int curEnd = -1;
+    int cur0 = 0;
     for (int i = 0, n = attrs.bitEnd.length; i <= n; i++) {
       final var bit = i == n ? -1 : attrs.bitEnd[i];
       if (bit != curEnd) {
@@ -100,8 +100,8 @@ class SplitterPainter {
       final var ySpine = (y0 + y1) / 2;
       GraphicsUtil.switchToWidth(g, Wire.WIDTH);
       g.drawLine(x0, y0, x0, ySpine);
-      var xi = x1;
-      var yi = y1;
+      int xi = x1;
+      int yi = y1;
       for (int i = 1; i <= fanout; i++) {
         if (context.getShowState()) {
           g.setColor(state.getValue(Location.create(xi, yi, true)).getColor());
@@ -124,8 +124,8 @@ class SplitterPainter {
       final var xSpine = (x0 + x1) / 2;
       GraphicsUtil.switchToWidth(g, Wire.WIDTH);
       g.drawLine(x0, y0, xSpine, y0);
-      var xi = x1;
-      var yi = y1;
+      int xi = x1;
+      int yi = y1;
       for (int i = 1; i <= fanout; i++) {
         if (context.getShowState()) {
           g.setColor(state.getValue(Location.create(xi, yi, true)).getColor());
@@ -149,17 +149,17 @@ class SplitterPainter {
   }
 
   static void drawLines(ComponentDrawContext context, SplitterAttributes attrs, Location origin) {
-    var showState = context.getShowState();
+    boolean showState = context.getShowState();
     final var state = showState ? context.getCircuitState() : null;
     if (state == null) showState = false;
 
     final var parms = attrs.getParameters();
     final var x0 = origin.getX();
     final var y0 = origin.getY();
-    var x = x0 + parms.getEnd0X();
-    var y = y0 + parms.getEnd0Y();
-    var dx = parms.getEndToEndDeltaX();
-    var dy = parms.getEndToEndDeltaY();
+    int x = x0 + parms.getEnd0X();
+    int y = y0 + parms.getEnd0Y();
+    int dx = parms.getEndToEndDeltaX();
+    int dy = parms.getEndToEndDeltaY();
     final var dxEndSpine = parms.getEndToSpineDeltaX();
     final var dyEndSpine = parms.getEndToSpineDeltaY();
 
@@ -177,10 +177,10 @@ class SplitterPainter {
     }
     GraphicsUtil.switchToWidth(g, SPINE_WIDTH);
     g.setColor(Value.multiColor);
-    var spine0x = x0 + parms.getSpine0X();
-    var spine0y = y0 + parms.getSpine0Y();
-    var spine1x = x0 + parms.getSpine1X();
-    var spine1y = y0 + parms.getSpine1Y();
+    int spine0x = x0 + parms.getSpine0X();
+    int spine0y = y0 + parms.getSpine0Y();
+    int spine1x = x0 + parms.getSpine1X();
+    int spine1y = y0 + parms.getSpine1Y();
     if (spine0x == spine1x && spine0y == spine1y) { // centered
       final var fanout = attrs.fanout;
       spine0x = x0 + parms.getEnd0X() + parms.getEndToSpineDeltaX();

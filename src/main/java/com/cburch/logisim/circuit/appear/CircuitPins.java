@@ -61,7 +61,7 @@ public class CircuitPins {
     for (final var comp : repl.getAdditions()) {
       if (comp.getFactory() instanceof Pin) {
         final var in = Instance.getInstanceFor(comp);
-        var added = pins.add(in);
+        boolean added = pins.add(in);
         if (added) {
           comp.addComponentListener(myComponentListener);
           in.getAttributeSet().addAttributeListener(myComponentListener);

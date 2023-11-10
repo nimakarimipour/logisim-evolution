@@ -73,7 +73,7 @@ public class Parser {
   private static Expression parse(ArrayList<Token> tokens) throws ParserException {
     final var stack = new ArrayList<Context>();
     Expression current = null;
-    for (var i = 0; i < tokens.size(); i++) {
+    for (int i = 0; i < tokens.size(); i++) {
       final var t = tokens.get(i);
       if (t.type == TOKEN_IDENT || t.type == TOKEN_CONST) {
         Expression here;
@@ -164,7 +164,7 @@ public class Parser {
 
     if (tokens.isEmpty()) return null;
 
-    var i = -1;
+    int i = -1;
     for (final var token : tokens) {
       i++;
       if (token.type == TOKEN_ERROR_BADCHAR) {

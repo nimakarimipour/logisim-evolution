@@ -52,7 +52,7 @@ public final class SvgReader {
     final var typeError = -1;
     final var patt = PATH_REGEX.matcher(elt.getAttribute("d"));
     final var tokens = new ArrayList<String>();
-    var type = -1; // -1 error, 0 start, 1 curve, 2 polyline
+    int type = -1; // -1 error, 0 start, 1 curve, 2 polyline
     while (patt.find()) {
       final var token = patt.group();
       tokens.add(token);
@@ -81,10 +81,10 @@ public final class SvgReader {
           && "Q".equalsIgnoreCase(tokens.get(3))) {
         final var x0 = Integer.parseInt(tokens.get(1));
         final var y0 = Integer.parseInt(tokens.get(2));
-        var x1 = Integer.parseInt(tokens.get(4));
-        var y1 = Integer.parseInt(tokens.get(5));
-        var x2 = Integer.parseInt(tokens.get(6));
-        var y2 = Integer.parseInt(tokens.get(7));
+        int x1 = Integer.parseInt(tokens.get(4));
+        int y1 = Integer.parseInt(tokens.get(5));
+        int x2 = Integer.parseInt(tokens.get(6));
+        int y2 = Integer.parseInt(tokens.get(7));
         if ("q".equals(tokens.get(3))) {
           x1 += x0;
           y1 += y0;
@@ -132,7 +132,7 @@ public final class SvgReader {
     if (ret == null) {
       return null;
     }
-    var attrs = ret.getAttributes();
+    java.util.List<com.cburch.logisim.data.Attribute<?>> attrs = ret.getAttributes();
     if (attrs.contains(DrawAttr.PAINT_TYPE)) {
       final var stroke = elt.getAttribute("stroke");
       final var fill = elt.getAttribute("fill");
@@ -157,7 +157,7 @@ public final class SvgReader {
       }
     }
     if (attrs.contains(DrawAttr.FILL_COLOR)) {
-      var color = elt.getAttribute("fill");
+      java.lang.String color = elt.getAttribute("fill");
       // FIXME: hardcoded color value
       if ("".equals(color)) color = "#000000";
       final var opacity = elt.getAttribute("fill-opacity");
@@ -191,7 +191,7 @@ public final class SvgReader {
     final var fontStyle = elt.getAttribute("font-style");
     final var fontWeight = elt.getAttribute("font-weight");
     final var fontSize = elt.getAttribute("font-size");
-    var styleFlags = Font.PLAIN;
+    int styleFlags = Font.PLAIN;
     if (isItalic(fontStyle)) styleFlags |= Font.ITALIC;
     if (isBold(fontWeight)) styleFlags |= Font.BOLD;
     final var size = Integer.parseInt(fontSize);
@@ -226,19 +226,19 @@ public final class SvgReader {
   }
 
   public static Font getFontAttribute(Element elt, String prefix, String defaultFamily, int defaultSize) {
-    var fontFamily = elt.getAttribute(prefix + "font-family");
-    var fontStyle = elt.getAttribute(prefix + "font-style");
-    var fontWeight = elt.getAttribute(prefix + "font-weight");
+    java.lang.String fontFamily = elt.getAttribute(prefix + "font-family");
+    java.lang.String fontStyle = elt.getAttribute(prefix + "font-style");
+    java.lang.String fontWeight = elt.getAttribute(prefix + "font-weight");
     final var fontSize = elt.getAttribute(prefix + "font-size");
 
     if (StringUtil.isNullOrEmpty(fontFamily)) fontFamily = defaultFamily;
     if (StringUtil.isNullOrEmpty(fontStyle)) fontStyle = "plain";
     if (StringUtil.isNullOrEmpty(fontWeight)) fontWeight = "plain";
-    var styleFlags = Font.PLAIN;
+    int styleFlags = Font.PLAIN;
     if (isItalic(fontStyle)) styleFlags |= Font.ITALIC;
     if (isBold(fontWeight)) styleFlags |= Font.BOLD;
 
-    var size = defaultSize;
+    int size = defaultSize;
     if (StringUtil.isNotEmpty(fontSize)) {
       try {
         size = Integer.parseInt(fontSize);
@@ -256,9 +256,9 @@ public final class SvgReader {
    * @param opacity opacity, as floating point (in from 0 to 1 range).
    */
   public static Color getColor(String hue, String opacity) {
-    var r = 0;
-    var g = 0;
-    var b = 0;
+    int r = 0;
+    int g = 0;
+    int b = 0;
     final var colorStrLen = 7;
     if (StringUtil.isNotEmpty(hue) && hue.length() == colorStrLen) {
       try {
@@ -269,7 +269,7 @@ public final class SvgReader {
         // Do nothing and stick to defaults.
       }
     }
-    var alpha = 255;
+    int alpha = 255;
     if (StringUtil.isNotEmpty(opacity)) {
       double tmpOpacity;
       try {
@@ -297,7 +297,7 @@ public final class SvgReader {
     final var patt = Pattern.compile("[ ,\n\r\t]+");
     final var toks = patt.split(points);
     final var ret = new Location[toks.length / 2];
-    for (var i = 0; i < ret.length; i++) {
+    for (int i = 0; i < ret.length; i++) {
       final var x = Integer.parseInt(toks[2 * i]);
       final var y = Integer.parseInt(toks[2 * i + 1]);
       ret[i] = Location.create(x, y, false);

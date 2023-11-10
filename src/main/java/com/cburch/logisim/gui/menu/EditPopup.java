@@ -49,7 +49,7 @@ public abstract class EditPopup extends JPopupMenu {
   protected abstract void fire(LogisimMenuItem item);
 
   protected void initialize() {
-    var x = false;
+    boolean x = false;
     x |= add(LogisimMenuBar.CUT, S.get("editCutItem"));
     x |= add(LogisimMenuBar.COPY, S.get("editCopyItem"));
     if (x) {

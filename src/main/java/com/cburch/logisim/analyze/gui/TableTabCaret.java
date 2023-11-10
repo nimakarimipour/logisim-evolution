@@ -96,7 +96,7 @@ class TableTabCaret {
 
     @Override
     public void keyPressed(KeyEvent e) {
-      var rows = table.getRowCount();
+      int rows = table.getRowCount();
       final var inputs = table.getInputColumnCount();
       final var outputs = table.getOutputColumnCount();
       final var cols = inputs + outputs;
@@ -148,10 +148,10 @@ class TableTabCaret {
 
     private int[] allRowsContaining(List<Integer> indexes) {
       final var model = table.getTruthTable();
-      var n = (indexes == null ? 0 : indexes.size());
+      int n = (indexes == null ? 0 : indexes.size());
       if (n == 0) return null;
       final var rows = new int[n];
-      for (var i = 0; i < n; i++) rows[i] = model.findVisibleRowContaining(indexes.get(i));
+      for (int i = 0; i < n; i++) rows[i] = model.findVisibleRowContaining(indexes.get(i));
       Arrays.sort(rows);
       return rows;
     }
@@ -165,7 +165,7 @@ class TableTabCaret {
         r2 = t;
       }
       final var indexes = new ArrayList<Integer>();
-      for (var r = r1; r <= r2; r++) {
+      for (int r = r1; r <= r2; r++) {
         for (final var idx : model.getVisibleRowIndexes(r)) indexes.add(idx);
       }
       Collections.sort(indexes);
@@ -185,8 +185,8 @@ class TableTabCaret {
       final var model = table.getTruthTable();
       final var inputs = table.getInputColumnCount();
       Entry newEntry = null;
-      var dx = 1;
-      var dy = 0;
+      int dx = 1;
+      int dy = 0;
       switch (c) {
         case ' ':
           if (cursor.col < inputs) {
@@ -233,20 +233,20 @@ class TableTabCaret {
         // obvious way to get from an index to a row number
         // except for scanning all existing rows.
         // First: save the old state
-        var oldCursor = cursor;
-        var oldMarkA = markA;
-        var oldMarkB = markB;
+        com.cburch.logisim.analyze.gui.TableTabCaret.Pt oldCursor = cursor;
+        com.cburch.logisim.analyze.gui.TableTabCaret.Pt oldMarkA = markA;
+        com.cburch.logisim.analyze.gui.TableTabCaret.Pt oldMarkB = markB;
         List<Integer> oldCursorIdx;
         List<Integer> oldMarkIdx;
         oldCursorIdx = allIndexesForRowRange(cursor.row, cursor.row);
         oldMarkIdx = allIndexesForRowRange(markA.row, markB.row);
         // Second: do the actual update
-        var updated = model.setVisibleInputEntry(cursor.row, cursor.col, newEntry, true);
+        boolean updated = model.setVisibleInputEntry(cursor.row, cursor.col, newEntry, true);
         // Third: try to update the cursor and selection.
         if (updated) {
           // Update the cursor position
           cursor = invalid;
-          var rows = allRowsContaining(oldCursorIdx);
+          int[] rows = allRowsContaining(oldCursorIdx);
           if (rows != null) {
             if (newEntry != Entry.ONE) {
               cursor = new Pt(rows[0], oldCursor.col);
@@ -258,9 +258,9 @@ class TableTabCaret {
           // Update the selection
           markA = cursor;
           markB = invalid;
-          var marks = allRowsContaining(oldMarkIdx);
+          int[] marks = allRowsContaining(oldMarkIdx);
           if (marks != null) {
-            var n = marks.length;
+            int n = marks.length;
             if (isContiguous(marks)) {
               final var fwd = oldMarkA.row <= oldMarkB.row;
               markA = new Pt(marks[fwd ? 0 : n - 1], oldMarkA.col);
@@ -275,8 +275,8 @@ class TableTabCaret {
       }
       if (!markA.isValid() || !markB.isValid()) return;
       final var selection = getSelection();
-      var row = cursor.row;
-      var col = cursor.col;
+      int row = cursor.row;
+      int col = cursor.col;
       if (dy > 0) { // advance down
         col = selection.x;
         if (++row >= selection.y + selection.height) row = selection.y;
@@ -623,10 +623,10 @@ class TableTabCaret {
   }
 
   private Rectangle region(Pt... pts) {
-    var r0 = -1;
-    var r1 = -1;
-    var c0 = -1;
-    var c1 = -1;
+    int r0 = -1;
+    int r1 = -1;
+    int c0 = -1;
+    int c1 = -1;
     for (Pt p : pts) {
       if (p == null || !p.isValid()) continue;
       if (r0 == -1) {
@@ -642,16 +642,16 @@ class TableTabCaret {
       }
     }
     if (r0 < 0) return new Rectangle(0, 0, -1, -1);
-    var x0 = table.getXLeft(c0);
-    var x1 = table.getXRight(c1);
-    var y0 = table.getY(r0);
-    var y1 = table.getY(r1) + table.getCellHeight();
+    int x0 = table.getXLeft(c0);
+    int x1 = table.getXRight(c1);
+    int y0 = table.getY(r0);
+    int y1 = table.getY(r1) + table.getCellHeight();
     return new Rectangle(x0 - 2, y0 - 2, (x1 - x0) + 4, (y1 - y0) + 4);
   }
 
   private boolean isContiguous(int[] rows) {
     if (rows.length <= 1) return true;
-    for (var i = 1; i < rows.length; i++) {
+    for (int i = 1; i < rows.length; i++) {
       // FIXME: this condition is always false. It most likely was meant to read:
       // if (Math.abs(rows[i] - rows[i+1]) > 1) return false;
       if (Math.abs(rows[i] - rows[i]) > 1) return false;

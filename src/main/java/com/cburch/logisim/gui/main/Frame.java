@@ -317,7 +317,7 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
 
     // Result zoomsteps.
     final var steps = new ArrayList<Double>();
-    var zoom = 0D;
+    double zoom = 0D;
     for (final var pair : config) {
       while (zoom < pair.maxZoom()) {
         zoom += pair.step();
@@ -336,15 +336,15 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
     final var comma = s.indexOf(',');
     if (comma < 0) return null;
     try {
-      var x = Integer.parseInt(s.substring(0, comma));
-      var y = Integer.parseInt(s.substring(comma + 1));
+      int x = Integer.parseInt(s.substring(0, comma));
+      int y = Integer.parseInt(s.substring(comma + 1));
       while (isProjectFrameAt(x, y)) {
         x += 20;
         y += 20;
       }
       final var desired = new Rectangle(x, y, 50, 50);
 
-      var gcBestSize = 0;
+      int gcBestSize = 0;
       Point gcBestPoint = null;
       final var ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
       for (final var gd : ge.getScreenDevices()) {
@@ -442,7 +442,7 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
     toFront();
     final String[] options = {S.get("saveOption"), S.get("discardOption"), S.get("cancelOption")};
     final var result = OptionPane.showOptionDialog(this, message, title, 0, OptionPane.QUESTION_MESSAGE, null, options, options[0]);
-    var ret = false;
+    boolean ret = false;
     if (result == 0) {
       ret = ProjectActions.doSave(project);
     } else if (result == 1) {
@@ -470,7 +470,7 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
 
     if (view.equals(EDIT_APPEARANCE)) {
       // appearance view
-      var app = appearance;
+      com.cburch.logisim.gui.appear.AppearanceView app = appearance;
       if (app == null) {
         app = new AppearanceView();
         app.setCircuit(project, project.getCircuitState());
@@ -521,7 +521,7 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
     final var loc = AppPreferences.TOOLBAR_PLACEMENT.get();
     rightPanel.remove(toolbar);
     if (!AppPreferences.TOOLBAR_HIDDEN.equals(loc)) {
-      var value = BorderLayout.NORTH;
+      java.lang.String value = BorderLayout.NORTH;
       for (final var dir : Direction.cardinals) {
         if (dir.toString().equals(loc)) {
           if (dir == Direction.EAST) {

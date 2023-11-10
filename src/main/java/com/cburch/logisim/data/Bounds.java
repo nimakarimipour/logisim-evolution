@@ -81,10 +81,10 @@ public class Bounds {
     if (this == EMPTY_BOUNDS) return Bounds.create(x, y, 1, 1);
     if (contains(x, y)) return this;
 
-    var newX = this.x;
-    var newWidth = this.wid;
-    var newY = this.y;
-    var newHeight = this.ht;
+    int newX = this.x;
+    int newWidth = this.wid;
+    int newY = this.y;
+    int newHeight = this.ht;
     if (x < this.x) {
       newX = x;
       newWidth = (this.x + this.wid) - x;
@@ -212,10 +212,10 @@ public class Bounds {
   }
 
   public Bounds intersect(Bounds other) {
-    var x0 = this.x;
-    var y0 = this.y;
-    var x1 = x0 + this.wid;
-    var y1 = y0 + this.ht;
+    int x0 = this.x;
+    int y0 = this.y;
+    int x1 = x0 + this.wid;
+    int y1 = y0 + this.ht;
     final var x2 = other.x;
     final var y2 = other.y;
     final var x3 = x2 + other.wid;
@@ -231,7 +231,7 @@ public class Bounds {
   // rotates this around (xc,yc) assuming that this is facing in the
   // from direction and the returned bounds should face in the to direction.
   public Bounds rotate(Direction from, Direction to, int xc, int yc) {
-    var degrees = to.toDegrees() - from.toDegrees();
+    int degrees = to.toDegrees() - from.toDegrees();
     while (degrees >= 360) degrees -= 360;
     while (degrees < 0) degrees += 360;
 

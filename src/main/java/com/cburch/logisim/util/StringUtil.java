@@ -59,10 +59,10 @@ public final class StringUtil {
   public static Bounds estimateBounds(String text, Font font, int hAlign, int vAlign) {
     // TODO - you can imagine being more clever here
     if (text == null || text.length() == 0) text = "X"; // return Bounds.EMPTY_BOUNDS;
-    var n = 0;
-    var c = 0;
-    var lines = 0;
-    for (var i = 0; i < text.length(); i++) {
+    int n = 0;
+    int c = 0;
+    int lines = 0;
+    for (int i = 0; i < text.length(); i++) {
       if (text.charAt(i) == '\n') {
         n = (Math.max(c, n));
         c = 0;

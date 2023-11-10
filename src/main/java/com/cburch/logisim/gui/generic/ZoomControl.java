@@ -99,8 +99,8 @@ public class ZoomControl extends JPanel {
   private int nearestZoomOption() {
     final var choices = model.getZoomOptions();
     final var factor = model.getZoomFactor() * 100.0;
-    var closest = 0;
-    for (var i = 1; i < choices.size(); i++) {
+    int closest = 0;
+    for (int i = 1; i < choices.size(); i++) {
       if (Math.abs(choices.get(i) - factor) < Math.abs(choices.get(closest) - factor)) {
         closest = i;
       }
@@ -134,7 +134,7 @@ public class ZoomControl extends JPanel {
     final var zoom = model.getZoomFactor();
     final var choices = model.getZoomOptions();
     final var factor = zoom * 100.0 * 0.999;
-    for (var i = choices.size() - 1; i >= 0; i--) {
+    for (int i = choices.size() - 1; i >= 0; i--) {
       if (choices.get(i) < factor) {
         model.setZoomFactor(choices.get(i) / 100.0);
         break;
@@ -241,8 +241,8 @@ public class ZoomControl extends JPanel {
       final var ydim = (height - AppPreferences.getScaled(4)) / three * three + 1;
       final var xoff = (width - xdim) / 2;
       final var yoff = (height - ydim) / 2;
-      for (var x = 0; x < xdim; x += three) {
-        for (var y = 0; y < ydim; y += three) {
+      for (int x = 0; x < xdim; x += three) {
+        for (int y = 0; y < ydim; y += three) {
           g.drawLine(x + xoff, y + yoff, x + xoff, y + yoff);
         }
       }
@@ -389,7 +389,7 @@ public class ZoomControl extends JPanel {
         final var zoomFactor = zoomModel.getZoomFactor();
         final var height = (bounds.getHeight() + 2 * padding) * zoomFactor;
         final var width = (bounds.getWidth() + 2 * padding) * zoomFactor;
-        var autozoom = zoomFactor;
+        double autozoom = zoomFactor;
         autozoom *=
             Math.min(
                 canvasPane.getViewport().getSize().getWidth() / width,

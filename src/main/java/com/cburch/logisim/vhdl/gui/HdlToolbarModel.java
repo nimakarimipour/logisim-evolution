@@ -129,8 +129,8 @@ public class HdlToolbarModel extends AbstractToolbarModel implements HdlModelLis
 
     @Override
     public Dimension getDimension(Object orientation) {
-      var w = 16;
-      var h = 16;
+      int w = 16;
+      int h = 16;
       if (icon != null) {
         w = icon.getIconWidth();
         h = icon.getIconHeight() + 2;

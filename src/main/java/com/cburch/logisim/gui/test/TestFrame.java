@@ -103,7 +103,7 @@ public class TestFrame extends LFrame.SubWindowWithSimulation {
   }
 
   private static String computeTitle(Model data, Project proj) {
-    var name = data == null ? "???" : data.getCircuit().getName();
+    java.lang.String name = data == null ? "???" : data.getCircuit().getName();
     return S.get("testFrameTitle", name, proj.getLogisimFile().getDisplayName());
   }
 

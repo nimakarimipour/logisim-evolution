@@ -599,7 +599,7 @@ public abstract class Expression {
 
           @Override
           public Void visitVariable(String name) {
-            var baseName = name;
+            java.lang.String baseName = name;
             String index = null;
             try {
               final var b = Bit.parse(name);

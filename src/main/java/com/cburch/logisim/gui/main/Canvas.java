@@ -777,7 +777,7 @@ public class Canvas extends JPanel implements LocaleListener, CanvasPaneContents
     public void mouseDragged(MouseEvent e) {
       if (dragTool != null) {
         dragTool.mouseDragged(Canvas.this, getGraphics(), e);
-        var zoomModel = proj.getFrame().getZoomModel();
+        com.cburch.logisim.gui.generic.ZoomModel zoomModel = proj.getFrame().getZoomModel();
         double zoomFactor = zoomModel.getZoomFactor();
         scrollRectToVisible(
             new Rectangle((int) (e.getX() * zoomFactor), (int) (e.getY() * zoomFactor), 1, 1));
@@ -893,7 +893,7 @@ public class Canvas extends JPanel implements LocaleListener, CanvasPaneContents
     public void mouseWheelMoved(MouseWheelEvent mwe) {
       final var tool = proj.getTool();
       if (mwe.isControlDown()) {
-        var zoomControl = proj.getFrame().getZoomControl();
+        com.cburch.logisim.gui.generic.ZoomControl zoomControl = proj.getFrame().getZoomControl();
     
         repairMouseEvent(mwe);
         if (mwe.getWheelRotation() < 0) {
@@ -901,8 +901,8 @@ public class Canvas extends JPanel implements LocaleListener, CanvasPaneContents
         } else {
           zoomControl.zoomOut();
         }
-        var rect = getViewableRect();
-        var zoom = proj.getFrame().getZoomModel().getZoomFactor();
+        java.awt.Rectangle rect = getViewableRect();
+        double zoom = proj.getFrame().getZoomModel().getZoomFactor();
         setHorizontalScrollBar((int) ((mwe.getX() - rect.width / 2) * zoom));
         setVerticalScrollBar((int) ((mwe.getY() - rect.height / 2) * zoom));
 
@@ -1288,7 +1288,7 @@ public class Canvas extends JPanel implements LocaleListener, CanvasPaneContents
     private int paintString(Graphics g, int y, String msg) {
       final var old = g.getFont();
       g.setFont(ERR_MSG_FONT);
-      var fm = g.getFontMetrics();
+      java.awt.FontMetrics fm = g.getFontMetrics();
       int x = (getWidth() - fm.stringWidth(msg)) / 2;
       if (x < 0) {
         x = 0;

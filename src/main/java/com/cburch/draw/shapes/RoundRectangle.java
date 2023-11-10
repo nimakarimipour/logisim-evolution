@@ -40,8 +40,8 @@ public class RoundRectangle extends Rectangular {
   protected boolean contains(int x, int y, int w, int h, Location q) {
     final var qx = q.getX();
     final var qy = q.getY();
-    var rx = radius;
-    var ry = radius;
+    int rx = radius;
+    int ry = radius;
     if (2 * rx > w) rx = w / 2;
     if (2 * ry > h) ry = h / 2;
     if (!isInRect(qx, qy, x, y, w, h)) {
@@ -88,9 +88,9 @@ public class RoundRectangle extends Rectangular {
     final var horz = Math.max(0, w - 2 * r); // length of horizontal segment
     final var vert = Math.max(0, h - 2 * r);
     final var len = 2 * horz + 2 * vert + 2 * Math.PI * r;
-    var u = len * rand.nextDouble();
-    var x = getX();
-    var y = getY();
+    double u = len * rand.nextDouble();
+    int x = getX();
+    int y = getY();
 
     if (u < horz) {
       x += r + (int) u;
@@ -103,8 +103,8 @@ public class RoundRectangle extends Rectangular {
       x += w;
       y += (u - 2 * w - h);
     } else {
-      var rx = radius;
-      var ry = radius;
+      int rx = radius;
+      int ry = radius;
       if (2 * rx > w) rx = w / 2;
       if (2 * ry > h) ry = h / 2;
       u = 2 * Math.PI * rand.nextDouble();

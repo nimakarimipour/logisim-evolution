@@ -59,14 +59,14 @@ public class LogisimVersion {
 
   private LogisimVersion initFromVersionString(String versionString)
       throws IllegalArgumentException {
-    var major = 0;
-    var minor = 0;
-    var patch = 0;
-    var separator = "";
-    var suffix = "";
+    int major = 0;
+    int minor = 0;
+    int patch = 0;
+    java.lang.String separator = "";
+    java.lang.String suffix = "";
 
-    var pattern = "^(\\d+.\\d+.\\d+)(.*)$";
-    var m = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE).matcher(versionString);
+    java.lang.String pattern = "^(\\d+.\\d+.\\d+)(.*)$";
+    java.util.regex.Matcher m = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE).matcher(versionString);
     if (m.matches()) {
       final var verStr = m.group(1);
       final var sufStr = m.group(2);
@@ -123,7 +123,7 @@ public class LogisimVersion {
    *     if equal, positive if newer.
    */
   public int compareTo(LogisimVersion other) {
-    var result = this.major - other.major;
+    int result = this.major - other.major;
 
     if (result == 0) {
       result = this.minor - other.minor;
@@ -165,7 +165,7 @@ public class LogisimVersion {
 
   @Override
   public String toString() {
-    var sfx = "";
+    java.lang.String sfx = "";
     if (!suffix.equals("")) {
       sfx = separator + suffix;
     }
@@ -177,7 +177,7 @@ public class LogisimVersion {
   }
 
   public static String format(int major, int minor, int patch, String suffix) {
-    var result = String.format("%d.%d.%d", major, minor, patch);
+    java.lang.String result = String.format("%d.%d.%d", major, minor, patch);
     if (!suffix.equals("")) result += suffix;
     return result;
   }

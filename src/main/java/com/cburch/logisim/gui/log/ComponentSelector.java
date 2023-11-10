@@ -94,7 +94,7 @@ public class ComponentSelector extends JTable {
       final var n = o.children.size();
       if (n == 0) return;
       if (o.expanded) {
-        for (var i = 0; i < n; i++) removeAll(row + 1);
+        for (int i = 0; i < n; i++) removeAll(row + 1);
         o.expanded = false;
       } else {
         for (int i = n - 1; i >= 0; i--) insertAll(row + 1, o.children.get(i));
@@ -107,7 +107,7 @@ public class ComponentSelector extends JTable {
       final var item = rows.remove(row);
       if (item.expanded) {
         final var n = item.children.size();
-        for (var i = 0; i < n; i++) removeAll(row);
+        for (int i = 0; i < n; i++) removeAll(row);
       }
     }
 
@@ -115,7 +115,7 @@ public class ComponentSelector extends JTable {
       rows.add(row, item);
       if (item.expanded) {
         final var n = item.children.size();
-        for (var i = n - 1; i >= 0; i--) insertAll(row + 1, item.children.get(i));
+        for (int i = n - 1; i >= 0; i--) insertAll(row + 1, item.children.get(i));
       }
     }
 
@@ -128,7 +128,7 @@ public class ComponentSelector extends JTable {
       root = r;
       rows.clear();
       final var n = root == null ? 0 : root.children.size();
-      for (var i = n - 1; i >= 0; i--) insertAll(0, root.children.get(i));
+      for (int i = n - 1; i >= 0; i--) insertAll(0, root.children.get(i));
       super.fireTableDataChanged();
     }
   }
@@ -224,7 +224,7 @@ public class ComponentSelector extends JTable {
     private boolean computeChildren() { // returns true if changed
       final var newChildren = new ArrayList<TreeNode<?>>();
       final var subcircs = new ArrayList<Component>();
-      var changed = false;
+      boolean changed = false;
       // TODO: hide from display any unselectable things that also have no children
       for (final var c : circ.getNonWires()) {
         // For DRIVEABLE_CLOCKS do not recurse into subcircuits
@@ -234,7 +234,7 @@ public class ComponentSelector extends JTable {
         }
         final var log = (LoggableContract) c.getFeature(LoggableContract.class);
         if (log == null) continue;
-        var bitWidth = log.getBitWidth(null);
+        com.cburch.logisim.data.BitWidth bitWidth = log.getBitWidth(null);
         if (bitWidth == null) bitWidth = c.getAttributeSet().getValue(StdAttr.WIDTH);
         final var w = bitWidth.getWidth();
         if (mode != ANY_SIGNAL && w != 1) continue; // signal is too wide to be a used as a clock
@@ -247,7 +247,7 @@ public class ComponentSelector extends JTable {
         } else if (mode == ACTUAL_CLOCKS) {
           if (!(c.getFactory() instanceof Clock)) continue;
         }
-        var toAdd = findChildFor(c);
+        com.cburch.logisim.gui.log.ComponentSelector.ComponentNode toAdd = findChildFor(c);
         if (toAdd == null) {
           toAdd = new ComponentNode(this, c);
           changed = true;
@@ -259,7 +259,7 @@ public class ComponentSelector extends JTable {
       for (final var c : subcircs) {
         final var factory = (SubcircuitFactory) c.getFactory();
         final var subCircuit = factory.getSubcircuit();
-        var toAdd = findChildFor(subCircuit);
+        com.cburch.logisim.gui.log.ComponentSelector.CircuitNode toAdd = findChildFor(subCircuit);
         if (toAdd == null) {
           changed = true;
           toAdd = new CircuitNode(this, subCircuit, c);
@@ -278,7 +278,7 @@ public class ComponentSelector extends JTable {
         final var label = comp.getAttributeSet().getValue(StdAttr.LABEL);
         if (label != null && !label.equals("")) return label;
       }
-      var ret = circ.getName();
+      java.lang.String ret = circ.getName();
       if (comp != null) ret += comp.getLocation();
       return ret;
     }
@@ -437,12 +437,12 @@ public class ComponentSelector extends JTable {
     } else {
       return null;
     }
-    var count = 0;
-    for (var cur = n.parent; cur != null; cur = cur.parent) count++;
+    int count = 0;
+    for (com.cburch.logisim.gui.log.ComponentSelector.CircuitNode cur = n.parent; cur != null; cur = cur.parent) count++;
     final var paths = new Component[count];
     paths[paths.length - 1] = n.comp;
-    var cur = n.parent;
-    for (var j = paths.length - 2; j >= 0; j--) {
+    com.cburch.logisim.gui.log.ComponentSelector.CircuitNode cur = n.parent;
+    for (int j = paths.length - 2; j >= 0; j--) {
       paths[j] = cur.comp;
       cur = cur.parent;
     }
@@ -510,8 +510,8 @@ public class ComponentSelector extends JTable {
   // observable clocks. Returns null if there are no clocks and nothing suitable
   // as an observable clock.
   public static ArrayList<SignalInfo> findClocks(Circuit circ) {
-    var sel = new ComponentSelector(circ, ACTUAL_CLOCKS);
-    var clocks = new ArrayList<SignalInfo>();
+    com.cburch.logisim.gui.log.ComponentSelector sel = new ComponentSelector(circ, ACTUAL_CLOCKS);
+    java.util.ArrayList<com.cburch.logisim.gui.log.SignalInfo> clocks = new ArrayList<SignalInfo>();
     sel.enumerate(clocks, sel.tableModel.root);
     if (clocks.size() > 0) return clocks;
     sel = new ComponentSelector(circ, OBSERVEABLE_CLOCKS);

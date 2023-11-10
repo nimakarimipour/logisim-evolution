@@ -109,7 +109,7 @@ public class CircuitState implements InstanceData {
           final var compState = componentData.remove(comp);
           if (compState != null) continue;
           Class<?> compFactory = comp.getFactory().getClass();
-          var found = false;
+          boolean found = false;
           for (final var repl : map.getReplacementsFor(comp)) {
             if (repl.getFactory().getClass() == compFactory) {
               found = true;
@@ -322,7 +322,7 @@ public class CircuitState implements InstanceData {
       // if we used an iterator instead.
       Object[] toProcess;
       RuntimeException firstException = null;
-      for (var tries = 4; true; tries--) {
+      for (int tries = 4; true; tries--) {
         try {
           toProcess = dirtyComponents.toArray();
           break;
@@ -357,7 +357,7 @@ public class CircuitState implements InstanceData {
     final var dirty = new HashSet<>(dirtyPoints);
     dirtyPoints.clear();
     if (circuit.wires.isMapVoided()) {
-      for (var i = 3; i >= 0; i--) {
+      for (int i = 3; i >= 0; i--) {
         try {
           dirty.addAll(circuit.wires.points.getSplitLocations());
           break;
@@ -456,7 +456,7 @@ public class CircuitState implements InstanceData {
       changed = !v.equals(old);
     }
     if (changed) {
-      var found = false;
+      boolean found = false;
       for (final var comp : circuit.getComponents(p)) {
         if (!(comp instanceof Wire) && !(comp instanceof Splitter)) {
           found = true;
@@ -475,7 +475,7 @@ public class CircuitState implements InstanceData {
   }
 
   boolean toggleClocks(int ticks) {
-    var ret = false;
+    boolean ret = false;
     if (temporaryClock != null)
       ret |= temporaryClockValidateOrTick(ticks);
 

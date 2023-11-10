@@ -90,8 +90,8 @@ class TestPanel extends JPanel implements ValueTable.Model {
   public void getRowData(int firstRow, int numRows, ValueTable.Cell[][] rowData) {
     Model model = getModel();
     TestException[] results = model.getResults();
-    var numPass = model.getPass();
-    var numFail = model.getFail();
+    int numPass = model.getPass();
+    int numFail = model.getFail();
     final var vec = model.getVector();
     int columns = vec.columnName.length;
     final var msg = new String[columns];
@@ -99,18 +99,18 @@ class TestPanel extends JPanel implements ValueTable.Model {
     final var passMsg = S.get("passStatus");
     final var failMsg = S.get("failStatus");
 
-    for (var i = firstRow; i < firstRow + numRows; i++) {
+    for (int i = firstRow; i < firstRow + numRows; i++) {
       final var row = model.sortedIndex(i);
       final var data = vec.data.get(row);
       String rowmsg = null;
       String status = null;
-      var failed = false;
+      boolean failed = false;
       if (row < numPass + numFail) {
         final var err = results[row];
         if (err instanceof FailException failEx) {
           failed = true;
           for (final var e : failEx.getAll()) {
-            var col = e.getColumn();
+            int col = e.getColumn();
             msg[col] = S.get("expectedValueMessage", e.getExpected().toDisplayString(getColumnValueRadix(col + 1)));
             altdata[col] = e.getComputed();
           }
@@ -124,7 +124,7 @@ class TestPanel extends JPanel implements ValueTable.Model {
       rowData[i - firstRow][0] =
           new ValueTable.Cell(status, rowmsg != null ? failColor : null, null, rowmsg);
 
-      for (var col = 0; col < columns; col++) {
+      for (int col = 0; col < columns; col++) {
         rowData[i - firstRow][col + 1] =
             new ValueTable.Cell(
                 altdata[col] != null ? altdata[col] : data[col],

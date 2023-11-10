@@ -41,8 +41,8 @@ public class AbstractOctalFlops extends AbstractTtlGate {
 
     private boolean isInside(InstanceState state, MouseEvent e) {
       final var p = getTranslatedTtlXY(state, e);
-      var inside = false;
-      for (var i = 0; i < 8; i++) {
+      boolean inside = false;
+      for (int i = 0; i < 8; i++) {
         final var dx = p.x - (95 + i * 10);
         final var dy = p.y - 40;
         final var d2 = dx * dx + dy * dy;
@@ -53,7 +53,7 @@ public class AbstractOctalFlops extends AbstractTtlGate {
 
     private int getIndex(InstanceState state, MouseEvent e) {
       final var p = getTranslatedTtlXY(state, e);
-      for (var i = 0; i < 8; i++) {
+      for (int i = 0; i < 8; i++) {
         final var dx = p.x - (95 + i * 10);
         final var dy = p.y - 40;
         final var d2 = dx * dx + dy * dy;
@@ -92,7 +92,7 @@ public class AbstractOctalFlops extends AbstractTtlGate {
   public void paintInternal(InstancePainter painter, int x, int y, int height, boolean up) {
     super.paintBase(painter, false, false);
     final var g = (Graphics2D) painter.getGraphics();
-    for (var i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) {
       g.drawRect(x + 90 + i * 10, y + 25, 10, 30);
     }
     g.drawLine(x + 85, y + 30, x + 90, y + 30);
@@ -133,12 +133,12 @@ public class AbstractOctalFlops extends AbstractTtlGate {
       g.drawLine(x + 95 + i * 10, y + 60, x + 95 + i * 10 + 3, y + 63);
     }
     final var dincr = new int[] {20, 60, 20, 0};
-    var dpos1 = 50;
-    var dpos2 = 150;
+    int dpos1 = 50;
+    int dpos2 = 150;
     final var qincr = new int[] {60, 20, 60, 0};
-    var qpos1 = 30;
-    var qpos2 = 170;
-    for (var i = 0; i < 4; i++) {
+    int qpos1 = 30;
+    int qpos2 = 170;
+    for (int i = 0; i < 4; i++) {
       g.drawLine(x + dpos1, y + height - AbstractTtlGate.PIN_HEIGHT, x + dpos1, y + 66);
       g.drawLine(x + dpos1, y + 66, x + dpos1 + 3, y + 63);
       dpos1 += dincr[i];
@@ -169,14 +169,14 @@ public class AbstractOctalFlops extends AbstractTtlGate {
 
   @Override
   public void propagateTtl(InstanceState state) {
-    var data = (TtlRegisterData) state.getData();
+    com.cburch.logisim.std.ttl.TtlRegisterData data = (TtlRegisterData) state.getData();
     if (data == null) {
       data = new TtlRegisterData(BitWidth.create(8));
       state.setData(data);
     }
-    var changed = false;
+    boolean changed = false;
     final var triggered = data.updateClock(state.getPortValue(9));
-    var values = data.getValue().getAll();
+    com.cburch.logisim.data.Value[] values = data.getValue().getAll();
     if (hasWe) {
       if (triggered && (state.getPortValue(0).equals(Value.FALSE))) {
         changed = true;
@@ -221,7 +221,7 @@ public class AbstractOctalFlops extends AbstractTtlGate {
   private void drawState(Graphics2D g, int x, int y, TtlRegisterData state) {
     if (state == null) return;
     g.rotate(-Math.PI / 2, x, y);
-    for (var i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) {
       g.setColor(state.getValue().get(i).getColor());
       g.fillOval(x - 44, y + 91 + i * 10, 8, 8);
       g.setColor(Color.WHITE);

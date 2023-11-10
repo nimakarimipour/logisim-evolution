@@ -131,12 +131,12 @@ public final class Instance implements Location.At {
     }
 
     final var bds = getBounds();
-    var x = bds.getX() + bds.getWidth() / 2;
-    var y = bds.getY() + bds.getHeight() / 2;
-    var hAlign = GraphicsUtil.H_CENTER;
-    var vAlign = GraphicsUtil.V_CENTER;
+    int x = bds.getX() + bds.getWidth() / 2;
+    int y = bds.getY() + bds.getHeight() / 2;
+    int hAlign = GraphicsUtil.H_CENTER;
+    int vAlign = GraphicsUtil.V_CENTER;
     if (labelLoc == StdAttr.LABEL_CENTER) {
-      var offset = 0;
+      int offset = 0;
       if ((avoid & AVOID_CENTER) != 0) offset = 3;
       x = bds.getX() + (bds.getWidth() - offset) / 2;
       y = bds.getY() + (bds.getHeight() - offset) / 2;

@@ -107,7 +107,7 @@ public class RightPanel extends JPanel {
 
   int indexOf(Signal s) {
     final var n = rows.size();
-    for (var i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
       final var waveForm = rows.get(i);
       if (waveForm.signal == s) return i;
     }
@@ -116,7 +116,7 @@ public class RightPanel extends JPanel {
 
   public void updateSignals() {
     final var n = model.getSignalCount();
-    for (var i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
       final var s = model.getSignal(i);
       final var idx = indexOf(s);
       if (idx < 0) {
@@ -203,7 +203,7 @@ public class RightPanel extends JPanel {
     // rather than just truncating, we can try to find a good rounding.
     // e.g. t = 1234567, delta = 100
     // and the best point within range [1234567, 1234667) is 12345600
-    var s = 1L;
+    long s = 1L;
     while (s < t && ((t + 10 * s - 1) / (10 * s)) * (10 * s) < t + delta) s *= 10;
     return ((t + s - 1) / s) * s;
   }
@@ -246,7 +246,7 @@ public class RightPanel extends JPanel {
   }
 
   public void updateSelected(int firstIdx, int lastIdx) {
-    for (var i = firstIdx; i <= lastIdx; i++) {
+    for (int i = firstIdx; i <= lastIdx; i++) {
       final var waveform = rows.get(i);
       final var selected = selectionModel.isSelectedIndex(i);
       if (selected != waveform.selected) {
@@ -276,7 +276,7 @@ public class RightPanel extends JPanel {
       gfx.setFont(MSG_FONT);
       final var lines = S.get("NoSignalsSelected");
       final var x = AppPreferences.getScaled(15);
-      var y = AppPreferences.getScaled(15);
+      int y = AppPreferences.getScaled(15);
       for (final var s : lines.split("\\|")) {
         gfx.drawString(s.trim(), x, y);
         y += AppPreferences.getScaled(14);
@@ -308,7 +308,7 @@ public class RightPanel extends JPanel {
     boolean subtracting;
 
     Signal getSignal(int y, boolean force) {
-      var idx = y / WAVE_HEIGHT;
+      int idx = y / WAVE_HEIGHT;
       final var n = model.getSignalCount();
       if (idx < 0 && force) idx = 0;
       else if (idx >= n && force) idx = n - 1;
@@ -374,7 +374,7 @@ public class RightPanel extends JPanel {
         if (!selectionModel.getValueIsAdjusting()) return;
         final var signal = getSignal(e.getY(), true);
         if (signal == null) return;
-        var idx = selectionModel.getAnchorSelectionIndex();
+        int idx = selectionModel.getAnchorSelectionIndex();
         if (idx < 0) {
           idx = signal.idx;
           selectionModel.setAnchorSelectionIndex(signal.idx);
@@ -430,16 +430,16 @@ public class RightPanel extends JPanel {
       final var labelWidth = Math.max(fm.stringWidth(max), fm.stringWidth(min));
 
       final var z = tickWidth / model.getTimeScale();
-      var prevHi = false;
-      var prevLo = false;
+      boolean prevHi = false;
+      boolean prevLo = false;
       Color prevFill = null;
       while (cur.value != null) {
         final var v = cur.getFormattedValue();
         final var x0 = (int) (z * (cur.time - t0));
         final var x1 = (int) (z * (cur.time + cur.duration - t0));
 
-        var hi = true;
-        var lo = true;
+        boolean hi = true;
+        boolean lo = true;
         Color lineColor;
         Color fillColor;
 
@@ -702,8 +702,8 @@ public class RightPanel extends JPanel {
       //   100, 200, 250, 500
       //   etc., such that labels are at least TIMELINE_SPACING pixels apart.
       // TODO: in clock and step mode, maybe use timeScale as unit?
-      var b = 1L;
-      var j = 0;
+      long b = 1L;
+      int j = 0;
       while ((int) (unit[j] * b * pixelPerTime) < TIMELINE_SPACING) {
         if (++j >= unit.length) {
           b *= 10;
@@ -721,7 +721,7 @@ public class RightPanel extends JPanel {
       final var h = ChronoPanel.HEADER_HEIGHT - ChronoPanel.GAP;
       g.setColor(Color.BLACK);
       g.drawLine(0, height - 2, width, height - 2);
-      for (var i = 0; true; i++) {
+      for (int i = 0; true; i++) {
         final var t = timeL + divMinor * i;
         if (t < time0) continue;
         final var x = (int) ((t - time0) * pixelPerTime);

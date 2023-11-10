@@ -49,7 +49,7 @@ public class AlphanumComparator implements Comparator<String> {
   /** Length of string is passed in for improved efficiency (only need to calculate it once). */
   private String getChunk(String s, int slength, int marker) {
     final var chunk = new StringBuilder();
-    var c = s.charAt(marker);
+    char c = s.charAt(marker);
     chunk.append(c);
     marker++;
     if (isDigit(c)) {
@@ -75,10 +75,10 @@ public class AlphanumComparator implements Comparator<String> {
       return 0;
     }
 
-    var thisMarker = 0;
-    var thatMarker = 0;
-    var s1Length = s1.length();
-    var s2Length = s2.length();
+    int thisMarker = 0;
+    int thatMarker = 0;
+    int s1Length = s1.length();
+    int s2Length = s2.length();
 
     while (thisMarker < s1Length && thatMarker < s2Length) {
       final var thisChunk = getChunk(s1, s1Length, thisMarker);
@@ -88,14 +88,14 @@ public class AlphanumComparator implements Comparator<String> {
       thatMarker += thatChunk.length();
 
       // If both chunks contain numeric characters, sort them numerically
-      var result = 0;
+      int result = 0;
       if (isDigit(thisChunk.charAt(0)) && isDigit(thatChunk.charAt(0))) {
         // Simple chunk comparison by length.
-        var thisChunkLength = thisChunk.length();
+        int thisChunkLength = thisChunk.length();
         result = thisChunkLength - thatChunk.length();
         // If equal, the first different number counts
         if (result == 0) {
-          for (var i = 0; i < thisChunkLength; i++) {
+          for (int i = 0; i < thisChunkLength; i++) {
             result = thisChunk.charAt(i) - thatChunk.charAt(i);
             if (result != 0) {
               return result;

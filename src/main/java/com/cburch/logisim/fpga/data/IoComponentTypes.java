@@ -72,7 +72,7 @@ public enum IoComponentTypes {
   public static final int ROTATION_CCW_90 = 90;
 
   public static IoComponentTypes getEnumFromString(String str) {
-    for (var elem : KNOWN_COMPONENT_SET) {
+    for (com.cburch.logisim.fpga.data.IoComponentTypes elem : KNOWN_COMPONENT_SET) {
       if (elem.name().equalsIgnoreCase(str)) {
         return elem;
       }
@@ -218,19 +218,19 @@ public enum IoComponentTypes {
       int nrOfColumns,
       int mapRotation,
       IoComponentTypes type) {
-    var hasDp = false;
-    var part = 0f;
-    var partX = 0f;
-    var partY = 0f;
+    boolean hasDp = false;
+    float part = 0f;
+    float partX = 0f;
+    float partY = 0f;
     switch (type) {
       case DIPSwitch:
         part = switch (mapRotation) {
           case ROTATION_CCW_90, ROTATION_CW_90 -> (float) height / (float) nrOfPins;
           default -> (float) width / (float) nrOfPins;
         };
-        for (var widthIndex = 0; widthIndex < width; widthIndex++)
-          for (var heightIndex = 0; heightIndex < height; heightIndex++) {
-            var pinIndex = 0;
+        for (int widthIndex = 0; widthIndex < width; widthIndex++)
+          for (int heightIndex = 0; heightIndex < height; heightIndex++) {
+            int pinIndex = 0;
             pinIndex = switch (mapRotation) {
               case ROTATION_CCW_90 -> (int) ((height - heightIndex - 1) / part);
               case ROTATION_CW_90 -> (int) (height / part);
@@ -241,8 +241,8 @@ public enum IoComponentTypes {
         break;
       case RgbLed:
         part = (float) height / (float) 3;
-        for (var w = 0; w < width; w++)
-          for (var h = 0; h < height; h++)
+        for (int w = 0; w < width; w++)
+          for (int h = 0; h < height; h++)
             partialMap[w][h] = (int) ((float) h / part);
         break;
       case SevenSegment: hasDp = true;
@@ -258,10 +258,10 @@ public enum IoComponentTypes {
             partY = (float) height / (float) 7;
           }
         }
-        var xIndex = 0;
-        var yIndex = 0;
-        for (var w = 0; w < width; w++)
-          for (var h = 0; h < height; h++) {
+        int xIndex = 0;
+        int yIndex = 0;
+        for (int w = 0; w < width; w++)
+          for (int h = 0; h < height; h++) {
             switch (mapRotation) {
               case ROTATION_CCW_90 -> {
                 xIndex = (int) ((float) (height - h - 1) / partY);
@@ -290,10 +290,10 @@ public enum IoComponentTypes {
             partY = (float) height / (float) nrOfRows;
           }
         }
-        for (var w = 0; w < width; w++)
-          for (var h = 0; h < height; h++) {
-            var realRow = 0;
-            var realColumn = 0;
+        for (int w = 0; w < width; w++)
+          for (int h = 0; h < height; h++) {
+            int realRow = 0;
+            int realColumn = 0;
             switch (mapRotation) {
               case ROTATION_CCW_90 -> {
                 realRow = (int) ((float) w / partX);
@@ -312,8 +312,8 @@ public enum IoComponentTypes {
           }
         break;
       default:
-        for (var w = 0; w < width; w++)
-          for (var h = 0; h < height; h++)
+        for (int w = 0; w < width; w++)
+          for (int h = 0; h < height; h++)
             partialMap[w][h] = -1;
         break;
     }
@@ -333,17 +333,17 @@ public enum IoComponentTypes {
       int alpha,
       IoComponentTypes type) {
     g.setColor(new Color(col.getRed(), col.getGreen(), col.getBlue(), alpha));
-    var hasDp = false;
-    var part = 0f;
-    var boxWidth = 0;
-    var boxHeight = 0;
-    var boxXpos = 0;
-    var boxYpos = 0;
-    var partX = 0f;
-    var partY = 0f;
+    boolean hasDp = false;
+    float part = 0f;
+    int boxWidth = 0;
+    int boxHeight = 0;
+    int boxXpos = 0;
+    int boxYpos = 0;
+    float partX = 0f;
+    float partY = 0f;
     switch (type) {
       case DIPSwitch:
-        var yPinNr = pinNr;
+        int yPinNr = pinNr;
         switch (mapRotation) {
           case ROTATION_CCW_90: yPinNr = nrOfPins - pinNr - 1;
           case ROTATION_CW_90: {
@@ -386,12 +386,12 @@ public enum IoComponentTypes {
             break;
           }
         }
-        var realXIndex = 0;
-        var realXIndexPlusOne = 0;
-        var realYIndex = 0;
-        var realYIndexPlusOne = 0;
-        for (var xIndex = 0; xIndex < 5; xIndex++) {
-          for (var yIndex = 0; yIndex < 7; yIndex++) {
+        int realXIndex = 0;
+        int realXIndexPlusOne = 0;
+        int realYIndex = 0;
+        int realYIndexPlusOne = 0;
+        for (int xIndex = 0; xIndex < 5; xIndex++) {
+          for (int yIndex = 0; yIndex < 7; yIndex++) {
             if (indexes[yIndex][xIndex] == pinNr) {
               switch (mapRotation) {
                 case ROTATION_CCW_90 -> {
@@ -438,10 +438,10 @@ public enum IoComponentTypes {
             break;
           }
         }
-        var xPosition = 0;
-        var nextXPosition = 0;
-        var yPosition = 0;
-        var nextYPosition = 0;
+        int xPosition = 0;
+        int nextXPosition = 0;
+        int yPosition = 0;
+        int nextYPosition = 0;
         switch (mapRotation) {
           case ROTATION_CCW_90 -> {
             xPosition = (int) ((float) selectedRow * partX);

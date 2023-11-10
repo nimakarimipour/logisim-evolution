@@ -298,7 +298,7 @@ abstract class AbstractFlipFlop extends InstanceFactory {
     painter.drawPort(n + 3, "0", Direction.SOUTH);
     painter.drawPort(n + 4, "1", Direction.SOUTH);
     g.setColor(Color.BLACK);
-    for (var i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
       painter.drawPort(i, getInputName(i), Direction.EAST);
     }
     painter.drawClock(n, Direction.EAST);
@@ -336,7 +336,7 @@ abstract class AbstractFlipFlop extends InstanceFactory {
     g.setColor(Color.BLACK);
 
     // Draw input ports (J/K, S/R, D, T)
-    for (var i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
       GraphicsUtil.switchToWidth(g, GraphicsUtil.DATA_SINGLE_WIDTH);
       g.drawLine(x - 10, y + 10 + i * 20, x - 1, y + 10 + i * 20);
       painter.drawPort(i);
@@ -398,7 +398,7 @@ abstract class AbstractFlipFlop extends InstanceFactory {
     } else if (triggered /* && state.getPortValue(n + 5) != Value.FALSE */) {
       // Clock has triggered and flip-flop is enabled: Update the state
       final var inputs = new Value[n];
-      for (var i = 0; i < n; i++) {
+      for (int i = 0; i < n; i++) {
         inputs[i] = state.getPortValue(i);
       }
 

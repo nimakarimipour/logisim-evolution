@@ -116,10 +116,10 @@ public class VivadoDownload implements VendorDownload {
   @Override
   public boolean createDownloadScripts() {
     // create project files
-    var createProjectFile = FileWriter.getFilePointer(scriptPath, CREATE_PROJECT_TCL);
-    var xdcFile = FileWriter.getFilePointer(xdcPath, XDC_FILE);
-    var generateBitstreamFile = FileWriter.getFilePointer(scriptPath, GENERATE_BITSTREAM_FILE);
-    var loadBitstreamFile = FileWriter.getFilePointer(scriptPath, LOAD_BITSTEAM_FILE);
+    java.io.File createProjectFile = FileWriter.getFilePointer(scriptPath, CREATE_PROJECT_TCL);
+    java.io.File xdcFile = FileWriter.getFilePointer(xdcPath, XDC_FILE);
+    java.io.File generateBitstreamFile = FileWriter.getFilePointer(scriptPath, GENERATE_BITSTREAM_FILE);
+    java.io.File loadBitstreamFile = FileWriter.getFilePointer(scriptPath, LOAD_BITSTEAM_FILE);
     if (createProjectFile == null
         || xdcFile == null
         || generateBitstreamFile == null
@@ -135,7 +135,7 @@ public class VivadoDownload implements VendorDownload {
     }
 
     // fill create project TCL script
-    var contents = new ArrayList<String>();
+    java.util.ArrayList<java.lang.String> contents = new ArrayList<String>();
     contents.add(
         "create_project "
             + VIVADO_PROJECT_NAME
@@ -176,7 +176,7 @@ public class VivadoDownload implements VendorDownload {
       }
 
       final var clockFrequency = boardInfo.fpga.getClockFrequency();
-      var clockPeriod = 1000000000.0 / (double) clockFrequency;
+      double clockPeriod = 1000000000.0 / (double) clockFrequency;
       contents.add(
           "    create_clock -add -name sys_clk_pin -period "
               + String.format(Locale.US, "%.2f", clockPeriod)
@@ -192,7 +192,7 @@ public class VivadoDownload implements VendorDownload {
     contents.clear();
 
     // generate bitstream
-    var openProjectPath = vivadoProjectPath + File.separator + VIVADO_PROJECT_NAME + ".xpr";
+    java.lang.String openProjectPath = vivadoProjectPath + File.separator + VIVADO_PROJECT_NAME + ".xpr";
     openProjectPath = openProjectPath.replace("\\", "/");
     contents.add("open_project -verbose " + openProjectPath);
     contents.add("update_compile_order -fileset sources_1");
@@ -223,7 +223,7 @@ public class VivadoDownload implements VendorDownload {
     final var contents = LineBuffer.getBuffer();
     for (final var key : mapInfo.getMappableResources().keySet()) {
       final var map = mapInfo.getMappableResources().get(key);
-      for (var i = 0; i < map.getNrOfPins(); i++) {
+      for (int i = 0; i < map.getNrOfPins(); i++) {
         if (map.isMapped(i) && !map.isOpenMapped(i) && !map.isConstantMapped(i) && !map.isInternalMapped(i)) {
           final var netName = (map.isExternalInverted(i) ? "n_" : "") + map.getHdlString(i);
           // Note {{2}} is wrapped in additional {}!

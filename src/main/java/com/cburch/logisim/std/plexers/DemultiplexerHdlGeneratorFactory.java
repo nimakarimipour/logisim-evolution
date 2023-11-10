@@ -34,7 +34,7 @@ public class DemultiplexerHdlGeneratorFactory extends AbstractHdlGeneratorFactor
     final var nrOfBits = attrs.getValue(StdAttr.WIDTH).getWidth() == 1 ? 1 : NR_OF_BITS_ID;
     final var selectInputIndex = (1 << nrOfSelectBits);
     final var hasenable = attrs.getValue(PlexersLibrary.ATTR_ENABLE);
-    for (var outp = 0; outp < selectInputIndex; outp++) {
+    for (int outp = 0; outp < selectInputIndex; outp++) {
       myPorts.add(Port.OUTPUT, String.format("demuxOut_%d", outp), nrOfBits, outp, StdAttr.WIDTH);
     }
     myPorts
@@ -51,10 +51,10 @@ public class DemultiplexerHdlGeneratorFactory extends AbstractHdlGeneratorFactor
   @Override
   public LineBuffer getModuleFunctionality(Netlist theNetList, AttributeSet attrs) {
     final var contents = LineBuffer.getBuffer();
-    var space = "  ";
+    java.lang.String space = "  ";
     final var nrOfSelectBits = attrs.getValue(PlexersLibrary.ATTR_SELECT).getWidth();
-    var numOutputs = (1 << nrOfSelectBits);
-    for (var i = 0; i < numOutputs; i++) {
+    int numOutputs = (1 << nrOfSelectBits);
+    for (int i = 0; i < numOutputs; i++) {
       if (i == 10) space = " ";
       final var binValue = Hdl.getConstantVector(i, nrOfSelectBits);
       if (Hdl.isVhdl()) {

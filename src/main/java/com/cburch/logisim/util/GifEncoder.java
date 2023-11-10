@@ -199,7 +199,7 @@ public class GifEncoder {
       numbits = codesize + 1;
       int limit = (1 << numbits) - 1;
 
-      var strings = new LZWStringTable();
+      com.cburch.logisim.util.GifEncoder.LZWStringTable strings = new LZWStringTable();
       strings.clearTable(codesize);
 
       final var bitFile = new BitFile(output);

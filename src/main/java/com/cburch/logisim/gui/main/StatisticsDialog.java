@@ -39,7 +39,7 @@ public class StatisticsDialog extends JDialog implements ActionListener {
     setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     setTitle(S.get("statsDialogTitle", circuitName));
 
-    var table = new StatisticsTable();
+    com.cburch.logisim.gui.main.StatisticsDialog.StatisticsTable table = new StatisticsTable();
     TableSorter mySorter = new TableSorter(model, table.getTableHeader());
     Comparator<String> comp =
         new CompareString("", S.get("statsTotalWithout"), S.get("statsTotalWith"));
@@ -47,18 +47,18 @@ public class StatisticsDialog extends JDialog implements ActionListener {
     table.setModel(mySorter);
     final var tablePane = new JScrollPane(table);
 
-    var button = new JButton(S.get("statsCloseButton"));
+    javax.swing.JButton button = new JButton(S.get("statsCloseButton"));
     button.addActionListener(this);
-    var buttonPanel = new JPanel();
+    javax.swing.JPanel buttonPanel = new JPanel();
     buttonPanel.add(button);
 
-    var contents = this.getContentPane();
+    java.awt.Container contents = this.getContentPane();
     contents.setLayout(new BorderLayout());
     contents.add(tablePane, BorderLayout.CENTER);
     contents.add(buttonPanel, BorderLayout.PAGE_END);
     this.pack();
 
-    var pref = contents.getPreferredSize();
+    java.awt.Dimension pref = contents.getPreferredSize();
     if (pref.width > 750 || pref.height > 550) {
       if (pref.width > 750) pref.width = 750;
       if (pref.height > 550) pref.height = 550;

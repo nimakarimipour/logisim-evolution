@@ -122,7 +122,7 @@ public class SmartScroller implements AdjustmentListener {
 
     final var scrollBar = (JScrollBar) e.getSource();
     final var listModel = scrollBar.getModel();
-    var value = listModel.getValue();
+    int value = listModel.getValue();
     final var extent = listModel.getExtent();
     final var maximum = listModel.getMaximum();
 

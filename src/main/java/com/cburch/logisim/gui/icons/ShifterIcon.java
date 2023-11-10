@@ -24,7 +24,7 @@ public class ShifterIcon extends BaseIcon {
     if (state < 0) {
       s.append("\u25b6".repeat(3));
     } else {
-      var mask = 4;
+      int mask = 4;
       while (mask > 0) {
         s.append((state & mask) == 0 ? "0" : "1");
         mask >>= 1;

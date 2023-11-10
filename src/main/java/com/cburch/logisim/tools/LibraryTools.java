@@ -37,8 +37,8 @@ public final class LibraryTools {
   }
 
   private static String message(String libName, Map<String, String> messages) {
-    var message = "";
-    var item = 0;
+    java.lang.String message = "";
+    int item = 0;
     for (final var myerror : messages.keySet()) {
       item++;
       message = message.concat(item + ") " + messages.get(myerror) + " \"" + myerror + "\".\n");
@@ -56,7 +56,7 @@ public final class LibraryTools {
   }
 
   public static boolean buildToolList(Library lib, Map<String, AddTool> tools) {
-    var ret = true;
+    boolean ret = true;
     if (!"Base".equals(lib.getName())) {
       for (final var tool1 : lib.getTools()) {
         if (tools.containsKey(tool1.getName().toUpperCase())) {
@@ -120,7 +120,7 @@ public final class LibraryTools {
 
   public static boolean isLibraryConform(Library lib, Set<String> names, Set<String> tools, Map<String, String> error) {
     final var toolIter = lib.getTools().iterator();
-    var hasErrors = false;
+    boolean hasErrors = false;
     while (toolIter.hasNext()) {
       final var tool = toolIter.next();
       if (tools.contains(tool.getName().toUpperCase())) {

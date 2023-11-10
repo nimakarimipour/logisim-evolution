@@ -100,7 +100,7 @@ public abstract class PrintHandler implements Printable {
             KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow(),
             S.get("exportImageButton"));
     if (returnVal != JFileChooser.APPROVE_OPTION) return;
-    var dest = chooser.getSelectedFile();
+    java.io.File dest = chooser.getSelectedFile();
     FileFilter ff = null;
     for (final var filter : filters) {
       if (filter.accept(dest)) ff = filter;

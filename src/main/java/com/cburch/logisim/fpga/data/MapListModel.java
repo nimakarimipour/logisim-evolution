@@ -51,31 +51,31 @@ public class MapListModel extends DefaultListModel<MapListModel.MapInfo> {
   }
 
   public void rebuild() {
-    var oldsize = 0;
+    int oldsize = 0;
     if (myItems == null) myItems = new ArrayList<>();
     else {
       oldsize = myItems.size();
       myItems.clear();
     }
-    for (var key : myMappableResources.keySet()) {
-      var map = myMappableResources.get(key);
+    for (java.util.ArrayList<java.lang.String> key : myMappableResources.keySet()) {
+      com.cburch.logisim.fpga.data.MapComponent map = myMappableResources.get(key);
       if (mappedList) {
         if (map.isCompleteMap(false)) {
-          var idx = getInsertionPoint(map);
+          int idx = getInsertionPoint(map);
           myItems.add(idx, new MapInfo(map.getNrOfPins() == 1 ? 0 : -1, map));
         } else {
-          var idx = getInsertionPoint(map);
-          for (var i = map.getNrOfPins() - 1; i >= 0; i--) {
+          int idx = getInsertionPoint(map);
+          for (int i = map.getNrOfPins() - 1; i >= 0; i--) {
             if (map.isMapped(i)) myItems.add(idx, new MapInfo(i, map));
           }
         }
       } else {
         if (map.isNotMapped()) {
-          var idx = getInsertionPoint(map);
+          int idx = getInsertionPoint(map);
           myItems.add(idx, new MapInfo(map.getNrOfPins() == 1 ? 0 : -1, map));
         } else {
-          var idx = getInsertionPoint(map);
-          for (var i = map.getNrOfPins() - 1; i >= 0; i--) {
+          int idx = getInsertionPoint(map);
+          for (int i = map.getNrOfPins() - 1; i >= 0; i--) {
             if (!map.isMapped(i)) {
               myItems.add(idx, new MapInfo(i, map));
             }
@@ -90,7 +90,7 @@ public class MapListModel extends DefaultListModel<MapListModel.MapInfo> {
 
   private int getInsertionPoint(MapComponent map) {
     if (myItems.isEmpty()) return 0;
-    var idx = 0;
+    int idx = 0;
     while (idx < myItems.size()
         && myItems
                 .get(idx)

@@ -31,7 +31,7 @@ public class LedArrayDriving {
   }
 
   public static List<String> getStrings() {
-    var result = new LinkedList<String>();
+    java.util.LinkedList<java.lang.String> result = new LinkedList<String>();
     result.add(DRIVING_STRINGS[0]);
     result.add(DRIVING_STRINGS[1]);
     result.add(DRIVING_STRINGS[2]);
@@ -42,7 +42,7 @@ public class LedArrayDriving {
   }
 
   public static List<String> getDisplayStrings() {
-    var result = new LinkedList<String>();
+    java.util.LinkedList<java.lang.String> result = new LinkedList<String>();
     result.add(S.get(DRIVING_STRINGS[0]));
     result.add(S.get(DRIVING_STRINGS[1]));
     result.add(S.get(DRIVING_STRINGS[2]));

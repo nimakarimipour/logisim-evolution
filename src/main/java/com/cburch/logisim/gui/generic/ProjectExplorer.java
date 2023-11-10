@@ -163,7 +163,7 @@ public class ProjectExplorer extends JTree implements LocaleListener {
       if (value instanceof ProjectExplorerToolNode toolNode) {
         final var tool = toolNode.getValue();
         if (ret instanceof JLabel label) {
-          var viewed = false;
+          boolean viewed = false;
           if (tool instanceof AddTool && proj != null && proj.getFrame() != null) {
             Circuit circ = null;
             VhdlContent vhdl = null;
@@ -188,7 +188,7 @@ public class ProjectExplorer extends JTree implements LocaleListener {
 
         if (ret instanceof JLabel) {
           final var baseName = lib.getDisplayName();
-          var text = baseName;
+          java.lang.String text = baseName;
           if (lib.isDirty()) {
             // TODO: Would be nice to use DIRTY_MARKER here instead of "*" but it does not render
             // corectly in project tree, font seem to have the character as frame title is fine.
@@ -300,7 +300,7 @@ public class ProjectExplorer extends JTree implements LocaleListener {
     }
 
     private TreePath[] getValidPaths(TreePath[] paths) {
-      var count = 0;
+      int count = 0;
       for (final var treePath : paths) {
         if (isPathValid(treePath)) ++count;
       }

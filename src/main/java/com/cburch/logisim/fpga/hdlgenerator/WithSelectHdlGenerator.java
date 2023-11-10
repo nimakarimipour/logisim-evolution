@@ -34,8 +34,8 @@ public class WithSelectHdlGenerator {
   }
 
   private Long binairyStringToInt(String binairyValue) {
-    var result = 0L;
-    for (var charIndex = 0; charIndex < binairyValue.length(); charIndex++) {
+    long result = 0L;
+    for (int charIndex = 0; charIndex < binairyValue.length(); charIndex++) {
       final var character = binairyValue.charAt(charIndex) - '0';
       if ((character < 0) || (character > 1)) throw new NumberFormatException("Invalid binairy value in WithSelectHDLGenerator");
       result *= 2;

@@ -87,7 +87,7 @@ public class MenuSimulate extends Menu {
     ticksEnabled.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, menuMask));
 
     final var bgroup = new ButtonGroup();
-    for (var i = 0; i < SUPPORTED_TICK_FREQUENCIES.length; i++) {
+    for (int i = 0; i < SUPPORTED_TICK_FREQUENCIES.length; i++) {
       tickFreqs[i] = new TickFrequencyChoice(SUPPORTED_TICK_FREQUENCIES[i]);
       bgroup.add(tickFreqs[i]);
       tickFreq.add(tickFreqs[i]);
@@ -215,9 +215,9 @@ public class MenuSimulate extends Menu {
   private void recreateStateMenu(JMenu menu, List<CircuitStateMenuItem> items, int code) {
     menu.removeAll();
     menu.setEnabled(items.size() > 0);
-    var first = true;
+    boolean first = true;
     final var mask = getToolkit().getMenuShortcutKeyMaskEx();
-    for (var i = items.size() - 1; i >= 0; i--) {
+    for (int i = items.size() - 1; i >= 0; i--) {
       final var item = items.get(i);
       menu.add(item);
       if (first) {
@@ -247,7 +247,7 @@ public class MenuSimulate extends Menu {
     } else if (currentState == null) {
       bottomState = null;
     } else {
-      var cur = bottomState;
+      com.cburch.logisim.circuit.CircuitState cur = bottomState;
       while (cur != null && cur != currentState) {
         cur = cur.getParentState();
       }
@@ -278,7 +278,7 @@ public class MenuSimulate extends Menu {
     }
 
     clearItems(downStateItems);
-    var cur = bottomState;
+    com.cburch.logisim.circuit.CircuitState cur = bottomState;
     while (cur != null && cur != currentState) {
       downStateItems.add(new CircuitStateMenuItem(cur));
       cur = cur.getParentState();

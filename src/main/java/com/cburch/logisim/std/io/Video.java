@@ -373,7 +373,7 @@ class Video extends ManagedComponent implements ToolTipMaker, AttributeListener 
     y += (-bh);
 
     g.drawRoundRect(x, y, bw, bh, 6, 6);
-    for (var i = 0; i < 6; i++) {
+    for (int i = 0; i < 6; i++) {
       if (i != P_CLK) context.drawPin(this, i);
     }
     context.drawClock(this, P_CLK, Direction.NORTH);
@@ -393,7 +393,7 @@ class Video extends ManagedComponent implements ToolTipMaker, AttributeListener 
   }
 
   private State getState(CircuitState circuitState) {
-    var state = (State) circuitState.getData(this);
+    com.cburch.logisim.std.io.Video.State state = (State) circuitState.getData(this);
     if (state == null) {
       state = new State(new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB));
       circuitState.setData(this, state);
@@ -444,7 +444,7 @@ class Video extends ManagedComponent implements ToolTipMaker, AttributeListener 
   @Override
   public String getToolTip(ComponentUserEvent e) {
     int end = -1;
-    for (var i = getEnds().size() - 1; i >= 0; i--) {
+    for (int i = getEnds().size() - 1; i >= 0; i--) {
       if (getEndLocation(i).manhattanDistanceTo(e.getX(), e.getY()) < 10) {
         end = i;
         break;

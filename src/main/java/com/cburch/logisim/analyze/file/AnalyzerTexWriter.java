@@ -43,8 +43,8 @@ public class AnalyzerTexWriter {
       new TruthtableFileFilter(S.getter("tableLatexFilter"), ".tex");
 
   private static int nrOfInCols(AnalyzerModel model) {
-    var count = 0;
-    var inputs = model.getInputs();
+    int count = 0;
+    com.cburch.logisim.analyze.model.VariableList inputs = model.getInputs();
     for (int i = 0; i < inputs.vars.size(); i++) {
       count += inputs.vars.get(i).width;
     }
@@ -52,7 +52,7 @@ public class AnalyzerTexWriter {
   }
 
   private static int nrOfOutCols(AnalyzerModel model) {
-    var count = 0;
+    int count = 0;
     final var outputs = model.getOutputs();
     for (int i = 0; i < outputs.vars.size(); i++) {
       count += outputs.vars.get(i).width;
@@ -160,7 +160,7 @@ public class AnalyzerTexWriter {
   }
 
   private static int reorderedIndex(int nrOfInputs, int row) {
-    var result = 0;
+    int result = 0;
     final var reorder = reordered(nrOfInputs);
     final var values = new int[nrOfInputs];
     for (int i = 0; i < nrOfInputs; i++) values[i] = 1 << (nrOfInputs - reorder[i] - 1);
@@ -175,7 +175,7 @@ public class AnalyzerTexWriter {
   private static String getKarnaughInputs(AnalyzerModel model) {
     final var content = new StringBuilder();
     final var reorder = reordered(model.getInputs().bits.size());
-    for (var i = 0; i < model.getInputs().bits.size(); i++) {
+    for (int i = 0; i < model.getInputs().bits.size(); i++) {
       try {
         final var inp = Bit.parse(model.getInputs().bits.get(reorder[i]));
         content.append("{$").append(inp.name);
@@ -205,7 +205,7 @@ public class AnalyzerTexWriter {
     final var leftVars = new StringBuilder();
     final var topVars = new StringBuilder();
     final var nrLeftVars = KarnaughMapPanel.ROW_VARS[table.getInputColumnCount()];
-    var count = 0;
+    int count = 0;
     for (final var variable : table.getInputVariables()) {
       if (variable.width == 1) {
         if (count++ < nrLeftVars) {
@@ -259,7 +259,7 @@ public class AnalyzerTexWriter {
 
   private static String getKValues(int outcol, AnalyzerModel model) {
     final var content = new StringBuilder();
-    for (var i = 0; i < model.getTruthTable().getRowCount(); i++) {
+    for (int i = 0; i < model.getTruthTable().getRowCount(); i++) {
       final var idx = reorderedIndex(model.getInputs().bits.size(), i);
       content.append(model.getTruthTable().getOutputEntry(idx, outcol).getDescription());
     }
@@ -289,7 +289,7 @@ public class AnalyzerTexWriter {
     final var groups = new KarnaughMapGroups(model);
     groups.setOutput(name);
     final var df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.ENGLISH);
-    var idx = 0;
+    int idx = 0;
     final var kmapRows = 1 << KarnaughMapPanel.ROW_VARS[table.getInputColumnCount()];
     for (final var group : groups.getCovers()) {
       for (final var thiscover : group.getAreas()) {
@@ -446,14 +446,14 @@ public class AnalyzerTexWriter {
           }
           out.println(SUB_SECTION_SEP);
           out.println("\\subsection{" + S.get("latexKarnaughFilledIn") + "}");
-          var outcol = 0;
-          for (var i = 0; i < model.getOutputs().vars.size(); i++) {
+          int outcol = 0;
+          for (int i = 0; i < model.getOutputs().vars.size(); i++) {
             Var outp = model.getOutputs().vars.get(i);
             if (outp.width == 1) {
               final var func = "$" + outp.name + "$";
               out.println(getKarnaugh(func, linedStyle, outcol++, model));
             } else {
-              for (var idx = outp.width - 1; idx >= 0; idx--) {
+              for (int idx = outp.width - 1; idx >= 0; idx--) {
                 final var func = "$" + outp.name + "_{" + idx + "}$";
                 out.println(getKarnaugh(func, linedStyle, outcol++, model));
               }
@@ -462,13 +462,13 @@ public class AnalyzerTexWriter {
           out.println(SUB_SECTION_SEP);
           out.println("\\subsection{" + S.get("latexKarnaughFilledInGroups") + "}");
           outcol = 0;
-          for (var i = 0; i < model.getOutputs().vars.size(); i++) {
+          for (int i = 0; i < model.getOutputs().vars.size(); i++) {
             final var outp = model.getOutputs().vars.get(i);
             if (outp.width == 1) {
               final var func = "$" + outp.name + "$";
               out.println(getKarnaughGroups(outp.name, func, linedStyle, outcol++, model));
             } else {
-              for (var idx = outp.width - 1; idx >= 0; idx--) {
+              for (int idx = outp.width - 1; idx >= 0; idx--) {
                 final var func = "$" + outp.name + "_{" + idx + "}$";
                 out.println(getKarnaughGroups(outp.name + "[" + idx + "]", func, linedStyle, outcol++, model));
               }
@@ -479,14 +479,14 @@ public class AnalyzerTexWriter {
            */
           out.println(SECTION_SEP);
           out.println("\\section{" + S.get("latexMinimal") + "}");
-          for (var o = 0; o < model.getTruthTable().getOutputVariables().size(); o++) {
+          for (int o = 0; o < model.getTruthTable().getOutputVariables().size(); o++) {
             final var outp = model.getTruthTable().getOutputVariable(o);
             if (outp.width == 1) {
               final var exp = Expressions.eq(Expressions.variable(outp.name),
                   model.getOutputExpressions().getMinimalExpression(outp.name));
               out.println(exp.toString(Notation.LATEX) + "~\\\\");
             } else {
-              for (var idx = outp.width - 1; idx >= 0; idx--) {
+              for (int idx = outp.width - 1; idx >= 0; idx--) {
                 final var name = outp.bitName(idx);
                 final var exp = Expressions.eq(Expressions.variable(name),
                     model.getOutputExpressions().getMinimalExpression(name));

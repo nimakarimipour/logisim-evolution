@@ -59,7 +59,7 @@ public class Ttl7430 extends AbstractTtlGate {
 
   @Override
   public void propagateTtl(InstanceState state) {
-    var val1 =
+    com.cburch.logisim.data.Value val1 =
         state
             .getPortValue(0)
             .and(state.getPortValue(1).and(state.getPortValue(2).and(state.getPortValue(3))));

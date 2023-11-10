@@ -123,7 +123,7 @@ public abstract class TclComponent extends InstanceFactory {
   @Override
   public void paintInstance(InstancePainter painter) {
     final var g = painter.getGraphics();
-    var metric = g.getFontMetrics();
+    java.awt.FontMetrics metric = g.getFontMetrics();
 
     final var bds = painter.getBounds();
     final var x0 = bds.getX() + (bds.getWidth() / 2);
@@ -239,7 +239,7 @@ public abstract class TclComponent extends InstanceFactory {
       /* Skip if we receive crap, still better than an out of range */
       if (parameters.length < 2) continue;
 
-      var busValue = parameters[1];
+      java.lang.String busValue = parameters[1];
       final var portId = Integer.parseInt(parameters[2]);
 
       // Expected response width
@@ -256,12 +256,12 @@ public abstract class TclComponent extends InstanceFactory {
        * the MSB
        */
       final var vectorValues = new Value[width];
-      for (var i = width - 1; i >= busValue.length(); i--) {
+      for (int i = width - 1; i >= busValue.length(); i--) {
         vectorValues[i] = Value.UNKNOWN;
       }
 
       /* Transform char to Logisim Value */
-      var idx = busValue.length() - 1;
+      int idx = busValue.length() - 1;
       for (final var bit : busValue.toCharArray()) {
 
         try {

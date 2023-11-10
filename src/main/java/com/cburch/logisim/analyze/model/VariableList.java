@@ -41,7 +41,7 @@ public class VariableList {
   }
 
   public boolean containsDuplicate(VariableList data, Var oldVar, String name) {
-    var found = false;
+    boolean found = false;
     for (int i = 0, n = vars.size(); i < n && !found; i++) {
       final var other = vars.get(i);
       if (other != oldVar && name.equals(other.name)) {
@@ -105,7 +105,7 @@ public class VariableList {
     data.remove(index);
     data.add(newIndex, variable);
     names.subList(bitIndex + 1 - variable.width, bitIndex + 1).clear();
-    var i = (newIndex == 0 ? 0 : (1 + names.indexOf(data.get(newIndex - 1).bitName(0))));
+    int i = (newIndex == 0 ? 0 : (1 + names.indexOf(data.get(newIndex - 1).bitName(0))));
     for (final var bit : variable) names.add(i++, bit);
     final var bitDelta = names.indexOf(variable.bitName(0)) - bitIndex;
     fireEvent(VariableListEvent.MOVE, variable, delta, bitDelta);
@@ -133,7 +133,7 @@ public class VariableList {
     if (oldVar.equals(newVar)) return;
     data.set(index, newVar);
     names.subList(bitIndex + 1 - oldVar.width, bitIndex + 1).clear();
-    var i = bitIndex + 1 - oldVar.width;
+    int i = bitIndex + 1 - oldVar.width;
     for (final var bit : newVar) {
       names.add(i++, bit);
     }
@@ -141,7 +141,7 @@ public class VariableList {
   }
 
   public void setAll(List<Var> values) {
-    var total = 0;
+    int total = 0;
     for (Var v : values) total += v.width;
     if (total > maxSize) throw new IllegalArgumentException("maximum size is " + maxSize);
     data.clear();

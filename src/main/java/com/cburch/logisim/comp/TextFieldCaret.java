@@ -177,7 +177,7 @@ class TextFieldCaret implements Caret, TextFieldListener {
 
   @SuppressWarnings("fallthrough")
   protected void controlKeyPressed(KeyEvent e, boolean shift) {
-    var cut = false;
+    boolean cut = false;
     switch (e.getKeyCode()) {
       case KeyEvent.VK_A:
         pos = 0;
@@ -212,9 +212,9 @@ class TextFieldCaret implements Caret, TextFieldListener {
           String s =
               (String)
                   Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
-          var lastWasSpace = false;
-          for (var i = 0; i < s.length(); i++) {
-            var c = s.charAt(i);
+          boolean lastWasSpace = false;
+          for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
             if (!allowedCharacter(c)) {
               if (lastWasSpace) continue;
               c = ' ';

@@ -149,8 +149,8 @@ public class OutputStreamEscaper extends OutputStream {
   // converts a string to an ascii string with C-like escapes
   public static String escape(String w) {
     final var s = new StringWriter();
-    for (var i = 0; i < w.length(); i++) {
-      var b = w.charAt(i);
+    for (int i = 0; i < w.length(); i++) {
+      char b = w.charAt(i);
       if (b >= 0x20 && b <= 0x7E && b != '\\')
         s.write(b);
       else

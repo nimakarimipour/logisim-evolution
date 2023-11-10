@@ -81,7 +81,7 @@ public class ReptarLocalBus extends InstanceFactory {
     final var inpLabels = new ArrayList<String>();
     final var outpLabels = new ArrayList<String>();
     final var ioLabels = new ArrayList<String>();
-    for (var i = 0; i < 16; i++) {
+    for (int i = 0; i < 16; i++) {
       if (i < 13) inpLabels.add(getInputLabel(i));
       if (i < 2) outpLabels.add(getOutputLabel(i));
       ioLabels.add(getIoLabel(i));

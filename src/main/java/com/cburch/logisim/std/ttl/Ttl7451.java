@@ -47,17 +47,17 @@ public class Ttl7451 extends AbstractTtlGate {
     final var offset =
         (AppPreferences.GATE_SHAPE.get().equals(AppPreferences.SHAPE_RECTANGULAR)) ? 4 : 0;
 
-    var posX = new int[] {x + 50, x + 53 + offset / 2, x + 53 + offset / 2, x + 56 + offset};
-    var posY = new int[] {y + 24, y + 24, y + 26 + offset / 2, y + 26 + offset / 2};
+    int[] posX = new int[] {x + 50, x + 53 + offset / 2, x + 53 + offset / 2, x + 56 + offset};
+    int[] posY = new int[] {y + 24, y + 24, y + 26 + offset / 2, y + 26 + offset / 2};
     gfx.drawPolyline(posX, posY, 4);
-    for (var i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
       posX[i] += 50;
     }
     gfx.drawPolyline(posX, posY, 4);
     posY[0] = posY[1] = y + 36;
     posY[2] = posY[3] = y + 34 - offset / 2;
     gfx.drawPolyline(posX, posY, 4);
-    for (var i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
       posX[i] -= 50;
     }
     gfx.drawPolyline(posX, posY, 4);
@@ -95,8 +95,8 @@ public class Ttl7451 extends AbstractTtlGate {
 
   @Override
   public void propagateTtl(InstanceState state) {
-    var val1 = state.getPortValue(1).and(state.getPortValue(2));
-    var val2 = state.getPortValue(3).and(state.getPortValue(4));
+    com.cburch.logisim.data.Value val1 = state.getPortValue(1).and(state.getPortValue(2));
+    com.cburch.logisim.data.Value val2 = state.getPortValue(3).and(state.getPortValue(4));
     state.setPort(5, val1.or(val2).not(), 3);
     val1 = state.getPortValue(0).and(state.getPortValue(9));
     val2 = state.getPortValue(7).and(state.getPortValue(8));

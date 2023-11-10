@@ -70,11 +70,11 @@ public class SocPio extends SocInstanceFactory {
 
   private void updatePorts(Instance instance) {
     final var nrBits = instance.getAttributeValue(StdAttr.WIDTH).getWidth();
-    var nrOfPorts = nrBits;
+    int nrOfPorts = nrBits;
     final var dir = instance.getAttributeValue(PioAttributes.PIO_DIRECTION);
     final var hasIrq = hasIrqPin(instance.getAttributeSet());
     if (dir == PioAttributes.PORT_INOUT) nrOfPorts *= 2;
-    var index = hasIrq ? 2 : 1;
+    int index = hasIrq ? 2 : 1;
     nrOfPorts += index;
     final var ps = new Port[nrOfPorts];
     if (hasIrq) {
@@ -84,7 +84,7 @@ public class SocPio extends SocInstanceFactory {
     ps[RESET_INDEX] = new Port(0, 110, Port.INPUT, 1);
     ps[RESET_INDEX].setToolTip(S.getter("SocPioResetInput"));
     if (dir == PioAttributes.PORT_INPUT || dir == PioAttributes.PORT_INOUT) {
-      for (var b = 0; b < nrBits; b++) {
+      for (int b = 0; b < nrBits; b++) {
         ps[index + b] = new Port(370 - b * 10, 120, Port.INPUT, 1);
         ps[index + b].setToolTip(S.getter("SocPioInputPinx", Integer.toString(b)));
       }
@@ -94,7 +94,7 @@ public class SocPio extends SocInstanceFactory {
         || dir == PioAttributes.PORT_OUTPUT
         || dir == PioAttributes.PORT_BIDIR) {
       final var portType = (dir == PioAttributes.PORT_BIDIR) ? Port.INOUT : Port.OUTPUT;
-      for (var b = 0; b < nrBits; b++) {
+      for (int b = 0; b < nrBits; b++) {
         ps[index + b] = new Port(370 - b * 10, 0, portType, 1);
         ps[index + b].setToolTip(
             (dir == PioAttributes.PORT_BIDIR)

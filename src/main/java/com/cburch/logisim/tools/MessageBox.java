@@ -30,8 +30,8 @@ public class MessageBox {
   public void show() {
 
     if (description.contains("\n") || description.length() > 60) {
-      var lines = 1;
-      for (var pos = description.indexOf('\n');
+      int lines = 1;
+      for (int pos = description.indexOf('\n');
           pos >= 0;
           pos = description.indexOf('\n', pos + 1)) {
         lines++;

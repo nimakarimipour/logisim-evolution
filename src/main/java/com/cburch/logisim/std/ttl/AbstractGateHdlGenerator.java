@@ -27,10 +27,10 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
     super();
     this.isInverter = isInverter;
     final var nrOfGates = (isInverter) ? 6 : 4;
-    for (var gate = 0; gate < nrOfGates; gate++) {
-      var inindex1 = (gate < 2) ? gate * 3 : gate * 3 + 1;
+    for (int gate = 0; gate < nrOfGates; gate++) {
+      int inindex1 = (gate < 2) ? gate * 3 : gate * 3 + 1;
       final var inindex2 = inindex1 + 1;
-      var outindex = (gate < 2) ? gate * 3 + 2 : gate * 3;
+      int outindex = (gate < 2) ? gate * 3 + 2 : gate * 3;
       if (isInverter) {
         inindex1 = (gate < 3) ? gate * 2 : gate * 2 + 1;
         outindex = (gate < 3) ? gate * 2 + 1 : gate * 2;
@@ -50,7 +50,7 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
   public LineBuffer getModuleFunctionality(Netlist theNetlist, AttributeSet attrs) {
     final var contents = LineBuffer.getBuffer();
     final var nrOfGates = isInverter ? 6 : 4;
-    for (var i = 0; i < nrOfGates; i++) {
+    for (int i = 0; i < nrOfGates; i++) {
       contents.addRemarkBlock("Here gate %d is described", i).add(getLogicFunction(i));
     }
     return contents;

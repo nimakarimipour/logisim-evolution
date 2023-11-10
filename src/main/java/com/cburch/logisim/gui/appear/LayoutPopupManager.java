@@ -126,7 +126,7 @@ class LayoutPopupManager implements SelectionListener, BaseMouseListenerContract
   }
 
   private Set<CanvasObject> shouldShowPopup(Collection<CanvasObject> add) {
-    var found = false;
+    boolean found = false;
     for (final var obj : add) {
       if (obj instanceof AppearancePort || obj instanceof DynamicElement) {
         found = true;

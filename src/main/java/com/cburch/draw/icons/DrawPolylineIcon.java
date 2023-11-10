@@ -30,7 +30,7 @@ public class DrawPolylineIcon extends BaseIcon {
     gfx.setStroke(new BasicStroke(AppPreferences.getScaled(2)));
     gfx.setColor(Color.BLUE.darker());
     final var p = new GeneralPath();
-    var i = 0;
+    int i = 0;
     p.moveTo(AppPreferences.getScaled(points[i++]), AppPreferences.getScaled(points[i++]));
     for (; i < points.length - 1; i += 2) {
       p.lineTo(AppPreferences.getScaled(points[i]), AppPreferences.getScaled(points[i + 1]));

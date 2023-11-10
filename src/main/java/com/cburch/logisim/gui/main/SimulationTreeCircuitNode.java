@@ -70,8 +70,8 @@ class SimulationTreeCircuitNode extends SimulationTreeNode
   @Override
   public int compare(Component a, Component b) {
     if (a != b) {
-      var nameA = a.getFactory().getDisplayName();
-      var nameB = b.getFactory().getDisplayName();
+      java.lang.String nameA = a.getFactory().getDisplayName();
+      java.lang.String nameB = b.getFactory().getDisplayName();
       int ret = nameA.compareToIgnoreCase(nameB);
       if (ret != 0) return ret;
     }

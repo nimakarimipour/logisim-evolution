@@ -36,8 +36,8 @@ class WireRepair extends CircuitTransaction {
     }
 
     void merge(Wire a, Wire b) {
-      var set0 = map.get(a);
-      var set1 = map.get(b);
+      java.util.ArrayList<com.cburch.logisim.circuit.Wire> set0 = map.get(a);
+      java.util.ArrayList<com.cburch.logisim.circuit.Wire> set1 = map.get(b);
       if (set0 == null && set1 == null) {
         set0 = new ArrayList<>(2);
         set0.add(a);
@@ -177,7 +177,7 @@ class WireRepair extends CircuitTransaction {
       if (locWires.size() > 1) {
         for (int i = 0, n = locWires.size(); i < n; i++) {
           final var w0 = locWires.get(i);
-          for (var j = i + 1; j < n; j++) {
+          for (int j = i + 1; j < n; j++) {
             final var w1 = locWires.get(j);
             if (w0.overlaps(w1, false))
               mergeSets.merge(w0, w1);
@@ -212,7 +212,7 @@ class WireRepair extends CircuitTransaction {
       if (splits != null) {
         splits.add(w1);
         Collections.sort(splits);
-        var e0 = w0;
+        com.cburch.logisim.data.Location e0 = w0;
         final var subs = new ArrayList<Wire>(splits.size());
         for (final var e1 : splits) {
           subs.add(Wire.create(e0, e1));

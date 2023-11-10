@@ -109,7 +109,7 @@ public class DipSwitch extends InstanceFactory {
 
   public static ArrayList<String> getLabels(int size) {
     final var labelNames = new ArrayList<String>();
-    for (var i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
       labelNames.add(getInputLabel(i));
     }
     return labelNames;
@@ -127,7 +127,7 @@ public class DipSwitch extends InstanceFactory {
 
   public DipSwitch() {
     super(_ID, S.getter("DipSwitchComponent"), new AbstractSimpleIoHdlGeneratorFactory(true), true);
-    var dipSize = 8;
+    int dipSize = 8;
     setAttributes(
         new Attribute[] {
           StdAttr.FACING,
@@ -188,7 +188,7 @@ public class DipSwitch extends InstanceFactory {
       dx = 10;
     }
     final var ps = new Port[n];
-    for (var i = 0; i < ps.length; i++) {
+    for (int i = 0; i < ps.length; i++) {
       ps[i] = new Port(cx + (i + 1) * dx, cy + (i + 1) * dy, Port.OUTPUT, 1);
       ps[i].setToolTip(S.getter("DIP" + (i + 1)));
     }
@@ -227,7 +227,7 @@ public class DipSwitch extends InstanceFactory {
   public void paintInstance(InstancePainter painter) {
     final var segmentWidth = 10;
 
-    var state = (State) painter.getData();
+    com.cburch.logisim.std.io.DipSwitch.State state = (State) painter.getData();
     if (state == null || state.size != painter.getAttributeValue(ATTR_SIZE).getWidth()) {
       final var val = (state == null) ? 0 : state.Value;
       state = new State(val, painter.getAttributeValue(ATTR_SIZE).getWidth());
@@ -237,15 +237,15 @@ public class DipSwitch extends InstanceFactory {
 
     final var facing = painter.getAttributeValue(StdAttr.FACING);
     final var loc = painter.getLocation();
-    var x = loc.getX();
-    var y = loc.getY();
+    int x = loc.getX();
+    int y = loc.getY();
     if (facing == Direction.SOUTH) {
       x -= segmentWidth * (n + 1);
       y -= 40;
     }
     final var g = painter.getGraphics();
     g.translate(x, y);
-    var rotate = 0.0;
+    double rotate = 0.0;
     if (facing != Direction.NORTH && facing != Direction.SOUTH && g instanceof Graphics2D) {
       rotate = -facing.getRight().toRadians();
       ((Graphics2D) g).rotate(rotate);
@@ -260,7 +260,7 @@ public class DipSwitch extends InstanceFactory {
     if (n > 9) {
       g.setFont(g.getFont().deriveFont(g.getFont().getSize2D() * 0.6f));
     }
-    for (var i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
       g.setColor(state.isBitSet(i) ? Value.trueColor : Color.white);
       g.fillRect(7 + (i * segmentWidth), 16, 6, 20);
 
@@ -270,7 +270,7 @@ public class DipSwitch extends InstanceFactory {
     }
 
     // draw each switch state
-    for (var i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
       g.setColor(state.isBitSet(i) ? Color.DARK_GRAY : Color.GRAY);
       int ypos = state.isBitSet(i) ? 17 : 26;
       g.fillRect(8 + (i * segmentWidth), ypos, 4, 9);
@@ -287,13 +287,13 @@ public class DipSwitch extends InstanceFactory {
 
   @Override
   public void propagate(InstanceState state) {
-    var pins = (State) state.getData();
+    com.cburch.logisim.std.io.DipSwitch.State pins = (State) state.getData();
     if (pins == null || pins.size != state.getAttributeValue(ATTR_SIZE).getWidth()) {
       int val = (pins == null) ? 0 : pins.Value;
       pins = new State(val, state.getAttributeValue(ATTR_SIZE).getWidth());
       state.setData(pins);
     }
-    for (var i = 0; i < pins.size; i++) {
+    for (int i = 0; i < pins.size; i++) {
       Value pinstate = (pins.isBitSet(i)) ? Value.TRUE : Value.FALSE;
       state.setPort(i, pinstate, 1);
     }

@@ -112,7 +112,7 @@ class RomContentsListener implements HexModelListener {
     if (enabled && proj != null && oldValues != null) {
       // this change needs to be logged in the undo log
       final var newValues = new long[oldValues.length];
-      for (var i = 0; i < newValues.length; i++) {
+      for (int i = 0; i < newValues.length; i++) {
         newValues[i] = source.get(start + i);
       }
       proj.doAction(new Change(this, (MemContents) source, start, oldValues, newValues));

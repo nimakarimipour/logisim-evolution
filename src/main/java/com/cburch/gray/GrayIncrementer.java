@@ -86,8 +86,8 @@ class GrayIncrementer extends InstanceFactory {
   static Value nextGray(Value prev) {
     final var bits = prev.getBitWidth();
     if (!prev.isFullyDefined()) return Value.createError(bits);
-    var x = prev.toLongValue();
-    var ct = (x >> 32) ^ x; // compute parity of x
+    long x = prev.toLongValue();
+    long ct = (x >> 32) ^ x; // compute parity of x
     ct = (ct >> 16) ^ ct;
     ct = (ct >> 8) ^ ct;
     ct = (ct >> 4) ^ ct;

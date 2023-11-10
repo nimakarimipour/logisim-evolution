@@ -187,7 +187,7 @@ class MouseOptions extends OptionsPanel {
         g.drawString(label1, x1, y);
       } else {
         final var x2 = (sz.width - fm.stringWidth(label2)) / 2;
-        var y = Math.max(0, (sz.height - 2 * fm.getHeight()) / 2 + fm.getAscent() - 2);
+        int y = Math.max(0, (sz.height - 2 * fm.getHeight()) / 2 + fm.getAscent() - 2);
         g.drawString(label1, x1, y);
         y += fm.getHeight();
         g.drawString(label2, x2, y);
@@ -222,7 +222,7 @@ class MouseOptions extends OptionsPanel {
     }
 
     int getRow(Integer mods) {
-      var row = Collections.binarySearch(curKeys, mods);
+      int row = Collections.binarySearch(curKeys, mods);
       if (row < 0) row = -(row + 1);
       return row;
     }
@@ -261,7 +261,7 @@ class MouseOptions extends OptionsPanel {
     public void actionPerformed(ActionEvent e) {
       final var src = e.getSource();
       if (src == remove) {
-        var row = mappings.getSelectedRow();
+        int row = mappings.getSelectedRow();
         getProject().doAction(OptionsActions.removeMapping(getOptions().getMouseMappings(), model.getKey(row)));
         row = Math.min(row, model.getRowCount() - 1);
         if (row >= 0) setSelectedRow(row);

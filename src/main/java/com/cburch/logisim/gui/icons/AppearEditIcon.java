@@ -28,7 +28,7 @@ public class AppearEditIcon extends BaseIcon {
     SubcircuitFactory.paintClasicIcon(g);
     g.dispose();
     g2.setColor(Color.MAGENTA);
-    var path = new GeneralPath();
+    java.awt.geom.GeneralPath path = new GeneralPath();
     path.moveTo(AppPreferences.getScaled(tip[0]), AppPreferences.getScaled(tip[1]));
     for (int i = 2; i < tip.length; i += 2) {
       path.lineTo(AppPreferences.getScaled(tip[i]), AppPreferences.getScaled(tip[i + 1]));

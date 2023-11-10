@@ -98,9 +98,9 @@ public class FactoryAttributes implements AttributeSet, AttributeListener, Clone
   }
 
   public AttributeSet getBase() {
-    var ret = baseAttrs;
+    com.cburch.logisim.data.AttributeSet ret = baseAttrs;
     if (ret == null) {
-      var fact = factory;
+      com.cburch.logisim.comp.ComponentFactory fact = factory;
       if (fact == null) {
         fact = desc.getFactory(descBase);
         factory = fact;

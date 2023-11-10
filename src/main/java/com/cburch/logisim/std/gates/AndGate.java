@@ -32,10 +32,10 @@ class AndGate extends AbstractGate {
     @Override
     public LineBuffer getLogicFunction(int nrOfInputs, int bitwidth, boolean isOneHot) {
       final var contents = LineBuffer.getHdlBuffer();
-      var oneLine = new StringBuilder();
+      java.lang.StringBuilder oneLine = new StringBuilder();
       oneLine.append(Hdl.assignPreamble()).append("result").append(Hdl.assignOperator());
       final var tabWidth = oneLine.length();
-      var first = true;
+      boolean first = true;
       for (int i = 0; i < nrOfInputs; i++) {
         if (!first) {
           oneLine.append(Hdl.andOperator());
@@ -62,8 +62,8 @@ class AndGate extends AbstractGate {
 
   @Override
   protected Expression computeExpression(Expression[] inputs, int numInputs) {
-    var ret = inputs[0];
-    for (var i = 1; i < numInputs; i++) {
+    com.cburch.logisim.analyze.model.Expression ret = inputs[0];
+    for (int i = 1; i < numInputs; i++) {
       ret = Expressions.and(ret, inputs[i]);
     }
     return ret;

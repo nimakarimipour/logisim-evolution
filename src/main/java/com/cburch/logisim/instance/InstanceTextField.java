@@ -107,7 +107,7 @@ public class InstanceTextField implements AttributeListener, TextFieldListener, 
     final var text = field.getText();
     if (text == null || text.equals("")) return field.getCaret(gfx, 0);
 
-    var bds = field.getBounds(gfx);
+    com.cburch.logisim.data.Bounds bds = field.getBounds(gfx);
     if (bds.getWidth() < 4 || bds.getHeight() < 4) {
       final var loc = comp.getLocation();
       bds = bds.add(Bounds.create(loc).expand(2));
@@ -141,7 +141,7 @@ public class InstanceTextField implements AttributeListener, TextFieldListener, 
     this.halign = halign;
     this.valign = valign;
     final var shouldReg = shouldRegister();
-    var attrs = comp.getAttributeSet();
+    com.cburch.logisim.data.AttributeSet attrs = comp.getAttributeSet();
     if (attrs.containsAttribute(StdAttr.LABEL_VISIBILITY))
       isLabelVisible = attrs.getValue(StdAttr.LABEL_VISIBILITY);
     if (!wasReg && shouldReg) attrs.addAttributeListener(this);

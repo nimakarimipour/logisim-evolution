@@ -40,8 +40,8 @@ class NandGate extends AbstractGate {
           .append(Hdl.notOperator())
           .append("(");
       final var tabWidth = oneLine.length();
-      var first = true;
-      for (var i = 0; i < nrOfInputs; i++) {
+      boolean first = true;
+      for (int i = 0; i < nrOfInputs; i++) {
         if (!first) {
           oneLine.append(Hdl.andOperator());
           contents.add(oneLine.toString());
@@ -68,7 +68,7 @@ class NandGate extends AbstractGate {
 
   @Override
   protected Expression computeExpression(Expression[] inputs, int numInputs) {
-    var ret = inputs[0];
+    com.cburch.logisim.analyze.model.Expression ret = inputs[0];
     for (int i = 1; i < numInputs; i++) {
       ret = Expressions.and(ret, inputs[i]);
     }

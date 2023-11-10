@@ -87,7 +87,7 @@ public abstract class DotMatrixBase extends InstanceFactory {
 
     protected Value get(int row, int col, long curTick) {
       final var index = row * cols + col;
-      var ret = grid[index];
+      com.cburch.logisim.data.Value ret = grid[index];
       if (ret == Value.FALSE && persistTo[index] - curTick >= 0) {
         ret = Value.TRUE;
       }
@@ -95,10 +95,10 @@ public abstract class DotMatrixBase extends InstanceFactory {
     }
 
     protected void setColumn(int index, Value colVector, long persist) {
-      var gridloc = (rows - 1) * cols + index;
+      int gridloc = (rows - 1) * cols + index;
       final var stride = -cols;
       final var vals = colVector.getAll();
-      for (var i = 0; i < vals.length; i++, gridloc += stride) {
+      for (int i = 0; i < vals.length; i++, gridloc += stride) {
         final var val = vals[i];
         if (grid[gridloc] == Value.TRUE) {
           persistTo[gridloc] = persist - 1;
@@ -111,10 +111,10 @@ public abstract class DotMatrixBase extends InstanceFactory {
     }
 
     protected void setRow(int index, Value rowVector, long persist) {
-      var gridloc = (index + 1) * cols - 1;
+      int gridloc = (index + 1) * cols - 1;
       final var stride = -1;
       final var vals = rowVector.getAll();
-      for (var i = 0; i < vals.length; i++, gridloc += stride) {
+      for (int i = 0; i < vals.length; i++, gridloc += stride) {
         final var val = vals[i];
         if (grid[gridloc] == Value.TRUE) {
           persistTo[gridloc] = persist - 1;
@@ -129,11 +129,11 @@ public abstract class DotMatrixBase extends InstanceFactory {
     protected void setSelect(Value rowVector, Value colVector, long persist) {
       final var rowVals = rowVector.getAll();
       final var colVals = colVector.getAll();
-      var gridloc = 0;
-      for (var i = rowVals.length - 1; i >= 0; i--) {
-        var wholeRow = rowVals[i];
+      int gridloc = 0;
+      for (int i = rowVals.length - 1; i >= 0; i--) {
+        com.cburch.logisim.data.Value wholeRow = rowVals[i];
         if (wholeRow == Value.TRUE) {
-          for (var j = colVals.length - 1; j >= 0; j--, gridloc++) {
+          for (int j = colVals.length - 1; j >= 0; j--, gridloc++) {
             final var val = colVals[colVals.length - 1 - j];
             if (grid[gridloc] == Value.TRUE) {
               persistTo[gridloc] = persist - 1;
@@ -202,7 +202,7 @@ public abstract class DotMatrixBase extends InstanceFactory {
 
   protected static List<String> getLabels(int rows, int cols) {
     final var result = new ArrayList<String>();
-    for (var r = 0; r < rows; r++) for (int c = 0; c < cols; c++) result.add("Row" + r + "Col" + c);
+    for (int r = 0; r < rows; r++) for (int c = 0; c < cols; c++) result.add("Row" + r + "Col" + c);
     return result;
   }
 
@@ -317,7 +317,7 @@ public abstract class DotMatrixBase extends InstanceFactory {
     final var cols = state.getAttributeValue(getAttributeColumns()).getWidth();
     final var clock = state.getTickCount();
 
-    var data = (State) state.getData();
+    com.cburch.logisim.std.io.DotMatrixBase.State data = (State) state.getData();
     if (data == null) {
       data = new State(rows, cols, clock);
       state.setData(data);
@@ -388,8 +388,8 @@ public abstract class DotMatrixBase extends InstanceFactory {
     g.setColor(Color.DARK_GRAY);
     g.fillRect(bounds.getX(), bounds.getY(), cols * 10 * scaleX, rows * 10 * scaleY);
 
-    for (var j = 0; j < rows; j++) {
-      for (var i = 0; i < cols; i++) {
+    for (int j = 0; j < rows; j++) {
+      for (int i = 0; i < cols; i++) {
         int x = bounds.getX() + 10 * i * scaleX;
         int y = bounds.getY() + 10 * j * scaleY;
 
@@ -439,11 +439,11 @@ public abstract class DotMatrixBase extends InstanceFactory {
 
     final var data = getState(state);
     if (getAttributeItemRow().equals(type)) {
-      for (var i = 0; i < rows; i++) {
+      for (int i = 0; i < rows; i++) {
         data.setRow(i, state.getPortValue(i), persist);
       }
     } else if (getAttributeItemColumn().equals(type)) {
-      for (var i = 0; i < cols; i++) {
+      for (int i = 0; i < cols; i++) {
         data.setColumn(i, state.getPortValue(i), persist);
       }
     } else if (getAttributeItemSelect().equals(type)) {
@@ -461,7 +461,7 @@ public abstract class DotMatrixBase extends InstanceFactory {
     Port[] ps;
     if (input == getAttributeItemColumn()) {
       ps = new Port[cols];
-      for (var i = 0; i < cols; i++) {
+      for (int i = 0; i < cols; i++) {
         ps[i] =
             new Port(
                 10 * i,
@@ -471,7 +471,7 @@ public abstract class DotMatrixBase extends InstanceFactory {
       }
     } else if (input == getAttributeItemRow()) {
       ps = new Port[rows];
-      for (var i = 0; i < rows; i++) {
+      for (int i = 0; i < rows; i++) {
         ps[i] =
             new Port(
                 selectLoc == StdAttr.SELECT_BOTTOM_LEFT ? 0 : cols * 10, 10 * i, Port.INPUT, cols);

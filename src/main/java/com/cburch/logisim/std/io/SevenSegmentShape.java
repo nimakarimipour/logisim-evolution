@@ -54,8 +54,8 @@ public class SevenSegmentShape extends DynamicElement {
     g.setColor(Color.BLACK);
     g.drawRect(x, y, w, h);
     g.setColor(Color.DARK_GRAY);
-    var summ = 0;
-    var desired = 1;
+    int summ = 0;
+    int desired = 1;
     if (state != null) {
       InstanceDataSingleton data = (InstanceDataSingleton) getData(state);
       summ = (data == null ? 0 : (Integer) data.getValue());
@@ -63,7 +63,7 @@ public class SevenSegmentShape extends DynamicElement {
       desired = activ == null || activ ? 1 : 0;
     }
     g.setColor(Color.DARK_GRAY);
-    for (var i = 0; i <= 7; i++) {
+    for (int i = 0; i <= 7; i++) {
       if (state != null) {
         g.setColor(((summ >> i) & 1) == desired ? onColor : offColor);
       }

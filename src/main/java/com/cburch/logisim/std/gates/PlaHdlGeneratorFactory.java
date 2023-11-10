@@ -45,7 +45,7 @@ public class PlaHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
     final var tt = attrs.getValue(Pla.ATTR_TABLE);
     final var outSz = attrs.getValue(Pla.ATTR_OUT_WIDTH).getWidth();
     if (Hdl.isVhdl()) {
-      var leader = "result <= ";
+      java.lang.String leader = "result <= ";
       if (tt.rows().isEmpty()) {
         contents.add("{{1}}{{2}};", leader, zeros(outSz));
       } else {

@@ -134,9 +134,9 @@ public class AssemblerAsmInstruction {
   }
 
   public void replacePcAndDoCalc(long pc, Map<AssemblerToken, StringGetter> errors) {
-    for (var idx = 0; idx < parameters.size(); idx++) {
+    for (int idx = 0; idx < parameters.size(); idx++) {
       final var parameter = parameters.get(idx);
-      var found = false;
+      boolean found = false;
       for (final var assemblerToken : parameter) {
         if (assemblerToken.getType() == AssemblerToken.PROGRAM_COUNTER) {
           found = true;
@@ -149,7 +149,7 @@ public class AssemblerAsmInstruction {
         final var toBeRemoved = new HashSet<Integer>();
         while (i < parameter.length) {
           if (AssemblerToken.MATH_OPERATORS.contains(parameter[i].getType())) {
-            var beforeValue = -1L;
+            long beforeValue = -1L;
             if (i == 0 || !parameter[i - 1].isNumber()) {
               beforeValue = 0L;
             } else if (i + 1 >= parameter.length || !parameter[i + 1].isNumber()) {

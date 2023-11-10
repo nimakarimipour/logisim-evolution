@@ -32,7 +32,7 @@ public class VhdlHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
     final var contents = attrs.getValue(VhdlEntityComponent.CONTENT_ATTR);
     final var inputs = contents.getInputs();
     final var outputs = contents.getOutputs();
-    var portId = 0;
+    int portId = 0;
     for (final var input : inputs)
       myPorts.add(Port.INPUT, input.getToolTip(), input.getFixedBitWidth().getWidth(), portId++);
     for (final var output : outputs)

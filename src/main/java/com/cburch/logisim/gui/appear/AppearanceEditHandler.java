@@ -59,7 +59,7 @@ public class AppearanceEditHandler extends EditHandler implements SelectionListe
     final var selEmpty = sel.isEmpty();
     final var canChange = proj.getLogisimFile().contains(circ);
     final var clipExists = !Clipboard.isEmpty();
-    var selHasRemovable = false;
+    boolean selHasRemovable = false;
     for (final var o : sel.getSelected()) {
       if (!(o instanceof AppearanceElement)) {
         selHasRemovable = true;
@@ -70,9 +70,9 @@ public class AppearanceEditHandler extends EditHandler implements SelectionListe
     boolean canLower;
     if (!selEmpty && canChange) {
       final var zs = ZOrder.getZIndex(sel.getSelected(), canvas.getModel());
-      var zMin = Integer.MAX_VALUE;
-      var zMax = Integer.MIN_VALUE;
-      var count = 0;
+      int zMin = Integer.MAX_VALUE;
+      int zMax = Integer.MIN_VALUE;
+      int count = 0;
       for (final var entry : zs.entrySet()) {
         if (!(entry.getKey() instanceof AppearanceElement)) {
           count++;
@@ -93,8 +93,8 @@ public class AppearanceEditHandler extends EditHandler implements SelectionListe
       canRaise = false;
       canLower = false;
     }
-    var canAddCtrl = false;
-    var canRemCtrl = false;
+    boolean canAddCtrl = false;
+    boolean canRemCtrl = false;
     final var handle = sel.getSelectedHandle();
     if (handle != null && canChange) {
       final var o = handle.getObject();
@@ -245,7 +245,7 @@ public class AppearanceEditHandler extends EditHandler implements SelectionListe
       dx += 10;
     }
 
-    var anchorLocation = clip.getAnchorLocation();
+    com.cburch.logisim.data.Location anchorLocation = clip.getAnchorLocation();
     if (anchorLocation != null && dx != 0) {
       anchorLocation = anchorLocation.translate(dx, dx);
     }

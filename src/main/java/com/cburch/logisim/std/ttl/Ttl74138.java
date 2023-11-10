@@ -111,7 +111,7 @@ public class Ttl74138 extends AbstractTtlGate {
       {0, 0, 0, 0, 0, 0, 0, 1},
     };
 
-    for (var i = 0; i < 8; i++) { // Active LOW
+    for (int i = 0; i < 8; i++) { // Active LOW
       final var val = enabled ? (outputPortStates[A + B + C][i] == 0 ? Value.TRUE : Value.FALSE) : Value.TRUE;
       state.setPort(mapPort(outPorts[i]), val, DELAY);
     }

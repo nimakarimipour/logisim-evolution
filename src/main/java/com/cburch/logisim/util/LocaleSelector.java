@@ -59,7 +59,7 @@ class LocaleSelector extends JList implements LocaleListener, ListSelectionListe
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     final var model = new DefaultListModel<LocaleOption>();
     items = new LocaleOption[locales.length];
-    for (var i = 0; i < locales.length; i++) {
+    for (int i = 0; i < locales.length; i++) {
       items[i] = new LocaleOption(locales[i]);
       model.addElement(items[i]);
     }

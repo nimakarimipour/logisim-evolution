@@ -172,14 +172,14 @@ public class Net {
   }
 
   public boolean hasShortCircuit() {
-    var ret = false;
-    for (var i = 0; i < nrOfBits; i++) ret |= sourceList.get(i).size() > 1;
+    boolean ret = false;
+    for (int i = 0; i < nrOfBits; i++) ret |= sourceList.get(i).size() > 1;
     return ret;
   }
 
   public boolean hasSinks() {
-    var ret = false;
-    for (var i = 0; i < nrOfBits; i++) {
+    boolean ret = false;
+    for (int i = 0; i < nrOfBits; i++) {
       ret |= sinkList.get(i).size() > 0;
     }
     return ret;
@@ -187,13 +187,13 @@ public class Net {
 
   public Set<ConnectionPoint> getSinks() {
     final var sinks = new HashSet<ConnectionPoint>();
-    for (var i = 0; i < nrOfBits; i++) sinks.addAll(sinkList.get(i).getAll());
+    for (int i = 0; i < nrOfBits; i++) sinks.addAll(sinkList.get(i).getAll());
     return sinks;
   }
 
   public boolean hasSource() {
-    var ret = false;
-    for (var i = 0; i < nrOfBits; i++) {
+    boolean ret = false;
+    for (int i = 0; i < nrOfBits; i++) {
       ret |= sourceList.get(i).size() > 0;
     }
     return ret;
@@ -208,7 +208,7 @@ public class Net {
     sinkList.clear();
     sourceNetsList.clear();
     sinkNetsList.clear();
-    for (var i = 0; i < nrOfBits; i++) {
+    for (int i = 0; i < nrOfBits; i++) {
       sourceList.add(new ConnectionPointArray());
       sinkList.add(new ConnectionPointArray());
       sourceNetsList.add(new ConnectionPointArray());

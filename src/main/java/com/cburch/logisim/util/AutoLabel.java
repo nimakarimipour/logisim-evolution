@@ -78,8 +78,8 @@ public class AutoLabel {
   public boolean correctMatrixBaseLabel(Circuit circ, ComponentFactory me, String common, int maxX, int maxY) {
     if (StringUtil.isNullOrEmpty(common) || (maxX < 0) || (maxY < 0)) return true;
     if (!SyntaxChecker.isVariableNameAcceptable(common, true)) return false;
-    for (var x = 0; x < maxX; x++)
-      for (var y = 0; y < maxY; y++) {
+    for (int x = 0; x < maxX; x++)
+      for (int y = 0; y < maxY; y++) {
         if (getMatrixLabel(circ, me, common, x, y).isEmpty()) {
           return false;
         }
@@ -105,8 +105,8 @@ public class AutoLabel {
     if (me instanceof Tunnel) {
       return labelBase.get(circ);
     }
-    var newLabel = "";
-    var curIdx = currentIndex.get(circ);
+    java.lang.String newLabel = "";
+    java.lang.Integer curIdx = currentIndex.get(circ);
     final var baseLabel = labelBase.get(circ);
     boolean undescore = useUnderscore.get(circ);
     do {
@@ -150,7 +150,7 @@ public class AutoLabel {
   }
 
   private int getLabelBaseEndIndex(String label) {
-    var index = label.length();
+    int index = label.length();
     while ((index > 1) && CorrectLabel.NUMBERS.contains(label.substring(index - 1, index))) index--;
     return (index - 1);
   }
@@ -191,8 +191,8 @@ public class AutoLabel {
 
   public String askAndSetLabel(String componentName, String oldLabel, Circuit circ, Component comp, ComponentFactory compFactory,
       AttributeSet attrs, SetAttributeAction act, boolean createAction) {
-    var correct = false;
-    var newLabel = oldLabel;
+    boolean correct = false;
+    java.lang.String newLabel = oldLabel;
     while (!correct) {
       newLabel = (String)
               OptionPane.showInputDialog(null, S.get("editLabelQuestion") + " " + componentName,

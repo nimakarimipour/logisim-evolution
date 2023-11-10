@@ -93,7 +93,7 @@ public class XmlCircuitReader extends CircuitTransaction {
     // Determine attributes
     final var locStr = elt.getAttribute("loc");
     final var attrs = source.createAttributeSet();
-    var defaults = source;
+    com.cburch.logisim.comp.ComponentFactory defaults = source;
     if (isHolyCross && source instanceof Ram) {
       final var ramAttrs = (RamAttributes) attrs;
       ramAttrs.setValue(Mem.ENABLES_ATTR, Mem.USELINEENABLES);
@@ -145,13 +145,13 @@ public class XmlCircuitReader extends CircuitTransaction {
   private void buildCircuit(XmlReader.CircuitData circData, CircuitMutator mutator) {
     final var element = circData.circuitElement;
     final var dest = circData.circuit;
-    var knownComponents = circData.knownComponents;
+    java.util.Map<org.w3c.dom.Element,com.cburch.logisim.comp.Component> knownComponents = circData.knownComponents;
     if (knownComponents == null) knownComponents = Collections.emptyMap();
     try {
       /* Here we check the attribute circuitnamedbox for backwards compatibility */
-      var hasNamedBox = false;
-      var hasNamedBoxFixedSize = false;
-      var hasAppearAttr = false;
+      boolean hasNamedBox = false;
+      boolean hasNamedBoxFixedSize = false;
+      boolean hasAppearAttr = false;
       for (final var attrElt : XmlIterator.forChildElements(circData.circuitElement, "a")) {
         if (attrElt.hasAttribute("name")) {
           final var name = attrElt.getAttribute("name");
@@ -174,7 +174,7 @@ public class XmlCircuitReader extends CircuitTransaction {
           if (!hasAppearAttr) {
             // Here we have 2 possibilities, either a Holycross file or a logisim-evolution file
             // before the introduction of the named circuit boxes. So let's ask the user.
-            var appear = CircuitAttributes.APPEAR_CLASSIC;
+            com.cburch.logisim.data.AttributeOption appear = CircuitAttributes.APPEAR_CLASSIC;
             if (CollectionUtil.isNotEmpty(circData.appearance)) {
               appear = CircuitAttributes.APPEAR_CUSTOM;
             } else if (isHolyCross) {
@@ -198,7 +198,7 @@ public class XmlCircuitReader extends CircuitTransaction {
       final var subEltName = subElement.getTagName();
       if ("comp".equals(subEltName)) {
         try {
-          var comp = knownComponents.get(subElement);
+          com.cburch.logisim.comp.Component comp = knownComponents.get(subElement);
           if (comp == null) comp = getComponent(subElement, reader, isHolyCross, isEvolution);
           if (comp != null) {
             /* filter out empty text boxes */
@@ -237,13 +237,13 @@ public class XmlCircuitReader extends CircuitTransaction {
         }
       }
     }
-    for (var comp : overlapComponents) {
+    for (com.cburch.logisim.comp.Component comp : overlapComponents) {
       final var bds = comp.getBounds();
       if (bds.getHeight() == 0 || bds.getWidth() == 0) {
         // ignore empty boxes
         continue;
       }
-      var d = 0;
+      int d = 0;
       do {
         d += 10;
       } while ((componentsAt.get(bds.translate(d, d))) != null && (d < 100_000));

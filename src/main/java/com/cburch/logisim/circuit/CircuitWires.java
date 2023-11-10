@@ -57,7 +57,7 @@ class CircuitWires {
     }
 
     WireBundle createBundleAt(Location p) {
-      var ret = pointBundles.get(p);
+      com.cburch.logisim.circuit.WireBundle ret = pointBundles.get(p);
       if (ret == null) {
         ret = new WireBundle();
         pointBundles.put(p, ret);
@@ -153,7 +153,7 @@ class CircuitWires {
       else return base;
     } else {
       final var ret = base.getAll();
-      for (var i = 0; i < ret.length; i++) {
+      for (int i = 0; i < ret.length; i++) {
         if (ret[i] == Value.UNKNOWN) ret[i] = pullTo;
       }
       return Value.create(ret);
@@ -191,7 +191,7 @@ class CircuitWires {
   // NOTE: this could be made much more efficient in most cases to
   // avoid voiding the bundle map.
   /*synchronized*/ boolean add(Component comp) {
-    var added = true;
+    boolean added = true;
     if (comp instanceof Wire wire) {
       added = addWire(wire);
     } else if (comp instanceof Splitter splitter) {
@@ -293,10 +293,10 @@ class CircuitWires {
         final var fromBundle = splData.endBundle[0];
         if (fromBundle == null || !fromBundle.isValid()) continue;
 
-        for (var i = 0; i < bitEnd.length; i++) {
-          var j = bitEnd[i];
+        for (int i = 0; i < bitEnd.length; i++) {
+          byte j = bitEnd[i];
           if (j > 0) {
-            var thr = spl.bitThread[i];
+            byte thr = spl.bitThread[i];
             final var toBundle = splData.endBundle[j];
             final var toThreads = toBundle.threads;
             if (toThreads != null && toBundle.isValid()) {
@@ -342,7 +342,7 @@ class CircuitWires {
   private void connectPullResistors(BundleMap ret) {
     for (final var comp : pulls) {
       final var loc = comp.getEnd(0).getLocation();
-      var b = ret.getBundleAt(loc);
+      com.cburch.logisim.circuit.WireBundle b = ret.getBundleAt(loc);
       if (b == null) {
         b = ret.createBundleAt(loc);
         b.points.add(loc);
@@ -429,7 +429,7 @@ class CircuitWires {
         final var s = wire.e0;
         final var t = wire.e1;
         final var wb = bmap.getBundleAt(s);
-        var width = 5;
+        int width = 5;
         if (!wb.isValid()) {
           g.setColor(Value.widthErrorColor);
         } else if (showState) {
@@ -473,7 +473,7 @@ class CircuitWires {
         if (points.getComponentCount(loc) > 2) {
           final var wb = bmap.getBundleAt(loc);
           if (wb != null) {
-            var color = Color.BLACK;
+            java.awt.Color color = Color.BLACK;
             if (!wb.isValid()) {
               color = Value.widthErrorColor;
             } else if (showState) {
@@ -523,7 +523,7 @@ class CircuitWires {
       // while at a time anway.
       for (final var loc : points.getSplitLocations()) {
         if (points.getComponentCount(loc) > 2) {
-          var icount = 0;
+          int icount = 0;
           for (final var comp : points.getComponents(loc)) {
             if (!hidden.contains(comp)) ++icount;
           }
@@ -537,7 +537,7 @@ class CircuitWires {
               } else {
                 g.setColor(Color.BLACK);
               }
-              var radius = highlighted.containsLocation(loc)
+              int radius = highlighted.containsLocation(loc)
                       ? (wireBundle.isBus() ? Wire.HIGHLIGHTED_WIDTH_BUS : Wire.HIGHLIGHTED_WIDTH)
                       : (wireBundle.isBus() ? Wire.WIDTH_BUS : Wire.WIDTH);
               radius = (int) (radius * Wire.DOT_MULTIPLY_FACTOR);
@@ -591,8 +591,8 @@ class CircuitWires {
   }
 
   private Value getThreadValue(CircuitState state, WireThread t) {
-    var ret = Value.UNKNOWN;
-    var pull = Value.UNKNOWN;
+    com.cburch.logisim.data.Value ret = Value.UNKNOWN;
+    com.cburch.logisim.data.Value pull = Value.UNKNOWN;
     for (final var tb : t.getBundles()) {
       for (final var p : tb.b.points) {
         final var val = state.getComponentOutputAt(p);
@@ -636,7 +636,7 @@ class CircuitWires {
   }
 
   Bounds getWireBounds() {
-    var bds = bounds;
+    com.cburch.logisim.data.Bounds bds = bounds;
     if (bds == Bounds.EMPTY_BOUNDS) {
       bds = recomputeBounds();
     }
@@ -677,7 +677,7 @@ class CircuitWires {
     final var dirtyThreads = new CopyOnWriteArraySet<WireThread>(); // affected threads
 
     // get state, or create a new one if current state is outdated
-    var state = circState.getWireData();
+    com.cburch.logisim.circuit.CircuitWires.State state = circState.getWireData();
     if (state == null || state.bundleMap != map) {
       // if it is outdated, we need to compute for all threads
       state = new State(map);
@@ -734,8 +734,8 @@ class CircuitWires {
         bv = state.thrValues.get(b.threads[0]);
       } else {
         final var tvs = new Value[b.threads.length];
-        var tvsValid = true;
-        for (var i = 0; i < tvs.length; i++) {
+        boolean tvsValid = true;
+        for (int i = 0; i < tvs.length; i++) {
           final var tv = state.thrValues.get(b.threads[i]);
           if (tv == null) {
             tvsValid = false;
@@ -761,11 +761,11 @@ class CircuitWires {
       return Bounds.EMPTY_BOUNDS;
     }
 
-    var w = it.next();
-    var xmin = w.e0.getX();
-    var ymin = w.e0.getY();
-    var xmax = w.e1.getX();
-    var ymax = w.e1.getY();
+    com.cburch.logisim.circuit.Wire w = it.next();
+    int xmin = w.e0.getX();
+    int ymin = w.e0.getY();
+    int xmax = w.e1.getX();
+    int ymax = w.e1.getY();
     while (it.hasNext()) {
       w = it.next();
       final var x0 = w.e0.getX();

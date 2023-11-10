@@ -204,7 +204,7 @@ public class KarnaughMapGroups {
               if (!areas.contains(current)) areas.add(current);
             }
             // can we merge with an existing ?
-            var found = false;
+            boolean found = false;
             for (CoverInfo area : areas) {
               if (!found && area.merge(col, row)) {
                 current = area;

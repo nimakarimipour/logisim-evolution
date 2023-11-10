@@ -73,7 +73,7 @@ public class EditableLabel implements Cloneable {
   }
 
   public void configureTextField(EditableLabelField field, double zoom) {
-    var font = this.font;
+    java.awt.Font font = this.font;
     if (zoom != 1.0) {
       font = font.deriveFont(AffineTransform.getScaleInstance(zoom, zoom));
     }

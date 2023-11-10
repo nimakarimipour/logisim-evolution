@@ -51,7 +51,7 @@ public class FpgaClockPanel extends JPanel implements ActionListener, LocaleList
     frequenciesList.addActionListener(this);
     frequenciesList.setActionCommand("frequency");
     frequenciesList.setEditable(true);
-    for (var freq : MenuSimulate.getTickFrequencyStrings())
+    for (java.lang.String freq : MenuSimulate.getTickFrequencyStrings())
       frequenciesList.addItem(freq);
     frequenciesList.setSelectedIndex(0);
     add(pan1, BorderLayout.WEST);
@@ -80,7 +80,7 @@ public class FpgaClockPanel extends JPanel implements ActionListener, LocaleList
     final var savedDownloadFrequency = rootSheet.getDownloadFrequency();
     final var savedSimFrequency = rootSheet.getTickFrequency();
     final var selectedFrequency = (savedDownloadFrequency > 0) ? savedDownloadFrequency : savedSimFrequency;
-    for (var i = 0; i < MenuSimulate.SUPPORTED_TICK_FREQUENCIES.length; i++) {
+    for (int i = 0; i < MenuSimulate.SUPPORTED_TICK_FREQUENCIES.length; i++) {
       if (MenuSimulate.SUPPORTED_TICK_FREQUENCIES[i].equals(selectedFrequency)) {
         frequenciesList.setSelectedIndex(i);
         recalculateFrequency();

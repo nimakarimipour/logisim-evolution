@@ -102,9 +102,9 @@ public class Tty extends InstanceFactory implements DynamicElementProvider {
   public Bounds getOffsetBounds(AttributeSet attrs) {
     final var rows = getRowCount(attrs.getValue(ATTR_ROWS));
     final var cols = getColumnCount(attrs.getValue(ATTR_COLUMNS));
-    var width = 2 * BORDER + cols * COL_WIDTH;
+    int width = 2 * BORDER + cols * COL_WIDTH;
     if (width < 30) width = 30;
-    var height = 2 * BORDER + rows * ROW_HEIGHT;
+    int height = 2 * BORDER + rows * ROW_HEIGHT;
     if (height < 30) height = 30;
     return Bounds.create(0, 10 - height, width, height);
   }
@@ -112,7 +112,7 @@ public class Tty extends InstanceFactory implements DynamicElementProvider {
   private TtyState getTtyState(InstanceState state) {
     final var rows = getRowCount(state.getAttributeValue(ATTR_ROWS));
     final var cols = getColumnCount(state.getAttributeValue(ATTR_COLUMNS));
-    var ret = (TtyState) state.getData();
+    com.cburch.logisim.std.io.TtyState ret = (TtyState) state.getData();
     if (ret == null) {
       ret = new TtyState(rows, cols);
       state.setData(ret);
@@ -165,7 +165,7 @@ public class Tty extends InstanceFactory implements DynamicElementProvider {
       int curCol;
       final var state = getTtyState(painter);
       synchronized (state) {
-        for (var i = 0; i < rows; i++) {
+        for (int i = 0; i < rows; i++) {
           rowData[i] = state.getRowString(i);
         }
         curRow = state.getCursorRow();
@@ -177,7 +177,7 @@ public class Tty extends InstanceFactory implements DynamicElementProvider {
       final var fm = g.getFontMetrics();
       int x = bds.getX() + BORDER;
       int y = bds.getY() + BORDER + (ROW_HEIGHT + fm.getAscent()) / 2;
-      for (var i = 0; i < rows; i++) {
+      for (int i = 0; i < rows; i++) {
         g.drawString(rowData[i], x, y);
         if (i == curRow) {
           final var x0 = x + fm.stringWidth(rowData[i].substring(0, curCol));
@@ -186,8 +186,8 @@ public class Tty extends InstanceFactory implements DynamicElementProvider {
         y += ROW_HEIGHT;
       }
     } else {
-      var str = S.get("ttyDesc", "" + rows, "" + cols);
-      var fm = g.getFontMetrics();
+      java.lang.String str = S.get("ttyDesc", "" + rows, "" + cols);
+      java.awt.FontMetrics fm = g.getFontMetrics();
       int strWidth = fm.stringWidth(str);
       if (strWidth + BORDER > bds.getWidth()) {
         str = S.get("ttyDescShort");

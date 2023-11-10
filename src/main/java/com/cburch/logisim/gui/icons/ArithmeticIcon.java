@@ -42,9 +42,9 @@ public class ArithmeticIcon extends BaseIcon {
     g2.setColor(Color.BLACK);
     final var scale = opp.length() >= nrOfChars ? nrOfChars : 1;
     final var yOff = opp.length() > nrOfChars ? getIconHeight() >> 2 : getIconHeight() >> 1;
-    var font = g2.getFont().deriveFont((float) getIconWidth() / scale).deriveFont(Font.BOLD);
+    java.awt.Font font = g2.getFont().deriveFont((float) getIconWidth() / scale).deriveFont(Font.BOLD);
     g2.drawRect(scale(1), scale(1), getIconWidth() - scale(2), getIconHeight() - scale(2));
-    var textLayout =
+    java.awt.font.TextLayout textLayout =
         new TextLayout(
             opp.length() > nrOfChars ? opp.substring(0, nrOfChars) : opp,
             font,

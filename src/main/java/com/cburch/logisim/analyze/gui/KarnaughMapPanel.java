@@ -230,9 +230,9 @@ public class KarnaughMapPanel extends JPanel implements BaseMouseMotionListenerC
     } else {
       computePreferredLinedSize(g, table);
       computePreferredNumberedSize(g, table);
-      var boxWidth = Math.max(linedKMapInfo.getWidth(), numberedKMapInfo.getWidth());
+      int boxWidth = Math.max(linedKMapInfo.getWidth(), numberedKMapInfo.getWidth());
       boxWidth = Math.max(boxWidth, AppPreferences.getScaled(300));
-      var boxHeight = Math.max(linedKMapInfo.getHeight(), numberedKMapInfo.getHeight());
+      int boxHeight = Math.max(linedKMapInfo.getHeight(), numberedKMapInfo.getHeight());
       linedKMapInfo.calculateOffsets(boxWidth, boxHeight);
       numberedKMapInfo.calculateOffsets(boxWidth, boxHeight);
       final var ctx = g.getFontRenderContext();
@@ -262,7 +262,7 @@ public class KarnaughMapPanel extends JPanel implements BaseMouseMotionListenerC
     final var lines = new ArrayList<TextLayout>();
     if (start >= end) return lines;
     final var ret = new StringBuilder(inputs.get(start));
-    for (var i = start + 1; i < end; i++) {
+    for (int i = start + 1; i < end; i++) {
       ret.append(", ");
       ret.append(inputs.get(i));
     }
@@ -316,7 +316,7 @@ public class KarnaughMapPanel extends JPanel implements BaseMouseMotionListenerC
       final var rowHeader = header(inputs, 0, rowVars, true, false, ctx);
       final var colHeader = header(inputs, rowVars, rowVars + colVars, false, false, ctx);
       headWidth = 0;
-      var height = 0;
+      int height = 0;
       for (TextLayout l : rowHeader) {
         final var w = (int) l.getBounds().getWidth();
         if (w > headWidth) headWidth = w;
@@ -347,7 +347,7 @@ public class KarnaughMapPanel extends JPanel implements BaseMouseMotionListenerC
       cellWidth = 24;
     } else {
       final var ctx = gfx.getFontRenderContext();
-      var fm = gfx.getFontMetrics(headerFont);
+      java.awt.FontMetrics fm = gfx.getFontMetrics(headerFont);
       final var singleheight = styledHeight(styled("E", headerFont), ctx);
       headHeight = styledHeight(styled("E:2", headerFont), ctx) + (fm.getAscent() - singleheight);
 
@@ -452,7 +452,7 @@ public class KarnaughMapPanel extends JPanel implements BaseMouseMotionListenerC
     if (inputs.isEmpty()) return "<html>" + s + "</html>";
     s.append("<br>When:");
     final var n = inputs.size();
-    for (var i = 0; i < MAX_VARS && i < inputs.size(); i++) {
+    for (int i = 0; i < MAX_VARS && i < inputs.size(); i++) {
       s.append("<br/>&nbsp;&nbsp;&nbsp;&nbsp;").append(inputs.get(i)).append(" = ").append((row >> (n - i - 1)) & 1);
     }
     return "<html>" + s + "</html>";
@@ -539,7 +539,7 @@ public class KarnaughMapPanel extends JPanel implements BaseMouseMotionListenerC
       t1.draw(g2, xoff + selInfo.getX(), yoff + selInfo.getY() + t1.getAscent());
     } else {
       final var t1 = new TextLayout(S.get("SelectedKmapGroup"), headerFont, ctx);
-      var xoff = (selInfo.getWidth() - (int) t1.getBounds().getWidth()) / 2;
+      int xoff = (selInfo.getWidth() - (int) t1.getBounds().getWidth()) / 2;
       t1.draw(g2, xoff + selInfo.getX(), selInfo.getY() + t1.getAscent());
       final var t2 = new ExpressionRenderData(expr, selInfo.getWidth(), notation);
       xoff = (selInfo.getWidth() - t2.getWidth()) / 2;
@@ -591,18 +591,18 @@ public class KarnaughMapPanel extends JPanel implements BaseMouseMotionListenerC
     final var cols = 1 << colVars;
     final var headFm = gfx.getFontMetrics(headerFont);
     final var ctx = gfx.getFontRenderContext();
-    var numberFont = headerFont;
+    java.awt.Font numberFont = headerFont;
     final var width2 = headFm.stringWidth("00");
     final var width3 = headFm.stringWidth("000");
     final var scale = (float) width2 / (float) width3;
     numberFont = headerFont.deriveFont(scale * headerFont.getSize2D());
-    for (var c = 0; c < cols; c++) {
+    for (int c = 0; c < cols; c++) {
       final var label = label(c, cols);
       final var styledLabel = styled(label, numberFont, ctx);
       final var xoff = (cellWidth - (int) styledLabel.getBounds().getWidth()) >> 1;
       styledLabel.draw(gfx, tableXstart + xoff + c * cellWidth, tableYstart - 3 - (int) styledLabel.getDescent());
     }
-    for (var r = 0; r < rows; r++) {
+    for (int r = 0; r < rows; r++) {
       final var label = label(r, rows);
       final var styledLabel = styled(label, numberFont, ctx);
       styledLabel.draw(
@@ -616,8 +616,8 @@ public class KarnaughMapPanel extends JPanel implements BaseMouseMotionListenerC
     final var rowHeader = header(model.getInputs().bits, 0, rowVars, true, false, ctx);
     final var colHeader =
         header(model.getInputs().bits, rowVars, rowVars + colVars, false, false, ctx);
-    var rx = x + 3;
-    var ry = y + numberedKMapInfo.getHeaderHeight() + cellHeight / 2;
+    int rx = x + 3;
+    int ry = y + numberedKMapInfo.getHeaderHeight() + cellHeight / 2;
     for (final var l : rowHeader) {
       l.draw(gfx, rx, ry + l.getAscent());
       ry += (int) l.getBounds().getHeight();
@@ -634,7 +634,7 @@ public class KarnaughMapPanel extends JPanel implements BaseMouseMotionListenerC
     ArrayList<Integer> starts = new ArrayList<>();
     ArrayList<Integer> stops = new ArrayList<>();
     StringBuilder str = new StringBuilder();
-    var idx = 0;
+    int idx = 0;
     while (header != null && idx < header.length()) {
       if (header.charAt(idx) == ':' || header.charAt(idx) == '[') {
         idx++;
@@ -650,7 +650,7 @@ public class KarnaughMapPanel extends JPanel implements BaseMouseMotionListenerC
     final var styled = new AttributedString(str.toString());
     styled.addAttribute(TextAttribute.FAMILY, font.getFamily());
     styled.addAttribute(TextAttribute.SIZE, font.getSize());
-    for (var i = 0; i < starts.size(); i++) {
+    for (int i = 0; i < starts.size(); i++) {
       styled.addAttribute(TextAttribute.SUPERSCRIPT, TextAttribute.SUPERSCRIPT_SUB, starts.get(i), stops.get(i));
     }
     return styled;
@@ -696,12 +696,12 @@ public class KarnaughMapPanel extends JPanel implements BaseMouseMotionListenerC
     final var rows = 1 << rowVars;
     final int cols = 1 << colVars;
     final var headHeight = linedKMapInfo.getHeaderHeight();
-    for (var i = 0; i < inputCount; i++) {
+    for (int i = 0; i < inputCount; i++) {
       final var header = styled(model.getInputs().bits.get(i), headerFont);
-      var rotated = false;
+      boolean rotated = false;
       final var middleOffset = styledWidth(header, ctx) >> 1;
-      var offsetX = headHeight + 11;
-      var offsetY = headHeight + 11;
+      int offsetX = headHeight + 11;
+      int offsetY = headHeight + 11;
       switch (i) {
         case 0:
           if (inputCount == 1) {
@@ -891,10 +891,10 @@ public class KarnaughMapPanel extends JPanel implements BaseMouseMotionListenerC
     gfx.drawLine(x - cellHeight, y - cellHeight, x, y);
     gfx.setStroke(oldstroke);
     final var outputColumn = table.getOutputIndex(output);
-    for (var i = 0; i < rows; i++) {
-      for (var j = 0; j < cols; j++) {
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < cols; j++) {
         final var row = getTableRow(i, j, rows, cols);
-        var entry = table.getOutputEntry(row, outputColumn);
+        com.cburch.logisim.analyze.model.Entry entry = table.getOutputEntry(row, outputColumn);
         if (provisionalValue != null && row == provisionalY && outputColumn == provisionalX)
           entry = provisionalValue;
         if (entry.isError()) {
@@ -914,8 +914,8 @@ public class KarnaughMapPanel extends JPanel implements BaseMouseMotionListenerC
 
     karnaughMapGroups.paint(gfx, x, y, cellWidth, cellHeight);
     gfx.setColor(Color.BLUE);
-    for (var i = 0; i < rows; i++) {
-      for (var j = 0; j < cols; j++) {
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < cols; j++) {
         final var row = getTableRow(i, j, rows, cols);
         if (provisionalValue != null && row == provisionalY && outputColumn == provisionalX) {
           final var text = provisionalValue.getDescription();

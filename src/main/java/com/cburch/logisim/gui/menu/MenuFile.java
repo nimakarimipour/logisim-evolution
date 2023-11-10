@@ -121,7 +121,7 @@ class MenuFile extends Menu implements ActionListener {
         proj.getFrame().dispose();
       }
     } else if (src == close && proj != null) {
-      var result = 0;
+      int result = 0;
       final var frame = proj.getFrame();
       if (proj.isFileDirty()) {
         /* Must use hardcoded strings here, because the string management is rotten */

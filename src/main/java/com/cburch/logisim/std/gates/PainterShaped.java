@@ -105,7 +105,7 @@ public class PainterShaped {
     final var lengths = getInputLineLengths(attrs, factory);
     if (painter.getInstance() == null) { // drawing ghost - negation bubbles
       // only
-      for (var i = 0; i < inputs; i++) {
+      for (int i = 0; i < inputs; i++) {
         final var iNegated = ((negated >> i) & 1) == 1;
         if (iNegated) {
           final var offs = factory.getInputOffset(attrs, i);

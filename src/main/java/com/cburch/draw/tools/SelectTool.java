@@ -112,7 +112,7 @@ public class SelectTool extends AbstractTool {
     }
     if (drawHandles) {
       // unscale the coordinate system so that the stroke width isn't scaled
-      var zoom = 1.0;
+      double zoom = 1.0;
       final var gfxCopy = gfx.create();
       if (gfxCopy instanceof Graphics2D g2d) {
         zoom = canvas.getZoomFactor();
@@ -131,8 +131,8 @@ public class SelectTool extends AbstractTool {
                 : obj.getHandles(null);
 
         for (final var han : handles) {
-          var x = han.getX();
-          var y = han.getY();
+          int x = han.getX();
+          int y = han.getY();
           if (action == MOVE_ALL && dragEffective) {
             final var delta = selection.getMovingDelta();
             x += delta.getX();
@@ -146,8 +146,8 @@ public class SelectTool extends AbstractTool {
       }
       final var selHandle = selection.getSelectedHandle();
       if (selHandle != null) {
-        var x = selHandle.getX();
-        var y = selHandle.getY();
+        int x = selHandle.getX();
+        int y = selHandle.getY();
         if (action == MOVE_ALL && dragEffective) {
           final var delta = selection.getMovingDelta();
           x += delta.getX();
@@ -169,10 +169,10 @@ public class SelectTool extends AbstractTool {
       case RECT_TOGGLE:
         if (dragEffective) {
           // find rectangle currently to show
-          var x0 = start.getX();
-          var y0 = start.getY();
-          var x1 = end.getX();
-          var y1 = end.getY();
+          int x0 = start.getX();
+          int y0 = start.getY();
+          int x1 = end.getX();
+          int y1 = end.getY();
           if (x1 < x0) {
             final var t = x0;
             x0 = x1;
@@ -360,7 +360,7 @@ public class SelectTool extends AbstractTool {
       final var loc = dragEnd;
       final var o = getObjectAt(model, loc.getX(), loc.getY(), false);
       if (o != null) {
-        var han = o.canDeleteHandle(loc);
+        com.cburch.draw.model.Handle han = o.canDeleteHandle(loc);
         if (han != null) {
           selection.setHandleSelected(han);
         } else {
@@ -434,8 +434,8 @@ public class SelectTool extends AbstractTool {
     dragEnd = newEnd;
 
     final var start = dragStart;
-    var dx = newEnd.getX() - start.getX();
-    var dy = newEnd.getY() - start.getY();
+    int dx = newEnd.getX() - start.getX();
+    int dy = newEnd.getY() - start.getY();
     if (!dragEffective) {
       if (Math.abs(dx) + Math.abs(dy) > DRAG_TOLERANCE) {
         dragEffective = true;
@@ -460,8 +460,8 @@ public class SelectTool extends AbstractTool {
       }
       case MOVE_ALL -> {
         if (ctrlPressed) {
-          var minX = Integer.MAX_VALUE;
-          var minY = Integer.MAX_VALUE;
+          int minX = Integer.MAX_VALUE;
+          int minY = Integer.MAX_VALUE;
           for (final var o : canvas.getSelection().getSelected()) {
             for (final var handle : o.getHandles(null)) {
               final var x = handle.getX();

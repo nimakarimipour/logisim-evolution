@@ -395,8 +395,8 @@ public class Netlist {
     netlistHasSinksWithoutSource();
     /* Check for unconnected input pins on components and generate warnings */
     for (final var comp : myComponents) {
-      var openInputs = false;
-      for (var j = 0; j < comp.nrOfEnds(); j++) {
+      boolean openInputs = false;
+      for (int j = 0; j < comp.nrOfEnds(); j++) {
         if (comp.isEndInput(j) && !comp.isEndConnected(j)) openInputs = true;
       }
       if (openInputs && !AppPreferences.SupressOpenPinWarnings.get()) {
@@ -412,8 +412,8 @@ public class Netlist {
     }
     /* Check for unconnected input pins on subcircuits and generate warnings */
     for (final var comp : mySubCircuits) {
-      var openInputs = false;
-      for (var j = 0; j < comp.nrOfEnds(); j++) {
+      boolean openInputs = false;
+      for (int j = 0; j < comp.nrOfEnds(); j++) {
         if (comp.isEndInput(j) && !comp.isEndConnected(j)) openInputs = true;
       }
       if (openInputs && !AppPreferences.SupressOpenPinWarnings.get()) {
@@ -429,8 +429,8 @@ public class Netlist {
     }
     /* Check for unconnected input pins in my circuit and generate warnings */
     for (final var comp : myInputPorts) {
-      var openInputs = false;
-      for (var j = 0; j < comp.nrOfEnds(); j++) {
+      boolean openInputs = false;
+      for (int j = 0; j < comp.nrOfEnds(); j++) {
         if (!comp.isEndConnected(j)) openInputs = true;
       }
       if (openInputs && !AppPreferences.SupressOpenPinWarnings.get()) {
@@ -446,8 +446,8 @@ public class Netlist {
     }
     /* Check for unconnected output pins in my circuit and generate warnings */
     for (final var comp : myOutputPorts) {
-      var openOutputs = false;
-      for (var j = 0; j < comp.nrOfEnds(); j++) {
+      boolean openOutputs = false;
+      for (int j = 0; j < comp.nrOfEnds(); j++) {
         if (!comp.isEndConnected(j)) openOutputs = true;
       }
       if (openOutputs && !AppPreferences.SupressOpenPinWarnings.get()) {
@@ -469,7 +469,7 @@ public class Netlist {
         return drcStatus;
       }
       constructHierarchyTree(null, new ArrayList<>(), 0, 0, 0);
-      var ports =
+      int ports =
           getNumberOfInputPorts()
               + numberOfOutputPorts()
               + localNrOfInportBubbles
@@ -549,12 +549,12 @@ public class Netlist {
 
   private boolean generateNetlist() {
     final var drc = new ArrayList<SimpleDrcContainer>();
-    var errors = false;
+    boolean errors = false;
     circuitName = myCircuit.getName();
     final var progress = Reporter.report.getProgressBar();
-    var curMax = 0;
-    var curVal = 0;
-    var curStr = "";
+    int curMax = 0;
+    int curVal = 0;
+    java.lang.String curStr = "";
     if (progress != null) {
       curMax = progress.getMaximum();
       curVal = progress.getValue();
@@ -595,7 +595,7 @@ public class Netlist {
 
     for (final var comp : components) {
       // We do not process the splitter and tunnel, they are processed later on
-      var ignore = false;
+      boolean ignore = false;
 
       // In this case, the probe should not be synthetised:
       // We could set the Probe as non-HDL element. But If we set the Probe
@@ -662,7 +662,7 @@ public class Netlist {
         final var loc = end.getLocation();
         if (points.containsKey(loc)) {
           /* Found a connection already used */
-          var newNet = true;
+          boolean newNet = true;
           for (final var net : myNets) {
             if (net.contains(loc)) newNet = false;
           }
@@ -692,7 +692,7 @@ public class Netlist {
      * Here we are going to process the tunnels and possible merging of the
      * tunneled nets
      */
-    var areTunnelsPresent = false;
+    boolean areTunnelsPresent = false;
     for (final var comp : tunnelList) {
       final var ends = comp.getEnds();
       for (final var end : ends) {
@@ -711,7 +711,7 @@ public class Netlist {
       while (netIterator.hasNext()) {
         final var thisNet = netIterator.next();
         if (thisNet.hasTunnel() && (myNets.indexOf(thisNet) < (myNets.size() - 1))) {
-          var merged = false;
+          boolean merged = false;
           final var searchIterator = myNets.listIterator(myNets.indexOf(thisNet) + 1);
           while (searchIterator.hasNext() && !merged) {
             final var searchNet = searchIterator.next();
@@ -748,13 +748,13 @@ public class Netlist {
     while (mySplitIter.hasNext()) {
       final var thisSplitter = mySplitIter.next();
       if (mySplitters.indexOf(thisSplitter) < (mySplitters.size() - 1)) {
-        var dupeFound = false;
+        boolean dupeFound = false;
         final var searchIter = mySplitters.listIterator(mySplitters.indexOf(thisSplitter) + 1);
         while (searchIter.hasNext() && !dupeFound) {
           final var SearchSplitter = searchIter.next();
           if (SearchSplitter.getLocation().equals(thisSplitter.getLocation())) {
             dupeFound = true;
-            for (var i = 0; i < SearchSplitter.getEnds().size(); i++) {
+            for (int i = 0; i < SearchSplitter.getEnds().size(); i++) {
               if (!SearchSplitter.getEnd(i)
                   .getLocation()
                   .equals(thisSplitter.getEnd(i).getLocation())) dupeFound = false;
@@ -808,12 +808,12 @@ public class Netlist {
     errors = false;
     while (mySplitIter.hasNext()) {
       final var mySplitter = mySplitIter.next();
-      var busWidth = mySplitter.getEnd(0).getWidth().getWidth();
+      int busWidth = mySplitter.getEnd(0).getWidth().getWidth();
       final var myEnds = mySplitter.getEnds();
-      var maxFanoutWidth = 0;
-      var index = -1;
-      for (var i = 1; i < myEnds.size(); i++) {
-        var width = mySplitter.getEnd(i).getWidth().getWidth();
+      int maxFanoutWidth = 0;
+      int index = -1;
+      for (int i = 1; i < myEnds.size(); i++) {
+        int width = mySplitter.getEnd(i).getWidth().getWidth();
         if (width > maxFanoutWidth) {
           maxFanoutWidth = width;
           index = i;
@@ -825,7 +825,7 @@ public class Netlist {
         Net connectedNet = null;
         final var busLoc = mySplitter.getEnd(0).getLocation();
         final var connectedLoc = mySplitter.getEnd(index).getLocation();
-        var issueWarning = false;
+        boolean issueWarning = false;
         /* here we search for the nets */
         for (final var currentNet : myNets) {
           if (currentNet.contains(busLoc)) {
@@ -897,9 +897,9 @@ public class Netlist {
       // Currently by definition end(0) is the combined end of the splitter
       final var ends = comp.getEnds();
       final var combinedEnd = ends.get(0);
-      var rootNet = -1;
+      int rootNet = -1;
       /* We search for the root net in the list of nets */
-      for (var i = 0; i < myNets.size() && rootNet < 0; i++) {
+      for (int i = 0; i < myNets.size() && rootNet < 0; i++) {
         if (myNets.get(i).contains(combinedEnd.getLocation())) {
           rootNet = i;
           // FIXME: shouldn't we `break` once we found it?
@@ -916,22 +916,22 @@ public class Netlist {
       // Now we process all the other ends to find the child busses/nets
       // of this root bus
       final var connections = new ArrayList<Integer>();
-      for (var i = 1; i < ends.size(); i++) {
+      for (int i = 1; i < ends.size(); i++) {
         final var thisEnd = ends.get(i);
         /* Find the connected net */
-        var connectedNet = -1;
-        for (var j = 0; j < myNets.size() && connectedNet < 1; j++) {
+        int connectedNet = -1;
+        for (int j = 0; j < myNets.size() && connectedNet < 1; j++) {
           if (myNets.get(j).contains(thisEnd.getLocation())) {
             connectedNet = j;
           }
         }
         connections.add(connectedNet);
       }
-      var unconnectedEnds = false;
-      var connectedUnknownEnds = false;
+      boolean unconnectedEnds = false;
+      boolean connectedUnknownEnds = false;
       final var sattrs = (SplitterAttributes) comp.getAttributeSet();
-      for (var i = 1; i < ends.size(); i++) {
-        var connectedNet = connections.get(i - 1);
+      for (int i = 1; i < ends.size(); i++) {
+        java.lang.Integer connectedNet = connections.get(i - 1);
         if (connectedNet >= 0) {
           /* Has this end a connection to the root bus? */
           connectedUnknownEnds |= sattrs.isNoConnect(i);
@@ -1022,15 +1022,15 @@ public class Netlist {
     for (final var thisNet : myNets) {
       if (thisNet.isForcedRootNet()) {
         /* Cycle through all the bits of this net */
-        for (var bit = 0; bit < thisNet.getBitWidth(); bit++) {
+        for (int bit = 0; bit < thisNet.getBitWidth(); bit++) {
           for (final var comp : mySplitters) {
             // Currently by definition end(0) is the combined end of the splitter
             final var ends = comp.getEnds();
             final var combinedEnd = ends.get(0);
-            var connectedBus = -1;
+            int connectedBus = -1;
             final var sattrs = (SplitterAttributes) comp.getAttributeSet();
             /* We search for the root net in the list of nets */
-            for (var i = 0; i < myNets.size() && connectedBus < 0; i++) {
+            for (int i = 0; i < myNets.size() && connectedBus < 0; i++) {
               if (myNets.get(i).contains(combinedEnd.getLocation())) connectedBus = i;
             }
             if (connectedBus < 0) {
@@ -1057,14 +1057,14 @@ public class Netlist {
                 }
                 byte connectedBusIndex = indexBits.get(bit);
                 // Figure out the rootbusid and rootbusindex
-                var rootBus = myNets.get(connectedBus);
+                com.cburch.logisim.fpga.designrulecheck.Net rootBus = myNets.get(connectedBus);
                 while (!rootBus.isRootNet()) {
                   connectedBusIndex = rootBus.getBit(connectedBusIndex);
                   rootBus = rootBus.getParent();
                 }
                 final var solderPoint = new ConnectionPoint(comp);
                 solderPoint.setParentNet(rootBus, connectedBusIndex);
-                var isSink = true;
+                boolean isSink = true;
                 if (!thisNet.hasBitSource(bit)) {
                   if (hasHiddenSource(thisNet, (byte) bit, rootBus, connectedBusIndex, mySplitters,
                       new HashSet<>(), comp)) {
@@ -1125,7 +1125,7 @@ public class Netlist {
   public int getEndIndex(netlistComponent comp, String pinLabel, boolean isOutputPort) {
     final var label = CorrectLabel.getCorrectLabel(pinLabel);
     final var subFactory = (SubcircuitFactory) comp.getComponent().getFactory();
-    for (var end = 0; end < comp.nrOfEnds(); end++) {
+    for (int end = 0; end < comp.nrOfEnds(); end++) {
       if ((comp.getEnd(end).isOutputEnd() == isOutputPort)
           && (comp.getEnd(end).get((byte) 0).getChildsPortIndex() == subFactory.getSubcircuit().getNetList().getPortInfo(label))) {
         return end;
@@ -1159,7 +1159,7 @@ public class Netlist {
             final var splitterEnd = busBitConnection[bitIndex];
             /* Find the corresponding Net index */
             Byte netIndex = 0;
-            for (var index = 0; index < bitIndex; index++) {
+            for (int index = 0; index < bitIndex; index++) {
               if (busBitConnection[index] == splitterEnd) netIndex++;
             }
             // Find the connected Net
@@ -1255,7 +1255,7 @@ public class Netlist {
   private void getNet(Wire wire, Net thisNet) {
     final var myIterator = wires.iterator();
     final var matchedWires = new ArrayList<Wire>();
-    var compWire = wire;
+    com.cburch.logisim.circuit.Wire compWire = wire;
     while (myIterator.hasNext()) {
       final var thisWire = myIterator.next();
       if (compWire == null) {
@@ -1281,7 +1281,7 @@ public class Netlist {
       final var circuitLabel = CorrectLabel.getCorrectLabel(search.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
       if (circuitLabel.equals(label)) {
         // Found the component, let's search the ends
-        for (var i = 0; i < search.nrOfEnds(); i++) {
+        for (int i = 0; i < search.nrOfEnds(); i++) {
           final var thisEnd = search.getEnd(i);
           if (thisEnd.isOutputEnd() && (bitindex < thisEnd.getNrOfBits())) {
             if (thisEnd.get(bitindex).getChildsPortIndex() == PortIndex)
@@ -1298,7 +1298,7 @@ public class Netlist {
       final var circuitLabel = CorrectLabel.getCorrectLabel(search.getComponent().getAttributeSet().getValue(StdAttr.LABEL));
       if (circuitLabel.equals(label)) {
         // Found the component, let's search the ends.
-        for (var i = 0; i < search.nrOfEnds(); i++) {
+        for (int i = 0; i < search.nrOfEnds(); i++) {
           final var thisEnd = search.getEnd(i);
           if (!thisEnd.isOutputEnd() && (bitIndex < thisEnd.getNrOfBits())) {
             if (thisEnd.get(bitIndex).getChildsPortIndex() == portIndex)
@@ -1338,7 +1338,7 @@ public class Netlist {
   private Net getRootNet(Net child) {
     if (child == null) return null;
     if (child.isRootNet()) return child;
-    var rootNet = child.getParent();
+    com.cburch.logisim.fpga.designrulecheck.Net rootNet = child.getParent();
     while (!rootNet.isRootNet()) rootNet = rootNet.getParent();
     return rootNet;
   }
@@ -1346,8 +1346,8 @@ public class Netlist {
   private byte getRootNetIndex(Net child, byte bitIndex) {
     if ((child == null) || ((bitIndex < 0) || (bitIndex > child.getBitWidth()))) return -1;
     if (child.isRootNet()) return bitIndex;
-    var rootNet = child.getParent();
-    var rootIndex = child.getBit(bitIndex);
+    com.cburch.logisim.fpga.designrulecheck.Net rootNet = child.getParent();
+    byte rootIndex = child.getBit(bitIndex);
     while (!rootNet.isRootNet()) {
       rootIndex = rootNet.getBit(rootIndex);
       rootNet = rootNet.getParent();
@@ -1405,7 +1405,7 @@ public class Netlist {
     for (final var splitter : splitters) {
       if (splitter.equals(splitterToIgnore)) continue;
       final var ends = splitter.getEnds();
-      for (var end = 0; end < ends.size(); end++) {
+      for (int end = 0; end < ends.size(); end++) {
         if (thisNet.contains(ends.get(end).getLocation())) {
           /* Here we have to process the inherited bits of the parent */
           final var busBitConnection = ((Splitter) splitter).getEndpoints();
@@ -1414,7 +1414,7 @@ public class Netlist {
             final var splitterEnd = busBitConnection[bitIndex];
             /* Find the corresponding Net index */
             Byte netIndex = 0;
-            for (var index = 0; index < bitIndex; index++) {
+            for (int index = 0; index < bitIndex; index++) {
               if (busBitConnection[index] == splitterEnd) netIndex++;
             }
             /* Find the connected Net */
@@ -1467,19 +1467,19 @@ public class Netlist {
     handledNets.add(netId);
     if (combinedNet.hasBitSource(combinedBitIndex)) return true;
     /* Check if we have a connection to another splitter */
-    for (var currentSplitter : splitterList) {
+    for (com.cburch.logisim.comp.Component currentSplitter : splitterList) {
       if (currentSplitter.equals(ignoreSplitter)) continue;
       final var ends = currentSplitter.getEnds();
-      for (var end = 0; end < ends.size(); end++) {
+      for (int end = 0; end < ends.size(); end++) {
         if (combinedNet.contains(ends.get(end).getLocation())) {
           /* Here we have to process the inherited bits of the parent */
           final var busBitConnection = ((Splitter) currentSplitter).getEndpoints();
           if (end == 0) {
             // This is a main net, find the connected end.
-            var splitterEnd = busBitConnection[combinedBitIndex];
+            byte splitterEnd = busBitConnection[combinedBitIndex];
             /* Find the corresponding Net index */
             Byte netIndex = 0;
-            for (var index = 0; index < combinedBitIndex; index++) {
+            for (int index = 0; index < combinedBitIndex; index++) {
               if (busBitConnection[index] == splitterEnd) netIndex++;
             }
             // Find the connected Net
@@ -1511,15 +1511,15 @@ public class Netlist {
 
   // FIXME: This method name is very unfortunate.
   public boolean isContinuesBus(netlistComponent comp, int endIndex) {
-    var continuesBus = true;
+    boolean continuesBus = true;
     if ((endIndex < 0) || (endIndex >= comp.nrOfEnds())) return true;
 
     final var connInfo = comp.getEnd(endIndex);
     final var nrOfBits = connInfo.getNrOfBits();
     if (nrOfBits == 1) return true;
     final var connectedNet = connInfo.get((byte) 0).getParentNet();
-    var connectedNetIndex = connInfo.get((byte) 0).getParentNetBitIndex();
-    for (var i = 1; (i < nrOfBits) && continuesBus; i++) {
+    java.lang.Byte connectedNetIndex = connInfo.get((byte) 0).getParentNetBitIndex();
+    for (int i = 1; (i < nrOfBits) && continuesBus; i++) {
       if (connectedNet != connInfo.get((byte) i).getParentNet())
         continuesBus = false; // This bit is connected to another bus
       if ((connectedNetIndex + 1) != connInfo.get((byte) i).getParentNetBitIndex()) {
@@ -1600,7 +1600,7 @@ public class Netlist {
   }
 
   public boolean netlistHasShortCircuits() {
-    var ret = false;
+    boolean ret = false;
     for (final var net : myNets) {
       if (net.isRootNet()) {
         if (net.hasShortCircuit()) {
@@ -1618,7 +1618,7 @@ public class Netlist {
           final var sourceNets = net.getSourceNets(0);
           final var sourceConnections = new HashMap<Component, Integer>();
           final var segments = new HashSet<>(net.getWires());
-          var foundShortCrcuit = false;
+          boolean foundShortCrcuit = false;
           final var error = new SimpleDrcContainer(myCircuit, S.get("NetList_ShortCircuit"), SimpleDrcContainer.LEVEL_FATAL, SimpleDrcContainer.MARK_WIRE | SimpleDrcContainer.MARK_INSTANCE);
           for (ConnectionPoint sourceNet : sourceNets) {
             final var connectedNet = sourceNet.getParentNet();
@@ -1655,9 +1655,9 @@ public class Netlist {
     /* Second pass: we iterate along all the sources */
     for (final var thisNet : myNets) {
       if (thisNet.isRootNet()) {
-        for (var i = 0; i < thisNet.getBitWidth(); i++) {
+        for (int i = 0; i < thisNet.getBitWidth(); i++) {
           if (thisNet.hasBitSource(i)) {
-            var hasSink = false;
+            boolean hasSink = false;
             final var sinks = thisNet.getBitSinks(i);
             hasSink |= !sinks.isEmpty();
             sinks.forEach(mySinks::remove);
@@ -1695,7 +1695,7 @@ public class Netlist {
   }
 
   public int numberOfBusses() {
-    var nrOfBusses = 0;
+    int nrOfBusses = 0;
     for (final var thisNet : myNets) {
       if (thisNet.isRootNet() && thisNet.isBus()) nrOfBusses++;
     }
@@ -1711,7 +1711,7 @@ public class Netlist {
   }
 
   public int numberOfInOutPortBits() {
-    var count = 0;
+    int count = 0;
     for (final var inp : myInOutPorts) count += inp.getEnd(0).getNrOfBits();
     return count;
   }
@@ -1725,7 +1725,7 @@ public class Netlist {
   }
 
   public int getNumberOfInputPortBits() {
-    var count = 0;
+    int count = 0;
     for (final var inPort : myInputPorts) count += inPort.getEnd(0).getNrOfBits();
     return count;
   }
@@ -1735,7 +1735,7 @@ public class Netlist {
   }
 
   public int numberOfNets() {
-    var nrOfNets = 0;
+    int nrOfNets = 0;
     for (final var thisNet : myNets) {
       if (thisNet.isRootNet() && !thisNet.isBus()) nrOfNets++;
     }
@@ -1747,7 +1747,7 @@ public class Netlist {
   }
 
   public int numberOfOutputPortBits() {
-    var count = 0;
+    int count = 0;
     for (final var outPort : myOutputPorts) count += outPort.getEnd(0).getNrOfBits();
     return count;
   }
@@ -1772,7 +1772,7 @@ public class Netlist {
               Thread.currentThread().getStackTrace()[2].getLineNumber());
           return false;
         }
-        for (var bitid = 0; bitid < thisPin.getWidth().getWidth(); bitid++) {
+        for (int bitid = 0; bitid < thisPin.getWidth().getWidth(); bitid++) {
           final var rootNetBitIndex = getRootNetIndex(connection, (byte) bitid);
           if (rootNetBitIndex < 0) {
             Reporter.report.addFatalErrorFmt(
@@ -1823,7 +1823,7 @@ public class Netlist {
         return false;
       }
       if (connection != null) {
-        var pinIsSink = thisPin.isInput();
+        boolean pinIsSink = thisPin.isInput();
         final var rootNet = getRootNet(connection);
         if (rootNet == null) {
           Reporter.report.addFatalErrorFmt(
@@ -2006,7 +2006,7 @@ public class Netlist {
     // their connected nets in    case it is not a clock net. The moment we call this function the
     // clock tree has been marked already!
     final var root = new ArrayList<Netlist>();
-    var suppress = AppPreferences.SupressGatedClockWarnings.getBoolean();
+    boolean suppress = AppPreferences.SupressGatedClockWarnings.getBoolean();
     root.add(this);
     final var notGatedSet = new HashMap<String, Map<netlistComponent, Circuit>>();
     final var gatedSet = new HashMap<String, Map<netlistComponent, Circuit>>();
@@ -2070,7 +2070,7 @@ public class Netlist {
     }
     // Second pass: we find all components with a clock input and see if they are
     // connected to a clock.
-    var gatedClock = false;
+    boolean gatedClock = false;
     final var pinSources = new ArrayList<SourceInfo>();
     final var pinWires = new ArrayList<Set<Wire>>();
     final var pinGatedComponents = new ArrayList<Set<netlistComponent>>();
@@ -2119,7 +2119,7 @@ public class Netlist {
       }
 
       if (gatedClock && !pinSources.isEmpty() && !AppPreferences.SupressGatedClockWarnings.getBoolean()) {
-        for (var i = 0; i < pinSources.size(); i++) {
+        for (int i = 0; i < pinSources.size(); i++) {
           Reporter.report.addSevereWarning(S.get("NetList_GatedClock"));
           Reporter.report.addWarningIncrement(S.get("NetList_TraceListBegin"));
           final var warn =
@@ -2176,14 +2176,14 @@ public class Netlist {
       List<Set<Wire>> nonPinWires,
       List<Set<netlistComponent>> nonPinGatedComponents,
       Set<netlistComponent> warnedComponents) {
-    var isGatedClock = false;
+    boolean isGatedClock = false;
     final var clockNetName = Hdl.getClockNetName(comp, clockPinIndex, this);
     if (clockNetName.isEmpty()) {
       /* we search for the source in case it is connected otherwise we ignore */
       final var connection = comp.getEnd(clockPinIndex).get((byte) 0);
       final var connectedNet = connection.getParentNet();
       final var connectedNetindex = connection.getParentNetBitIndex();
-      var hasSource = false;
+      boolean hasSource = false;
       if (connectedNet != null) {
         isGatedClock = true;
         final var segments = new HashSet<Wire>();
@@ -2236,8 +2236,8 @@ public class Netlist {
   }
 
   private int getEntryIndex(List<SourceInfo> searchList, ConnectionPoint connection, Integer index) {
-    var result = -1;
-    for (var i = 0; i < searchList.size(); i++) {
+    int result = -1;
+    for (int i = 0; i < searchList.size(); i++) {
       final var thisEntry = searchList.get(i);
       if (thisEntry.getSource().equals(connection) && thisEntry.getIndex().equals(index))
         result = i;
@@ -2251,8 +2251,8 @@ public class Netlist {
       if (hierarchyNames.isEmpty())
         /* we cannot go up at toplevel, so leave */
         return;
-      var idx = -1;
-      for (var i = 0; i < myInputPorts.size(); i++) {
+      int idx = -1;
+      for (int i = 0; i < myInputPorts.size(); i++) {
         if (myInputPorts.get(i).getComponent().equals(comp)) idx = i;
       }
       if (idx < 0) {
@@ -2427,8 +2427,8 @@ public class Netlist {
       List<Netlist> hierarchyNetlists,
       String warning) {
     if (AppPreferences.SupressGatedClockWarnings.getBoolean()) return;
-    for (var i = 0; i < sources.size(); i++) {
-      var alreadyWarned = false;
+    for (int i = 0; i < sources.size(); i++) {
+      boolean alreadyWarned = false;
       for (final var comp : components.get(i))
         alreadyWarned |= warnedComponents.contains(comp);
       if (!alreadyWarned) {

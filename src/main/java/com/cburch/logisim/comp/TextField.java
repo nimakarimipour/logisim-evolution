@@ -57,8 +57,8 @@ public class TextField {
     final var old = g.getFont();
     if (font != null) g.setFont(font);
 
-    var x = this.x;
-    var y = this.y;
+    int x = this.x;
+    int y = this.y;
     final var fm = g.getFontMetrics();
     final var width = fm.stringWidth(text);
     final var ascent = fm.getAscent();
@@ -88,8 +88,8 @@ public class TextField {
   }
 
   public Bounds getBounds(Graphics g) {
-    var x = this.x;
-    var y = this.y;
+    int x = this.x;
+    int y = this.y;
     final var fm = (font == null) ? g.getFontMetrics() : g.getFontMetrics(font);
     final var width = fm.stringWidth(text);
     final var ascent = fm.getAscent();

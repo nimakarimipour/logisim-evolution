@@ -106,7 +106,7 @@ public class ShiftRegister extends InstanceFactory {
         ps = new Port[6 + 2 * len];
         ps[LD] = new Port(10, -20, Port.INPUT, 1);
         ps[LD].setToolTip(S.getter("shiftRegLoadTip"));
-        for (var i = 0; i < len; i++) {
+        for (int i = 0; i < len; i++) {
           ps[6 + 2 * i] = new Port(20 + 10 * i, -20, Port.INPUT, width);
           ps[6 + 2 * i + 1] = new Port(20 + 10 * i, 20, Port.OUTPUT, width);
         }
@@ -123,7 +123,7 @@ public class ShiftRegister extends InstanceFactory {
         ps = new Port[6 + 2 * len - 1];
         ps[LD] = new Port(0, 30, Port.INPUT, 1);
         ps[LD].setToolTip(S.getter("shiftRegLoadTip"));
-        for (var i = 0; i < len; i++) {
+        for (int i = 0; i < len; i++) {
           ps[6 + 2 * i] = new Port(0, 90 + i * 20, Port.INPUT, width);
           if (i < (len - 1))
             ps[6 + 2 * i + 1] = new Port(symbolWidth + 20, 90 + i * 20, Port.OUTPUT, width);
@@ -220,7 +220,7 @@ public class ShiftRegister extends InstanceFactory {
       int currentStage,
       Value data_value,
       boolean hasLoad) {
-    var realYpos = ypos + 70 + currentStage * 20;
+    int realYpos = ypos + 70 + currentStage * 20;
     if (currentStage > 0) realYpos += 10;
     final var realXpos = xpos + 10;
     final var dataWidth = (nrOfBits == 1) ? 2 : 5;
@@ -338,7 +338,7 @@ public class ShiftRegister extends InstanceFactory {
     final var width = state.getAttributeValue(StdAttr.WIDTH);
     final var lenObj = state.getAttributeValue(ATTR_LENGTH);
     final var length = lenObj == null ? 8 : lenObj;
-    var data = (ShiftRegisterData) state.getData();
+    com.cburch.logisim.std.memory.ShiftRegisterData data = (ShiftRegisterData) state.getData();
     if (data == null) {
       data = new ShiftRegisterData(width, length);
       state.setData(data);
@@ -413,11 +413,11 @@ public class ShiftRegister extends InstanceFactory {
     // In the case data is null we assume that the different value are null. This allow the user to
     // instantiate the shift register without simulation mode
     if (data == null) {
-      for (var stage = 0; stage < len; stage++) {
+      for (int stage = 0; stage < len; stage++) {
         drawDataBlock(painter, xpos, ypos, len, wid, stage, null, parallelObj);
       }
     } else {
-      for (var stage = 0; stage < len; stage++)
+      for (int stage = 0; stage < len; stage++)
         drawDataBlock(painter, xpos, ypos, len, wid, stage, data.get(len - stage - 1), parallelObj);
     }
   }
@@ -438,8 +438,8 @@ public class ShiftRegister extends InstanceFactory {
         if (wid <= 4) {
           final var data = getData(painter);
           final var bds = painter.getBounds();
-          var x = bds.getX() + 20;
-          var y = bds.getY();
+          int x = bds.getX() + 20;
+          int y = bds.getY();
           Object label = painter.getAttributeValue(StdAttr.LABEL);
           if (label == null || label.equals("")) {
             y += bds.getHeight() / 2;
@@ -447,7 +447,7 @@ public class ShiftRegister extends InstanceFactory {
             y += 3 * bds.getHeight() / 4;
           }
           final var g = painter.getGraphics();
-          for (var i = 0; i < len; i++) {
+          for (int i = 0; i < len; i++) {
             if (data != null && data.get(len - 1 - i) != null) {
               final var s = data.get(len - 1 - i).toHexString();
               GraphicsUtil.drawCenteredText(g, s, x, y);
@@ -466,14 +466,14 @@ public class ShiftRegister extends InstanceFactory {
           final var a = S.get("shiftRegisterLabel1");
           GraphicsUtil.drawCenteredText(g, a, x, y + h / 4);
         }
-        var b = S.get("shiftRegisterLabel2", "" + len, "" + wid);
+        java.lang.String b = S.get("shiftRegisterLabel2", "" + len, "" + wid);
         GraphicsUtil.drawCenteredText(g, b, x, y + 3 * h / 4);
       }
     }
 
     // draw input and output ports
     final var ports = painter.getInstance().getPorts().size();
-    for (var i = 0; i < ports; i++) {
+    for (int i = 0; i < ports; i++) {
       if (i != CK) painter.drawPort(i);
     }
     painter.drawClock(CK, Direction.EAST);
@@ -502,7 +502,7 @@ public class ShiftRegister extends InstanceFactory {
 
     state.setPort(OUT, data.get(0), 4);
     if (parallel) {
-      for (var i = 0; i < len - 1; i++) {
+      for (int i = 0; i < len - 1; i++) {
         state.setPort(6 + 2 * i + 1, data.get(len - 1 - i), 4);
       }
     }

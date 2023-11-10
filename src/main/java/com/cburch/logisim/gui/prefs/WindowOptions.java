@@ -153,7 +153,7 @@ class WindowOptions extends OptionsPanel {
     panel.add(new JLabel(" "));
     panel.add(new JLabel(" "));
 
-    var index = 0;
+    int index = 0;
     lookAndFeel = new JComboBox<>();
     lookAndFeel.setSize(50, 20);
 

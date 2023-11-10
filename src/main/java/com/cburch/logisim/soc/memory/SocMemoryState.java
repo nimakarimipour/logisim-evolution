@@ -143,7 +143,7 @@ public class SocMemoryState implements SocBusSlaveInterface {
         return;
       }
       addAfter.addInfo(address, wdata);
-      for (var i = addBefore.getStartAddress(); i < addBefore.getEndAddress(); i += 4) {
+      for (int i = addBefore.getStartAddress(); i < addBefore.getEndAddress(); i += 4) {
         addAfter.addInfo(i, addBefore.getValue(i));
       }
       memInfo.remove(addBefore);
@@ -215,7 +215,7 @@ public class SocMemoryState implements SocBusSlaveInterface {
   @Override
   public String getName() {
     if (attachedBus == null || attachedBus.getComponent() == null) return "BUG: Unknown";
-    var name = label;
+    java.lang.String name = label;
     if (StringUtil.isNullOrEmpty(name)) {
       final var loc = attachedBus.getComponent().getLocation();
       name = String.format("%s@%d,%d", attachedBus.getComponent().getFactory().getDisplayName(), loc.getX(), loc.getY());
@@ -295,10 +295,10 @@ public class SocMemoryState implements SocBusSlaveInterface {
   private void performWriteAction(int address, int data, int type) {
     int wData = data;
     if (type != SocBusTransaction.WORD_ACCESS) {
-      var oldData = performReadAction(address, SocBusTransaction.WORD_ACCESS);
+      int oldData = performReadAction(address, SocBusTransaction.WORD_ACCESS);
       if (type == SocBusTransaction.HALF_WORD_ACCESS) {
         final var bit1 = (address >> 1) & 1;
-        var mdata = data & 0xFFFF;
+        int mdata = data & 0xFFFF;
         if (bit1 == 1) {
           oldData &= 0xFFFF;
           mdata <<= 16;

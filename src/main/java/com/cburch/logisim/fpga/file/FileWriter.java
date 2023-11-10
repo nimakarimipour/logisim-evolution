@@ -136,7 +136,7 @@ public class FileWriter {
   public static boolean writeContents(File outfile, List<String> contents) {
     try {
       final var output = new FileOutputStream(outfile);
-      for (var thisLine : contents) {
+      for (java.lang.String thisLine : contents) {
         if (!thisLine.isEmpty()) {
           output.write(thisLine.getBytes());
         }

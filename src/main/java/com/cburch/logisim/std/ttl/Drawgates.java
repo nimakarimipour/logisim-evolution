@@ -57,7 +57,7 @@ public class Drawgates {
       boolean up,
       boolean rightToLeft,
       int height) {
-    var xPoints =
+    int[] xPoints =
         (!rightToLeft)
             ? new int[] {
               rightPinX, rightPinX, rightPinX - 10, rightPinX - 10, inputX
@@ -66,7 +66,7 @@ public class Drawgates {
               rightPinX - 20, rightPinX - 20, rightPinX - 10, rightPinX - 10, inputX
             }; // leftmost input if !rightToLeft
 
-    var yPoints =
+    int[] yPoints =
         (!up)
             ? new int[] {
               y + height - AbstractTtlGate.PIN_HEIGHT,
@@ -169,8 +169,8 @@ public class Drawgates {
         y + AbstractTtlGate.PIN_HEIGHT + 10,
         portNames.length * 10,
         height - 2 * AbstractTtlGate.PIN_HEIGHT - 20);
-    for (var i = 0; i < 2; i++) {
-      for (var j = 0; j < portsPerRow; j++) {
+    for (int i = 0; i < 2; i++) {
+      for (int j = 0; j < portsPerRow; j++) {
         GraphicsUtil.drawCenteredText(
             gfx,
             portNames[j + (i * portsPerRow)],

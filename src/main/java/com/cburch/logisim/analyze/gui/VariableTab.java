@@ -110,7 +110,7 @@ public class VariableTab extends AnalyzerTab {
 
           @Override
           public void actionPerformed(ActionEvent e) {
-            var idx = table.getSelectedRow();
+            int idx = table.getSelectedRow();
             if (idx < 0 || idx >= data.vars.size()) return;
             data.remove(data.vars.get(idx));
             if (idx >= data.vars.size()) idx = data.vars.size() - 1;
@@ -311,7 +311,7 @@ public class VariableTab extends AnalyzerTab {
 
   public static int checkindex(String index) {
     final var length = index.length();
-    var pos = 0;
+    int pos = 0;
     if (length < 2) return 0;
     if (index.charAt(pos++) != '[') return NO_START_PAR;
     while ((pos < length) && ("0123456789".indexOf(index.charAt(pos)) >= 0)) pos++;
@@ -338,7 +338,7 @@ public class VariableTab extends AnalyzerTab {
   }
 
   private int validateInput(VariableList data, Var oldVar, String text, int w) {
-    var err = OK;
+    int err = OK;
     if (text.length() == 0) {
       err = EMPTY;
     } else if (!Character.isJavaIdentifierStart(text.charAt(0))) {
@@ -596,8 +596,8 @@ public class VariableTab extends AnalyzerTab {
       final var oldVar = editing;
       editing = null;
       final var text = field.getText().trim();
-      var name = "";
-      var index = "";
+      java.lang.String name = "";
+      java.lang.String index = "";
       int w;
       if (text.contains("[")) {
         int idx = text.indexOf('[');
@@ -695,7 +695,7 @@ public class VariableTab extends AnalyzerTab {
 
       final var newVar = parse(s);
       if (newVar == null) return false;
-      var newIdx = data.vars.size();
+      int newIdx = data.vars.size();
       if (info.isDrop()) {
         try {
           JTable.DropLocation dl = (JTable.DropLocation) info.getDropLocation();

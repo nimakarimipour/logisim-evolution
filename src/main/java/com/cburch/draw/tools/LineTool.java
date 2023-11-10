@@ -97,8 +97,8 @@ public class LineTool extends AbstractTool {
 
   @Override
   public void mousePressed(Canvas canvas, MouseEvent e) {
-    var x = e.getX();
-    var y = e.getY();
+    int x = e.getX();
+    int y = e.getY();
     final var mods = e.getModifiersEx();
     if ((mods & InputEvent.CTRL_DOWN_MASK) != 0) {
       x = canvas.snapX(x);
@@ -147,12 +147,12 @@ public class LineTool extends AbstractTool {
   private void updateMouse(Canvas canvas, int mx, int my, int mods) {
     if (active) {
       final var shift = (mods & MouseEvent.SHIFT_DOWN_MASK) != 0;
-      var newEnd =
+      com.cburch.logisim.data.Location newEnd =
           (shift) ? LineUtil.snapTo8Cardinals(mouseStart, mx, my) : Location.create(mx, my, false);
 
       if ((mods & InputEvent.CTRL_DOWN_MASK) != 0) {
-        var x = newEnd.getX();
-        var y = newEnd.getY();
+        int x = newEnd.getX();
+        int y = newEnd.getY();
         x = canvas.snapX(x);
         y = canvas.snapY(y);
         newEnd = Location.create(x, y, false);

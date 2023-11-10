@@ -107,8 +107,8 @@ public class Line extends AbstractCanvasObject {
   @Override
   public Location getRandomPoint(Bounds bds, Random rand) {
     final var u = rand.nextDouble();
-    var x = (int) Math.round(x0 + u * (x1 - x0));
-    var y = (int) Math.round(y0 + u * (y1 - y0));
+    int x = (int) Math.round(x0 + u * (x1 - x0));
+    int y = (int) Math.round(y0 + u * (y1 - y0));
     final var w = strokeWidth;
     if (w > 1) {
       x += (rand.nextInt(w) - w / 2);
@@ -143,7 +143,7 @@ public class Line extends AbstractCanvasObject {
 
   @Override
   public int matchesHashCode() {
-    var ret = x0 * 31 + y0;
+    int ret = x0 * 31 + y0;
     ret = ret * 31 * 31 + x1 * 31 + y1;
     ret = ret * 31 + strokeWidth;
     ret = ret * 31 + strokeColor.hashCode();
@@ -173,10 +173,10 @@ public class Line extends AbstractCanvasObject {
   @Override
   public void paint(Graphics g, HandleGesture gesture) {
     if (setForStroke(g)) {
-      var x0 = this.x0;
-      var y0 = this.y0;
-      var x1 = this.x1;
-      var y1 = this.y1;
+      int x0 = this.x0;
+      int y0 = this.y0;
+      int x1 = this.x1;
+      int y1 = this.y1;
       final var h = gesture.getHandle();
       if (h.isAt(x0, y0)) {
         x0 += gesture.getDeltaX();

@@ -47,9 +47,9 @@ public class AbstractConstantHdlGeneratorFactory extends InlinedHdlGeneratorFact
           contents.add("");
         } else {
           /* we have to enumerate all bits */
-          var mask = 1L;
-          var constValue = Hdl.zeroBit();
-          for (var bit = 0; bit < nrOfBits; bit++) {
+          long mask = 1L;
+          java.lang.String constValue = Hdl.zeroBit();
+          for (int bit = 0; bit < nrOfBits; bit++) {
             if ((mask & constantValue) != 0) constValue = Hdl.oneBit();
             else constValue = Hdl.zeroBit();
             mask <<= 1;

@@ -417,7 +417,7 @@ public class PioState implements SocBusSlaveInterface {
 
   @Override
   public String getName() {
-    var name = "BUG: Unknown";
+    java.lang.String name = "BUG: Unknown";
     if (attachedBus != null && attachedBus.getComponent() != null) {
       name = label;
       if (StringUtil.isNullOrEmpty(name)) {

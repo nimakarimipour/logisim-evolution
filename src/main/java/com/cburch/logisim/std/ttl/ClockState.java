@@ -52,7 +52,7 @@ class ClockState implements Cloneable {
   }
 
   public boolean updateClock(Value newClock, int which) {
-    var values = lastClock.getAll();
+    com.cburch.logisim.data.Value[] values = lastClock.getAll();
     if (values.length <= which) {
       final var nvalue = (Value.createKnown(BitWidth.create(which + 1), 0)).getAll();
       System.arraycopy(values, 0, nvalue, 0, values.length);

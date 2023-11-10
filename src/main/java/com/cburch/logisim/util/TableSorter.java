@@ -152,7 +152,7 @@ public class TableSorter extends AbstractTableModel {
       final var viewColumn = columnModel.getColumnIndexAtX(e.getX());
       final var column = columnModel.getColumn(viewColumn).getModelIndex();
       if (column != -1) {
-        var status = getSortingStatus(column);
+        int status = getSortingStatus(column);
         if (!e.isControlDown()) {
           cancelSorting();
         }
@@ -183,7 +183,7 @@ public class TableSorter extends AbstractTableModel {
         Object o1 = tableModel.getValueAt(modelIndex, column);
         Object o2 = tableModel.getValueAt(o.modelIndex, column);
 
-        var comparison = 0;
+        int comparison = 0;
         // Define null less than everything, except null.
         if (o1 == null && o2 == null) {
           comparison = 0;
@@ -416,7 +416,7 @@ public class TableSorter extends AbstractTableModel {
     if (modelToView == null) {
       final var n = getViewToModel().length;
       modelToView = new int[n];
-      for (var i = 0; i < n; i++) {
+      for (int i = 0; i < n; i++) {
         modelToView[modelIndex(i)] = i;
       }
     }
@@ -451,7 +451,7 @@ public class TableSorter extends AbstractTableModel {
     if (viewToModel == null) {
       final var tableModelRowCount = tableModel.getRowCount();
       viewToModel = new Row[tableModelRowCount];
-      for (var row = 0; row < tableModelRowCount; row++) {
+      for (int row = 0; row < tableModelRowCount; row++) {
         viewToModel[row] = new Row(row);
       }
 

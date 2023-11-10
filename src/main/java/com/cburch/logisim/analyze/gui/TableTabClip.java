@@ -39,12 +39,12 @@ class TableTabClip implements ClipboardOwner {
         return this;
       } else if (flavor == DataFlavor.stringFlavor) {
         final var buf = new StringBuilder();
-        for (var i = 0; i < headers.length; i++) {
+        for (int i = 0; i < headers.length; i++) {
           buf.append(headers[i]);
           buf.append(i == headers.length - 1 ? '\n' : '\t');
         }
         for (final var content : contents) {
-          for (var j = 0; j < content.length; j++) {
+          for (int j = 0; j < content.length; j++) {
             buf.append(content[j]);
             buf.append(j == content.length - 1 ? '\n' : '\t');
           }
@@ -86,7 +86,7 @@ class TableTabClip implements ClipboardOwner {
     final var t = table.getTruthTable();
     final var inputs = t.getInputColumnCount();
     final var header = new String[s.width];
-    for (var c = s.x; c < s.x + s.width; c++) {
+    for (int c = s.x; c < s.x + s.width; c++) {
       if (c < inputs) {
         header[c - s.x] = t.getInputHeader(c);
       } else {
@@ -94,8 +94,8 @@ class TableTabClip implements ClipboardOwner {
       }
     }
     final var contents = new String[s.height][s.width];
-    for (var r = s.y; r < s.y + s.height; r++) {
-      for (var c = s.x; c < s.x + s.width; c++) {
+    for (int r = s.y; r < s.y + s.height; r++) {
+      for (int c = s.x; c < s.x + s.width; c++) {
         if (c < inputs) {
           contents[r - s.y][c - s.x] = t.getInputEntry(r, c).getDescription();
         } else {
@@ -136,7 +136,7 @@ class TableTabClip implements ClipboardOwner {
         entries = new Entry[data.contents.length][];
         for (int i = 0; i < entries.length; i++) {
           final var row = new Entry[data.contents[i].length];
-          for (var j = 0; j < row.length; j++) {
+          for (int j = 0; j < row.length; j++) {
             row[j] = Entry.parse(data.contents[i][j]);
           }
           entries[i] = row;
@@ -151,19 +151,19 @@ class TableTabClip implements ClipboardOwner {
         String first;
         if (!lines.hasMoreTokens()) return;
         first = lines.nextToken();
-        var toks = new StringTokenizer(first, "\t,");
+        java.util.StringTokenizer toks = new StringTokenizer(first, "\t,");
         final var headers = new String[toks.countTokens()];
         final var firstEntries = new Entry[headers.length];
-        var allParsed = true;
+        boolean allParsed = true;
         for (int i = 0; toks.hasMoreTokens(); i++) {
           headers[i] = toks.nextToken();
           firstEntries[i] = Entry.parse(headers[i]);
           allParsed = allParsed && firstEntries[i] != null;
         }
-        var rows = lines.countTokens();
+        int rows = lines.countTokens();
         if (allParsed) rows++;
         entries = new Entry[rows][];
-        var cur = 0;
+        int cur = 0;
         if (allParsed) {
           entries[0] = firstEntries;
           cur++;
@@ -171,7 +171,7 @@ class TableTabClip implements ClipboardOwner {
         while (lines.hasMoreTokens()) {
           toks = new StringTokenizer(lines.nextToken(), "\t");
           final var ents = new Entry[toks.countTokens()];
-          for (var i = 0; toks.hasMoreTokens(); i++) {
+          for (int i = 0; toks.hasMoreTokens(); i++) {
             ents[i] = Entry.parse(toks.nextToken());
           }
           entries[cur] = ents;
@@ -213,8 +213,8 @@ class TableTabClip implements ClipboardOwner {
         return;
       }
     }
-    for (var r = 0; r < entries.length; r++) {
-      for (var c = 0; c < entries[0].length; c++) {
+    for (int r = 0; r < entries.length; r++) {
+      for (int c = 0; c < entries[0].length; c++) {
         if (s.x + c >= inputs) {
           model.setVisibleOutputEntry(s.y + r, s.x + c - inputs, entries[r][c]);
         }

@@ -79,7 +79,7 @@ class OpenRecent extends JMenu implements PropertyChangeListener {
   }
 
   private void renewItems() {
-    for (var index = recentItems.size() - 1; index >= 0; index--) {
+    for (int index = recentItems.size() - 1; index >= 0; index--) {
       remove(recentItems.get(index));
     }
     recentItems.clear();

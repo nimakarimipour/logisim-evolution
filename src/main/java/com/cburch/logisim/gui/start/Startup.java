@@ -342,8 +342,8 @@ public class Startup implements AWTEventListener {
     }
 
     // see whether we'll be using any graphics
-    var isTty = false;
-    var shallClearPreferences = false;
+    boolean isTty = false;
+    boolean shallClearPreferences = false;
     if (cmd.hasOption(ARG_TTY_SHORT) || cmd.hasOption(ARG_TEST_FGPA_SHORT) || cmd.hasOption(ARG_TEST_FGPA_LONG)) {
       isTty = true;
       Main.headless = true;
@@ -540,8 +540,8 @@ public class Startup implements AWTEventListener {
 
     final var p = wxh[1].indexOf('+', 1);
     String loc = null;
-    var x = 0;
-    var y = 0;
+    int x = 0;
+    int y = 0;
     if (p >= 0) {
       loc = wxh[1].substring(p + 1);
       wxh[1] = wxh[1].substring(0, p);
@@ -559,8 +559,8 @@ public class Startup implements AWTEventListener {
       }
     }
 
-    var w = 0;
-    var h = 0;
+    int w = 0;
+    int h = 0;
     try {
       w = Integer.parseInt(wxh[0]);
       h = Integer.parseInt(wxh[1]);
@@ -700,7 +700,7 @@ public class Startup implements AWTEventListener {
     startup.testCircuitImpName = optArgs[1];
     startup.testCircuitImpBoard = optArgs[2];
 
-    var handlerRc = RC.OK;
+    com.cburch.logisim.gui.start.Startup.RC handlerRc = RC.OK;
     if (argsCnt >= 4) {
       handlerRc = handleArgTestFpgaParseArg(startup, optArgs[3]);
       if (handlerRc == RC.QUIT) return handlerRc;
@@ -923,8 +923,8 @@ public class Startup implements AWTEventListener {
         monitor.close();
       }
     } else {
-      var numOpened = 0;
-      var first = true;
+      int numOpened = 0;
+      boolean first = true;
       Project proj;
       for (final var fileToOpen : filesToOpen) {
         try {
@@ -979,7 +979,7 @@ public class Startup implements AWTEventListener {
   }
 
   private boolean hasIcon(Component comp) {
-    var result = false;
+    boolean result = false;
     if (comp instanceof JOptionPane pane) {
       for (final var comp1 : pane.getComponents()) result |= hasIcon(comp1);
     } else if (comp instanceof JPanel panel) {

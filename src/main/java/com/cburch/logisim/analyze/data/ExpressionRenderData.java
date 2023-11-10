@@ -105,10 +105,10 @@ public class ExpressionRenderData {
       attrs.add(new ArrayList<>());
     }
     for (Range nd : attribs) {
-      var pos = 0;
+      int pos = 0;
       for (int j = 0; j < attrs.size() && pos < nd.stopIndex; j++) {
         final var line = lineText[j];
-        var nextPos = pos + line.length();
+        int nextPos = pos + line.length();
         if (nextPos > nd.startIndex) {
           Range toAdd = new Range();
           toAdd.startIndex = Math.max(pos, nd.startIndex) - pos;
@@ -126,12 +126,12 @@ public class ExpressionRenderData {
   }
 
   private void computeLineText() {
-    var text = expr.toString(notation, true);
+    java.lang.String text = expr.toString(notation, true);
     final var badness = expr.getBadness();
     final var bestBreakPositions = new ArrayList<Integer>();
     final var secondBestBreakPositions = new ArrayList<Integer>();
-    var minimal1 = Integer.MAX_VALUE;
-    var minimal2 = Integer.MAX_VALUE;
+    int minimal1 = Integer.MAX_VALUE;
+    int minimal2 = Integer.MAX_VALUE;
     lineStyled = null;
     for (int i = 0; i < text.length(); i++) {
       if (badness[i] < minimal1) {
@@ -159,8 +159,8 @@ public class ExpressionRenderData {
     g.setFont(expressionBaseFont);
     final var ctx = g.getFontRenderContext();
     /* first pass, we are going to break on the best positions if required */
-    var i = bestBreakPositions.size() - 1;
-    var breakPosition = 0;
+    int i = bestBreakPositions.size() - 1;
+    int breakPosition = 0;
     while (i >= 0 && text.length() > 0 && (bestBreakPositions.get(i) - breakPosition) > 0) {
       if (getWidth(
               ctx, text, bestBreakPositions.get(i) - breakPosition, expr.subscripts, expr.marks)
@@ -184,7 +184,7 @@ public class ExpressionRenderData {
               <= parentWidth
           || (i == 0)
           || (secondBestBreakPositions.get(i - 1) - breakPosition <= 0)) {
-        var addedLine = text.substring(0, secondBestBreakPositions.get(i) - breakPosition);
+        java.lang.String addedLine = text.substring(0, secondBestBreakPositions.get(i) - breakPosition);
         lines.add(addedLine);
         text = text.substring(secondBestBreakPositions.get(i) - breakPosition);
         breakPosition += addedLine.length();
@@ -199,7 +199,7 @@ public class ExpressionRenderData {
 
   private void computeLineY() {
     lineY = new int[lineNots.size()];
-    var curY = 0;
+    int curY = 0;
     for (int i = 0; i < lineY.length; i++) {
       int maxDepth = -1;
       final var nots = lineNots.get(i);
@@ -218,8 +218,8 @@ public class ExpressionRenderData {
       final var stack = new int[n];
       for (int i = 0; i < nots.size(); i++) {
         final var nd = nots.get(i);
-        var depth = 0;
-        var top = 0;
+        int depth = 0;
+        int top = 0;
         stack[0] = nd.stopIndex;
         for (int j = i + 1; j < nots.size(); j++) {
           final var nd2 = nots.get(j);
@@ -244,7 +244,7 @@ public class ExpressionRenderData {
      * of this substring (see remark in getWidth(...) below. As we have a mono spaced
      * font the size of all chars is equal.
      */
-    var sub = s.substring(0, end);
+    java.lang.String sub = s.substring(0, end);
     if (replaceSpaces) {
       sub = sub.replace(" ", "_");
     }
@@ -292,7 +292,7 @@ public class ExpressionRenderData {
         lineStyled[i] = style(line, line.length(), subs, marks, false);
       }
     }
-    var width = 0;
+    int width = 0;
     for (AttributedString attributedString : lineStyled) {
       final var test = new TextLayout(attributedString.getIterator(), ctx);
       if (test.getBounds().getWidth() > width) width = (int) test.getBounds().getWidth();
@@ -344,7 +344,7 @@ public class ExpressionRenderData {
       }
     }
     final var col = g.getColor();
-    var curCol = col;
+    java.awt.Color curCol = col;
     for (int i = 0; i < lineStyled.length; i++) {
       final var as = lineStyled[i];
       final var nots = lineNots.get(i);

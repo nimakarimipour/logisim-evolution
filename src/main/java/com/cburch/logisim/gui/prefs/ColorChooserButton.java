@@ -58,7 +58,7 @@ public class ColorChooserButton extends JButton implements PropertyChangeListene
     }
 
     public void update(Frame frame) {
-      var col = new Color(myMonitor.get());
+      java.awt.Color col = new Color(myMonitor.get());
       final var newCol = ColorPickerDialog.showDialog(frame, col, false);
       if (newCol == null) return;
       if (!newCol.equals(col)) {

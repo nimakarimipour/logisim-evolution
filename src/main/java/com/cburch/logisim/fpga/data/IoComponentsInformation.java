@@ -47,8 +47,8 @@ public class IoComponentsInformation {
 
   public void clear() {
     ioComps.clear();
-    for (var x = 0; x < BoardManipulator.IMAGE_WIDTH; x++)
-      for (var y = 0; y < imageHeight; y++) lookup[x][y] = null;
+    for (int x = 0; x < BoardManipulator.IMAGE_WIDTH; x++)
+      for (int y = 0; y < imageHeight; y++) lookup[x][y] = null;
     highlighted = null;
   }
 
@@ -61,14 +61,14 @@ public class IoComponentsInformation {
   }
 
   public boolean hasOverlap(BoardRectangle rect) {
-    var overlap = false;
-    for (var io : ioComps) overlap |= io.getRectangle().overlap(rect);
+    boolean overlap = false;
+    for (com.cburch.logisim.fpga.data.FpgaIoInformationContainer io : ioComps) overlap |= io.getRectangle().overlap(rect);
     return overlap;
   }
 
   public boolean hasOverlap(BoardRectangle orig, BoardRectangle update) {
-    var overlap = false;
-    for (var io : ioComps)
+    boolean overlap = false;
+    for (com.cburch.logisim.fpga.data.FpgaIoInformationContainer io : ioComps)
       if (!io.getRectangle().equals(orig)) overlap |= io.getRectangle().overlap(update);
     return overlap;
   }
@@ -96,7 +96,7 @@ public class IoComponentsInformation {
   }
 
   public void setSelectable(MapListModel.MapInfo comp, float scale) {
-    for (var io : ioComps) {
+    for (com.cburch.logisim.fpga.data.FpgaIoInformationContainer io : ioComps) {
       if (io.setSelectable(comp)) this.fireRedraw(io.getRectangle(), scale);
     }
   }
@@ -110,9 +110,9 @@ public class IoComponentsInformation {
   public void addComponent(FpgaIoInformationContainer comp, float scale) {
     if (!ioComps.contains(comp)) {
       ioComps.add(comp);
-      var rect = comp.getRectangle();
-      for (var x = rect.getXpos(); x < rect.getXpos() + rect.getWidth(); x++)
-        for (var y = rect.getYpos(); y < rect.getYpos() + rect.getHeight(); y++)
+      com.cburch.logisim.fpga.data.BoardRectangle rect = comp.getRectangle();
+      for (int x = rect.getXpos(); x < rect.getXpos() + rect.getWidth(); x++)
+        for (int y = rect.getYpos(); y < rect.getYpos() + rect.getHeight(); y++)
           if (x < BoardManipulator.IMAGE_WIDTH && y < imageHeight) lookup[x][y] = comp;
       if (mapMode) return;
       fireRedraw(comp.getRectangle(), scale);
@@ -123,9 +123,9 @@ public class IoComponentsInformation {
     if (ioComps.contains(comp)) {
       if (highlighted == comp) highlighted = null;
       ioComps.remove(comp);
-      var rect = comp.getRectangle();
-      for (var x = rect.getXpos(); x < rect.getXpos() + rect.getWidth(); x++)
-        for (var y = rect.getYpos(); y < rect.getYpos() + rect.getHeight(); y++)
+      com.cburch.logisim.fpga.data.BoardRectangle rect = comp.getRectangle();
+      for (int x = rect.getXpos(); x < rect.getXpos() + rect.getWidth(); x++)
+        for (int y = rect.getYpos(); y < rect.getYpos() + rect.getHeight(); y++)
           lookup[x][y] = null;
       fireRedraw(comp.getRectangle(), scale);
     }
@@ -140,13 +140,13 @@ public class IoComponentsInformation {
   }
 
   public void mouseMoved(MouseEvent e, float scale) {
-    var xpos = AppPreferences.getDownScaled(e.getX(), scale);
-    var ypos = AppPreferences.getDownScaled(e.getY(), scale);
+    int xpos = AppPreferences.getDownScaled(e.getX(), scale);
+    int ypos = AppPreferences.getDownScaled(e.getY(), scale);
     xpos = Math.max(xpos, 0);
     xpos = Math.min(xpos, BoardManipulator.IMAGE_WIDTH - 1);
     ypos = Math.max(ypos, 0);
     ypos = Math.min(ypos, imageHeight - 1);
-    var selected = lookup[xpos][ypos];
+    com.cburch.logisim.fpga.data.FpgaIoInformationContainer selected = lookup[xpos][ypos];
     if (selected == highlighted) {
       if (highlighted != null && highlighted.selectedPinChanged(xpos, ypos))
         fireRedraw(highlighted.getRectangle(), scale);
@@ -215,17 +215,17 @@ public class IoComponentsInformation {
   }
 
   public void paint(Graphics2D g, float scale) {
-    for (var c : ioComps) c.paint(g, scale);
+    for (com.cburch.logisim.fpga.data.FpgaIoInformationContainer c : ioComps) c.paint(g, scale);
   }
 
   private void fireRedraw(BoardRectangle rect, float scale) {
     if (listeners == null) return;
-    var area =
+    java.awt.Rectangle area =
         new Rectangle(
             AppPreferences.getScaled(rect.getXpos() - 2, scale),
             AppPreferences.getScaled(rect.getYpos() - 2, scale),
             AppPreferences.getScaled(rect.getWidth() + 4, scale),
             AppPreferences.getScaled(rect.getHeight() + 4, scale));
-    for (var l : listeners) l.repaintRequest(area);
+    for (com.cburch.logisim.fpga.data.IoComponentsListener l : listeners) l.repaintRequest(area);
   }
 }

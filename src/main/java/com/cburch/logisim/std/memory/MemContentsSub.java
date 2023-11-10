@@ -21,7 +21,7 @@ class MemContentsSub {
       data = new byte[size];
       if (AppPreferences.Memory_Startup_Unknown.get() && randomize) {
         final var generator = new Random();
-        for (var i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
           data[i] = (byte) (generator.nextInt(256) & mask);
         }
       }
@@ -51,7 +51,7 @@ class MemContentsSub {
     @Override
     void load(long start, long[] values, long mask) {
       final var n = Math.min(values.length, data.length - (int) start);
-      for (var i = 0; i < n; i++) {
+      for (int i = 0; i < n; i++) {
         data[(int) start + i] = (byte) (values[i] & mask);
       }
     }
@@ -74,7 +74,7 @@ class MemContentsSub {
       data = new int[size];
       if (AppPreferences.Memory_Startup_Unknown.get() && randomize) {
         final var generator = new Random();
-        for (var i = 0; i < size; i++) data[i] = (int) (generator.nextInt() & mask);
+        for (int i = 0; i < size; i++) data[i] = (int) (generator.nextInt() & mask);
       }
     }
 
@@ -102,7 +102,7 @@ class MemContentsSub {
     @Override
     void load(long start, long[] values, long mask) {
       final var n = Math.min(values.length, data.length - (int) start);
-      for (var i = 0; i < n; i++) {
+      for (int i = 0; i < n; i++) {
         data[(int) start + i] = (int) (values[i] & mask);
       }
     }
@@ -125,7 +125,7 @@ class MemContentsSub {
       data = new short[size];
       if (AppPreferences.Memory_Startup_Unknown.get() && randomize) {
         final var generator = new Random();
-        for (var i = 0; i < size; i++) data[i] = (short) (generator.nextInt(1 << 16) & mask);
+        for (int i = 0; i < size; i++) data[i] = (short) (generator.nextInt(1 << 16) & mask);
       }
     }
 
@@ -157,7 +157,7 @@ class MemContentsSub {
        * Bugfix in memory writing (by Roy77)
        * https://github.com/roy77
        */
-      for (var i = (int) start; i < n; i++) {
+      for (int i = (int) start; i < n; i++) {
         data[(int) start + i] = (short) (values[i] & mask);
       }
     }
@@ -180,7 +180,7 @@ class MemContentsSub {
       data = new long[size];
       if (AppPreferences.Memory_Startup_Unknown.get() && randomize) {
         final var generator = new Random();
-        for (var i = 0; i < size; i++) data[i] = (int) generator.nextLong() & mask;
+        for (int i = 0; i < size; i++) data[i] = (int) generator.nextLong() & mask;
       }
     }
 
@@ -208,7 +208,7 @@ class MemContentsSub {
     @Override
     void load(long start, long[] values, long mask) {
       final var n = Math.min(values.length, data.length - (int) start);
-      for (var i = 0; i < n; i++) {
+      for (int i = 0; i < n; i++) {
         data[(int) start + i] = (values[i] & mask);
       }
     }

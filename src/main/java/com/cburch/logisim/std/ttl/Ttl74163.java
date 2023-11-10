@@ -27,10 +27,10 @@ public class Ttl74163 extends Ttl74161 {
 
   @Override
   public void propagateTtl(InstanceState state) {
-    var data = getStateData(state);
+    com.cburch.logisim.std.ttl.TtlRegisterData data = getStateData(state);
 
     final var triggered = data.updateClock(state.getPortValue(PORT_INDEX_CLK), StdAttr.TRIG_RISING);
-    var counter = data.getValue().toLongValue();
+    long counter = data.getValue().toLongValue();
     if (triggered) {
       final var nClear = state.getPortValue(PORT_INDEX_nCLR).toLongValue();
       final var nLoad = state.getPortValue(PORT_INDEX_nLOAD).toLongValue();

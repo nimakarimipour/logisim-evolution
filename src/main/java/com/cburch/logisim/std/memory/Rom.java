@@ -174,7 +174,7 @@ public class Rom extends Mem {
 
   @Override
   MemState getState(Instance instance, CircuitState state) {
-    var ret = (MemState) instance.getData(state);
+    com.cburch.logisim.std.memory.MemState ret = (MemState) instance.getData(state);
     if (ret == null) {
       final var contents = getMemContents(instance);
       ret = new MemState(contents);
@@ -185,7 +185,7 @@ public class Rom extends Mem {
 
   @Override
   MemState getState(InstanceState state) {
-    var ret = (MemState) state.getData();
+    com.cburch.logisim.std.memory.MemState ret = (MemState) state.getData();
     if (ret == null) {
       final var contents = getMemContents(state.getInstance());
       ret = new MemState(contents);
@@ -222,12 +222,12 @@ public class Rom extends Mem {
 
     final var addr = addrValue.toLongValue();
     if (addrValue.isErrorValue() || (addrValue.isFullyDefined() && addr < 0)) {
-      for (var i = 0; i < nrDataLines; i++)
+      for (int i = 0; i < nrDataLines; i++)
         state.setPort(RamAppearance.getDataOutIndex(i, attrs), Value.createError(dataBits), DELAY);
       return;
     }
     if (!addrValue.isFullyDefined()) {
-      for (var i = 0; i < nrDataLines; i++)
+      for (int i = 0; i < nrDataLines; i++)
         state.setPort(RamAppearance.getDataOutIndex(i, attrs), Value.createUnknown(dataBits), DELAY);
       return;
     }
@@ -239,7 +239,7 @@ public class Rom extends Mem {
     boolean misaligned = addr % nrDataLines != 0;
     boolean misalignError = misaligned && !state.getAttributeValue(ALLOW_MISALIGNED);
 
-    for (var i = 0; i < nrDataLines; i++) {
+    for (int i = 0; i < nrDataLines; i++) {
       long val = myState.getContents().get(addr + i);
       state.setPort(
           RamAppearance.getDataOutIndex(i, attrs),

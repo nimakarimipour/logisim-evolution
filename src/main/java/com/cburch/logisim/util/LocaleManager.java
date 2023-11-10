@@ -128,8 +128,8 @@ public class LocaleManager {
   private static String replaceAccents(String src, HashMap<Character, String> repl) {
     // find first non-standard character - so we can avoid the
     // replacement process if possible
-    var i = 0;
-    var n = src.length();
+    int i = 0;
+    int n = src.length();
     for (; i < n; i++) {
       final var ci = src.charAt(i);
       if (ci < 32 || ci >= 127) break;
@@ -221,9 +221,9 @@ public class LocaleManager {
   }
 
   public JComponent createLocaleSelector() {
-    var locales = getLocaleOptions();
+    java.util.Locale[] locales = getLocaleOptions();
     if (locales == null || locales.length == 0) {
-      var cur = getLocale();
+      java.util.Locale cur = getLocale();
       if (cur == null) cur = Locale.ENGLISH;
       locales = new Locale[] {cur};
     }

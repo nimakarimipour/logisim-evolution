@@ -136,12 +136,12 @@ public class Print {
     public int print(Graphics base, PageFormat format, int pageIndex) {
       if (pageIndex >= circuits.size()) return Printable.NO_SUCH_PAGE;
 
-      var circ = circuits.get(pageIndex);
+      com.cburch.logisim.circuit.Circuit circ = circuits.get(pageIndex);
       final var circState = proj.getCircuitState(circ);
-      var g = base.create();
-      var g2 = g instanceof Graphics2D ? (Graphics2D) g : null;
-      var fm = g.getFontMetrics();
-      var head =
+      java.awt.Graphics g = base.create();
+      java.awt.Graphics2D g2 = g instanceof Graphics2D ? (Graphics2D) g : null;
+      java.awt.FontMetrics fm = g.getFontMetrics();
+      java.lang.String head =
           (header != null && !header.equals(""))
               ? format(header, pageIndex + 1, circuits.size(), circ.getName())
               : null;

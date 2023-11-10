@@ -85,7 +85,7 @@ public class RegTabContent extends JScrollPane implements LocaleListener, Simula
     constraints.ipady = 2;
     constraints.weighty = 0;
 
-    var y = 0;
+    int y = 0;
     constraints.gridy = y;
     constraints.gridx = 0;
     constraints.weightx = 0.3;
@@ -110,7 +110,7 @@ public class RegTabContent extends JScrollPane implements LocaleListener, Simula
         panel.add(new MyLabel(registerName), constraints);
         constraints.gridx++;
         final var selReg = registers.get(key);
-        var mainCircState = proj.getCircuitState();
+        com.cburch.logisim.circuit.CircuitState mainCircState = proj.getCircuitState();
         if (mainCircState == null) continue;
         while (mainCircState.getParentState() != null) { // Get the main circuit
           mainCircState = mainCircState.getParentState();

@@ -34,9 +34,9 @@ class AttrTableSelectionModel extends AttributeSetTableModel implements Selectio
   public String getTitle() {
     final var sel = canvas.getSelection();
     Class<? extends CanvasObject> commonClass = null;
-    var commonCount = 0;
+    int commonCount = 0;
     CanvasObject firstObject = null;
-    var totalCount = 0;
+    int totalCount = 0;
     for (final var obj : sel.getSelected()) {
       if (firstObject == null) {
         firstObject = obj;

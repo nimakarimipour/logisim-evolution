@@ -74,7 +74,7 @@ public class CoverColor implements PreferenceChangeListener {
 
   @Override
   public void preferenceChange(PreferenceChangeEvent evt) {
-    var idx = 0;
+    int idx = 0;
     Color newColor = null;
 
     for (final var color : availableColors) {

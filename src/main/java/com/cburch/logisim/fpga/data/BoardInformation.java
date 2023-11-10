@@ -66,7 +66,7 @@ public class BoardInformation {
     final var result = new HashMap<String, ArrayList<Integer>>();
     final var list = new ArrayList<Integer>();
 
-    var count = 0;
+    int count = 0;
     for (final var type : IoComponentTypes.KNOWN_COMPONENT_SET) {
       count = 0;
       for (final var comp : myComponents) {

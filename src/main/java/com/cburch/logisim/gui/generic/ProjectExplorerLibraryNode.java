@@ -61,7 +61,7 @@ public class ProjectExplorerLibraryNode extends ProjectExplorerModel.Node<Librar
     // go through previously built children
     Map<T, ProjectExplorerModel.Node<T>> nodeMap = new HashMap<>();
     List<ProjectExplorerModel.Node<T>> nodeList = new ArrayList<>();
-    var oldPos = startIndex;
+    int oldPos = startIndex;
 
     for (Enumeration<?> en = children(); en.hasMoreElements(); ) {
       final var baseNode = en.nextElement();
@@ -76,11 +76,11 @@ public class ProjectExplorerLibraryNode extends ProjectExplorerModel.Node<Librar
       }
     }
 
-    var oldCount = oldPos;
+    int oldCount = oldPos;
 
     // go through what should be the children
-    var actualPos = startIndex;
-    var insertionCount = 0;
+    int actualPos = startIndex;
+    int insertionCount = 0;
     oldPos = startIndex;
 
     for (T tool : items) {
@@ -106,9 +106,9 @@ public class ProjectExplorerLibraryNode extends ProjectExplorerModel.Node<Librar
     if (oldPos != oldCount) {
       final var delIndex = new int[oldCount - oldPos];
       final var delNodes = new ProjectExplorerModel.Node<?>[delIndex.length];
-      var delPos = 0;
+      int delPos = 0;
 
-      for (var i = nodeList.size() - 1; i >= 0; i--) {
+      for (int i = nodeList.size() - 1; i >= 0; i--) {
         final var node = nodeList.get(i);
         if (node.newIndex < 0) {
           node.decommission();
@@ -129,8 +129,8 @@ public class ProjectExplorerLibraryNode extends ProjectExplorerModel.Node<Librar
     }
 
     // identify moved nodes
-    var minChange = Integer.MAX_VALUE >> 3;
-    var maxChange = Integer.MIN_VALUE >> 3;
+    int minChange = Integer.MAX_VALUE >> 3;
+    int maxChange = Integer.MIN_VALUE >> 3;
 
     for (ProjectExplorerModel.Node<T> node : nodeList) {
       if (node.newIndex != node.oldIndex && node.oldIndex >= 0) {
@@ -142,14 +142,14 @@ public class ProjectExplorerLibraryNode extends ProjectExplorerModel.Node<Librar
       final var moveIndex = new int[maxChange - minChange + 1];
       final var moveNodes = new ProjectExplorerModel.Node<?>[moveIndex.length];
 
-      for (var i = maxChange; i >= minChange; i--) {
+      for (int i = maxChange; i >= minChange; i--) {
         final var node = nodeList.get(i);
         moveIndex[node.newIndex - minChange] = node.newIndex;
         moveNodes[node.newIndex - minChange] = node;
         remove(i);
       }
 
-      for (var i = 0; i < moveIndex.length; i++) {
+      for (int i = 0; i < moveIndex.length; i++) {
         insert(moveNodes[i], moveIndex[i]);
       }
 
@@ -160,7 +160,7 @@ public class ProjectExplorerLibraryNode extends ProjectExplorerModel.Node<Librar
     if (insertionCount > 0) {
       final var insIndex = new int[insertionCount];
       final var insNodes = new ProjectExplorerModel.Node<?>[insertionCount];
-      var insertionsPos = 0;
+      int insertionsPos = 0;
 
       for (final var node : nodeList) {
         if (node.oldIndex < 0) {

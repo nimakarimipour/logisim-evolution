@@ -33,7 +33,7 @@ public class netlistComponent {
     nrOfEnds = ref.getEnds().size();
     compReference = ref;
     endEnds = new ArrayList<>();
-    for (var i = 0; i < ref.getEnds().size(); i++) {
+    for (int i = 0; i < ref.getEnds().size(); i++) {
       endEnds.add(
           new ConnectionEnd(
               ref.getEnd(i).isOutput(), (byte) ref.getEnd(i).getWidth().getWidth(), ref));
@@ -92,9 +92,9 @@ public class netlistComponent {
     if ((index < 0) || (index >= nrOfEnds)) {
       return false;
     }
-    var isConnected = false;
+    boolean isConnected = false;
     final var ThisEnd = endEnds.get(index);
-    for (var i = 0; i < ThisEnd.getNrOfBits(); i++) {
+    for (int i = 0; i < ThisEnd.getNrOfBits(); i++) {
       isConnected |= (ThisEnd.get((byte) i).getParentNet() != null);
     }
     return isConnected;

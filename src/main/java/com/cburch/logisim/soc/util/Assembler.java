@@ -67,7 +67,7 @@ public class Assembler extends AbstractParser implements LocaleListener {
       if (positions.isEmpty()) {
         positions.add(pos);
       } else {
-        var found = false;
+        boolean found = false;
         for (int i = 0; i < positions.size() && !found; i++) {
           if (pos < positions.get(i)) {
             found = true;
@@ -87,7 +87,7 @@ public class Assembler extends AbstractParser implements LocaleListener {
     /* first pass: we build a list of AssemblerTokens from the token
      * list provided by the AssemblerHighlighter */
     final var text = pane.getTextArea();
-    for (var i = 0; i < text.getLineCount(); i++) {
+    for (int i = 0; i < text.getLineCount(); i++) {
       assemblerTokens.addAll(checkAndBuildTokens(i));
     }
     /* second pass, we are going to collect all labels */
@@ -125,14 +125,14 @@ public class Assembler extends AbstractParser implements LocaleListener {
      * 10*2+5 => (10*2)+5 = 25
      */
     final var toBeRemoved = new ArrayList<AssemblerToken>();
-    for (var i = 0; i < assemblerTokens.size(); i++) {
+    for (int i = 0; i < assemblerTokens.size(); i++) {
       final var asm = assemblerTokens.get(i);
       if (AssemblerToken.MATH_OPERATORS.contains(asm.getType())) {
         if ((i + 1) >= assemblerTokens.size()) {
           addError(asm.getoffset(), S.getter("AssemblerReguiresNumberAfterMath"), errorMarkers.keySet());
           continue;
         }
-        var before = (i == 0) ? null : assemblerTokens.get(i - 1);
+        com.cburch.logisim.soc.util.AssemblerToken before = (i == 0) ? null : assemblerTokens.get(i - 1);
         final var after = assemblerTokens.get(i + 1);
         if (before == null
             || (!before.isNumber() && before.getType() != AssemblerToken.PROGRAM_COUNTER))
@@ -236,7 +236,7 @@ public class Assembler extends AbstractParser implements LocaleListener {
     assembler.performUpSpecificOperationsOnTokens(assemblerTokens);
     /* sixth pass: We are going to detect and remove the macros */
     toBeRemoved.clear();
-    var errors = false;
+    boolean errors = false;
     final var iter = assemblerTokens.iterator();
     final var macros = new HashMap<String, AssemblerMacro>();
     while (iter.hasNext()) {
@@ -270,7 +270,7 @@ public class Assembler extends AbstractParser implements LocaleListener {
           break;
         }
         final var macro = new AssemblerMacro(name.getValue(), nrParameters.getNumberValue());
-        var endOfMacro = false;
+        boolean endOfMacro = false;
         while (!endOfMacro && iter.hasNext()) {
           final var macroAsm = iter.next();
           if (macroAsm.getType() == AssemblerToken.ASM_INSTRUCTION) {
@@ -372,7 +372,7 @@ public class Assembler extends AbstractParser implements LocaleListener {
     } catch (BadLocationException e1) {
       return null;
     }
-    var first = text.getTokenListForLine(lineNumber);
+    org.fife.ui.rsyntaxtextarea.Token first = text.getTokenListForLine(lineNumber);
     /* search for all error markers on this line */
     final var lineErrorMarkers = new HashSet<GutterIconInfo>();
     for (final var error : errorMarkers.keySet()) {
@@ -477,7 +477,7 @@ public class Assembler extends AbstractParser implements LocaleListener {
     }
     /* second pass, detect the labels */
     final var toBeRemoved = new ArrayList<AssemblerToken>();
-    for (var i = 0; i < lineTokens.size(); i++) {
+    for (int i = 0; i < lineTokens.size(); i++) {
       final var asm = lineTokens.get(i);
       if (asm.getType() == AssemblerToken.LABEL_IDENTIFIER) {
         if (i == 0)

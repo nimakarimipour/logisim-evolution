@@ -76,7 +76,7 @@ public abstract class AbstractComponentFactory implements ComponentFactory {
 
   @Override
   public Object getDefaultAttributeValue(Attribute<?> attr, LogisimVersion ver) {
-    var dfltSet = defaultSet;
+    com.cburch.logisim.data.AttributeSet dfltSet = defaultSet;
     if (dfltSet == null) {
       dfltSet = (AttributeSet) createAttributeSet().clone();
       defaultSet = dfltSet;
@@ -150,7 +150,7 @@ public abstract class AbstractComponentFactory implements ComponentFactory {
       g.setColor(Color.black);
       g.drawRect(x + 5, y + 2, 11, 17);
       Value[] v = {Value.TRUE, Value.FALSE};
-      for (var i = 0; i < 3; i++) {
+      for (int i = 0; i < 3; i++) {
         g.setColor(v[i % 2].getColor());
         g.fillOval(x + 5 - 1, y + 5 + 5 * i - 1, 3, 3);
         g.setColor(v[(i + 1) % 2].getColor());

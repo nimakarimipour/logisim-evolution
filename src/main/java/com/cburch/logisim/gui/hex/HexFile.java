@@ -394,7 +394,7 @@ public class HexFile {
   }
 
   private static File getRecent(Project proj, Mem mem, Instance instance) {
-    var recent = mem == null ? null : mem.getCurrentImage(instance);
+    java.io.File recent = mem == null ? null : mem.getCurrentImage(instance);
     if (recent == null) {
       final var lf = (proj == null ? null : proj.getLogisimFile());
       final var ld = (lf == null ? null : lf.getLoader());
@@ -471,7 +471,7 @@ public class HexFile {
       p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
       final var scaledTen = scaled(10);
       p.setBorder(BorderFactory.createEmptyBorder(scaledTen, scaledTen, 0, scaledTen));
-      var m =
+      javax.swing.JLabel m =
           new JLabel(
               "<html>"
                   + msg
@@ -634,8 +634,8 @@ public class HexFile {
       try {
         final var buf = new char[1024];
         this.reader.in.reset();
-        var n = this.reader.in.readUtf8(buf, 0, 1024);
-        var count = 0;
+        int n = this.reader.in.readUtf8(buf, 0, 1024);
+        int count = 0;
         if (n < 0) {
           originalTxt.setText("(error reading data)");
         } else {
@@ -655,8 +655,8 @@ public class HexFile {
         try {
           final var buf = new byte[1024];
           this.reader.in.reset();
-          var n = this.reader.in.readBytes(buf, 0, 1024);
-          var count = 0;
+          int n = this.reader.in.readBytes(buf, 0, 1024);
+          int count = 0;
           if (n < 0) {
             originalTxt.setText("(error reading data)");
           } else {
@@ -890,7 +890,7 @@ public class HexFile {
       tags.put("version", t[0]);
 
       String err = null;
-      for (var i = 1; i < t.length; i++) {
+      for (int i = 1; i < t.length; i++) {
         final var tag = t[i];
 
         final var key = switch (tag.toLowerCase()) {
@@ -986,8 +986,8 @@ public class HexFile {
 
     static long hex2ulong(String s) {
       long val = 0;
-      var n = s.length();
-      for (var i = 0; i < n; i++) {
+      int n = s.length();
+      for (int i = 0; i < n; i++) {
         final var d = hex2int(s.charAt(i));
         val = (val << 4) + d;
       }
@@ -1016,7 +1016,7 @@ public class HexFile {
     protected MemContents detectFormatAndDecode() throws IOException {
       if (in.byteLength() == 0) throw new IOException("File contains no data.");
 
-      var hdr = in.readLine();
+      java.lang.String hdr = in.readLine();
       while (hdr != null && (hdr = hdr.trim()).length() == 0) hdr = in.readLine();
 
       if (hdr == null) return warnAndAsk("File does not contain any header, and appears to contain only whitespace.");
@@ -1366,7 +1366,7 @@ public class HexFile {
       findNonemptyLine(true);
       while (curWords != null) {
         // first word should be "addr:"
-        var addr = curWords[0];
+        java.lang.String addr = curWords[0];
         final var foundColon = addr.endsWith(":");
         final var stripOx = addr.startsWith("0x") || addr.startsWith("0X");
         if (foundColon) addr = addr.substring(stripOx ? 2 : 0, addr.length() - 1);
@@ -1462,13 +1462,13 @@ public class HexFile {
     void decodeEscapedAscii() throws IOException {
       final var buf = new byte[4096];
       bLen = 0;
-      var n = in.readBytes(buf, 0, 4096);
+      int n = in.readBytes(buf, 0, 4096);
       curLineNo = 1;
-      var esc = 0;
-      var ehex = 0;
+      int esc = 0;
+      int ehex = 0;
       while (n > 0) {
         // decode buf[] into bytes[]
-        for (var i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
           byte c = buf[i];
           if (c == '\n') curLineNo++;
           if (c < 0x20 || c > 0x7E) continue;
@@ -1570,7 +1570,7 @@ public class HexFile {
     void buffer() {
       bLen = 0;
       if (bigEndian) {
-        var val = BigInteger.ZERO;
+        java.math.BigInteger val = BigInteger.ZERO;
         int nbits = -mAddrFrac;
         while (memAddr <= memEnd) {
           while (nbits < 8) {
@@ -1591,7 +1591,7 @@ public class HexFile {
         // there may be 0 to 7 bits of a partial byte leftover
         if (memAddr <= memEnd && nbits > 0) bytes[bLen++] = (byte) ((val.longValue() << 8 - nbits) & 0xffL);
       } else {
-        var val = BigInteger.ZERO;
+        java.math.BigInteger val = BigInteger.ZERO;
         int nbits = -mAddrFrac;
         while (memAddr <= memEnd) {
           while (nbits < 8) {

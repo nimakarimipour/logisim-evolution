@@ -85,7 +85,7 @@ public class TextTool extends Tool {
       caretCircuit.removeCircuitListener(this);
 
       final var val = caret.getText();
-      var isEmpty = StringUtil.isNullOrEmpty(val);
+      boolean isEmpty = StringUtil.isNullOrEmpty(val);
       Action a;
       final var proj = caretCanvas.getProject();
       if (caretCreatingText) {

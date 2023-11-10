@@ -114,7 +114,7 @@ public class Nios2State implements SocUpSimulationStateListener, SocProcessorInt
         bPanel.loadProgram(state, getProcessorInterface(), progInfo, sectInfo, ASSEMBLER);
       }
       pc = entryPoint != null ? entryPoint : resetVector;
-      for (var i = 0; i < 31; i++) registers_valid[i] = false;
+      for (int i = 0; i < 31; i++) registers_valid[i] = false;
       lastRegisterWritten = -1;
       status = STATUS_RSIE;
       estatus = 0;
@@ -488,7 +488,7 @@ public class Nios2State implements SocUpSimulationStateListener, SocProcessorInt
 
   public static int getRegisterIndex(String name) {
     final var regName = name.toLowerCase();
-    for (var i = 0; i < registerABINames.length; i++) {
+    for (int i = 0; i < registerABINames.length; i++) {
       if (registerABINames[i].equals(regName)) return i;
     }
     if (regName.startsWith("r") && regName.length() < 4) {
@@ -548,7 +548,7 @@ public class Nios2State implements SocUpSimulationStateListener, SocProcessorInt
   }
 
   public String getName() {
-    var name = label;
+    java.lang.String name = label;
     if (StringUtil.isNullOrEmpty(name)) {
       final var loc = attachedBus.getComponent().getLocation();
       name = String.format("%s@%d,%d", attachedBus.getComponent().getFactory().getDisplayName(), loc.getX(), loc.getY());

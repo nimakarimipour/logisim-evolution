@@ -185,8 +185,8 @@ public class WindowMenu extends JMenu {
     final var windowSize = owner.getPreferredSize();
     final var windowLoc = owner.getLocation();
 
-    var locChanged = false;
-    var sizeChanged = false;
+    boolean locChanged = false;
+    boolean sizeChanged = false;
     if (windowLoc.x + windowSize.width > screenSize.width) {
       windowLoc.x = Math.max(0, screenSize.width - windowSize.width);
       locChanged = true;

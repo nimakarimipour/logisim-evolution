@@ -106,8 +106,8 @@ public final class Projects {
   }
 
   public static Point getCenteredLoc(int width, int height) {
-    var x = 0;
-    var y = 0;
+    int x = 0;
+    int y = 0;
 
     final var topFrame = getTopFrame();
     if (topFrame != null) {
@@ -129,7 +129,7 @@ public final class Projects {
   }
 
   public static Frame getTopFrame() {
-    var ret = mostRecentFrame;
+    com.cburch.logisim.gui.main.Frame ret = mostRecentFrame;
     if (ret == null) {
       Frame backup = null;
       for (final var proj : openProjects) {

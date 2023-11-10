@@ -78,7 +78,7 @@ public class BitSelectorHdlGeneratorFactory extends AbstractHdlGeneratorFactory 
             begin
                case (sel)
             """);
-        for (var i = 15; i > 0; i--) {
+        for (int i = 15; i > 0; i--) {
           contents.add("{{1}}{{2}} : s_selected_slice <= s_selectVector[({{3}}*{{outBits}})-1:{{2}}*{{outBits}}];", LineBuffer.getIndent(2), i, (i + 1));
         }
         contents.add("""

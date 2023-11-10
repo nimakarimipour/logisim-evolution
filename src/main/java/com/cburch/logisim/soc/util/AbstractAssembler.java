@@ -100,11 +100,11 @@ public abstract class AbstractAssembler implements AssemblerInterface {
   }
 
   private int addLabels(SectionHeader sh, HashMap<Integer, String> labels) {
-    var maxSize = 0;
+    int maxSize = 0;
     for (final var st : sh.getSymbols()) {
-      var stName = st.getName();
+      java.lang.String stName = st.getName();
       if (StringUtil.isNotEmpty(stName)) {
-        var addr = st.getValue(SymbolTable.ST_VALUE);
+        java.lang.Integer addr = st.getValue(SymbolTable.ST_VALUE);
         if (!labels.containsKey(addr)) {
           if (stName.length() > maxSize) maxSize = stName.length();
           labels.put(addr, stName);

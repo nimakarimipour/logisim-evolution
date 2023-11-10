@@ -101,8 +101,8 @@ public class GridPainter implements PropertyChangeListener {
     final var clip = g.getClipBounds();
     final var x0 = (clip.x / gridImageWidth) * gridImageWidth; // round down to multiple of w
     final var y0 = (clip.y / gridImageWidth) * gridImageWidth;
-    for (var x = 0; x < clip.width + gridImageWidth; x += gridImageWidth) {
-      for (var y = 0; y < clip.height + gridImageWidth; y += gridImageWidth) {
+    for (int x = 0; x < clip.width + gridImageWidth; x += gridImageWidth) {
+      for (int y = 0; y < clip.height + gridImageWidth; y += gridImageWidth) {
         g.drawImage(gridImage, x0 + x, y0 + y, destination);
       }
     }
@@ -113,7 +113,7 @@ public class GridPainter implements PropertyChangeListener {
   }
 
   private void createGridImage(int size, double f) {
-    var ww = f * size * 5;
+    double ww = f * size * 5;
     while (2 * ww < 150) ww *= 2;
     final var w = (int) Math.round(ww);
     final var pix = new int[w * w];
@@ -121,8 +121,8 @@ public class GridPainter implements PropertyChangeListener {
 
     if (f == 1.0) {
       final var lineStep = size * w;
-      for (var j = 0; j < pix.length; j += lineStep) {
-        for (var i = 0; i < w; i += size) {
+      for (int j = 0; j < pix.length; j += lineStep) {
+        for (int i = 0; i < w; i += size) {
           pix[i + j] = AppPreferences.GRID_DOT_COLOR.get();
         }
       }

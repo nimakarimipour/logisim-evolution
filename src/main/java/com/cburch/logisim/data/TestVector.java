@@ -50,7 +50,7 @@ public class TestVector {
     }
 
     private StringTokenizer findNonemptyLine() throws IOException {
-      var line = in.readLine();
+      java.lang.String line = in.readLine();
 
       while (line != null) {
         final var i = line.indexOf('#');
@@ -78,7 +78,7 @@ public class TestVector {
 
     private void parseData() throws IOException {
       final var vals = new Value[columnName.length];
-      for (var i = 0; i < columnName.length; i++) {
+      for (int i = 0; i < columnName.length; i++) {
         final var t = curLine.nextToken();
 
         try {
@@ -99,7 +99,7 @@ public class TestVector {
       columnWidth = new BitWidth[n];
       columnRadix = new int[n];
 
-      for (var i = 0; i < n; i++) {
+      for (int i = 0; i < n; i++) {
         columnRadix[i] = 2;
         final var t = (String) curLine.nextElement();
         int s = t.indexOf('[');
@@ -114,7 +114,7 @@ public class TestVector {
             throw new IOException("Test Vector header format error: bad spec: " + t);
 
           columnName[i] = t.substring(0, s);
-          var w = 0;
+          int w = 0;
           try {
             w = Integer.parseInt(t.substring(s + 1, e));
           } catch (NumberFormatException ignored) {

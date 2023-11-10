@@ -57,10 +57,10 @@ public class FpgaIoInformationSettingsDialog {
       ArrayList<JTextField> LocInputs,
       ArrayList<String> PinLabels,
       ArrayList<String> oldLocations) {
-    var c = new GridBagConstraints();
+    java.awt.GridBagConstraints c = new GridBagConstraints();
     pinPanel.removeAll();
     if (LocInputs.size() == 0) {
-      for (var i = 0; i < nr; i++) {
+      for (int i = 0; i < nr; i++) {
         final var txt = new JTextField(6);
         if (i < oldLocations.size())
           txt.setText(oldLocations.get(i));
@@ -74,10 +74,10 @@ public class FpgaIoInformationSettingsDialog {
       if (idx < oldLocations.size()) txt.setText(oldLocations.get(idx));
     }
     while (LocInputs.size() > nr) LocInputs.remove(LocInputs.size() - 1);
-    var offset = 0;
-    var oldY = 0;
-    var maxY = -1;
-    for (var i = 0; i < nr; i++) {
+    int offset = 0;
+    int oldY = 0;
+    int maxY = -1;
+    for (int i = 0; i < nr; i++) {
       if (i % 16 == 0) {
         offset = (i / 16) * 2;
         c.gridy = oldY;
@@ -100,16 +100,16 @@ public class FpgaIoInformationSettingsDialog {
       ArrayList<JTextField> LocInputs,
       ArrayList<String> oldLocations,
       HashMap<Integer, Integer> NrOfPins) {
-    var pinLabels = new ArrayList<String>();
+    java.util.ArrayList<java.lang.String> pinLabels = new ArrayList<String>();
     NrOfPins.clear();
     NrOfPins.put(INPUT_ID, 0);
     NrOfPins.put(IO_ID, 0);
-    var nrOfPins = 0;
+    int nrOfPins = 0;
     switch (driveMode) {
       case LedArrayDriving.LED_DEFAULT -> {
         nrOfPins = nrOfRows * nrOfColumns;
-        for (var row = 0; row < nrOfRows; row++) {
-          for (var col = 0; col < nrOfColumns; col++)
+        for (int row = 0; row < nrOfRows; row++) {
+          for (int col = 0; col < nrOfColumns; col++)
             pinLabels.add("Row_" + row + "_Col_" + col);
         }
         break;
@@ -117,7 +117,7 @@ public class FpgaIoInformationSettingsDialog {
       case LedArrayDriving.LED_ROW_SCANNING -> {
         final var nrBits = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(nrOfRows);
         nrOfPins = nrBits + nrOfColumns;
-        for (var i = 0; i < nrOfPins; i++) {
+        for (int i = 0; i < nrOfPins; i++) {
           if (i < nrBits) {
             pinLabels.add("RowAddress_" + i);
           } else {
@@ -129,7 +129,7 @@ public class FpgaIoInformationSettingsDialog {
       case LedArrayDriving.LED_COLUMN_SCANNING -> {
         final var nrBits = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(nrOfColumns);
         nrOfPins = nrBits + nrOfRows;
-        for (var i = 0; i < nrOfPins; i++) {
+        for (int i = 0; i < nrOfPins; i++) {
           if (i < nrBits) {
             pinLabels.add("ColumnAddress_" + i);
           } else {
@@ -140,15 +140,15 @@ public class FpgaIoInformationSettingsDialog {
       }
       case LedArrayDriving.RGB_DEFAULT -> {
         nrOfPins = nrOfRows * nrOfColumns * 3;
-        var preamble = "";
-        for (var rgb = 0; rgb < 3; rgb++) {
+        java.lang.String preamble = "";
+        for (int rgb = 0; rgb < 3; rgb++) {
           preamble = switch (rgb) {
             case 0 -> "Red_";
             case 1 -> "Green_";
             default -> "Blue_";
           };
-          for (var row = 0; row < nrOfRows; row++) {
-            for (var col = 0; col < nrOfColumns; col++)
+          for (int row = 0; row < nrOfRows; row++) {
+            for (int col = 0; col < nrOfColumns; col++)
               pinLabels.add(preamble + "Row_" + row + "_Col_" + col);
           }
         }
@@ -157,8 +157,8 @@ public class FpgaIoInformationSettingsDialog {
       case LedArrayDriving.RGB_ROW_SCANNING -> {
         final var nrBits = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(nrOfRows);
         nrOfPins = nrBits + 3 * nrOfColumns;
-        var preamble = "";
-        for (var i = 0; i < nrOfPins; i++) {
+        java.lang.String preamble = "";
+        for (int i = 0; i < nrOfPins; i++) {
           if (i < nrBits) {
             pinLabels.add("RowAddress_" + i);
           } else {
@@ -178,8 +178,8 @@ public class FpgaIoInformationSettingsDialog {
       case LedArrayDriving.RGB_COLUMN_SCANNING -> {
         final var nrBits = LedArrayGenericHdlGeneratorFactory.getNrOfBitsRequired(nrOfColumns);
         nrOfPins = nrBits + 3 * nrOfRows;
-        var preamble = "";
-        for (var i = 0; i < nrOfPins; i++) {
+        java.lang.String preamble = "";
+        for (int i = 0; i < nrOfPins; i++) {
           if (i < nrBits) {
             pinLabels.add("ColumnAddress_" + i);
           } else {
@@ -214,7 +214,7 @@ public class FpgaIoInformationSettingsDialog {
     rectPanel.setLayout(new GridBagLayout());
     rectPanel.setBorder(BorderFactory.createTitledBorder(
         BorderFactory.createLineBorder(Color.BLACK, 2, true), S.get("FpgaIoRecProp")));
-    var c = new GridBagConstraints();
+    java.awt.GridBagConstraints c = new GridBagConstraints();
     c.fill = GridBagConstraints.HORIZONTAL;
     c.gridy = 0;
     c.gridx = 0;
@@ -253,7 +253,7 @@ public class FpgaIoInformationSettingsDialog {
     final var inputsPanel = new JPanel();
     final var outputsPanel = new JPanel();
     final var ioPanel = new JPanel();
-    var abort = false;
+    boolean abort = false;
     final var rectLocations = new ArrayList<JTextField>();
     final var oldInputLocations = new ArrayList<String>();
     final var oldOutputLocations = new ArrayList<String>();
@@ -270,7 +270,7 @@ public class FpgaIoInformationSettingsDialog {
       nrOfPins.put(OUTPUT_ID, info.getNrOfOutputPins());
       nrOfPins.put(IO_ID, info.getNrOfIoPins());
     }
-    for (var cnt = 0; cnt < info.getNrOfPins(); cnt++) {
+    for (int cnt = 0; cnt < info.getNrOfPins(); cnt++) {
       if (cnt < nrOfPins.get(INPUT_ID)) oldInputLocations.add(info.getPinLocation(cnt));
       else if (cnt < nrOfPins.get(INPUT_ID) + nrOfPins.get(OUTPUT_ID))
         oldOutputLocations.add(info.getPinLocation(cnt));
@@ -281,30 +281,30 @@ public class FpgaIoInformationSettingsDialog {
         e -> {
           switch (e.getActionCommand()) {
             case "inputSize" -> {
-              var nr = (int) inputSize.getSelectedItem();
+              int nr = (int) inputSize.getSelectedItem();
               nrOfPins.put(INPUT_ID, nr);
               pinLabels.clear();
-              for (var i = 0; i < nr; i++)
+              for (int i = 0; i < nr; i++)
                 pinLabels.add(IoComponentTypes.getInputLabel(nr, i, myType));
               buildPinTable(nr, myType, inputsPanel, locInputs, pinLabels, oldInputLocations);
               selWindow.pack();
               return;
             }
             case "outputSize" -> {
-              var nr = (int) outputSize.getSelectedItem();
+              int nr = (int) outputSize.getSelectedItem();
               nrOfPins.put(OUTPUT_ID, nr);
               pinLabels.clear();
-              for (var i = 0; i < nr; i++)
+              for (int i = 0; i < nr; i++)
                 pinLabels.add(IoComponentTypes.getOutputLabel(nr, 0, 0, i, myType));
               buildPinTable(nr, myType, outputsPanel, locOutputs, pinLabels, oldOutputLocations);
               selWindow.pack();
               return;
             }
             case "ioSize" -> {
-              var nr = (int) ioSize.getSelectedItem();
+              int nr = (int) ioSize.getSelectedItem();
               nrOfPins.put(IO_ID, nr);
               pinLabels.clear();
-              for (var i = 0; i < nr; i++)
+              for (int i = 0; i < nr; i++)
                 pinLabels.add(IoComponentTypes.getIoLabel(nr, i, myType));
               buildPinTable(nr, myType, ioPanel, locIos, pinLabels, oldIoLocations);
               selWindow.pack();
@@ -334,7 +334,7 @@ public class FpgaIoInformationSettingsDialog {
     final var c = new GridBagConstraints();
     c.gridy = -1;
     if (MyRectangle != null) {
-      var tf = new JTextField(5);
+      javax.swing.JTextField tf = new JTextField(5);
       tf.setText(Integer.toString(MyRectangle.getXpos()));
       rectLocations.add(tf);
       tf = new JTextField(5);
@@ -389,14 +389,14 @@ public class FpgaIoInformationSettingsDialog {
       arrayPanel.setLayout(new GridBagLayout());
       rowSize.removeAll();
       colSize.removeAll();
-      for (var i = 1; i < 33; i++) {
+      for (int i = 1; i < 33; i++) {
         rowSize.addItem(i);
         colSize.addItem(i);
       }
       rowSize.setSelectedIndex(info.getNrOfRows() - 1);
       colSize.setSelectedIndex(info.getNrOfColumns() - 1);
       eEncoding.removeAll();
-      for (var val : LedArrayDriving.getDisplayStrings())
+      for (java.lang.String val : LedArrayDriving.getDisplayStrings())
         eEncoding.addItem(val);
       eEncoding.setSelectedIndex(info.getArrayDriveMode());
       rowSize.setActionCommand("LedArray");
@@ -434,15 +434,15 @@ public class FpgaIoInformationSettingsDialog {
       inputsPanel.setLayout(new GridBagLayout());
       if (IoComponentTypes.nrOfInputPinsConfigurable(myType)) {
         inputSize.removeAllItems();
-        for (var i = 1; i < 129; i++) inputSize.addItem(i);
+        for (int i = 1; i < 129; i++) inputSize.addItem(i);
         inputSize.setSelectedItem(nrOfPins.get(INPUT_ID));
         inputSize.addActionListener(actionListener);
         inputSize.setActionCommand("inputSize");
         panel.add(inputSize, BorderLayout.NORTH);
       }
       pinLabels.clear();
-      var nr = nrOfPins.get(INPUT_ID);
-      for (var i = 0; i < nr; i++) pinLabels.add(IoComponentTypes.getOutputLabel(nr, 0, 0, i, myType));
+      java.lang.Integer nr = nrOfPins.get(INPUT_ID);
+      for (int i = 0; i < nr; i++) pinLabels.add(IoComponentTypes.getOutputLabel(nr, 0, 0, i, myType));
       buildPinTable(nrOfPins.get(INPUT_ID), myType, inputsPanel, locInputs, pinLabels, oldInputLocations);
       panel.add(inputsPanel, BorderLayout.CENTER);
       c.gridy++;
@@ -458,7 +458,7 @@ public class FpgaIoInformationSettingsDialog {
       outputsPanel.setLayout(new GridBagLayout());
       if (IoComponentTypes.nrOfOutputPinsConfigurable(myType)) {
         outputSize.removeAllItems();
-        for (var i = 1; i < 129; i++) outputSize.addItem(i);
+        for (int i = 1; i < 129; i++) outputSize.addItem(i);
         outputSize.setSelectedItem(nrOfPins.get(OUTPUT_ID));
         outputSize.addActionListener(actionListener);
         outputSize.setActionCommand("outputSize");
@@ -467,7 +467,7 @@ public class FpgaIoInformationSettingsDialog {
       if (myType != IoComponentTypes.LedArray) {
         pinLabels.clear();
         final var nr = nrOfPins.get(OUTPUT_ID);
-        for (var i = 0; i < nr; i++) pinLabels.add(IoComponentTypes.getOutputLabel(nr, 0, 0, i, myType));
+        for (int i = 0; i < nr; i++) pinLabels.add(IoComponentTypes.getOutputLabel(nr, 0, 0, i, myType));
         buildPinTable(nrOfPins.get(OUTPUT_ID), myType, outputsPanel, locOutputs, pinLabels, oldOutputLocations);
       } else {
         updateLedArrayRequirements(
@@ -492,7 +492,7 @@ public class FpgaIoInformationSettingsDialog {
       ioPanel.setLayout(new GridBagLayout());
       if (IoComponentTypes.nrOfIoPinsConfigurable(myType)) {
         ioSize.removeAllItems();
-        for (var i = 1; i < 129; i++) ioSize.addItem(i);
+        for (int i = 1; i < 129; i++) ioSize.addItem(i);
         ioSize.setSelectedItem(nrOfPins.get(IO_ID));
         ioSize.addActionListener(actionListener);
         ioSize.setActionCommand("ioSize");
@@ -500,7 +500,7 @@ public class FpgaIoInformationSettingsDialog {
       }
       pinLabels.clear();
       final var nr = nrOfPins.get(IO_ID);
-      for (var i = 0; i < nr; i++) pinLabels.add(IoComponentTypes.getIoLabel(nr, i, myType));
+      for (int i = 0; i < nr; i++) pinLabels.add(IoComponentTypes.getIoLabel(nr, i, myType));
       buildPinTable(nrOfPins.get(IO_ID), myType, ioPanel, locIos, pinLabels, oldIoLocations);
       panel.add(ioPanel, BorderLayout.CENTER);
       c.gridy++;
@@ -513,7 +513,7 @@ public class FpgaIoInformationSettingsDialog {
     c.gridy++;
     c.gridx = 0;
     contents.add(LabText, c);
-    var LabelInput = new JTextField(6);
+    javax.swing.JTextField LabelInput = new JTextField(6);
     LabelInput.setText(info.getLabel());
     c.gridx = 1;
     contents.add(LabelInput, c);
@@ -598,8 +598,8 @@ public class FpgaIoInformationSettingsDialog {
       abort |= info.getType().equals(IoComponentTypes.Unknown);
       if (!abort) {
         final var NrPins = nrOfPins.get(INPUT_ID) + nrOfPins.get(OUTPUT_ID) + nrOfPins.get(IO_ID);
-        var correct = true;
-        for (var i = 0; i < nrOfPins.get(INPUT_ID); i++) {
+        boolean correct = true;
+        for (int i = 0; i < nrOfPins.get(INPUT_ID); i++) {
           if (locInputs.get(i).getText().isEmpty()) {
             correct = false;
             DialogNotification.showDialogNotification(
@@ -610,7 +610,7 @@ public class FpgaIoInformationSettingsDialog {
           }
         }
         if (!correct) continue;
-        for (var i = 0; i < nrOfPins.get(OUTPUT_ID); i++) {
+        for (int i = 0; i < nrOfPins.get(OUTPUT_ID); i++) {
           if (locOutputs.get(i).getText().isEmpty()) {
             correct = false;
             DialogNotification.showDialogNotification(
@@ -622,7 +622,7 @@ public class FpgaIoInformationSettingsDialog {
           }
         }
         if (!correct) continue;
-        for (var i = 0; i < nrOfPins.get(IO_ID); i++) {
+        for (int i = 0; i < nrOfPins.get(IO_ID); i++) {
           if (locIos.get(i).getText().isEmpty()) {
             correct = false;
             DialogNotification.showDialogNotification(
@@ -635,8 +635,8 @@ public class FpgaIoInformationSettingsDialog {
         }
         if (correct) {
           if (!rectLocations.isEmpty()) {
-            var values = new int[4];
-            for (var i = 0; i < 4; i++) {
+            int[] values = new int[4];
+            for (int i = 0; i < 4; i++) {
               try {
                 values[i] = Integer.parseUnsignedInt(rectLocations.get(i).getText());
               } catch (NumberFormatException e) {
@@ -690,12 +690,12 @@ public class FpgaIoInformationSettingsDialog {
           }
           IOcomps.setDefaultStandard(StandardInput.getSelectedIndex());
           info.setNrOfPins(NrPins);
-          var idx = 0;
-          for (var i = 0; i < nrOfPins.get(INPUT_ID); i++)
+          int idx = 0;
+          for (int i = 0; i < nrOfPins.get(INPUT_ID); i++)
             info.setInputPinLocation(idx++, locInputs.get(i).getText());
-          for (var i = 0; i < nrOfPins.get(OUTPUT_ID); i++)
+          for (int i = 0; i < nrOfPins.get(OUTPUT_ID); i++)
             info.setOutputPinLocation(idx++, locOutputs.get(i).getText());
-          for (var i = 0; i < nrOfPins.get(IO_ID); i++)
+          for (int i = 0; i < nrOfPins.get(IO_ID); i++)
             info.setIOPinLocation(idx++, locIos.get(i).getText());
           if (LabelInput.getText() != null && LabelInput.getText().length() != 0)
             info.setLabel(LabelInput.getText());
@@ -976,7 +976,7 @@ public class FpgaIoInformationSettingsDialog {
     selWindow.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
     selWindow.setAlwaysOnTop(true);
     selWindow.setLocationRelativeTo(panel);
-    var saveSettings = false;
+    boolean saveSettings = false;
     while ((!abort) && (!saveSettings)) {
       selWindow.setVisible(true);
       if (!abort) {
@@ -1053,13 +1053,13 @@ public class FpgaIoInformationSettingsDialog {
   }
 
   private static long getFrequency(String chars, String speed) {
-    var result = 0L;
-    var multiplier = 1L;
-    var dec_mult = false;
+    long result = 0L;
+    long multiplier = 1L;
+    boolean dec_mult = false;
 
     if ("kHz".equals(speed)) multiplier = 1_000L;
     if ("MHz".equals(speed)) multiplier = 1_000_000L;
-    for (var i = 0; i < chars.length(); i++) {
+    for (int i = 0; i < chars.length(); i++) {
       if (chars.charAt(i) >= '0' && chars.charAt(i) <= '9') {
         result *= 10L;
         result += (chars.charAt(i) - '0');

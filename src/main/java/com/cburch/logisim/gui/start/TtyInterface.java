@@ -66,7 +66,7 @@ public class TtyInterface {
   }
 
   private static void displaySpeed(long tickCount, long elapse) {
-    var hertz = (double) tickCount / elapse * 1000.0;
+    double hertz = (double) tickCount / elapse * 1000.0;
     double precision;
     if (hertz >= 100) precision = 1.0;
     else if (hertz >= 10) precision = 0.1;
@@ -74,14 +74,14 @@ public class TtyInterface {
     else if (hertz >= 0.01) precision = 0.0001;
     else precision = 0.0000001;
     hertz = (int) (hertz / precision) * precision;
-    var hertzStr = hertz == (int) hertz ? "" + (int) hertz : "" + hertz;
+    java.lang.String hertzStr = hertz == (int) hertz ? "" + (int) hertz : "" + hertz;
     System.out.printf(S.get("ttySpeedMsg") + "\n", hertzStr, tickCount, elapse);
   }
 
   private static void displayStatistics(LogisimFile file, Circuit circuit) {
     final var stats = FileStatistics.compute(file, circuit);
     final var total = stats.getTotalWithSubcircuits();
-    var maxName = 0;
+    int maxName = 0;
     for (final var count : stats.getCounts()) {
       final var nameLength = count.getFactory().getDisplayName().length();
       if (nameLength > maxName) maxName = nameLength;
@@ -118,11 +118,11 @@ public class TtyInterface {
   }
 
   private static void displayTableRow(ArrayList<Value> prevOutputs, ArrayList<Value> curOutputs) {
-    var shouldPrint = false;
+    boolean shouldPrint = false;
     if (prevOutputs == null) {
       shouldPrint = true;
     } else {
-      for (var i = 0; i < curOutputs.size(); i++) {
+      for (int i = 0; i < curOutputs.size(); i++) {
         final var a = prevOutputs.get(i);
         final var b = curOutputs.get(i);
         if (!a.equals(b)) {
@@ -132,7 +132,7 @@ public class TtyInterface {
       }
     }
     if (shouldPrint) {
-      for (var i = 0; i < curOutputs.size(); i++) {
+      for (int i = 0; i < curOutputs.size(); i++) {
         if (i != 0) System.out.print("\t");
         System.out.print(curOutputs.get(i));
       }
@@ -142,11 +142,11 @@ public class TtyInterface {
 
   private static boolean displayTableRow(boolean showHeader, ArrayList<Value> prevOutputs, ArrayList<Value> curOutputs,
                                          ArrayList<String> headers, ArrayList<String> formats, int format) {
-    var shouldPrint = false;
+    boolean shouldPrint = false;
     if (prevOutputs == null) {
       shouldPrint = true;
     } else {
-      for (var i = 0; i < curOutputs.size(); i++) {
+      for (int i = 0; i < curOutputs.size(); i++) {
         final var a = prevOutputs.get(i);
         final var b = curOutputs.get(i);
         if (!a.equals(b)) {
@@ -156,13 +156,13 @@ public class TtyInterface {
       }
     }
     if (shouldPrint) {
-      var sep = "";
+      java.lang.String sep = "";
       if ((format & FORMAT_TABLE_TABBED) != 0) sep = "\t";
       else if ((format & FORMAT_TABLE_CSV) != 0) sep = ",";
       else // if ((format & FORMAT_TABLE_PRETTY) != 0)
         sep = " ";
       if (showHeader) {
-        for (var i = 0; i < headers.size(); i++) {
+        for (int i = 0; i < headers.size(); i++) {
           if ((format & FORMAT_TABLE_TABBED) != 0) formats.add("%s");
           else if ((format & FORMAT_TABLE_CSV) != 0) formats.add("%s");
           else { // if ((format & FORMAT_TABLE_PRETTY) != 0)
@@ -171,13 +171,13 @@ public class TtyInterface {
             formats.add("%" + w + "s");
           }
         }
-        for (var i = 0; i < headers.size(); i++) {
+        for (int i = 0; i < headers.size(); i++) {
           if (i != 0) System.out.print(sep);
           System.out.printf(formats.get(i), headers.get(i));
         }
         System.out.println();
       }
-      for (var i = 0; i < curOutputs.size(); i++) {
+      for (int i = 0; i < curOutputs.size(); i++) {
         if (i != 0) System.out.print(sep);
         System.out.printf(formats.get(i), valueFormat(curOutputs.get(i), format));
       }
@@ -211,7 +211,7 @@ public class TtyInterface {
   private static boolean loadRam(CircuitState circState, File loadFile) throws IOException {
     if (loadFile == null) return false;
 
-    var found = false;
+    boolean found = false;
     for (final var comp : circState.getCircuit().getNonWires()) {
       if (comp.getFactory() instanceof Ram ramFactory) {
         final var ramState = circState.getInstanceState(comp);
@@ -230,7 +230,7 @@ public class TtyInterface {
   private static boolean saveRam(CircuitState circState, File saveFile) throws IOException {
     if (saveFile == null) return false;
 
-    var found = false;
+    boolean found = false;
     for (final var comp : circState.getCircuit().getNonWires()) {
       if (comp.getFactory() instanceof Ram ramFactory) {
         final var ramState = circState.getInstanceState(comp);
@@ -247,7 +247,7 @@ public class TtyInterface {
   }
 
   private static boolean prepareForTty(CircuitState circState, ArrayList<InstanceState> keybStates) {
-    var found = false;
+    boolean found = false;
     for (final var comp : circState.getCircuit().getNonWires()) {
       final Object factory = comp.getFactory();
       if (factory instanceof Tty ttyFactory) {
@@ -287,7 +287,7 @@ public class TtyInterface {
         ? file.getMainCircuit()
         : file.getCircuit(circuitToTest);
 
-    var format = args.getTtyFormat();
+    int format = args.getTtyFormat();
     if ((format & FORMAT_STATISTICS) != 0) {
       format &= ~FORMAT_STATISTICS;
       displayStatistics(file, circuit);
@@ -400,16 +400,16 @@ public class TtyInterface {
     final var inputCount = inputNames.size();
     final var rowCount = 1 << inputCount;
 
-    var needTableHeader = true;
+    boolean needTableHeader = true;
     final var valueMap = new HashMap<Instance, Value>();
-    for (var i = 0; i < rowCount; i++) {
+    for (int i = 0; i < rowCount; i++) {
       valueMap.clear();
       final var circuitState = new CircuitState(proj, circuit);
-      var incol = 0;
+      int incol = 0;
       for (final var pin : inputPins) {
         final var width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
         final var v = new Value[width];
-        for (var b = width - 1; b >= 0; b--) {
+        for (int b = width - 1; b >= 0; b--) {
           final var value = TruthTable.isInputSet(i, incol++, inputCount);
           v[b] = value ? Value.TRUE : Value.FALSE;
         }
@@ -470,10 +470,10 @@ public class TtyInterface {
       }
     }
 
-    var retCode = 0;
+    int retCode = 0;
     long tickCount = 0;
     final var start = System.currentTimeMillis();
-    var halted = false;
+    boolean halted = false;
     ArrayList<Value> prevOutputs = null;
     final var prop = circState.getPropagator();
     while (true) {

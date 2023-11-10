@@ -130,7 +130,7 @@ public class SignalInfo implements AttributeListener, CircuitListener, Location.
       // This could remove a component that is on our path, or alter our name.
 
       // Walk through each level of circuit to see if we got removed or
-      var changed = false;
+      boolean changed = false;
       for (int i = 0; i < n; i++) {
         final var t = circ[i];
         final var c = path[i];
@@ -226,7 +226,7 @@ public class SignalInfo implements AttributeListener, CircuitListener, Location.
     }
 
     final var buf = new StringBuilder();
-    for (var i = 0; i < n - 1; i++) buf.append(logName(path[i], null)).append("/");
+    for (int i = 0; i < n - 1; i++) buf.append(logName(path[i], null)).append("/");
     buf.append(nickname);
     if (width > 1) buf.append("[").append(width - 1).append("..0]");
     final var f = buf.toString();
@@ -241,8 +241,8 @@ public class SignalInfo implements AttributeListener, CircuitListener, Location.
   public Value fetchValue(CircuitState root) {
     final var log = (LoggableContract) path[n - 1].getFeature(LoggableContract.class);
     if (log == null) return Value.NIL;
-    var cur = root;
-    for (var i = 0; i < n - 1; i++) cur = circ[i].getSubcircuitFactory().getSubstate(cur, path[i]);
+    com.cburch.logisim.circuit.CircuitState cur = root;
+    for (int i = 0; i < n - 1; i++) cur = circ[i].getSubcircuitFactory().getSubstate(cur, path[i]);
     return log.getLogValue(cur, option);
   }
 

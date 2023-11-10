@@ -58,8 +58,8 @@ public class TestBench {
   private boolean searchMatchingPins(Circuit circuit) {
     /* Going to look for the matching output pin outputSignals */
     final var state = new CircuitState(proj, proj.getCurrentCircuit());
-    var j = 0;
-    var pinMatched = 0;
+    int j = 0;
+    int pinMatched = 0;
 
     for (final var output : outputSignals) {
       for (final var comp : circuit.getNonWires()) {

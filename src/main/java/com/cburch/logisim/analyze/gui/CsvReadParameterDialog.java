@@ -86,8 +86,8 @@ public class CsvReadParameterDialog extends JDialog implements ActionListener {
     c.fill = GridBagConstraints.CENTER;
     add(new JLabel(S.get("cvsFilePreview")), c);
     pack();
-    var celwidth = AppPreferences.getScaled(200);
-    var celHeight = AppPreferences.getScaled(25);
+    int celwidth = AppPreferences.getScaled(200);
+    int celHeight = AppPreferences.getScaled(25);
     c.gridwidth = 1;
     labels = new JLabel[16];
     final var border = BorderFactory.createLineBorder(Color.BLACK, AppPreferences.getScaled(1));

@@ -40,7 +40,7 @@ public class RgbLedShape extends LedShape {
     } else {
       final var activ = path.leaf().getAttributeSet().getValue(IoLibrary.ATTR_ACTIVE);
       final var data = (InstanceDataSingleton) getData(state);
-      var summ = (data == null ? 0 : (Integer) data.getValue());
+      int summ = (data == null ? 0 : (Integer) data.getValue());
       final var mask = activ ? 0 : 7;
       summ ^= mask;
       final var red = ((summ >> RgbLed.RED) & 1) * 0xFF;

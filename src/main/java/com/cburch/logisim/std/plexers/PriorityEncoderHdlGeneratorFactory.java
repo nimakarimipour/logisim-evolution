@@ -55,7 +55,7 @@ public class PriorityEncoderHdlGeneratorFactory extends AbstractHdlGeneratorFact
     final var nrOfBits = comp.nrOfEnds() - 4;
     map.putAll(Hdl.getNetMap("enable", false, comp, nrOfBits + PriorityEncoder.EN_IN, nets));
     final var vectorList = new StringBuilder();
-    for (var i = nrOfBits - 1; i >= 0; i--) {
+    for (int i = nrOfBits - 1; i >= 0; i--) {
       if (Hdl.isVhdl())
         map.putAll(Hdl.getNetMap("inputVector(" + i + ")", true, comp, i, nets));
       else {

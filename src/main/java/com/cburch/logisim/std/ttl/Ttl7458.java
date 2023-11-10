@@ -40,15 +40,15 @@ public class Ttl7458 extends AbstractTtlGate {
     Drawgates.paintAnd(gfx, x + 86, y + 44, 10, 10, false);
     final var OrOffset =
         (AppPreferences.GATE_SHAPE.get().equals(AppPreferences.SHAPE_RECTANGULAR)) ? 4 : 0;
-    var posX = new int[] {x + 86, x + 90, x + 90, x + 93 + OrOffset};
-    var posY = new int[] {y + 34, y + 34, y + 36, y + 36};
+    int[] posX = new int[] {x + 86, x + 90, x + 90, x + 93 + OrOffset};
+    int[] posY = new int[] {y + 34, y + 34, y + 36, y + 36};
     gfx.drawPolyline(posX, posY, 4);
     posY = new int[] {y + 44, y + 44, y + 42, y + 42};
     gfx.drawPolyline(posX, posY, 4);
     posX = new int[] {x + 107, x + 110, x + 110};
     posY = new int[] {y + 39, y + 39, y + height - AbstractTtlGate.PIN_HEIGHT};
     gfx.drawPolyline(posX, posY, 3);
-    for (var i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {
       gfx.drawLine(
           x + 30 + i * 20,
           y + 32 + i * 5,
@@ -71,7 +71,7 @@ public class Ttl7458 extends AbstractTtlGate {
     posX = new int[] {x + 127, x + 130, x + 130};
     posY = new int[] {y + 21, y + 21, y + AbstractTtlGate.PIN_HEIGHT};
     gfx.drawPolyline(posX, posY, 3);
-    for (var i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++) {
       posX = new int[] {x + 10 + i * 20, x + 10 + i * 20, x + 95};
       posY =
           new int[] {
@@ -88,8 +88,8 @@ public class Ttl7458 extends AbstractTtlGate {
 
   @Override
   public void propagateTtl(InstanceState state) {
-    var val1 = state.getPortValue(1).and(state.getPortValue(2));
-    var val2 = state.getPortValue(3).and(state.getPortValue(4));
+    com.cburch.logisim.data.Value val1 = state.getPortValue(1).and(state.getPortValue(2));
+    com.cburch.logisim.data.Value val2 = state.getPortValue(3).and(state.getPortValue(4));
     state.setPort(5, val1.or(val2), 5);
     val1 = state.getPortValue(0).and(state.getPortValue(11).and(state.getPortValue(10)));
     val2 = state.getPortValue(9).and(state.getPortValue(8).and(state.getPortValue(7)));

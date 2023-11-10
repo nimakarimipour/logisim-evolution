@@ -161,7 +161,7 @@ class TableTab extends AnalyzerTab implements Entry.EntryChangedListener {
     }
 
     void calculateWidth() {
-      var w = -cellPadding;
+      int w = -cellPadding;
       for (Var v : vars) w += cellPadding + v.width * cellWidth;
       width = leftPadding + w + rightPadding;
     }
@@ -169,7 +169,7 @@ class TableTab extends AnalyzerTab implements Entry.EntryChangedListener {
     int getColumn(int x) {
       if (x < leftPadding) return -1;
       x -= leftPadding;
-      var col = 0;
+      int col = 0;
       for (final var v : vars) {
         if (x < 0) return -1;
         if (x < v.width * cellWidth) return col + x / cellWidth;
@@ -183,7 +183,7 @@ class TableTab extends AnalyzerTab implements Entry.EntryChangedListener {
     int getNearestColumn(int x) {
       if (x < leftPadding) return 0;
       x -= leftPadding;
-      var col = 0;
+      int col = 0;
       for (final var var : vars) {
         if (x < -(cellPadding / 2)) return col - 1;
         if (x < 0) return col;
@@ -195,7 +195,7 @@ class TableTab extends AnalyzerTab implements Entry.EntryChangedListener {
     }
 
     int getX(int col) {
-      var x = leftPadding;
+      int x = leftPadding;
       for (final var var : vars) {
         if (col < 0) return x;
         if (col < var.width) return x + col * cellWidth;
@@ -221,9 +221,9 @@ class TableTab extends AnalyzerTab implements Entry.EntryChangedListener {
     void paintRow(Graphics g, FontMetrics fm, int x, int y, int row, boolean isInput) {
       x += leftPadding;
       final var cy = y + fm.getAscent();
-      var col = 0;
+      int col = 0;
       for (final var var : vars) {
-        for (var b = var.width - 1; b >= 0; b--) {
+        for (int b = var.width - 1; b >= 0; b--) {
           final var entry =
               isInput
                   ? table.getVisibleInputEntry(row, col++)
@@ -552,7 +552,7 @@ class TableTab extends AnalyzerTab implements Entry.EntryChangedListener {
       public int getBlockIncrement(int direction) {
         final var curY = getValue();
         final var curHeight = getVisibleAmount();
-        var numCells = curHeight / cellHeight - 1;
+        int numCells = curHeight / cellHeight - 1;
         if (numCells <= 0) numCells = 1;
         if (direction > 0) {
           return curY > 0 ? numCells * cellHeight : numCells * cellHeight + headerVertSep;
@@ -657,7 +657,7 @@ class TableTab extends AnalyzerTab implements Entry.EntryChangedListener {
       final var lastRow = Math.min(getRowCount(), 2 + (clip.y + clip.height - y) / cellHeight);
       y += firstRow * cellHeight;
 
-      for (var row = firstRow; row < lastRow; row++) {
+      for (int row = firstRow; row < lastRow; row++) {
         inDim.paintRow(g, fm, left, y, row, true);
         outDim.paintRow(g, fm, mid, y, row, false);
         y += cellHeight;
@@ -745,9 +745,9 @@ class TableTab extends AnalyzerTab implements Entry.EntryChangedListener {
           requestFocus();
           final var s = caret.getSelection();
           final var inputs = table.getInputColumnCount();
-          for (var c = s.x; c < s.x + s.width; c++) {
+          for (int c = s.x; c < s.x + s.width; c++) {
             if (c < inputs) continue; // TODO: allow input row delete?
-            for (var r = s.y; r < s.y + s.height; r++) {
+            for (int r = s.y; r < s.y + s.height; r++) {
               table.setVisibleOutputEntry(r, c - inputs, Entry.DONT_CARE);
             }
           }
@@ -781,7 +781,7 @@ class TableTab extends AnalyzerTab implements Entry.EntryChangedListener {
           final var fm = g.getFontMetrics();
 
           // shrink horizontally to fit
-          var scale = 1.0;
+          double scale = 1.0;
           if (tableWidth > w) scale = w / tableWidth;
 
           // figure out how many pages we will need

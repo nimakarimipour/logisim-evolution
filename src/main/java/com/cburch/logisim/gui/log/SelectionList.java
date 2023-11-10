@@ -237,7 +237,7 @@ public class SelectionList extends JTable {
   }
 
   void removeSelected() {
-    var idx = 0;
+    int idx = 0;
     final var items = getSelectedValuesList();
     for (final var item : items) {
       idx = Math.max(idx, logModel.indexOf(item));
@@ -303,7 +303,7 @@ public class SelectionList extends JTable {
       removing = false;
       try {
         final var items = (SignalInfo.List) support.getTransferable().getTransferData(SignalInfo.List.dataFlavor);
-        var newIdx = logModel.getSignalCount();
+        int newIdx = logModel.getSignalCount();
         if (support.isDrop()) {
           try {
             final var dl = (JTable.DropLocation) support.getDropLocation();

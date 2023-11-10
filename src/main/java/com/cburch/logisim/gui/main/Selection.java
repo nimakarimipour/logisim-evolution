@@ -61,9 +61,9 @@ public class Selection extends SelectionBase {
 
     for (Component c : lifted) {
       if (!hidden.contains(c)) {
-        var loc = c.getLocation();
+        com.cburch.logisim.data.Location loc = c.getLocation();
 
-        var gfxNew = g.create();
+        java.awt.Graphics gfxNew = g.create();
         context.setGraphics(gfxNew);
         c.getFactory().drawGhost(context, Color.GRAY, loc.getX(), loc.getY(), c.getAttributeSet());
         gfxNew.dispose();
@@ -72,7 +72,7 @@ public class Selection extends SelectionBase {
 
     for (Component comp : unionSet) {
       if (!suppressHandles.contains(comp) && !hidden.contains(comp)) {
-        var gfxNew = g.create();
+        java.awt.Graphics gfxNew = g.create();
         context.setGraphics(gfxNew);
         CustomHandles handler = (CustomHandles) comp.getFeature(CustomHandles.class);
         if (handler == null) {

@@ -108,7 +108,7 @@ final class XmlWriter {
     if (n == 0) return "";
     else if (n == 1) return attrToString((Attr) a.item(0));
     final var lst = new ArrayList<String>();
-    for (var i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
       lst.add(attrToString((Attr) a.item(i)));
     }
     Collections.sort(lst);
@@ -123,7 +123,7 @@ final class XmlWriter {
 
   private static final Comparator<Node> nodeComparator =
       (nodeA, nodeB) -> {
-        var compareResult = stringCompare(nodeA.getNodeName(), nodeB.getNodeName());
+        int compareResult = stringCompare(nodeA.getNodeName(), nodeB.getNodeName());
         if (compareResult != 0) return compareResult;
         compareResult = stringCompare(attrsToString(nodeA.getAttributes()), attrsToString(nodeB.getAttributes()));
         if (compareResult != 0) return compareResult;
@@ -151,24 +151,24 @@ final class XmlWriter {
     if ("appear".equals(name)) {
       // the appearance section only has to sort the circuit ports, the rest is static.
       final var circuitPortIndexes = new ArrayList<Integer>();
-      for (var nodeIndex = 0; nodeIndex < childrenCount; nodeIndex++)
+      for (int nodeIndex = 0; nodeIndex < childrenCount; nodeIndex++)
         if ("circ-port".equals(children.item(nodeIndex).getNodeName())) circuitPortIndexes.add(nodeIndex);
       if (circuitPortIndexes.isEmpty()) return;
       final var numberOfPorts = circuitPortIndexes.size();
       final var nodeSet = new Node[numberOfPorts];
-      for (var portIndex = 0; portIndex < numberOfPorts; portIndex++)
+      for (int portIndex = 0; portIndex < numberOfPorts; portIndex++)
         nodeSet[portIndex] = children.item(circuitPortIndexes.get(portIndex));
       Arrays.sort(nodeSet, nodeComparator);
-      for (var portIndex = 0; portIndex < numberOfPorts; portIndex++) top.insertBefore(nodeSet[portIndex], null);
+      for (int portIndex = 0; portIndex < numberOfPorts; portIndex++) top.insertBefore(nodeSet[portIndex], null);
       return;
     }
     if (childrenCount > 1 && !name.equals("project") && !name.equals("lib") && !name.equals("toolbar")) {
       final var nodeSet = new Node[childrenCount];
-      for (var nodeIndex = 0; nodeIndex < childrenCount; nodeIndex++) nodeSet[nodeIndex] = children.item(nodeIndex);
+      for (int nodeIndex = 0; nodeIndex < childrenCount; nodeIndex++) nodeSet[nodeIndex] = children.item(nodeIndex);
       Arrays.sort(nodeSet, nodeComparator);
-      for (var nodeIndex = 0; nodeIndex < childrenCount; nodeIndex++) top.insertBefore(nodeSet[nodeIndex], null);
+      for (int nodeIndex = 0; nodeIndex < childrenCount; nodeIndex++) top.insertBefore(nodeSet[nodeIndex], null);
     }
-    for (var childId = 0; childId < childrenCount; childId++) {
+    for (int childId = 0; childId < childrenCount; childId++) {
       sort(children.item(childId));
     }
   }
@@ -182,7 +182,7 @@ final class XmlWriter {
     final var doc = docBuilder.newDocument();
     XmlWriter context;
     if (destFile != null) {
-      var dstFilePath = destFile.getAbsolutePath();
+      java.lang.String dstFilePath = destFile.getAbsolutePath();
       dstFilePath = dstFilePath.substring(0, dstFilePath.lastIndexOf(File.separator));
       context = new XmlWriter(file, doc, loader, dstFilePath);
     } else if (libraryHome != null) {
@@ -226,7 +226,7 @@ final class XmlWriter {
       if (attrs.isToSave(attr) && val != null) {
         final var dflt = source == null ? null : source.getDefaultAttributeValue(attr, BuildInfo.version);
         final var defaultValue = dflt == null ? "" : attr.toStandardString(dflt);
-        var newValue = attr.toStandardString(val);
+        java.lang.String newValue = attr.toStandardString(val);
         if (dflt == null || (!dflt.equals(val) && !defaultValue.equals(newValue))
             || (attr.equals(StdAttr.APPEARANCE) && !userModifiedOnly)
             || (attr.equals(ProbeAttributes.PROBEAPPEARANCE) && !userModifiedOnly && val.equals(ProbeAttributes.APPEAR_EVOLUTION_NEW))) {
@@ -371,7 +371,7 @@ final class XmlWriter {
     final var ret = doc.createElement("lib");
     if (libs.containsKey(lib)) return null;
     final var name = Integer.toString(libs.size());
-    var desc = loader.getDescriptor(lib);
+    java.lang.String desc = loader.getDescriptor(lib);
     if (desc == null) {
       loader.showError("library location unknown: " + lib.getName());
       return null;
@@ -379,7 +379,7 @@ final class XmlWriter {
     libs.put(lib, name);
     if (isProjectExport || AppPreferences.REMOVE_UNUSED_LIBRARIES.getBoolean()) {
       // first we check if the library is used and if this is not the case we do not add it
-      var isUsed = false;
+      boolean isUsed = false;
       final var tools = lib.getTools();
       for (final var circuit : file.getCircuits()) {
         for (final var tool : circuit.getNonWires()) {

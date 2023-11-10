@@ -68,7 +68,7 @@ public final class SvgCreator {
     elt = (poly.isClosed()) ? doc.createElement("polygon") : doc.createElement("polyline");
 
     final var points = new StringBuilder();
-    var first = true;
+    boolean first = true;
     for (final var h : poly.getHandles(null)) {
       if (!first) points.append(" ");
       points.append(h.getX()).append(",").append(h.getY());

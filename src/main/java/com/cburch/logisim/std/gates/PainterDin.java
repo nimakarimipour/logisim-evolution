@@ -17,7 +17,7 @@ class PainterDin {
   private static void paint(
       InstancePainter painter, int width, int height, boolean drawBubble, int dinType) {
     final var g = painter.getGraphics();
-    var xMid = -width;
+    int xMid = -width;
     final var y0 = -height / 2;
     if (drawBubble) {
       width -= 8;
@@ -89,13 +89,13 @@ class PainterDin {
     // ignore lines if in print view
     final var r = Math.min(height / 2, width);
     final var hash = r << 4 | inputs;
-    var lens = orLenArrays.get(hash);
+    int[] lens = orLenArrays.get(hash);
     if (lens == null) {
       lens = new int[inputs];
       orLenArrays.put(hash, lens);
       final var yCurveStart = height / 2 - r;
-      for (var i = 0; i < inputs; i++) {
-        var y = OrGate.FACTORY.getInputOffset(attrs, i).getY();
+      for (int i = 0; i < inputs; i++) {
+        int y = OrGate.FACTORY.getInputOffset(attrs, i).getY();
         if (y < 0) y = -y;
         if (y <= yCurveStart) {
           lens[i] = r;
@@ -109,7 +109,7 @@ class PainterDin {
     final var factory = hasBubble ? NorGate.FACTORY : OrGate.FACTORY;
     final var printView = painter.isPrintView() && painter.getInstance() != null;
     GraphicsUtil.switchToWidth(g, 2);
-    for (var i = 0; i < inputs; i++) {
+    for (int i = 0; i < inputs; i++) {
       if (!printView || painter.isPortConnected(i)) {
         final var loc = factory.getInputOffset(attrs, i);
         int x = loc.getX();

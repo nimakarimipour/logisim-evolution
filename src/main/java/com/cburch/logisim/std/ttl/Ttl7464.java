@@ -46,7 +46,7 @@ public class Ttl7464 extends AbstractTtlGate {
     gfx.drawLine(x + 129, y + 35, x + 130, y + 35);
     gfx.drawLine(x + 130, y + 35, x + 130, y + AbstractTtlGate.PIN_HEIGHT);
     int[] posX, posY;
-    for (var i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
       if (!isIEC) {
         int tmpOff = (i == 0) || (i == 3) ? 2 : 0;
         posX = new int[] {x + 105, x + 107 + tmpOff, x + 107 + tmpOff, x + 111};

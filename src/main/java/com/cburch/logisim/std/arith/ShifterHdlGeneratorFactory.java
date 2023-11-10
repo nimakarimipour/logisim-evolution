@@ -45,7 +45,7 @@ public class ShifterHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
         .add(Port.INPUT, "dataA", 0, Shifter.IN0, StdAttr.WIDTH)
         .add(Port.INPUT, "shiftAmount", 0, Shifter.IN1, Shifter.SHIFT_BITS_ATTR)
         .add(Port.OUTPUT, "result", 0, Shifter.OUT, StdAttr.WIDTH);
-    for (var stage = 0; stage < attrs.getValue(Shifter.SHIFT_BITS_ATTR); stage++)
+    for (int stage = 0; stage < attrs.getValue(Shifter.SHIFT_BITS_ATTR); stage++)
       myWires
           .addWire(String.format("s_stage%dResult", stage), attrs.getValue(StdAttr.WIDTH).getWidth())
           .addWire(String.format("s_stage%dShiftIn", stage), 1 << stage);
@@ -73,7 +73,7 @@ public class ShifterHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
                                  {{shiftMode}} = 4 {{else}} dataA {{and}} {{not}}(shiftAmount);
             """);
       } else {
-        for (var stage = 0; stage < nrOfShiftBits; stage++)
+        for (int stage = 0; stage < nrOfShiftBits; stage++)
           contents.add(getStageFunctionalityVhdl(stage, nrOfBits));
         contents
             .empty()
@@ -88,7 +88,7 @@ public class ShifterHdlGeneratorFactory extends AbstractHdlGeneratorFactory {
                               ({{shiftMode}} == 4) ) ? dataA : dataA&(~shiftAmount);
             """);
       } else {
-        for (var stage = 0; stage < nrOfShiftBits; stage++) {
+        for (int stage = 0; stage < nrOfShiftBits; stage++) {
           contents.add(getStageFunctionalityVerilog(stage, nrOfBits));
         }
         contents

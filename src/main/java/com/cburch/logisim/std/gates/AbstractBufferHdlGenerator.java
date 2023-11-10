@@ -46,7 +46,7 @@ public class AbstractBufferHdlGenerator extends InlinedHdlGeneratorFactory {
 
   @Override
   public boolean isHdlSupportedTarget(AttributeSet attrs) {
-    var supported = true;
+    boolean supported = true;
     if (attrs.containsAttribute(GateAttributes.ATTR_OUTPUT))
       supported = attrs.getValue(GateAttributes.ATTR_OUTPUT).equals(GateAttributes.OUTPUT_01);
     return supported;

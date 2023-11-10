@@ -189,8 +189,8 @@ public abstract class AbstractTtlGate extends InstanceFactory {
   }
 
   static Point getTranslatedTtlXY(InstanceState state, MouseEvent e) {
-    var x = 0;
-    var y = 0;
+    int x = 0;
+    int y = 0;
     final var loc = state.getInstance().getLocation();
     final var height = state.getInstance().getBounds().getHeight();
     final var width = state.getInstance().getBounds().getWidth();
@@ -217,10 +217,10 @@ public abstract class AbstractTtlGate extends InstanceFactory {
     final var bds = painter.getBounds();
     final var x = bds.getX();
     final var y = bds.getY();
-    var xp = x;
-    var yp = y;
-    var width = bds.getWidth();
-    var height = bds.getHeight();
+    int xp = x;
+    int yp = y;
+    int width = bds.getWidth();
+    int height = bds.getHeight();
     for (byte i = 0; i < this.pinNumber; i++) {
       if (i < this.pinNumber / 2) {
         if (dir == Direction.WEST || dir == Direction.EAST) xp = i * 20 + (10 - PIN_WIDTH / 2) + x;
@@ -294,8 +294,8 @@ public abstract class AbstractTtlGate extends InstanceFactory {
       final var bds = painter.getBounds();
       final var x = bds.getX();
       final var y = bds.getY();
-      var xp = x;
-      var yp = y;
+      int xp = x;
+      int yp = y;
       final var width = bds.getWidth();
       final var height = bds.getHeight();
       for (byte i = 0; i < this.pinNumber; i++) {
@@ -398,10 +398,10 @@ public abstract class AbstractTtlGate extends InstanceFactory {
   private void paintInternalBase(InstancePainter painter) {
     final var dir = painter.getAttributeValue(StdAttr.FACING);
     final var bds = painter.getBounds();
-    var x = bds.getX();
-    var y = bds.getY();
-    var width = bds.getWidth();
-    var height = bds.getHeight();
+    int x = bds.getX();
+    int y = bds.getY();
+    int width = bds.getWidth();
+    int height = bds.getHeight();
     if (dir == Direction.SOUTH || dir == Direction.NORTH) {
       x += (width - height) / 2;
       y += (height - width) / 2;
@@ -433,7 +433,7 @@ public abstract class AbstractTtlGate extends InstanceFactory {
     if (state.getAttributeValue(TtlLibrary.VCC_GND)
         && (state.getPortValue(this.pinNumber - 2 - NrOfUnusedPins) != Value.FALSE
             || state.getPortValue(this.pinNumber - 1 - NrOfUnusedPins) != Value.TRUE)) {
-      var port = 0;
+      int port = 0;
       for (byte i = 1; i <= pinNumber; i++) {
         if (!unusedPins.contains(i) && (i != (pinNumber / 2))) {
           if (outputPorts.contains(i)) state.setPort(port, Value.UNKNOWN, 1);
@@ -448,14 +448,14 @@ public abstract class AbstractTtlGate extends InstanceFactory {
   private void updatePorts(Instance instance) {
     final var bds = instance.getBounds();
     final var dir = instance.getAttributeValue(StdAttr.FACING);
-    var dx = 0;
-    var dy = 0;
+    int dx = 0;
+    int dy = 0;
     final var width = bds.getWidth();
     final var height = bds.getHeight();
     byte portindex = 0;
-    var isoutput = false;
-    var hasvccgnd = instance.getAttributeValue(TtlLibrary.VCC_GND);
-    var skip = false;
+    boolean isoutput = false;
+    java.lang.Boolean hasvccgnd = instance.getAttributeValue(TtlLibrary.VCC_GND);
+    boolean skip = false;
     final var NrOfUnusedPins = unusedPins.size();
     /*
      * array port is composed in this order: lower ports less GND, upper ports less

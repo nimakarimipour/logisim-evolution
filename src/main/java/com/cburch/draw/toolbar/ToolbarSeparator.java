@@ -40,10 +40,10 @@ public class ToolbarSeparator implements ToolbarItem {
   @Override
   public void paintIcon(Component destination, Graphics gfx) {
     final var dim = destination.getSize();
-    var x = 0;
-    var y = 0;
-    var w = dim.width;
-    var h = dim.height;
+    int x = 0;
+    int y = 0;
+    int w = dim.width;
+    int h = dim.height;
     final var width = AppPreferences.getScaled(2);
     if (h >= w) { // separator is a vertical line in horizontal toolbar
       x = (w - width - 2) / 2;

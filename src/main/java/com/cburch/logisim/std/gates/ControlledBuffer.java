@@ -141,7 +141,7 @@ class ControlledBuffer extends InstanceFactory {
 
   @Override
   public Bounds getOffsetBounds(AttributeSet attrs) {
-    var w = 20;
+    int w = 20;
     if (isInverter && !NotGate.SIZE_NARROW.equals(attrs.getValue(NotGate.ATTR_SIZE))) {
       w = 30;
     }
@@ -217,7 +217,7 @@ class ControlledBuffer extends InstanceFactory {
     final var loc = painter.getLocation();
     final var x = loc.getX();
     final var y = loc.getY();
-    var rotate = 0.0;
+    double rotate = 0.0;
     final var g = painter.getGraphics();
     g.translate(x, y);
     if (facing != Direction.EAST && g instanceof Graphics2D) {

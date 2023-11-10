@@ -26,7 +26,7 @@ public final class ZOrder {
   }
 
   private static int getIndex(CanvasObject query, List<CanvasObject> objs) {
-    var index = -1;
+    int index = -1;
     for (final var o : objs) {
       index++;
       if (o == query) return index;
@@ -51,7 +51,7 @@ public final class ZOrder {
       List<CanvasObject> objs,
       CanvasModel model,
       Collection<? extends CanvasObject> ignore) {
-    var index = getIndex(query, objs);
+    int index = getIndex(query, objs);
     if (index > 0) {
       final var set = toSet(model.getObjectsOverlapping(query));
       final var it = objs.listIterator(index);
@@ -76,7 +76,7 @@ public final class ZOrder {
 
     final var querySet = toSet(query);
     final var ret = new LinkedHashMap<CanvasObject, Integer>(query.size());
-    var z = -1;
+    int z = -1;
     for (final var o : model.getObjectsFromBottom()) {
       z++;
       if (querySet.contains(o)) {

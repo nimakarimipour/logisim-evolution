@@ -298,7 +298,7 @@ public class BoardManipulator extends JPanel implements BaseMouseListenerContrac
 
   private void defineIOComponent() {
     final var rect = defineRectangle.getBoardRectangle(scale);
-    var comp = defineRectangle.getIoInfo();
+    com.cburch.logisim.fpga.data.FpgaIoInformationContainer comp = defineRectangle.getIoInfo();
     /*
      * Before doing anything we have to check that this region does not
      * overlap with an already defined region. If we detect an overlap we
@@ -402,7 +402,7 @@ public class BoardManipulator extends JPanel implements BaseMouseListenerContrac
       }
     } else if (mapMode && ioComps.tryMap(this)) {
       this.repaint();
-      var sel = unmappedList.getSelectedIndex();
+      int sel = unmappedList.getSelectedIndex();
       update();
       while (sel > unmappedList.getModel().getSize()) sel--;
       if (sel >= 0) unmappedList.setSelectedIndex(sel);

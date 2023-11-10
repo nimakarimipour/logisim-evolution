@@ -41,7 +41,7 @@ class PortManager {
     if (!sameWay.isEmpty()) {
       sameWay.add(pin);
       DefaultAppearance.sortPinList(sameWay, facing);
-      var isFirst = false;
+      boolean isFirst = false;
       Instance neighbor = null; // (preferably previous in map)
       for (final var p : sameWay) {
         if (p == pin) {
@@ -62,7 +62,7 @@ class PortManager {
         dx = isFirst ? -10 : 10;
         dy = 0;
       }
-      var loc = others.get(neighbor).getLocation();
+      com.cburch.logisim.data.Location loc = others.get(neighbor).getLocation();
       do {
         loc = loc.translate(dx, dy);
       } while (usedLocs.contains(loc));
@@ -100,7 +100,7 @@ class PortManager {
     }
     x = (x + 9) / 10 * 10; // round coordinates up to ensure they're on grid
     y = (y + 9) / 10 * 10;
-    var loc = Location.create(x, y, true);
+    com.cburch.logisim.data.Location loc = Location.create(x, y, true);
     while (usedLocs.contains(loc)) {
       loc = loc.translate(dX, dY);
     }

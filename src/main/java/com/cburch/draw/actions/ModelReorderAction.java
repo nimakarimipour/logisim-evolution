@@ -32,7 +32,7 @@ public class ModelReorderAction extends ModelAction {
     for (final var req : requests) {
       objects.add(req.getObject());
     }
-    var typeIndex = 0; // 0 = mixed/unknown, -1 = to greater index, 1 = to
+    int typeIndex = 0; // 0 = mixed/unknown, -1 = to greater index, 1 = to
     // smaller index
     for (final var req : requests) {
       final var from = req.getFromIndex();
@@ -57,7 +57,7 @@ public class ModelReorderAction extends ModelAction {
       final var from = entry.getValue();
       final var above = ZOrder.getObjectBelow(obj, model, objects);
       if (above != null) {
-        var to = ZOrder.getZIndex(above, model);
+        int to = ZOrder.getZIndex(above, model);
         if (objects.contains(above)) {
           to++;
         }
@@ -75,7 +75,7 @@ public class ModelReorderAction extends ModelAction {
       CanvasModel model, Collection<? extends CanvasObject> objects) {
     final var reqs = new ArrayList<ReorderRequest>();
     final var zmap = ZOrder.getZIndex(objects, model);
-    var to = 0;
+    int to = 0;
     for (final var entry : zmap.entrySet()) {
       final var obj = entry.getKey();
       final var from = entry.getValue();
@@ -97,7 +97,7 @@ public class ModelReorderAction extends ModelAction {
       final var from = entry.getValue();
       final var above = ZOrder.getObjectAbove(obj, model, objects);
       if (above != null) {
-        var to = ZOrder.getZIndex(above, model);
+        int to = ZOrder.getZIndex(above, model);
         if (objects.contains(above)) {
           to--;
         }
@@ -132,9 +132,9 @@ public class ModelReorderAction extends ModelAction {
   private static void repairRequests(List<ReorderRequest> reqs) {
     for (int i = 0, n = reqs.size(); i < n; i++) {
       final var req = reqs.get(i);
-      var from = req.getFromIndex();
-      var to = req.getToIndex();
-      for (var j = 0; j < i; j++) {
+      int from = req.getFromIndex();
+      int to = req.getToIndex();
+      for (int j = 0; j < i; j++) {
         final var prev = reqs.get(j);
         final var prevFrom = prev.getFromIndex();
         final var prevTo = prev.getToIndex();
@@ -153,7 +153,7 @@ public class ModelReorderAction extends ModelAction {
         reqs.set(i, new ReorderRequest(req.getObject(), from, to));
       }
     }
-    for (var i = reqs.size() - 1; i >= 0; i--) {
+    for (int i = reqs.size() - 1; i >= 0; i--) {
       final var req = reqs.get(i);
       if (req.getFromIndex() == req.getToIndex()) {
         reqs.remove(i);
@@ -189,7 +189,7 @@ public class ModelReorderAction extends ModelAction {
   @Override
   void undoSub(CanvasModel model) {
     final var inv = new ArrayList<ReorderRequest>(requests.size());
-    for (var i = requests.size() - 1; i >= 0; i--) {
+    for (int i = requests.size() - 1; i >= 0; i--) {
       final var request = requests.get(i);
       inv.add(
           new ReorderRequest(request.getObject(), request.getToIndex(), request.getFromIndex()));

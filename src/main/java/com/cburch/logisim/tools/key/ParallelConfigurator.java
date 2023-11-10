@@ -38,7 +38,7 @@ public final class ParallelConfigurator implements KeyConfigurator, Cloneable {
     }
     final var len = this.handlers.length;
     ret.handlers = new KeyConfigurator[len];
-    for (var i = 0; i < len; i++) {
+    for (int i = 0; i < len; i++) {
       ret.handlers[i] = this.handlers[i].clone();
     }
     return ret;

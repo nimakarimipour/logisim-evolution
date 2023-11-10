@@ -168,7 +168,7 @@ public class ToolbarData {
   // package-protected methods
   //
   void replaceAll(Map<Tool, Tool> toolMap) {
-    var changed = false;
+    boolean changed = false;
     for (final var it = contents.listIterator(); it.hasNext(); ) {
       Object old = it.next();
       if (toolMap.containsKey(old)) {

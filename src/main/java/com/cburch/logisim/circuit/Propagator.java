@@ -117,8 +117,8 @@ public class Propagator {
   //
   static Value computeValue(SetData causes) {
     if (causes == null) return Value.NIL;
-    var ret = causes.val;
-    for (var n = causes.next; n != null; n = n.next) {
+    com.cburch.logisim.data.Value ret = causes.val;
+    for (com.cburch.logisim.circuit.Propagator.SetData n = causes.next; n != null; n = n.next) {
       ret = ret.combine(n.val);
     }
     return ret;
@@ -165,8 +165,8 @@ public class Propagator {
     final var causes = state.causes;
 
     // first check whether this is change of previous info.
-    var replaced = false;
-    for (var n = head; n != null; n = n.next) {
+    boolean replaced = false;
+    for (com.cburch.logisim.circuit.Propagator.SetData n = head; n != null; n = n.next) {
       if (n.cause == data.cause) {
         n.val = data.val;
         replaced = true;
@@ -273,7 +273,7 @@ public class Propagator {
 
     final var oscThreshold = simLimit;
     final var logThreshold = 3 * oscThreshold / 4;
-    var iters = 0;
+    int iters = 0;
     while (!toProcess.isEmpty()) {
       if (iters > 0 && propListener != null)
         propListener.propagationInProgress(propEvent);
@@ -304,8 +304,8 @@ public class Propagator {
       if (head == null) causes.remove(loc);
       else causes.put(loc, head);
     } else {
-      var prev = head;
-      var cur = head.next;
+      com.cburch.logisim.circuit.Propagator.SetData prev = head;
+      com.cburch.logisim.circuit.Propagator.SetData cur = head.next;
       while (cur != null) {
         if (cur.cause == cause) {
           prev.next = cur.next;
@@ -387,7 +387,7 @@ public class Propagator {
       final var state = data.state;
 
       // if it's already handled for this clock tick, continue
-      var handled = visited.get(state);
+      java.util.HashSet<com.cburch.logisim.circuit.Propagator.ComponentPoint> handled = visited.get(state);
       if (handled != null) {
         if (!handled.add(new ComponentPoint(data.cause, data.loc))) continue;
       } else {
@@ -434,7 +434,7 @@ public class Propagator {
     final var opts = root.getProject().getOptions();
     final var rand = opts.getAttributeSet().getValue(Options.ATTR_SIM_RAND);
     final var val = rand;
-    var logVal = 0;
+    int logVal = 0;
     while ((1 << logVal) < val) logVal++;
     simRandomShift = logVal;
   }

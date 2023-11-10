@@ -90,7 +90,7 @@ public class ValueTable extends JPanel {
       tableWidth = tableHeight = 0;
     } else {
       final var g = getGraphics();
-      var cellsWidth = 0;
+      int cellsWidth = 0;
 
       if (g == null) {
         cellHeight = 16;
@@ -99,12 +99,12 @@ public class ValueTable extends JPanel {
         final var headerMetric = g.getFontMetrics(HEAD_FONT);
         final var bodyMetric = g.getFontMetrics(BODY_FONT);
         cellHeight = Math.max(headerMetric.getHeight(), bodyMetric.getHeight());
-        for (var i = 0; i < columns; i++) {
+        for (int i = 0; i < columns; i++) {
           final var radix = model.getColumnValueRadix(i);
           // column should be at least as wide as 24, as header, and
           // as formatted value
           final var header = model.getColumnName(i);
-          var cellWidth = Math.max(24, headerMetric.stringWidth(header));
+          int cellWidth = Math.max(24, headerMetric.stringWidth(header));
           final var w = model.getColumnValueWidth(i);
 
           if (w != null) {
@@ -142,12 +142,12 @@ public class ValueTable extends JPanel {
   }
 
   int findColumn(int x, int width) {
-    var left = Math.max(0, (width - tableWidth) / 2);
+    int left = Math.max(0, (width - tableWidth) / 2);
     if (x < left + COLUMN_SEP || x >= left + tableWidth) return -1;
     left += COLUMN_SEP;
     final var columns = model.getColumnCount();
 
-    for (var i = 0; i < columns; i++) {
+    for (int i = 0; i < columns; i++) {
       final var cellWidth = columnWidth[i];
       if (x >= left && x < left + cellWidth) return i;
       left += cellWidth + COLUMN_SEP;
@@ -181,8 +181,8 @@ public class ValueTable extends JPanel {
       return;
     }
 
-    var topRow = Math.min(rows - 1, Math.max(0, top / cellHeight));
-    var bottomRow = Math.min(rows - 1, Math.max(0, bottom / cellHeight));
+    int topRow = Math.min(rows - 1, Math.max(0, top / cellHeight));
+    int bottomRow = Math.min(rows - 1, Math.max(0, bottom / cellHeight));
 
     if (rowData != null
         && rowStart <= topRow
@@ -291,9 +291,9 @@ public class ValueTable extends JPanel {
       final var firstRow = Math.max(0, clip.y / cellHeight);
       final var lastRow = Math.min(model.getRowCount() - 1, (clip.y + clip.height) / cellHeight);
 
-      var top = 0;
+      int top = 0;
       final var left = Math.max(0, (sz.width - tableWidth) / 2);
-      var x = left + COLUMN_SEP;
+      int x = left + COLUMN_SEP;
 
       final var bg = getBackground();
 
@@ -305,7 +305,7 @@ public class ValueTable extends JPanel {
         final var cellWidth = columnWidth[col];
         final var radix = model.getColumnValueRadix(col);
 
-        for (var row = firstRow; row <= lastRow; row++) {
+        for (int row = firstRow; row <= lastRow; row++) {
           if (!(rowStart <= row && row < rowStart + rowCount)) continue;
           final var cell = rowData[row - rowStart][col];
 
@@ -377,10 +377,10 @@ public class ValueTable extends JPanel {
 
       g.drawLine(left, cellHeight + HEADER_SEP / 2, left + tableWidth, cellHeight + HEADER_SEP / 2);
 
-      var x = left + COLUMN_SEP;
+      int x = left + COLUMN_SEP;
       final var y = top + headerMetric.getAscent() + 1;
 
-      for (var i = 0; i < columns; i++) {
+      for (int i = 0; i < columns; i++) {
         g.setColor(Color.GRAY);
         g.drawLine(x - COLUMN_SEP / 2, 0, x - COLUMN_SEP / 2, cellHeight);
         g.setColor(Color.BLACK);
@@ -417,7 +417,7 @@ public class ValueTable extends JPanel {
     @Override
     public int getBlockIncrement(int direction) {
       final var curHeight = getVisibleAmount();
-      var numCells = curHeight / cellHeight - 1;
+      int numCells = curHeight / cellHeight - 1;
       if (numCells <= 0) numCells = 1;
       return numCells * cellHeight;
     }

@@ -79,7 +79,7 @@ public class Dag {
   }
 
   private Node createNode(Object data) {
-    var ret = findNode(data);
+    com.cburch.logisim.util.Dag.Node ret = findNode(data);
     if (ret != null) return ret;
     if (data == null) return null;
 

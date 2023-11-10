@@ -303,12 +303,12 @@ public class Simulator {
       // System.out.printf("%d nudge %s tick %s prop %s step %s\n", cnt++, doNudge, doTick, doProp,
       // doStep);
 
-      var oops = false;
-      var osc = false;
-      var ticked = false;
-      var stepped = false;
-      var propagated = false;
-      var hasClocks = true;
+      boolean oops = false;
+      boolean osc = false;
+      boolean ticked = false;
+      boolean stepped = false;
+      boolean propagated = false;
+      boolean hasClocks = true;
 
       if (doReset)
         try {
@@ -352,7 +352,7 @@ public class Simulator {
 
       osc = prop != null && prop.isOscillating();
 
-      var clockDied = false;
+      boolean clockDied = false;
       synchronized (this) {
         this.oops = oops;
         if (osc) {

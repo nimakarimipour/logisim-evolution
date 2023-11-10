@@ -55,7 +55,7 @@ abstract class FillableCanvasObject extends AbstractCanvasObject {
   @Override
   public boolean matches(CanvasObject other) {
     if (!(other instanceof FillableCanvasObject that)) return false;
-    var ret = this.paintType == that.paintType;
+    boolean ret = this.paintType == that.paintType;
     if (ret && this.paintType != DrawAttr.PAINT_FILL) {
       ret =
           ret
@@ -70,7 +70,7 @@ abstract class FillableCanvasObject extends AbstractCanvasObject {
 
   @Override
   public int matchesHashCode() {
-    var ret = paintType.hashCode();
+    int ret = paintType.hashCode();
     if (paintType != DrawAttr.PAINT_FILL) {
       ret = ret * 31 + strokeWidth;
       ret = ret * 31 + strokeColor.hashCode();

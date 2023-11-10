@@ -144,7 +144,7 @@ class NotGate extends InstanceFactory {
       return (ExpressionComputer)
           expressionMap -> {
             int width = instance.getAttributeValue(StdAttr.WIDTH).getWidth();
-            for (var b = 0; b < width; b++) {
+            for (int b = 0; b < width; b++) {
               final var e = expressionMap.get(instance.getPortLocation(1), b);
               if (e != null) {
                 expressionMap.put(instance.getPortLocation(0), b, Expressions.not(e));
@@ -197,7 +197,7 @@ class NotGate extends InstanceFactory {
     final var x = loc.getX();
     final var y = loc.getY();
     g.translate(x, y);
-    var rotate = 0.0;
+    double rotate = 0.0;
     if (facing != null && facing != Direction.EAST && g instanceof Graphics2D) {
       rotate = -facing.toRadians();
       ((Graphics2D) g).rotate(rotate);
@@ -262,7 +262,7 @@ class NotGate extends InstanceFactory {
   @Override
   public void propagate(InstanceState state) {
     final var in = state.getPortValue(1);
-    var out = in.not();
+    com.cburch.logisim.data.Value out = in.not();
     out = Buffer.repair(state, out);
     state.setPort(0, out, GateAttributes.DELAY);
   }

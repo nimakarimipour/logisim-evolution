@@ -95,7 +95,7 @@ public final class LogisimFileActions {
       final var libNames = new HashMap<String, Library>();
       final var toolList = new HashSet<String>();
       final var errors = new HashMap<String, String>();
-      var canContinue = true;
+      boolean canContinue = true;
       for (final var lib : source.getLibraries()) {
         LibraryTools.buildLibraryList(lib, libNames);
       }
@@ -112,7 +112,7 @@ public final class LogisimFileActions {
             final var Location = "";
             final var toolNames = LibraryTools.getToolLocation(source, Location, ret);
             for (final var key : toolNames.keySet()) {
-              var solStr = S.get("LibMergeFailure2") + " a) ";
+              java.lang.String solStr = S.get("LibMergeFailure2") + " a) ";
               final var errLoc = toolNames.get(key);
               final var errParts = errLoc.split("->");
               if (errParts.length > 1) {
@@ -150,7 +150,7 @@ public final class LogisimFileActions {
               final var errLoc = toolNames.get(key);
               final var errParts = errLoc.split("->");
               if (errParts.length > 1) {
-                var solStr = S.get("LibMergeFailure2") + " a) ";
+                java.lang.String solStr = S.get("LibMergeFailure2") + " a) ";
                 solStr = solStr.concat(S.get("LibMergeFailure4", errParts[1]));
                 solStr = solStr.concat(" " + S.get("LibMergeFailure5") + " b) ");
                 solStr = solStr.concat(S.get("LibMergeFailure8", circ.getName()));
@@ -280,7 +280,7 @@ public final class LogisimFileActions {
       // outputs and wires
       for (final var circ : mergedCircuits) {
         Circuit newCircuit = null;
-        var replace = false;
+        boolean replace = false;
         for (final var circs : proj.getLogisimFile().getCircuits()) {
           if (circs.getName().equalsIgnoreCase(circ.getName())) {
             newCircuit = circs;
@@ -618,7 +618,7 @@ public final class LogisimFileActions {
 
       copyToolAttributes(src, dst);
       for (final var srcLib : src.getLibraries()) {
-        var dstLib = dst.getLibrary(srcLib.getName());
+        com.cburch.logisim.tools.Library dstLib = dst.getLibrary(srcLib.getName());
         if (dstLib == null) {
           final var desc = src.getLoader().getDescriptor(srcLib);
           dstLib = dst.getLoader().loadLibrary(desc);
@@ -690,7 +690,7 @@ public final class LogisimFileActions {
 
     @Override
     public void doIt(Project proj) {
-      for (var i = libs.length - 1; i >= 0; i--) {
+      for (int i = libs.length - 1; i >= 0; i--) {
         proj.getLogisimFile().removeLibrary(libs[i]);
       }
     }

@@ -33,7 +33,7 @@ public class HdlTypes {
     }
 
     public HdlEnum add(String entry) {
-      for (var item = 0; item < myEntries.size(); item++)
+      for (int item = 0; item < myEntries.size(); item++)
         if (myEntries.get(item).compareTo(entry) > 0) {
           myEntries.add(item, entry);
           return this;
@@ -48,7 +48,7 @@ public class HdlTypes {
       if (Hdl.isVhdl())
         contents.append(LineBuffer.formatVhdl("{{type}} {{1}} {{is}} (", myTypeName));
       else contents.append("typedef enum { ");
-      var first = true;
+      boolean first = true;
       for (final var entry : myEntries) {
         if (first) first = false;
         else contents.append(", ");

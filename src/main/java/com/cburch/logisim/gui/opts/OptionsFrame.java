@@ -147,7 +147,7 @@ public class OptionsFrame extends LFrame.Dialog {
     @Override
     public void localeChanged() {
       computeTitle();
-      for (var i = 0; i < panels.length; i++) {
+      for (int i = 0; i < panels.length; i++) {
         tabbedPane.setTitleAt(i, panels[i].getTitle());
         tabbedPane.setToolTipTextAt(i, panels[i].getToolTipText());
         panels[i].localeChanged();

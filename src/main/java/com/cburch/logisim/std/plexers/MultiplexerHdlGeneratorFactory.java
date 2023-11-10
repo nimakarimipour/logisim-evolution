@@ -33,7 +33,7 @@ public class MultiplexerHdlGeneratorFactory extends AbstractHdlGeneratorFactory 
     final var nrOfSelectBits = attrs.getValue(PlexersLibrary.ATTR_SELECT).getWidth();
     final var selectInputIndex = (1 << nrOfSelectBits);
     final var hasenable = attrs.getValue(PlexersLibrary.ATTR_ENABLE);
-    for (var inp = 0; inp < selectInputIndex; inp++)
+    for (int inp = 0; inp < selectInputIndex; inp++)
       myPorts.add(Port.INPUT, String.format("muxIn_%d", inp), NR_OF_BITS_ID, inp, StdAttr.WIDTH);
     myPorts
         .add(Port.INPUT, "sel", nrOfSelectBits, selectInputIndex)
@@ -51,7 +51,7 @@ public class MultiplexerHdlGeneratorFactory extends AbstractHdlGeneratorFactory 
     final var nrOfBits = attrs.getValue(StdAttr.WIDTH).getWidth();
     if (Hdl.isVhdl()) {
       contents.empty().addVhdlKeywords().add("makeMux : {{process}}(enable,");
-      for (var i = 0; i < (1 << nrOfSelectBits); i++)
+      for (int i = 0; i < (1 << nrOfSelectBits); i++)
         contents.add("                  muxIn_{{1}},", i);
       contents.add("""
                             sel) {{is}}
@@ -65,7 +65,7 @@ public class MultiplexerHdlGeneratorFactory extends AbstractHdlGeneratorFactory 
                                      {{else}}
                       {{case}} (sel) IS
                 """);
-      for (var i = 0; i < (1 << nrOfSelectBits) - 1; i++)
+      for (int i = 0; i < (1 << nrOfSelectBits) - 1; i++)
         contents.add("         {{when}} {{1}} => muxOut <= muxIn_{{2}};", Hdl.getConstantVector(i, nrOfSelectBits), i);
       contents.add("         {{when}} {{others}}  => muxOut <= muxIn_{{1}};", (1 << nrOfSelectBits) - 1)
               .add("""
@@ -86,7 +86,7 @@ public class MultiplexerHdlGeneratorFactory extends AbstractHdlGeneratorFactory 
              if (~enable) s_selected_vector <= 0;
              else case (sel)
           """);
-      for (var i = 0; i < (1 << nrOfSelectBits) - 1; i++) {
+      for (int i = 0; i < (1 << nrOfSelectBits) - 1; i++) {
         contents
             .add("      {{1}}:", Hdl.getConstantVector(i, nrOfSelectBits))
             .add("         s_selected_vector <= muxIn_{{1}};", i);

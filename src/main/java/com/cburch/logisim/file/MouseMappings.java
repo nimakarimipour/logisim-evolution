@@ -58,7 +58,7 @@ public class MouseMappings {
     this.map.clear();
     for (Integer mods : other.map.keySet()) {
       final var srcTool = other.map.get(mods);
-      var dstTool = file.findTool(srcTool);
+      com.cburch.logisim.tools.Tool dstTool = file.findTool(srcTool);
       if (dstTool != null) {
         dstTool = dstTool.cloneTool();
         AttributeSets.copy(srcTool.getAttributeSet(), dstTool.getAttributeSet());
@@ -119,7 +119,7 @@ public class MouseMappings {
   // package-protected methods
   //
   void replaceAll(Map<Tool, Tool> toolMap) {
-    var changed = false;
+    boolean changed = false;
     for (final var entry : map.entrySet()) {
       final var key = entry.getKey();
       final var tool = entry.getValue();
@@ -130,7 +130,7 @@ public class MouseMappings {
   }
 
   private boolean replaceInMap(Map<Tool, Tool> toolMap, Tool tool, Object searchFor, Integer key) {
-    var changed = false;
+    boolean changed = false;
     if (toolMap.containsKey(searchFor)) {
       changed = true;
       final var newTool = toolMap.get(searchFor);

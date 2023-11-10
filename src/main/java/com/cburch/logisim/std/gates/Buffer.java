@@ -56,7 +56,7 @@ class Buffer extends InstanceFactory {
       final var ww = w.getWidth();
       if (vw == ww && v.isFullyDefined()) return v;
       final var vs = new Value[w.getWidth()];
-      for (var i = 0; i < vs.length; i++) {
+      for (int i = 0; i < vs.length; i++) {
         final var ini = i < vw ? v.get(i) : Value.ERROR;
         vs[i] = ini.isFullyDefined() ? ini : Value.ERROR;
       }
@@ -127,7 +127,7 @@ class Buffer extends InstanceFactory {
     if (key == ExpressionComputer.class) {
       return (ExpressionComputer) expressionMap -> {
         final var width = instance.getAttributeValue(StdAttr.WIDTH).getWidth();
-        for (var b = 0; b < width; b++) {
+        for (int b = 0; b < width; b++) {
           final var e = expressionMap.get(instance.getPortLocation(1), b);
           if (e != null) {
             expressionMap.put(instance.getPortLocation(0), b, e);
@@ -170,7 +170,7 @@ class Buffer extends InstanceFactory {
     final var y = loc.getY();
     final var g = painter.getGraphics();
     g.translate(x, y);
-    var rotate = 0.0d;
+    double rotate = 0.0d;
     if (facing != Direction.EAST && g instanceof Graphics2D g2d) {
       rotate = -facing.toRadians();
       g2d.rotate(rotate);

@@ -85,14 +85,14 @@ public final class ProjectActions {
    */
   private static boolean checkValidFilename(
       String filename, Project proj, HashMap<String, String> errors) {
-    var isOk = true;
-    var tempSet = new HashMap<String, Library>();
-    var forbiddenNames = new HashSet<String>();
+    boolean isOk = true;
+    java.util.HashMap<java.lang.String,com.cburch.logisim.tools.Library> tempSet = new HashMap<String, Library>();
+    java.util.HashSet<java.lang.String> forbiddenNames = new HashSet<String>();
     LibraryTools.buildLibraryList(proj.getLogisimFile(), tempSet);
     LibraryTools.buildToolList(proj.getLogisimFile(), forbiddenNames);
     forbiddenNames.addAll(tempSet.keySet());
-    var pattern = Pattern.compile("[^a-z\\d_.]", Pattern.CASE_INSENSITIVE);
-    var matcher = pattern.matcher(filename);
+    java.util.regex.Pattern pattern = Pattern.compile("[^a-z\\d_.]", Pattern.CASE_INSENSITIVE);
+    java.util.regex.Matcher matcher = pattern.matcher(filename);
     if (matcher.find()) {
       isOk = false;
       errors.put(FILE_NAME_FORMAT_ERROR, S.get("InvalidFileFormatError"));
@@ -273,7 +273,7 @@ public final class ProjectActions {
   }
 
   public static Project doOpen(Component parent, Project baseProject, File f) {
-    var proj = Projects.findProjectFor(f);
+    com.cburch.logisim.proj.Project proj = Projects.findProjectFor(f);
     Loader loader = null;
     if (proj != null) {
       proj.getFrame().toFront();
@@ -335,7 +335,7 @@ public final class ProjectActions {
       return null;
     }
 
-    var frame = proj.getFrame();
+    com.cburch.logisim.gui.main.Frame frame = proj.getFrame();
     if (frame == null) {
       frame = createFrame(baseProject, proj);
     }
@@ -404,7 +404,7 @@ public final class ProjectActions {
    * @return true if success, false otherwise
    */
   public static boolean doExportProject(Project proj) {
-    var ret = proj.isFileDirty() ? doSave(proj) : true;
+    boolean ret = proj.isFileDirty() ? doSave(proj) : true;
     if (ret) {
       final var loader = proj.getLogisimFile().getLoader();
       final var oldTool = proj.getTool();
@@ -413,8 +413,8 @@ public final class ProjectActions {
       chooser.setFileFilter(Loader.LOGISIM_DIRECTORY);
       chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
       chooser.setAcceptAllFileFilterUsed(false);
-      var isCorrectDirectory = false;
-      var exportRootDir = "";
+      boolean isCorrectDirectory = false;
+      java.lang.String exportRootDir = "";
       do {
         ret &= chooser.showSaveDialog(proj.getFrame()) == JFileChooser.APPROVE_OPTION;
         if (!ret) {
@@ -458,16 +458,16 @@ public final class ProjectActions {
    * @return true if success, false otherwise
    */
   public static boolean doSaveAs(Project proj) {
-    var loader = proj.getLogisimFile().getLoader();
-    var chooser = loader.createChooser();
+    com.cburch.logisim.file.Loader loader = proj.getLogisimFile().getLoader();
+    javax.swing.JFileChooser chooser = loader.createChooser();
     chooser.setFileFilter(Loader.LOGISIM_FILTER);
     if (loader.getMainFile() != null) {
       chooser.setSelectedFile(loader.getMainFile());
     }
 
     int returnVal;
-    var validFilename = false;
-    var errors = new HashMap<String, String>();
+    boolean validFilename = false;
+    java.util.HashMap<java.lang.String,java.lang.String> errors = new HashMap<String, String>();
     do {
       errors.clear();
       returnVal = chooser.showSaveDialog(proj.getFrame());
@@ -476,7 +476,7 @@ public final class ProjectActions {
       }
       validFilename = checkValidFilename(chooser.getSelectedFile().getName(), proj, errors);
       if (!validFilename) {
-        var message = "\"" + chooser.getSelectedFile() + "\":\n";
+        java.lang.String message = "\"" + chooser.getSelectedFile() + "\":\n";
         for (String key : errors.keySet()) {
           message = message.concat("=> " + S.get(errors.get(key)) + "\n");
         }
@@ -485,29 +485,29 @@ public final class ProjectActions {
       }
     } while (!validFilename);
 
-    var selectedFile = chooser.getSelectedFile();
+    java.io.File selectedFile = chooser.getSelectedFile();
     if (!selectedFile.getName().endsWith(Loader.LOGISIM_EXTENSION)) {
-      var old = selectedFile.getName();
+      java.lang.String old = selectedFile.getName();
       int ext0 = old.lastIndexOf('.');
       if (ext0 < 0 || !Pattern.matches("\\.\\p{L}{2,}\\d?", old.substring(ext0))) {
         selectedFile = new File(selectedFile.getParentFile(), old + Loader.LOGISIM_EXTENSION);
       } else {
-        var ext = old.substring(ext0);
-        var ttl = S.get("replaceExtensionTitle");
-        var msg = S.get("replaceExtensionMessage", ext);
+        java.lang.String ext = old.substring(ext0);
+        java.lang.String ttl = S.get("replaceExtensionTitle");
+        java.lang.String msg = S.get("replaceExtensionMessage", ext);
         Object[] options = {
           S.get("replaceExtensionReplaceOpt", ext),
           S.get("replaceExtensionAddOpt", Loader.LOGISIM_EXTENSION),
           S.get("replaceExtensionKeepOpt")
         };
-        var dlog = new JOptionPane(msg);
+        javax.swing.JOptionPane dlog = new JOptionPane(msg);
         dlog.setMessageType(OptionPane.QUESTION_MESSAGE);
         dlog.setOptions(options);
         dlog.createDialog(proj.getFrame(), ttl).setVisible(true);
 
         Object result = dlog.getValue();
         if (result == options[0]) {
-          var name = old.substring(0, ext0) + Loader.LOGISIM_EXTENSION;
+          java.lang.String name = old.substring(0, ext0) + Loader.LOGISIM_EXTENSION;
           selectedFile = new File(selectedFile.getParentFile(), name);
         } else if (result == options[1]) {
           selectedFile = new File(selectedFile.getParentFile(), old + Loader.LOGISIM_EXTENSION);
@@ -516,7 +516,7 @@ public final class ProjectActions {
     }
 
     if (selectedFile.exists()) {
-      var confirm =
+      int confirm =
           OptionPane.showConfirmDialog(
               proj.getFrame(),
               S.get("confirmOverwriteMessage"),

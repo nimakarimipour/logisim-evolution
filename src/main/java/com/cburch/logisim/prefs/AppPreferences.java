@@ -611,7 +611,7 @@ public class AppPreferences {
   static {
     final var radixOptions = RadixOption.OPTIONS;
     final var radixStrings = new String[radixOptions.length];
-    for (var i = 0; i < radixOptions.length; i++) {
+    for (int i = 0; i < radixOptions.length; i++) {
       radixStrings[i] = radixOptions[i].getSaveString();
     }
     POKE_WIRE_RADIX1 =

@@ -45,7 +45,7 @@ public class Location implements Comparable<Location> {
       value = value.substring(1, len - 1);
     }
     value = value.trim();
-    var comma = value.indexOf(',');
+    int comma = value.indexOf(',');
     if (comma < 0) {
       comma = value.indexOf(' ');
       if (comma < 0) {
@@ -106,7 +106,7 @@ public class Location implements Comparable<Location> {
   // rotates this around (xc,yc) assuming that this is facing in the
   // from direction and the returned bounds should face in the to direction.
   public Location rotate(Direction from, Direction to, int xc, int yc) {
-    var degrees = to.toDegrees() - from.toDegrees();
+    int degrees = to.toDegrees() - from.toDegrees();
     while (degrees >= 360) degrees -= 360;
     while (degrees < 0) degrees += 360;
 

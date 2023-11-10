@@ -431,7 +431,7 @@ public class RV32imState implements SocUpSimulationStateListener, SocProcessorIn
   }
 
   public String getName() {
-    var name = label;
+    java.lang.String name = label;
     if (StringUtil.isNullOrEmpty(name)) {
       final var loc = attachedBus.getComponent().getLocation();
       name =

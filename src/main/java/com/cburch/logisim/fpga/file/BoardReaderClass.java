@@ -152,8 +152,8 @@ public class BoardReaderClass {
   }
 
   private FpgaClass getFpgaInfo() {
-    var fpgaList = BoardDoc.getElementsByTagName(BoardWriterClass.BOARD_INFORMATION_SECTION_STRING);
-    var frequency = -1L;
+    org.w3c.dom.NodeList fpgaList = BoardDoc.getElementsByTagName(BoardWriterClass.BOARD_INFORMATION_SECTION_STRING);
+    long frequency = -1L;
     String clockPin = null;
     String clockPull = null;
     String clockStand = null;
@@ -262,7 +262,7 @@ public class BoardReaderClass {
     if (compList.getLength() == 1) {
       tempNode = compList.item(0);
       compList = tempNode.getChildNodes();
-      for (var i = 0; i < compList.getLength(); i++) {
+      for (int i = 0; i < compList.getLength(); i++) {
         final var newComp = new FpgaIoInformationContainer(compList.item(i));
         if (newComp.isKnownComponent()) {
           board.addComponent(newComp);

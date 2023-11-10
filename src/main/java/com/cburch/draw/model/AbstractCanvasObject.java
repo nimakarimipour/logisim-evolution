@@ -111,7 +111,7 @@ public abstract class AbstractCanvasObject implements AttributeSet, CanvasObject
     final var y = bds.getY();
     final var w = bds.getWidth();
     final var h = bds.getHeight();
-    for (var i = 0; i < GENERATE_RANDOM_TRIES; i++) {
+    for (int i = 0; i < GENERATE_RANDOM_TRIES; i++) {
       final var loc = Location.create(x + rand.nextInt(w), y + rand.nextInt(h), false);
       if (contains(loc, false)) return loc;
     }
@@ -147,7 +147,7 @@ public abstract class AbstractCanvasObject implements AttributeSet, CanvasObject
     if (c.getWidth() == 0 || c.getHeight() == 0) {
       return false;
     } else if (other instanceof AbstractCanvasObject that) {
-      for (var i = 0; i < OVERLAP_TRIES; i++) {
+      for (int i = 0; i < OVERLAP_TRIES; i++) {
         if (i % 2 == 0) {
           final var loc = this.getRandomPoint(c, rand);
           if (loc != null && that.contains(loc, false)) return true;
@@ -158,7 +158,7 @@ public abstract class AbstractCanvasObject implements AttributeSet, CanvasObject
       }
       return false;
     } else {
-      for (var i = 0; i < OVERLAP_TRIES; i++) {
+      for (int i = 0; i < OVERLAP_TRIES; i++) {
         final var loc = this.getRandomPoint(c, rand);
         if (loc != null && other.contains(loc, false)) return true;
       }

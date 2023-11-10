@@ -42,7 +42,7 @@ public class Drawing implements CanvasModel {
   @Override
   public void addObjects(int index, Collection<? extends CanvasObject> shapes) {
     final var indexes = new LinkedHashMap<CanvasObject, Integer>();
-    var i = index;
+    int i = index;
     for (final var shape : shapes) {
       indexes.put(shape, i);
       i++;
@@ -185,7 +185,7 @@ public class Drawing implements CanvasModel {
 
   @Override
   public void reorderObjects(List<ReorderRequest> requests) {
-    var hasEffect = false;
+    boolean hasEffect = false;
     for (final var r : requests) {
       if (r.getFromIndex() != r.getToIndex()) {
         hasEffect = true;

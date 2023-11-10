@@ -53,9 +53,9 @@ public class DotMatrixHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
        *  r0,c0 r0,c1
        *  r1,c0 r1,c1
        */
-      for (var dotMatrixRow = 0; dotMatrixRow < rows; dotMatrixRow++) {
+      for (int dotMatrixRow = 0; dotMatrixRow < rows; dotMatrixRow++) {
         final var ledMatrixRow = rows - dotMatrixRow - 1;
-        for (var ledMatrixCol = 0; ledMatrixCol < cols; ledMatrixCol++) {
+        for (int ledMatrixCol = 0; ledMatrixCol < cols; ledMatrixCol++) {
           final var wire =
               (rows == 1)
                   ? Hdl.getNetName(componentInfo, ledMatrixCol, true, netlist)
@@ -76,8 +76,8 @@ public class DotMatrixHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
        *  r0,c0 r0,c1
        *  r1,c0 r1,c1
        */
-      for (var ledMatrixRow = 0; ledMatrixRow < rows; ledMatrixRow++) {
-        for (var dotMatrixCol = 0; dotMatrixCol < cols; dotMatrixCol++) {
+      for (int ledMatrixRow = 0; ledMatrixRow < rows; ledMatrixRow++) {
+        for (int dotMatrixCol = 0; dotMatrixCol < cols; dotMatrixCol++) {
           final var ledMatrixCol = cols - dotMatrixCol - 1;
           final var wire =
               (cols == 1)
@@ -99,9 +99,9 @@ public class DotMatrixHdlGeneratorFactory extends InlinedHdlGeneratorFactory {
        *  r0,c0 r0,c1
        *  r1,c0 r1,c1
        */
-      for (var dotMatrixRow = 0; dotMatrixRow < rows; dotMatrixRow++) {
+      for (int dotMatrixRow = 0; dotMatrixRow < rows; dotMatrixRow++) {
         final var ledMatrixRow = rows - dotMatrixRow - 1;
-        for (var ledMatrixCol = 0; ledMatrixCol < cols; ledMatrixCol++) {
+        for (int ledMatrixCol = 0; ledMatrixCol < cols; ledMatrixCol++) {
           final var rowWire =
               (rows == 1)
                   ? Hdl.getNetName(componentInfo, 1, true, netlist)

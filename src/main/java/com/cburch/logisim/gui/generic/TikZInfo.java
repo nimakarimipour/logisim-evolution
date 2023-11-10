@@ -80,7 +80,7 @@ public class TikZInfo implements Cloneable {
 
   @Override
   public TikZInfo clone() {
-    var newInst = new TikZInfo();
+    com.cburch.logisim.gui.generic.TikZInfo newInst = new TikZInfo();
     newInst.myTransformer = (AffineTransform) myTransformer.clone();
     newInst.drawColor = drawColor;
     newInst.backColor = backColor;
@@ -280,8 +280,8 @@ public class TikZInfo implements Cloneable {
     while (l.hasNext()) {
       final var obj = l.next();
       if (obj instanceof TikZLine lineA) {
-        var merged = false;
-        for (var i = contents.indexOf(obj) + 1; i < contents.size(); i++) {
+        boolean merged = false;
+        for (int i = contents.indexOf(obj) + 1; i < contents.size(); i++) {
           final var n = contents.get(i);
           if (n instanceof TikZLine lineB) {
             if (lineB.canMerge(lineA)) {
@@ -304,12 +304,12 @@ public class TikZInfo implements Cloneable {
 
   private String getFontDefinition(int i) {
     final var content = new StringBuilder();
-    var replaced = false;
+    boolean replaced = false;
     content
         .append("\\def\\logisimfont")
         .append(getCharRepresentation(i))
         .append("#1{\\fontfamily{");
-    var fontName = usedFonts.get(i);
+    java.lang.String fontName = usedFonts.get(i);
     if (fontName.contains("SansSerif")) {
       replaced = true;
       fontName = "cmr";
@@ -435,7 +435,7 @@ public class TikZInfo implements Cloneable {
       final var x2 = Math.max(left.x, right.x);
       final var y1 = Math.min(left.y, right.y);
       final var y2 = Math.max(left.y, right.y);
-      var inside = true;
+      boolean inside = true;
       if (points.isEmpty())
         return (start.x >= x1 && start.x <= x2)
             && (start.y >= y1 && start.y <= y2)
@@ -567,7 +567,7 @@ public class TikZInfo implements Cloneable {
         contents.append("--");
         contents.append(getPoint(end));
       } else {
-        var first = true;
+        boolean first = true;
         for (final var point : points) {
           if (first) first = false;
           else contents.append("--");
@@ -593,7 +593,7 @@ public class TikZInfo implements Cloneable {
         content.append(start.x).append(",").append(start.y).append(" ").append(end.x).append(",")
             .append(end.y);
       } else {
-        var first = true;
+        boolean first = true;
         for (final var point : points) {
           if (first) first = false;
           else content.append(" ");
@@ -705,7 +705,7 @@ public class TikZInfo implements Cloneable {
 
     @Override
     public boolean insideArea(int x, int y, int width, int height) {
-      var inside = true;
+      boolean inside = true;
       for (final var point : myPath) inside &= point.insideArea(x, y, width, height);
       return inside;
     }
@@ -835,7 +835,7 @@ public class TikZInfo implements Cloneable {
 
       public boolean insideArea(int x, int y, int width, int height) {
         if (closePath) return true;
-        var inside = true;
+        boolean inside = true;
         final var x2 = x + width;
         final var y2 = y + height;
         if (startPoint != null)
@@ -1156,7 +1156,7 @@ public class TikZInfo implements Cloneable {
 
     private String getAttrString(boolean svg, Document root, Element e) {
       strIter.first();
-      var content = new StringBuilder();
+      java.lang.StringBuilder content = new StringBuilder();
       Element tspan = null;
       if (!svg) content.append("$\\text{");
       else tspan = root.createElement("tspan");
@@ -1226,7 +1226,7 @@ public class TikZInfo implements Cloneable {
       if (name != null)
         if (name.isEmpty()) return "";
         else
-          for (var i = 0; i < name.length(); i++) {
+          for (int i = 0; i < name.length(); i++) {
             char kar = name.charAt(i);
             if (kar == '_' || kar == '&') content.append("\\");
             content.append(kar);

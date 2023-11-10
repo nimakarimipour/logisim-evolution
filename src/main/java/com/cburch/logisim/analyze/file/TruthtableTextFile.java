@@ -87,7 +87,7 @@ public class TruthtableTextFile {
       VariableList inputs = model.getInputs();
       VariableList outputs = model.getOutputs();
       final var colwidth = new int[inputs.vars.size() + outputs.vars.size()];
-      var i = 0;
+      int i = 0;
       for (final var variable : inputs.vars)
         colwidth[i++] = Math.max(variable.toString().length(), variable.width);
       for (final var variable : outputs.vars)
@@ -104,17 +104,17 @@ public class TruthtableTextFile {
       }
       out.println();
       for (i = 0; i < colwidth.length; i++) {
-        for (var j = 0; j < colwidth[i] + 1; j++) out.print("~");
+        for (int j = 0; j < colwidth[i] + 1; j++) out.print("~");
       }
       out.println("~");
       final var table = model.getTruthTable();
       final var rows = table.getVisibleRowCount();
-      for (var row = 0; row < rows; row++) {
+      for (int row = 0; row < rows; row++) {
         i = 0;
-        var col = 0;
+        int col = 0;
         for (final var variable : inputs.vars) {
           final var s = new StringBuilder();
-          for (var b = variable.width - 1; b >= 0; b--) {
+          for (int b = variable.width - 1; b >= 0; b--) {
             final var val = table.getVisibleInputEntry(row, col++);
             s.append(val.toBitString());
           }
@@ -125,7 +125,7 @@ public class TruthtableTextFile {
         col = 0;
         for (final var variable : outputs.vars) {
           final var s = new StringBuilder();
-          for (var b = variable.width - 1; b >= 0; b--) {
+          for (int b = variable.width - 1; b >= 0; b--) {
             final var val = table.getVisibleOutputEntry(row, col++);
             s.append(val.toBitString());
           }
@@ -142,7 +142,7 @@ public class TruthtableTextFile {
   static void validateHeader(String line, VariableList inputs, VariableList outputs, int lineno)
       throws IOException {
     final var s = line.split("\\s+");
-    var cur = inputs;
+    com.cburch.logisim.analyze.model.VariableList cur = inputs;
     for (final var value : s) {
       if (value.equals("|")) {
         if (cur != inputs)
@@ -152,11 +152,11 @@ public class TruthtableTextFile {
       } else if (value.matches("[a-zA-Z]\\w*")) {
         cur.add(new Var(value, 1));
       } else {
-        var m = NAME_FORMAT.matcher(value);
+        java.util.regex.Matcher m = NAME_FORMAT.matcher(value);
         if (!m.matches())
           throw new IOException(
               String.format("Line %d: Invalid variable name '%s'.", lineno, value));
-        var n = m.group(1);
+        java.lang.String n = m.group(1);
         int a;
         int b;
         try {
@@ -205,7 +205,7 @@ public class TruthtableTextFile {
   static Entry parseHex(char c, int bit, int nbits, String sval, Var var, int lineno)
       throws IOException {
     if (c == 'x' || c == 'X' || c == '-') return Entry.DONT_CARE;
-    var d = 0;
+    int d = 0;
     if ('0' <= c && c <= '9') {
       d = c - '0';
     } else if ('a' <= c && c <= 'f') {
@@ -231,10 +231,10 @@ public class TruthtableTextFile {
   static int parseVal(Entry[] row, int col, String sval, Var var, int lineno) throws IOException {
     if (sval.length() == var.width) {
       // must be binary
-      for (var i = 0; i < var.width; i++) row[col++] = parseBit(sval.charAt(i), sval, lineno);
+      for (int i = 0; i < var.width; i++) row[col++] = parseBit(sval.charAt(i), sval, lineno);
     } else if (sval.length() == (var.width + 3) / 4) {
       // try hex
-      for (var i = 0; i < var.width; i++) {
+      for (int i = 0; i < var.width; i++) {
         row[col++] =
             parseHex(
                 sval.charAt((i + ((4 - (var.width % 4)) % 4)) / 4),
@@ -257,9 +257,9 @@ public class TruthtableTextFile {
       String line, VariableList inputs, VariableList outputs, ArrayList<Entry[]> rows, int lineno)
       throws IOException {
     final var row = new Entry[inputs.bits.size() + outputs.bits.size()];
-    var col = 0;
+    int col = 0;
     final var s = line.split("\\s+");
-    var ix = 0;
+    int ix = 0;
     for (final var variable : inputs.vars) {
       if (ix >= s.length || s[ix].equals("|"))
         throw new IOException(String.format("Line %d: Not enough input columns.", lineno));
@@ -284,7 +284,7 @@ public class TruthtableTextFile {
   }
 
   public static void doLoad(File file, AnalyzerModel model, JFrame parent) throws IOException {
-    var lineno = 0;
+    int lineno = 0;
     try (Scanner sc = new Scanner(file)) {
       final var inputs = new VariableList(AnalyzerModel.MAX_INPUTS);
       final var outputs = new VariableList(AnalyzerModel.MAX_OUTPUTS);

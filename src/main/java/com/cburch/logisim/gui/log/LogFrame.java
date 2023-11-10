@@ -58,7 +58,7 @@ public class LogFrame extends LFrame.SubWindowWithSimulation {
     @Override
     public void localeChanged() {
       setTitle(computeTitle(curModel, project));
-      for (var i = 0; i < panels.length; i++) {
+      for (int i = 0; i < panels.length; i++) {
         tabbedPane.setTitleAt(i, panels[i].getTitle());
         tabbedPane.setToolTipTextAt(i, panels[i].getToolTipText());
         panels[i].localeChanged();
@@ -210,7 +210,7 @@ public class LogFrame extends LFrame.SubWindowWithSimulation {
 
     final var contents = getContentPane();
     final var w = Math.max(550, project.getFrame().getWidth());
-    var h = 300;
+    int h = 300;
     tabbedPane.setPreferredSize(new Dimension(w, h));
     contents.add(tabbedPane, BorderLayout.CENTER);
 

@@ -92,7 +92,7 @@ class ExpressionTab extends AnalyzerTab {
     public void fireTableChanged(TableModelEvent event) {
       TableModelListener listener;
       final var list = listenerList.getListenerList();
-      for (var index = 0; index < list.length; index += 2) {
+      for (int index = 0; index < list.length; index += 2) {
         listener = (TableModelListener) list[index + 1];
         listener.tableChanged(event);
       }
@@ -195,7 +195,7 @@ class ExpressionTab extends AnalyzerTab {
       final var outputs = model.getOutputs();
       final var n = outputs.bits.size();
       listCopy = new NamedExpression[n];
-      var i = -1;
+      int i = -1;
       for (final var name : outputs.bits) {
         i++;
         listCopy[i] = new NamedExpression(name);
@@ -502,7 +502,7 @@ class ExpressionTab extends AnalyzerTab {
       if (expr == null)
         return false;
 
-      var idx = -1;
+      int idx = -1;
       if (table.getRowCount() == 0) {
         return false;
       }
@@ -572,9 +572,9 @@ class ExpressionTab extends AnalyzerTab {
         @Override
         public Dimension getExportImageSize() {
           final var width = table.getWidth();
-          var height = 14;
+          int height = 14;
           final var n = table.getRowCount();
-          for (var i = 0; i < n; i++) {
+          for (int i = 0; i < n; i++) {
             final var ne = (NamedExpression) table.getValueAt(i, 0);
             prettyView.setWidth(width);
             prettyView.setExpression(ne);
@@ -590,7 +590,7 @@ class ExpressionTab extends AnalyzerTab {
           g.setClip(0, 0, width, height);
           g.translate(6 / 2, 14);
           final var n = table.getRowCount();
-          for (var i = 0; i < n; i++) {
+          for (int i = 0; i < n; i++) {
             final var ne = (NamedExpression) table.getValueAt(i, 0);
             prettyView.setForeground(Color.BLACK);
             prettyView.setBackground(Color.WHITE);
@@ -609,9 +609,9 @@ class ExpressionTab extends AnalyzerTab {
           g.translate(6 / 2, 14 / 2);
 
           final var n = table.getRowCount();
-          var y = 0;
-          var pg = 0;
-          for (var i = 0; i < n; i++) {
+          int y = 0;
+          int pg = 0;
+          for (int i = 0; i < n; i++) {
             final var ne = (NamedExpression) table.getValueAt(i, 0);
             prettyView.setWidth(width - 6);
             prettyView.setForeground(Color.BLACK);

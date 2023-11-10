@@ -49,10 +49,10 @@ class LayoutOptions extends OptionsPanel {
               AppPreferences.NEW_INPUT_OUTPUT_SHAPES, S.getter("layoutUseNewInputOutputSymbols")),
         };
 
-    for (var i = 0; i < 2; i++) {
+    for (int i = 0; i < 2; i++) {
       final var opts = RadixOption.OPTIONS;
       final var items = new PrefOption[opts.length];
-      for (var j = 0; j < RadixOption.OPTIONS.length; j++) {
+      for (int j = 0; j < RadixOption.OPTIONS.length; j++) {
         items[j] = new PrefOption(opts[j].getSaveString(), opts[j].getDisplayGetter());
       }
       if (i == 0) {

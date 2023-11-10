@@ -75,7 +75,7 @@ public class RamAttributes extends AbstractAttributeSet {
 
   public boolean updateAttributes() {
     final var newList = new ArrayList<Attribute<?>>();
-    var changes = false;
+    boolean changes = false;
     newList.add(Mem.ADDR_ATTR);
     newList.add(Mem.DATA_ATTR);
     newList.add(Mem.ENABLES_ATTR);
@@ -267,7 +267,7 @@ public class RamAttributes extends AbstractAttributeSet {
       labelVisible = newVis;
       fireAttributeValueChanged(attr, value, null);
     } else if (attr == ATTR_ByteEnables) {
-      var newBE = (AttributeOption) value;
+      com.cburch.logisim.data.AttributeOption newBE = (AttributeOption) value;
       if (byteEnables.equals(newBE)) return;
       if (dataBits.getWidth() < 9) newBE = BUS_WITHOUT_BYTE_ENABLES;
       byteEnables = newBE;

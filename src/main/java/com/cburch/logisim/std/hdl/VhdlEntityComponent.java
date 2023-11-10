@@ -149,7 +149,7 @@ public class VhdlEntityComponent extends InstanceFactory {
 
   @Override
   public String getHDLTopName(AttributeSet attrs) {
-    var label = "";
+    java.lang.String label = "";
     if (!attrs.getValue(StdAttr.LABEL).equals("")) {
       label = "_" + attrs.getValue(StdAttr.LABEL).toLowerCase();
     }
@@ -178,7 +178,7 @@ public class VhdlEntityComponent extends InstanceFactory {
   public void paintInstance(InstancePainter painter) {
     final var g = painter.getGraphics();
     final var content = painter.getAttributeValue(CONTENT_ATTR);
-    var metric = g.getFontMetrics();
+    java.awt.FontMetrics metric = g.getFontMetrics();
 
     final var bds = painter.getBounds();
     final var x0 = bds.getX() + (bds.getWidth() / 2);
@@ -207,7 +207,7 @@ public class VhdlEntityComponent extends InstanceFactory {
     final var inputs = content.getInputs();
     final var outputs = content.getOutputs();
 
-    for (var i = 0; i < inputs.length; i++)
+    for (int i = 0; i < inputs.length; i++)
       GraphicsUtil.drawText(
           g,
           StringUtil.resizeString(inputs[i].getToolTip(), metric, (WIDTH / 2) - X_PADDING),
@@ -215,7 +215,7 @@ public class VhdlEntityComponent extends InstanceFactory {
           bds.getY() + HEIGHT - 2 + (i * PORT_GAP),
           GraphicsUtil.H_LEFT,
           GraphicsUtil.V_CENTER);
-    for (var i = 0; i < outputs.length; i++)
+    for (int i = 0; i < outputs.length; i++)
       GraphicsUtil.drawText(
           g,
           StringUtil.resizeString(outputs[i].getToolTip(), metric, (WIDTH / 2) - X_PADDING),
@@ -279,7 +279,7 @@ public class VhdlEntityComponent extends InstanceFactory {
 
         final var vector_values = new Value[busValue.length()];
 
-        var k = busValue.length() - 1;
+        int k = busValue.length() - 1;
         for (final var bit : busValue.toCharArray()) {
           try {
             switch (Character.getNumericValue(bit)) {
@@ -305,7 +305,7 @@ public class VhdlEntityComponent extends InstanceFactory {
         /* If it is an output */
         if (p.getType() == 2) {
           final var vector_values = new Value[p.getFixedBitWidth().getWidth()];
-          for (var k = 0; k < p.getFixedBitWidth().getWidth(); k++) {
+          for (int k = 0; k < p.getFixedBitWidth().getWidth(); k++) {
             vector_values[k] = Value.UNKNOWN;
           }
 
@@ -330,7 +330,7 @@ public class VhdlEntityComponent extends InstanceFactory {
           new PrintWriter(VhdlSimConstants.SIM_SRC_PATH + getSimName(attrs) + ".vhdl",
               StandardCharsets.UTF_8);
 
-      var content = attrs.getValue(CONTENT_ATTR).getContent()
+      java.lang.String content = attrs.getValue(CONTENT_ATTR).getContent()
               .replaceAll("(?i)" + getHDLName(attrs), getSimName(attrs));
 
       writer.print(content);

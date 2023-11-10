@@ -100,8 +100,8 @@ public class DefaultHolyCrossAppearance {
   }
 
   private static int textWidth(String s) {
-    var w = 0;
-    for (var i = 0; i < s.length(); i++) {
+    int w = 0;
+    for (int i = 0; i < s.length(); i++) {
       char c = s.charAt(i);
       if (c >= ' ' && c <= '~') {
         w += asciiWidths[c - ' '];
@@ -116,8 +116,8 @@ public class DefaultHolyCrossAppearance {
     final var edge = new HashMap<Direction, List<Instance>>();
     edge.put(Direction.EAST, new ArrayList<>());
     edge.put(Direction.WEST, new ArrayList<>());
-    var maxLeftLabelLength = 0;
-    var maxRightLabelLength = 0;
+    int maxLeftLabelLength = 0;
+    int maxRightLabelLength = 0;
     for (final var pin : pins) {
       Direction pinEdge;
       final var labelString = pin.getAttributeValue(StdAttr.LABEL);
@@ -147,10 +147,10 @@ public class DefaultHolyCrossAppearance {
     final var offsEast = computeOffset(numEast, numWest);
     final var offsWest = computeOffset(numWest, numEast);
 
-    var width = 2 * LABEL_OUTSIDE + maxLeftLabelLength + maxRightLabelLength + LABEL_GAP;
+    int width = 2 * LABEL_OUTSIDE + maxLeftLabelLength + maxRightLabelLength + LABEL_GAP;
     width = Math.max(MIN_WIDTH, (width + 9) / 10 * 10);
 
-    var height = PORT_GAP * maxHorz + TOP_MARGIN + BOTTOM_MARGIN;
+    int height = PORT_GAP * maxHorz + TOP_MARGIN + BOTTOM_MARGIN;
     height = Math.max(MIN_HEIGHT, height);
 
     // compute position of anchor relative to top left corner of box

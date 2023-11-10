@@ -239,7 +239,7 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
   }
 
   private AttributeSet getBaseAttributes() {
-    var ret = attrs;
+    com.cburch.logisim.data.AttributeSet ret = attrs;
     if (ret instanceof FactoryAttributes) {
       ret = ((FactoryAttributes) ret).getBase();
     }
@@ -247,9 +247,9 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
   }
 
   private Bounds getBounds() {
-    var ret = bounds;
+    com.cburch.logisim.data.Bounds ret = bounds;
     if (ret == null) {
-      var source = getFactory();
+      com.cburch.logisim.comp.ComponentFactory source = getFactory();
       if (source == null) {
         ret = Bounds.EMPTY_BOUNDS;
       } else {
@@ -300,7 +300,7 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
   }
 
   public ComponentFactory getFactory() {
-    var ret = factory;
+    com.cburch.logisim.comp.ComponentFactory ret = factory;
     if (ret == null && !sourceLoadAttempted) {
       ret = description.getFactory(descriptionBase);
       if (ret != null) {
@@ -501,7 +501,7 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
         final var bds = source.getOffsetBounds(base).expand(5);
         matrix.setBounds(bds);
         final var dialog = new MatrixPlacerDialog(matrix, source.getName(), autoLabeler.isActive(canvas.getCircuit()));
-        var okay = false;
+        boolean okay = false;
         while (!okay) {
           if (!dialog.execute()) return;
           if (SyntaxChecker.isVariableNameAcceptable(matrix.getLabel(), true)) {
@@ -529,8 +529,8 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
       try {
         final var mutation = new CircuitMutation(circ);
 
-        for (var x = 0; x < matrix.getCopiesCountX(); x++) {
-          for (var y = 0; y < matrix.getCopiesCountY(); y++) {
+        for (int x = 0; x < matrix.getCopiesCountX(); x++) {
+          for (int y = 0; y < matrix.getCopiesCountY(); y++) {
             final var loc = Location.create(event.getX() + (matrix.getDeltaX() * x),
                 event.getY() + (matrix.getDeltaY() * y), true);
             final var attrsCopy = (AttributeSet) attrs.clone();
@@ -611,7 +611,7 @@ public class AddTool extends Tool implements Transferable, PropertyChangeListene
   }
 
   private void processKeyEvent(Canvas canvas, KeyEvent event, int type) {
-    var handler = keyHandler;
+    com.cburch.logisim.tools.key.KeyConfigurator handler = keyHandler;
     if (!keyHandlerTried) {
       final var source = getFactory();
       final var baseAttrs = getBaseAttributes();

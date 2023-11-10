@@ -148,8 +148,8 @@ public class BitSelector extends InstanceFactory {
     final var selectLoc = instance.getAttributeValue(StdAttr.SELECT_LOC);
     final var data = instance.getAttributeValue(StdAttr.WIDTH);
     final var group = instance.getAttributeValue(GROUP_ATTR);
-    var groups = (data.getWidth() + group.getWidth() - 1) / group.getWidth() - 1;
-    var selectBits = 1;
+    int groups = (data.getWidth() + group.getWidth() - 1) / group.getWidth() - 1;
+    int selectBits = 1;
     if (groups > 0) {
       while (groups != 1) {
         groups >>= 1;

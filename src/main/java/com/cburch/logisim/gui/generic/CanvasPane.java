@@ -114,7 +114,7 @@ public class CanvasPane extends JScrollPane {
       final var prop = e.getPropertyName();
       if (prop.equals(ZoomModel.ZOOM)) {
         final var oldZoom = (Double) e.getOldValue();
-        var r = getViewport().getViewRect();
+        java.awt.Rectangle r = getViewport().getViewRect();
         final var cx = (r.x + r.width / 2) / oldZoom;
         final var cy = (r.y + r.height / 2) / oldZoom;
 
@@ -135,7 +135,7 @@ public class CanvasPane extends JScrollPane {
     @Override
     public void mouseWheelMoved(MouseWheelEvent mwe) {
       if (mwe.isControlDown()) {
-        var zoom = zoomModel.getZoomFactor();
+        double zoom = zoomModel.getZoomFactor();
         final var opts = zoomModel.getZoomOptions();
         if (mwe.getWheelRotation() < 0) { // ZOOM IN
           zoom += 0.1;

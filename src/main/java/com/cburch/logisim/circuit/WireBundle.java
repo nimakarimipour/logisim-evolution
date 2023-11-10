@@ -35,7 +35,7 @@ class WireBundle {
   }
 
   WireBundle find() {
-    var ret = this;
+    com.cburch.logisim.circuit.WireBundle ret = this;
     if (ret.parent != ret) {
       do ret = ret.parent;
       while (ret.parent != ret);

@@ -96,7 +96,7 @@ public final class FileStatistics {
         final var subCountRecursive = doRecursiveCount(sub, include, countMap);
         for (final var subCount : subCountRecursive.values()) {
           final var subfactory = subCount.factory;
-          var superCount = counts.get(subfactory);
+          com.cburch.logisim.file.FileStatistics.Count superCount = counts.get(subfactory);
           if (superCount == null) {
             superCount = new Count(subfactory);
             counts.put(subfactory, superCount);
@@ -113,7 +113,7 @@ public final class FileStatistics {
     final var counts = new HashMap<ComponentFactory, Count>();
     for (final var comp : circuit.getNonWires()) {
       final var factory = comp.getFactory();
-      var count = counts.get(factory);
+      com.cburch.logisim.file.FileStatistics.Count count = counts.get(factory);
       if (count == null) {
         count = new Count(factory);
         counts.put(factory, count);
@@ -128,7 +128,7 @@ public final class FileStatistics {
       Map<Circuit, Map<ComponentFactory, Count>> circuitCounts) {
     for (final var count : counts.values()) {
       final var factory = count.getFactory();
-      var unique = 0;
+      int unique = 0;
       for (final var circ : circuitCounts.keySet()) {
         final var subcount = circuitCounts.get(circ).get(factory);
         if (subcount != null) {

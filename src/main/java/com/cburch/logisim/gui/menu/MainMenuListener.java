@@ -118,11 +118,11 @@ public class MainMenuListener extends MenuListener {
       final var viewAppearance = editorView.equals(Frame.EDIT_APPEARANCE);
       final var viewLayout = editorView.equals(Frame.EDIT_LAYOUT);
 
-      var canSetMain = false;
-      var canMoveUp = false;
-      var canMoveDown = false;
-      var canRemove = false;
-      var canRevert = false;
+      boolean canSetMain = false;
+      boolean canMoveUp = false;
+      boolean canMoveDown = false;
+      boolean canRemove = false;
+      boolean canRevert = false;
 
       // is project circuit?
       if (curIndex >= 0) {

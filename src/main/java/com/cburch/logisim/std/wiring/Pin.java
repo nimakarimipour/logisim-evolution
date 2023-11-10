@@ -675,9 +675,9 @@ public class Pin extends InstanceFactory {
   private static PinState getState(InstanceState state) {
     final var attrs = (PinAttributes) state.getAttributeSet();
     final var width = attrs.width;
-    var ret = (PinState) state.getData();
+    com.cburch.logisim.std.wiring.Pin.PinState ret = (PinState) state.getData();
     if (ret == null) {
-      var initialValue = attrs.getValue(ATTR_INITIAL);
+      java.lang.Long initialValue = attrs.getValue(ATTR_INITIAL);
       final var newValue = attrs.threeState
             ? Value.createUnknown(width)
             : Value.createKnown(width.getWidth(), initialValue);

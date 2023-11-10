@@ -162,8 +162,8 @@ public abstract class Mem extends InstanceFactory {
 
   protected static String getSizeLabel(int NrAddressBits) {
     String[] labels = {"", "K", "M", "G", "T", "P", "E"};
-    var pass = 0;
-    var addrBits = NrAddressBits;
+    int pass = 0;
+    int addrBits = NrAddressBits;
     while (addrBits > 9) {
       pass++;
       addrBits -= 10;

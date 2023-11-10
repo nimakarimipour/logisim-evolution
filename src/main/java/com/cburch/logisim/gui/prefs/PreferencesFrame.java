@@ -47,7 +47,7 @@ public class PreferencesFrame extends LFrame.Dialog {
         };
     tabbedPane = new JTabbedPane();
     int intlIndex = -1;
-    for (var index = 0; index < panels.length; index++) {
+    for (int index = 0; index < panels.length; index++) {
       final var panel = panels[index];
       tabbedPane.addTab(panel.getTitle(), null, panel, panel.getToolTipText());
       if (panel instanceof IntlOptions) intlIndex = index;

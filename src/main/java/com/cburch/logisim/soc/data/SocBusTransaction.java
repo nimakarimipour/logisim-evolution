@@ -212,7 +212,7 @@ public class SocBusTransaction {
     gfx.drawLine(bds.getX(), bds.getY(), bds.getX(), bds.getHeight());
     bds = getScaled(boxInfo.skip + boxInfo.mark / 2, (3 * (SocBusStateInfo.TRACE_HEIGHT - 2)) / 4, 0, 0, scale);
     GraphicsUtil.drawCenteredText(gfx, "A", bds.getX(), bds.getY());
-    var addrStr = String.format("0x%08X", getAddress());
+    java.lang.String addrStr = String.format("0x%08X", getAddress());
     bds = getScaled(boxInfo.skip + boxInfo.mark + boxInfo.hex / 2, (3 * (SocBusStateInfo.TRACE_HEIGHT - 2)) / 4, 0, 0, scale);
     GraphicsUtil.drawCenteredText(gfx, addrStr, bds.getX(), bds.getY());
     bds = getScaled(boxInfo.skip + boxInfo.mark + boxInfo.hex, 0, 0, 0, scale);
@@ -329,7 +329,7 @@ public class SocBusTransaction {
   public int paint(Graphics2D g2, Long index, int width) {
     final var realWidth = getRealBlockWidth(g2, true);
     final var usedWidth = Math.max(realWidth.blockWidth, width);
-    var bds = getScaled(usedWidth / 2, (SocBusStateInfo.TRACE_HEIGHT - 2) / 4, usedWidth, SocBusStateInfo.TRACE_HEIGHT >> 1, true);
+    com.cburch.logisim.data.Bounds bds = getScaled(usedWidth / 2, (SocBusStateInfo.TRACE_HEIGHT - 2) / 4, usedWidth, SocBusStateInfo.TRACE_HEIGHT >> 1, true);
     g2.setColor(Color.LIGHT_GRAY);
     g2.fillRect(0, 0, bds.getWidth(), bds.getHeight() - 1);
     g2.setColor(Color.black);

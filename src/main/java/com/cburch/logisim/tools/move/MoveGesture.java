@@ -57,7 +57,7 @@ public class MoveGesture {
     // now see which of them require connection
     final var conns = new HashSet<ConnectionData>();
     for (final var loc : locs) {
-      var found = false;
+      boolean found = false;
       for (final var comp : circuit.getComponents(loc)) {
         if (!selected.contains(comp)) {
           found = true;
@@ -74,7 +74,7 @@ public class MoveGesture {
         } else {
           wirePath = new ArrayList<>();
           Location cur = loc;
-          for (var wire = lastOnPath; wire != null; wire = findWire(circuit, cur, selected, wire)) {
+          for (com.cburch.logisim.circuit.Wire wire = lastOnPath; wire != null; wire = findWire(circuit, cur, selected, wire)) {
             wirePath.add(wire);
             cur = wire.getOtherEnd(cur);
           }
@@ -135,7 +135,7 @@ public class MoveGesture {
     final var request = new MoveRequest(this, dx, dy);
     ConnectorThread.enqueueRequest(request, true);
     synchronized (cachedResults) {
-      var result = cachedResults.get(request);
+      com.cburch.logisim.tools.move.MoveResult result = cachedResults.get(request);
       while (result == null) {
         try {
           cachedResults.wait();
@@ -150,7 +150,7 @@ public class MoveGesture {
   }
 
   Set<ConnectionData> getConnections() {
-    var ret = connections;
+    java.util.Set<com.cburch.logisim.tools.move.ConnectionData> ret = connections;
     if (ret == null) {
       ret = computeConnections(circuit, selected);
       connections = ret;
@@ -159,7 +159,7 @@ public class MoveGesture {
   }
 
   AvoidanceMap getFixedAvoidanceMap() {
-    var ret = initAvoid;
+    com.cburch.logisim.tools.move.AvoidanceMap ret = initAvoid;
     if (ret == null) {
       final var comps = new HashSet<>(circuit.getNonWires());
       comps.addAll(circuit.getWires());

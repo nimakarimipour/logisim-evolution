@@ -62,7 +62,7 @@ public class Adder extends InstanceFactory {
       }
     } else {
       final var bits = new Value[w];
-      var carry = cIn;
+      com.cburch.logisim.data.Value carry = cIn;
       for (int i = 0; i < w; i++) {
         if (carry == Value.ERROR) {
           bits[i] = Value.ERROR;

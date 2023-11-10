@@ -37,7 +37,7 @@ class OddParityGate extends AbstractGate {
 
   @Override
   protected Expression computeExpression(Expression[] inputs, int numInputs) {
-    var ret = inputs[0];
+    com.cburch.logisim.analyze.model.Expression ret = inputs[0];
     for (int i = 1; i < numInputs; i++) {
       ret = Expressions.xor(ret, inputs[i]);
     }

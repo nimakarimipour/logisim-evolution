@@ -80,7 +80,7 @@ public class TableLayout implements LayoutManager2 {
 
     double y0;
     int yRemaining = size.height - pref.height;
-    var rowWeightTotal = 0.0;
+    double rowWeightTotal = 0.0;
     if (yRemaining != 0 && rowWeight != null) {
       for (double weight : rowWeight) {
         rowWeightTotal += weight;
@@ -100,7 +100,7 @@ public class TableLayout implements LayoutManager2 {
       i++;
       int yRound = (int) (y + 0.5);
       int x = x0;
-      for (var j = 0; j < row.length; j++) {
+      for (int j = 0; j < row.length; j++) {
         final var comp = row[j];
         if (comp != null) {
           row[j].setBounds(x, yRound, prefCol[j], prefRow[i]);
@@ -132,11 +132,11 @@ public class TableLayout implements LayoutManager2 {
     if (prefs == null) {
       final var prefCol = new int[colCount];
       final var prefRow = new int[contents.size()];
-      var height = 0;
-      for (var i = 0; i < prefRow.length; i++) {
+      int height = 0;
+      for (int i = 0; i < prefRow.length; i++) {
         final var row = contents.get(i);
-        var rowHeight = 0;
-        for (var j = 0; j < row.length; j++) {
+        int rowHeight = 0;
+        for (int j = 0; j < row.length; j++) {
           if (row[j] != null) {
             final var dim = row[j].getPreferredSize();
             if (dim.height > rowHeight) rowHeight = dim.height;
@@ -146,8 +146,8 @@ public class TableLayout implements LayoutManager2 {
         prefRow[i] = rowHeight;
         height += rowHeight;
       }
-      var width = 0;
-      for (var j : prefCol) {
+      int width = 0;
+      for (int j : prefCol) {
         width += j;
       }
       this.prefs = new Dimension(width, height);
@@ -160,7 +160,7 @@ public class TableLayout implements LayoutManager2 {
   @Override
   public void removeLayoutComponent(Component comp) {
     for (final var row : contents) {
-      for (var j = 0; j < row.length; j++) {
+      for (int j = 0; j < row.length; j++) {
         if (row[j] == comp) {
           row[j] = null;
           return;

@@ -23,9 +23,9 @@ public class ControlledBufferHdlGenerator extends InlinedHdlGeneratorFactory {
       Netlist nets, Long componentId, netlistComponent componentInfo, String circuitName) {
     final var contents = LineBuffer.getBuffer();
     final var triName = Hdl.getNetName(componentInfo, 2, true, nets);
-    var inpName = "";
-    var outpName = "";
-    var triState = "";
+    java.lang.String inpName = "";
+    java.lang.String outpName = "";
+    java.lang.String triState = "";
     final var nrBits =
         componentInfo.getComponent().getAttributeSet().getValue(StdAttr.WIDTH).getWidth();
     if (nrBits > 1) {

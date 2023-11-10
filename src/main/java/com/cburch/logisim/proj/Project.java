@@ -259,7 +259,7 @@ public class Project {
     if (circuitState != null && circuitState.getCircuit() == circuit) {
       return circuitState;
     } else {
-      var ret = recentRootState.get(circuit);
+      com.cburch.logisim.circuit.CircuitState ret = recentRootState.get(circuit);
       if (ret == null) {
         ret = new CircuitState(this, circuit);
         recentRootState.put(circuit, ret);
@@ -497,7 +497,7 @@ public class Project {
   }
 
   public void setCurrentCircuit(Circuit circuit) {
-    var circState = recentRootState.get(circuit);
+    com.cburch.logisim.circuit.CircuitState circState = recentRootState.get(circuit);
     if (circState == null) {
       circState = new CircuitState(this, circuit);
       recentRootState.put(circuit, circState);

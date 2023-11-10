@@ -199,7 +199,7 @@ public class Caret {
         case KeyEvent.VK_END:
           if (cursor >= 0) {
             final var model = hex.getModel();
-            var dest = (cursor / cols * cols) + cols - 1;
+            long dest = (cursor / cols * cols) + cols - 1;
             if (model != null) {
               final var end = model.getLastOffset();
               if (dest > end || dest == cursor) dest = end;
@@ -215,7 +215,7 @@ public class Caret {
             if (cursor + rows * cols <= max) {
               setDot(cursor + rows * cols, shift);
             } else {
-              var n = cursor;
+              long n = cursor;
               while (n + cols < max) n += cols;
               setDot(n, shift);
             }

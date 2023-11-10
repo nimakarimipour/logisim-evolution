@@ -20,7 +20,7 @@ import com.cburch.logisim.instance.StdAttr;
 public class ShiftRegisterLogger extends InstanceLogger {
   @Override
   public String getLogName(InstanceState state, Object option) {
-    var inName = state.getAttributeValue(StdAttr.LABEL);
+    java.lang.String inName = state.getAttributeValue(StdAttr.LABEL);
     if (inName == null || inName.equals("")) {
       inName = S.get("shiftRegisterComponent") + state.getInstance().getLocation();
     }
@@ -48,7 +48,7 @@ public class ShiftRegisterLogger extends InstanceLogger {
 
   @Override
   public Value getLogValue(InstanceState state, Object option) {
-    var dataWidth = state.getAttributeValue(StdAttr.WIDTH);
+    com.cburch.logisim.data.BitWidth dataWidth = state.getAttributeValue(StdAttr.WIDTH);
     if (dataWidth == null) dataWidth = BitWidth.create(0);
     final var data = (ShiftRegisterData) state.getData();
     if (data == null) {

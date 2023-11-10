@@ -212,7 +212,7 @@ public class Buzzer extends InstanceFactory {
   }
 
   private Data getData(InstanceState state) {
-    var data = (Data) state.getData();
+    com.cburch.logisim.std.io.extra.Buzzer.Data data = (Data) state.getData();
     if (data == null) {
       data = new Data();
       state.setData(data);
@@ -223,9 +223,9 @@ public class Buzzer extends InstanceFactory {
   @Override
   public void propagate(InstanceState state) {
     final var data = getData(state);
-    var active = state.getPortValue(ENABLE) == Value.TRUE;
+    boolean active = state.getPortValue(ENABLE) == Value.TRUE;
     data.isOn.set(active);
-    var freq = (int) state.getPortValue(FREQ).toLongValue();
+    int freq = (int) state.getPortValue(FREQ).toLongValue();
     if (freq >= 0) {
       if (state.getAttributeValue(FREQUENCY_MEASURE) == dHz) {
         freq /= 10;
@@ -271,8 +271,8 @@ public class Buzzer extends InstanceFactory {
     ports[ENABLE] = new Port(0, 0, Port.INPUT, 1);
     ports[ENABLE].setToolTip(S.getter("enableSound"));
     final var selectLoc = instance.getAttributeValue(StdAttr.SELECT_LOC);
-    var xPw = 20;
-    var yPw = 20;
+    int xPw = 20;
+    int yPw = 20;
     if (facing == Direction.NORTH || facing == Direction.SOUTH) {
       xPw *= selectLoc == StdAttr.SELECT_BOTTOM_LEFT ? -1 : 1;
       yPw *= facing == Direction.SOUTH ? -1 : 1;
@@ -335,8 +335,8 @@ public class Buzzer extends InstanceFactory {
       AudioFormat af = null;
       Clip clip = null;
       AudioInputStream ais = null;
-      var oldfreq = -1;
-      var oldpw = -1;
+      int oldfreq = -1;
+      int oldpw = -1;
       try {
         while (isOn.get()) {
           if (updateRequired) {
@@ -354,17 +354,17 @@ public class Buzzer extends InstanceFactory {
 
             // TODO: Computing all those values takes time; it may be interesting to replace this by
             // a LUT
-            var cycle = Math.max(1, sampleRate / hz);
-            var values = new double[4 * cycle];
-            for (var i = 0; i < values.length; i++) {
+            int cycle = Math.max(1, sampleRate / hz);
+            double[] values = new double[4 * cycle];
+            for (int i = 0; i < values.length; i++) {
               values[i] = wf.strategy.amplitude(i / (double) sampleRate, hz, pw / 256.0);
             }
 
             if (wf != BuzzerWaveform.Sine && smoothLevel > 0 && smoothWidth > 0) {
-              var nsig = new double[values.length];
-              for (var k = 0; k < smoothLevel; k++) {
-                var sum = 0;
-                for (var i = 0; i < values.length; i++) {
+              double[] nsig = new double[values.length];
+              for (int k = 0; k < smoothLevel; k++) {
+                int sum = 0;
+                for (int i = 0; i < values.length; i++) {
                   if (i > 2 * smoothWidth) {
                     nsig[i - smoothWidth - 1] =
                         (sum - values[i - smoothWidth - 1]) / (2 * smoothWidth);
@@ -377,14 +377,14 @@ public class Buzzer extends InstanceFactory {
               }
             }
 
-            var rvalues = new double[sampleRate];
-            for (var i = 0; i < sampleRate; i += cycle) {
+            double[] rvalues = new double[sampleRate];
+            for (int i = 0; i < sampleRate; i += cycle) {
               System.arraycopy(values, 2 * cycle, rvalues, i, Math.min(cycle, sampleRate - i));
             }
 
-            var buf = new byte[4 * sampleRate];
+            byte[] buf = new byte[4 * sampleRate];
             for (int i = 0, j = 0; i < buf.length; i += 4, j++) {
-              var val = (short) Math.round(rvalues[j] * vol);
+              short val = (short) Math.round(rvalues[j] * vol);
               if ((channels & 1) != 0) {
                 buf[i] = (byte) (val & 0xff);
                 buf[i + 1] = (byte) (val >> 8);
@@ -395,7 +395,7 @@ public class Buzzer extends InstanceFactory {
               }
             }
 
-            var newAis = new AudioInputStream(new ByteArrayInputStream(buf), af, buf.length);
+            javax.sound.sampled.AudioInputStream newAis = new AudioInputStream(new ByteArrayInputStream(buf), af, buf.length);
 
             Clip newClip = AudioSystem.getClip();
             newClip.open(newAis);

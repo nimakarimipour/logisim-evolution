@@ -73,10 +73,10 @@ public class PokeTool extends Tool {
     @Override
     public void draw(Graphics g) {
       final var v = canvas.getCircuitState().getValue(wire.getEnd0());
-      var radix1 = RadixOption.decode(AppPreferences.POKE_WIRE_RADIX1.get());
-      var radix2 = RadixOption.decode(AppPreferences.POKE_WIRE_RADIX2.get());
+      com.cburch.logisim.circuit.RadixOption radix1 = RadixOption.decode(AppPreferences.POKE_WIRE_RADIX1.get());
+      com.cburch.logisim.circuit.RadixOption radix2 = RadixOption.decode(AppPreferences.POKE_WIRE_RADIX2.get());
       if (radix1 == null) radix1 = RadixOption.RADIX_2;
-      var vStr = radix1.toString(v);
+      java.lang.String vStr = radix1.toString(v);
       if (radix2 != null && v.getWidth() > 1) {
         vStr += " / " + radix2.toString(v);
       }
@@ -87,14 +87,14 @@ public class PokeTool extends Tool {
       final var fm = g.getFontMetrics();
       g.setColor(caretColor);
 
-      var margin = 2;
-      var width = fm.stringWidth(vStr) + 2 * margin;
-      var pad = 0;
+      int margin = 2;
+      int width = fm.stringWidth(vStr) + 2 * margin;
+      int pad = 0;
       if (width < 45) {
         pad = (45 - width) / 2;
         width = 45;
       }
-      var h = fm.getAscent() + fm.getDescent() + 2 * margin;
+      int h = fm.getAscent() + fm.getDescent() + 2 * margin;
 
       final var rect = canvas.getViewableRect();
       final var dx = Math.max(0, width - (rect.x + rect.width - x));
@@ -225,7 +225,7 @@ public class PokeTool extends Tool {
     int x = e.getX();
     int y = e.getY();
     final var loc = Location.create(x, y, false);
-    var dirty = false;
+    boolean dirty = false;
     canvas.setHighlightedWires(WireSet.EMPTY);
     if (pokeCaret != null && !pokeCaret.getBounds(g).contains(loc)) {
       dirty = true;

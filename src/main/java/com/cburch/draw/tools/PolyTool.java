@@ -52,7 +52,7 @@ public class PolyTool extends AbstractTool {
     CanvasObject add = null;
     active = false;
     final var locs = locations;
-    for (var i = locs.size() - 2; i >= 0; i--) {
+    for (int i = locs.size() - 2; i >= 0; i--) {
       if (locs.get(i).equals(locs.get(i + 1))) locs.remove(i);
     }
     if (locs.size() > 1) {
@@ -72,7 +72,7 @@ public class PolyTool extends AbstractTool {
       int size = locations.size();
       final var xs = new int[size];
       final var ys = new int[size];
-      for (var i = 0; i < size; i++) {
+      for (int i = 0; i < size; i++) {
         final var loc = locations.get(i);
         xs[i] = loc.getX();
         ys[i] = loc.getY();
@@ -135,8 +135,8 @@ public class PolyTool extends AbstractTool {
 
   @Override
   public void mousePressed(Canvas canvas, MouseEvent e) {
-    var mx = e.getX();
-    var my = e.getY();
+    int mx = e.getX();
+    int my = e.getY();
     lastMouseX = mx;
     lastMouseY = my;
     if ((e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != 0) {
@@ -206,8 +206,8 @@ public class PolyTool extends AbstractTool {
         newLast = Location.create(mx, my, false);
       }
       if ((mods & MouseEvent.CTRL_DOWN_MASK) != 0) {
-        var lastX = newLast.getX();
-        var lastY = newLast.getY();
+        int lastX = newLast.getX();
+        int lastY = newLast.getY();
         lastX = canvas.snapX(lastX);
         lastY = canvas.snapY(lastY);
         newLast = Location.create(lastX, lastY, false);

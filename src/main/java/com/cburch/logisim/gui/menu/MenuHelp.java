@@ -88,7 +88,7 @@ class MenuHelp extends JMenu implements ActionListener {
   }
 
   private void loadBroker() {
-    var helpUrl = S.get("helpsetUrl");
+    java.lang.String helpUrl = S.get("helpsetUrl");
     if (helpUrl == null) {
       helpUrl = "doc/doc_en.hs";
     }

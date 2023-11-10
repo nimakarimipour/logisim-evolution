@@ -187,8 +187,8 @@ public class Button extends InstanceFactory {
     final var defaultButtonState =
         painter.getAttributeValue(ATTR_PRESS) == BUTTON_PRESS_ACTIVE ? Value.FALSE : Value.TRUE;
     final var bds = painter.getBounds();
-    var x = bds.getX();
-    var y = bds.getY();
+    int x = bds.getX();
+    int y = bds.getY();
     final var w = bds.getWidth();
     final var h = bds.getHeight();
 
@@ -200,7 +200,7 @@ public class Button extends InstanceFactory {
       val = defaultButtonState;
     }
 
-    var color = painter.getAttributeValue(IoLibrary.ATTR_COLOR);
+    java.awt.Color color = painter.getAttributeValue(IoLibrary.ATTR_COLOR);
     if (!painter.shouldDrawColor()) {
       int hue = (color.getRed() + color.getGreen() + color.getBlue()) / 3;
       color = new Color(hue, hue, hue);

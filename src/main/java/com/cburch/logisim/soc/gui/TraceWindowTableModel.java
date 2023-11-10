@@ -74,7 +74,7 @@ public class TraceWindowTableModel extends AbstractTableModel
       }
     fireTableStructureChanged();
     if (table != null) {
-      for (var i = 0; i < getColumnCount(); i++) {
+      for (int i = 0; i < getColumnCount(); i++) {
         table.getColumnModel().getColumn(i).setPreferredWidth(AppPreferences.getScaled(boxWidth));
       }
       final var height = 2 * SocBusStateInfo.TRACE_HEIGHT + SocBusStateInfo.TRACE_HEIGHT / 2;
@@ -96,7 +96,7 @@ public class TraceWindowTableModel extends AbstractTableModel
 
   @Override
   public int getRowCount() {
-    var max = 1;
+    int max = 1;
     for (final var i : myTraceList.keySet()) {
       if (myTraceList.get(i) != null) {
         if (i.getNrOfEntires() > max) {
@@ -109,7 +109,7 @@ public class TraceWindowTableModel extends AbstractTableModel
 
   @Override
   public int getColumnCount() {
-    var cols = 0;
+    int cols = 0;
     for (final var i : myTraceList.keySet()) {
       if (myTraceList.get(i) != null) cols++;
     }
@@ -147,8 +147,8 @@ public class TraceWindowTableModel extends AbstractTableModel
         if (sortedList.isEmpty()) {
           sortedList.add(info);
         } else {
-          var inserted = false;
-          for (var j = 0; j < sortedList.size(); j++) {
+          boolean inserted = false;
+          for (int j = 0; j < sortedList.size(); j++) {
             final var sortedKey = myTraceList.get(sortedList.get(j)).getName();
             if (myTraceList.get(info).getName().compareTo(sortedKey) <= 0) {
               sortedList.add(j, info);

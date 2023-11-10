@@ -213,7 +213,7 @@ public class LoadedLibrary extends Library implements LibraryEventSource {
     }
     replaceAll(componentMap, toolMap);
 
-    var toolChanges = new HashSet<Tool>(old.getTools());
+    java.util.HashSet<com.cburch.logisim.tools.Tool> toolChanges = new HashSet<Tool>(old.getTools());
     toolChanges.removeAll(toolMap.keySet());
     for (Tool tool : toolChanges) {
       fireLibraryEvent(LibraryEvent.REMOVE_TOOL, tool);

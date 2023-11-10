@@ -40,7 +40,7 @@ public class RegisterPoker extends InstancePoker {
     final var val = Character.digit(e.getKeyChar(), 16);
     if (val < 0) return;
 
-    var dataWidth = state.getAttributeValue(StdAttr.WIDTH);
+    com.cburch.logisim.data.BitWidth dataWidth = state.getAttributeValue(StdAttr.WIDTH);
     if (dataWidth == null) dataWidth = BitWidth.create(8);
     curValue = (curValue * 16 + val) & dataWidth.getMask();
     final var data = (RegisterData) state.getData();
@@ -50,7 +50,7 @@ public class RegisterPoker extends InstancePoker {
 
   @Override
   public void keyPressed(InstanceState state, KeyEvent e) {
-    var dataWidth = state.getAttributeValue(StdAttr.WIDTH);
+    com.cburch.logisim.data.BitWidth dataWidth = state.getAttributeValue(StdAttr.WIDTH);
     if (dataWidth == null) dataWidth = BitWidth.create(8);
     if (e.getKeyCode() == KeyEvent.VK_UP) {
       final var maxVal = dataWidth.getMask();

@@ -122,7 +122,7 @@ public class VhdlEntity extends InstanceFactory implements HdlModelListener {
 
   @Override
   public String getHDLTopName(AttributeSet attrs) {
-    var label = "";
+    java.lang.String label = "";
     if (!attrs.getValue(StdAttr.LABEL).equals(""))
       label = "_" + attrs.getValue(StdAttr.LABEL).toLowerCase();
     return getHDLName(attrs) + label;
@@ -219,7 +219,7 @@ public class VhdlEntity extends InstanceFactory implements HdlModelListener {
         final var busValue = parameters[1];
         final var vectorValues = new Value[busValue.length()];
 
-        var idx = busValue.length() - 1;
+        int idx = busValue.length() - 1;
         for (final var bit : busValue.toCharArray()) {
 
           try {
@@ -246,7 +246,7 @@ public class VhdlEntity extends InstanceFactory implements HdlModelListener {
         /* If it is an output */
         if (port.getType() == 2) {
           final var vectorValues = new Value[port.getFixedBitWidth().getWidth()];
-          for (var k = 0; k < port.getFixedBitWidth().getWidth(); k++) {
+          for (int k = 0; k < port.getFixedBitWidth().getWidth(); k++) {
             vectorValues[k] = Value.UNKNOWN;
           }
 
@@ -288,7 +288,7 @@ public class VhdlEntity extends InstanceFactory implements HdlModelListener {
 
   private ArrayList<Instance> getPins() {
     final var pins = new ArrayList<Instance>();
-    var yPos = 0;
+    int yPos = 0;
     for (final var port : content.getPorts()) {
       final var attr = Pin.FACTORY.createAttributeSet();
       attr.setValue(StdAttr.LABEL, port.getName());

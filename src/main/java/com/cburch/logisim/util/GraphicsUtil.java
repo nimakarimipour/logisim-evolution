@@ -117,10 +117,10 @@ public final class GraphicsUtil {
   public static int getTextPosition(Graphics g, String text, int x, int y, int halign, int valign) {
     final var r = getTextBounds(g, text, 0, 0, halign, valign);
     x -= r.x;
-    var last = 0;
+    int last = 0;
     final var font = g.getFont();
     final var fr = ((Graphics2D) g).getFontRenderContext();
-    for (var i = 0; i < text.length(); i++) {
+    for (int i = 0; i < text.length(); i++) {
       final var cur = (int) font.getStringBounds(text.substring(0, i + 1), fr).getWidth();
       if (x <= (last + cur) / 2) {
         return i;

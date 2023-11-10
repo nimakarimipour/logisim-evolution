@@ -34,7 +34,7 @@ abstract class Rectangular extends FillableCanvasObject {
 
   @Override
   public boolean contains(Location loc, boolean assumeFilled) {
-    var type = getPaintType();
+    com.cburch.logisim.data.AttributeOption type = getPaintType();
     if (assumeFilled && type == DrawAttr.PAINT_STROKE) {
       type = DrawAttr.PAINT_STROKE_FILL;
     }
@@ -92,10 +92,10 @@ abstract class Rectangular extends FillableCanvasObject {
     final var hy = gesture.getHandle().getY();
     final var dx = gesture.getDeltaX();
     final var dy = gesture.getDeltaY();
-    var newX0 = x0 == hx ? x0 + dx : x0;
-    var newY0 = y0 == hy ? y0 + dy : y0;
-    var newX1 = x1 == hx ? x1 + dx : x1;
-    var newY1 = y1 == hy ? y1 + dy : y1;
+    int newX0 = x0 == hx ? x0 + dx : x0;
+    int newY0 = y0 == hy ? y0 + dy : y0;
+    int newX1 = x1 == hx ? x1 + dx : x1;
+    int newY1 = y1 == hy ? y1 + dy : y1;
 
     if (gesture.isShiftDown()) {
       if (gesture.isAltDown()) {
@@ -190,10 +190,10 @@ abstract class Rectangular extends FillableCanvasObject {
     final var newHandles = getHandleArray(gesture);
     final var moved = gesture == null ? null : gesture.getHandle();
     Handle result = null;
-    var x0 = Integer.MAX_VALUE;
-    var x1 = Integer.MIN_VALUE;
-    var y0 = Integer.MAX_VALUE;
-    var y1 = Integer.MIN_VALUE;
+    int x0 = Integer.MAX_VALUE;
+    int x1 = Integer.MIN_VALUE;
+    int y0 = Integer.MAX_VALUE;
+    int y1 = Integer.MIN_VALUE;
     int i = -1;
     for (final var h : newHandles) {
       i++;
@@ -220,10 +220,10 @@ abstract class Rectangular extends FillableCanvasObject {
       final var handles = getHandleArray(gesture);
       final var p0 = handles[0];
       final var p1 = handles[2];
-      var x0 = p0.getX();
-      var y0 = p0.getY();
-      var x1 = p1.getX();
-      var y1 = p1.getY();
+      int x0 = p0.getX();
+      int y0 = p0.getY();
+      int x1 = p1.getX();
+      int y1 = p1.getY();
       if (x1 < x0) {
         final var t = x0;
         x0 = x1;

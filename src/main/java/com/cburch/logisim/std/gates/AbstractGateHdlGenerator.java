@@ -38,7 +38,7 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
     if (!attrs.containsAttribute(GateAttributes.ATTR_INPUTS)) return;
     final var nrOfInputs = attrs.getValue(GateAttributes.ATTR_INPUTS);
     final var bitWidth = attrs.getValue(StdAttr.WIDTH).getWidth();
-    for (var input = 1; input <= nrOfInputs; input++) {
+    for (int input = 1; input <= nrOfInputs; input++) {
       myWires.addWire(String.format("s_realInput%d", input), bitWidth == 1 ? 1 : BIT_WIDTH_GENERIC);
       final var floatingToZero =
           getFloatingValue(attrs.getValue(new NegateAttribute(input - 1, null)));
@@ -72,7 +72,7 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
     if (nrOfInputs > 1) {
       contents.empty();
       contents.addRemarkBlock("Here the bubbles are processed");
-      for (var i = 0; i < nrOfInputs; i++) {
+      for (int i = 0; i < nrOfInputs; i++) {
         if (Hdl.isVhdl()) {
           contents
               .addVhdlKeywords()
@@ -87,7 +87,7 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
       }
     }
     contents.empty().addRemarkBlock("Here the functionality is defined");
-    var onehot = false;
+    boolean onehot = false;
     if (attrs.containsAttribute(GateAttributes.ATTR_XOR)) {
       onehot = attrs.getValue(GateAttributes.ATTR_XOR) == GateAttributes.XOR_ONE;
     }
@@ -97,8 +97,8 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
 
   public LineBuffer getOneHot(boolean inverted, int nrOfInputs, boolean isBus) {
     final var lines = LineBuffer.getHdlBuffer();
-    var spaces = "";
-    var indexString = "";
+    java.lang.String spaces = "";
+    java.lang.String indexString = "";
     if (isBus) {
       if (Hdl.isVhdl()) {
         lines
@@ -119,7 +119,7 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
         indexString = "[n]";
       }
     }
-    var oneLine = new StringBuilder();
+    java.lang.StringBuilder oneLine = new StringBuilder();
     oneLine
         .append(spaces)
         .append(Hdl.assignPreamble())
@@ -128,12 +128,12 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
         .append(Hdl.assignOperator());
     if (inverted) oneLine.append(Hdl.notOperator()).append("(");
     final var spacesLen = oneLine.length();
-    for (var termloop = 0; termloop < nrOfInputs; termloop++) {
+    for (int termloop = 0; termloop < nrOfInputs; termloop++) {
       while (oneLine.length() < spacesLen) {
         oneLine.append(" ");
       }
       oneLine.append("(");
-      for (var i = 0; i < nrOfInputs; i++) {
+      for (int i = 0; i < nrOfInputs; i++) {
         if (i == termloop) {
           oneLine.append("s_realInput").append(i + 1).append(indexString);
         } else {
@@ -171,8 +171,8 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
 
   public static LineBuffer getParity(boolean inverted, int nrOfInputs, boolean isBus) {
     final var lines = LineBuffer.getHdlBuffer();
-    var spaces = "   ";
-    var indexString = "";
+    java.lang.String spaces = "   ";
+    java.lang.String indexString = "";
     if (isBus) {
       if (Hdl.isVhdl()) {
         lines
@@ -202,7 +202,7 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
         .append(Hdl.assignOperator());
     if (inverted) oneLine.append(Hdl.notOperator()).append("(");
     final var spacesLen = oneLine.length();
-    for (var i = 0; i < nrOfInputs; i++) {
+    for (int i = 0; i < nrOfInputs; i++) {
       while (oneLine.length() < spacesLen) {
         oneLine.append(" ");
       }
@@ -229,7 +229,7 @@ public class AbstractGateHdlGenerator extends AbstractHdlGeneratorFactory {
 
   @Override
   public boolean isHdlSupportedTarget(AttributeSet attrs) {
-    var supported = true;
+    boolean supported = true;
     if (attrs.containsAttribute(GateAttributes.ATTR_OUTPUT))
       supported = attrs.getValue(GateAttributes.ATTR_OUTPUT).equals(GateAttributes.OUTPUT_01);
     return supported;

@@ -80,7 +80,7 @@ public class Register extends InstanceFactory implements DynamicElementProvider 
       g.fillRect(x + xoff, y + 1, wid, 16);
       if (value.isFullyDefined()) g.setColor(Color.DARK_GRAY);
       else g.setColor(Color.YELLOW);
-      var str = "";
+      java.lang.String str = "";
       if (value.isFullyDefined()) str = StringUtil.toHexString(nrOfBits, value.toLongValue());
       else {
         for (int i = 0; i < len; i++) str = str.concat("?");
@@ -321,7 +321,7 @@ public class Register extends InstanceFactory implements DynamicElementProvider 
   public void propagate(InstanceState state) {
     final var dataWidth = state.getAttributeValue(StdAttr.WIDTH);
     Object triggerType = state.getAttributeValue(StdAttr.TRIGGER);
-    var data = (RegisterData) state.getData();
+    com.cburch.logisim.std.memory.RegisterData data = (RegisterData) state.getData();
 
     if (data == null) {
       data = new RegisterData(dataWidth);

@@ -34,7 +34,7 @@ public final class SyntaxChecker {
     variableMatcher = variablePattern.matcher(val);
     forbiddenMatcher = forbiddenPattern.matcher(val);
     final var hdl = CorrectLabel.hdlCorrectLabel(val);
-    var message = "";
+    java.lang.String message = "";
     if (!variableMatcher.matches()) {
       message = message.concat(S.get("variableInvalidCharacters"));
     }

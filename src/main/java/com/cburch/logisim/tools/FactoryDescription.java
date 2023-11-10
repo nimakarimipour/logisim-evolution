@@ -65,8 +65,8 @@ public class FactoryDescription {
 
   public static List<Tool> getTools(
       Class<? extends Library> base, FactoryDescription[] descriptions) {
-    var tools = new Tool[descriptions.length];
-    for (var i = 0; i < tools.length; i++) {
+    com.cburch.logisim.tools.Tool[] tools = new Tool[descriptions.length];
+    for (int i = 0; i < tools.length; i++) {
       tools[i] = new AddTool(base, descriptions[i]);
     }
     return Arrays.asList(tools);
@@ -82,7 +82,7 @@ public class FactoryDescription {
       return ret;
     }
 
-    var errorMsg = "";
+    java.lang.String errorMsg = "";
     try {
       errorMsg = "Getting class loader";
       final var loader = this.factoryClass.getClassLoader();
@@ -109,7 +109,7 @@ public class FactoryDescription {
   }
 
   public Icon getIcon() {
-    var ret = icon;
+    javax.swing.Icon ret = icon;
     if (ret == null && !iconLoadAttempted) {
       ret = IconsUtil.getIcon(iconName);
       icon = ret;

@@ -56,8 +56,8 @@ public class MatrixPlacerDialog extends JPanel implements ActionListener {
       add(labelField, c);
       c.gridwidth = 1;
     }
-    for (var x = 4; x < 11; x++)
-      for (var y = 5; y < 12; y++) {
+    for (int x = 4; x < 11; x++)
+      for (int y = 5; y < 12; y++) {
         c.gridx = x;
         c.gridy = y;
         final var symbol =
@@ -79,7 +79,7 @@ public class MatrixPlacerDialog extends JPanel implements ActionListener {
     c.gridx = 8;
     c.gridy = 1;
     c.gridwidth = 2;
-    for (var i = 1; i < 50; i++) {
+    for (int i = 1; i < 50; i++) {
       copiesX.addItem(i);
     }
     copiesX.setSelectedItem(1);
@@ -94,14 +94,14 @@ public class MatrixPlacerDialog extends JPanel implements ActionListener {
     c.gridx = 5;
     add(new JLabel("dx:"), c);
     c.gridx = 6;
-    for (var i = matrixInfo.getMinimalDisplacementX(); i < 100; i++) {
+    for (int i = matrixInfo.getMinimalDisplacementX(); i < 100; i++) {
       distanceX.addItem(i);
     }
     distanceX.setSelectedIndex(0);
     distanceX.addActionListener(this);
     add(distanceX, c);
 
-    for (var y = 5; y < 12; y++) {
+    for (int y = 5; y < 12; y++) {
       c.gridy = y;
       if (y == 5) {
         c.gridx = 3;
@@ -125,7 +125,7 @@ public class MatrixPlacerDialog extends JPanel implements ActionListener {
     }
     c.gridx = 2;
     c.gridy = 10;
-    for (var i = 1; i < 50; i++) copiesY.addItem(i);
+    for (int i = 1; i < 50; i++) copiesY.addItem(i);
     copiesY.setSelectedIndex(0);
     copiesY.addActionListener(this);
     add(copiesY, c);
@@ -137,7 +137,7 @@ public class MatrixPlacerDialog extends JPanel implements ActionListener {
     c.gridy = 6;
     add(new JLabel("dy:"), c);
     c.gridx = 1;
-    for (var i = matrixInfo.getMinimalDisplacementY(); i < 100; i++) {
+    for (int i = matrixInfo.getMinimalDisplacementY(); i < 100; i++) {
       distanceY.addItem(i);
     }
     distanceY.setSelectedIndex(0);

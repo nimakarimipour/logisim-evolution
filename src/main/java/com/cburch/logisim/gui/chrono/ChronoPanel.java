@@ -398,7 +398,7 @@ public class ChronoPanel extends LogPanel implements Model.Listener {
           final var fm = g.getFontMetrics();
           final var d = getExportImageSize();
           final var headerHeight = fm.getHeight() * 1.5;
-          var scale = 1.0D;
+          double scale = 1.0D;
           if (d.width > w || d.height > (h - headerHeight))
             scale = Math.min(w / d.width, (h - headerHeight) / d.height);
 

@@ -72,7 +72,7 @@ public abstract class NumericConfigurator<V> implements KeyConfigurator, Cloneab
         final var attrs = event.getAttributeSet();
         final var min = getMinimumValue(attrs);
         final var max = getMaximumValue(attrs);
-        var val = 0L;
+        long val = 0L;
         if (sinceLast < maxTimeKeyLasts) {
           val = radix * curValue;
           if (val > max) {

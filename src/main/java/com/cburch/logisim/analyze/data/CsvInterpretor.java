@@ -99,14 +99,14 @@ public class CsvInterpretor {
   public void getTruthTable(AnalyzerModel model) throws IOException {
     if (content.size() <= 1) return;
     final var rows = new ArrayList<Entry[]>();
-    var nrOfEntries = inputs.bits.size() + outputs.bits.size();
+    int nrOfEntries = inputs.bits.size() + outputs.bits.size();
     for (int row = 1; row < content.size(); row++) {
       final var entryRow = new ArrayList<Entry>();
       final var line = content.get(row);
-      var col = 0;
+      int col = 0;
       while (col < line.size()) {
         if (col != inputs.bits.size()) {
-          var entry = line.get(col);
+          java.lang.String entry = line.get(col);
           if ("-xX".indexOf(entry.charAt(0)) >= 0) {
             entryRow.add(Entry.DONT_CARE);
           } else if (entry.charAt(0) == '0') {
@@ -129,7 +129,7 @@ public class CsvInterpretor {
     try {
       table.setVisibleRows(rows, false);
     } catch (IllegalArgumentException e) {
-      var confirm =
+      int confirm =
           OptionPane.showConfirmDialog(
               parent,
               new String[] {e.getMessage(), S.get("tableParseErrorMessage")},
@@ -151,12 +151,12 @@ public class CsvInterpretor {
       return false;
     }
     for (int row = 1; row < content.size(); row++) {
-      var col = 0;
-      var line = content.get(row);
+      int col = 0;
+      java.util.List<java.lang.String> line = content.get(row);
       while (col < line.size()) {
         /* we skip the seperator field */
         if (col != inputs.bits.size()) {
-          var entry = line.get(col);
+          java.lang.String entry = line.get(col);
           if (entry == null || entry.length() != 1 || "01-xX".indexOf(entry.charAt(0)) < 0) {
             OptionPane.showMessageDialog(
                 parent,
@@ -223,8 +223,8 @@ public class CsvInterpretor {
       }
     }
     HashMap<String, ArrayList<Boolean>> bitspresent = new HashMap<>();
-    var processingInputs = true;
-    var inOuSepDetected = false;
+    boolean processingInputs = true;
+    boolean inOuSepDetected = false;
     /* now read the cells */
     for (int idx = 0; idx < nrOfEntries; idx++) {
       final var field = header.get(idx);
@@ -394,10 +394,10 @@ public class CsvInterpretor {
   }
 
   public static List<String> parseCsvLine(String line, char seperator, char quote) {
-    var inQuote = false;
-    var nrofcontquotes = 0;
+    boolean inQuote = false;
+    int nrofcontquotes = 0;
 
-    var working = new StringBuilder();
+    java.lang.StringBuilder working = new StringBuilder();
     List<String> result = new ArrayList<>();
     for (char kar : line.toCharArray()) {
       if (inQuote) {
@@ -405,7 +405,7 @@ public class CsvInterpretor {
           nrofcontquotes++;
         } else {
           if (nrofcontquotes > 1) {
-            var quotestoprint = nrofcontquotes >> 1;
+            int quotestoprint = nrofcontquotes >> 1;
             working.append(String.valueOf(quote).repeat(quotestoprint));
             nrofcontquotes -= quotestoprint << 1;
           }

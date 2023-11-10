@@ -121,7 +121,7 @@ public class Analyze {
       final var width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
       if (Pin.FACTORY.isInputPin(pin)) {
         expressionMap.currentCause = Instance.getComponentFor(pin);
-        for (var b = 0; b < width; b++) {
+        for (int b = 0; b < width; b++) {
           final var e = Expressions.variable(width > 1 ? label + "[" + b + "]" : label);
           expressionMap.put(new LocationBit(pin.getLocation(), b), e);
         }
@@ -135,7 +135,7 @@ public class Analyze {
     propagateComponents(expressionMap, circuit.getNonWires());
 
     final var maxIterations = 100;
-    for (var iterations = 0; !expressionMap.dirtyPoints.isEmpty(); iterations++) {
+    for (int iterations = 0; !expressionMap.dirtyPoints.isEmpty(); iterations++) {
       if (iterations > maxIterations) {
         throw new AnalyzeException.Circular();
       }
@@ -154,7 +154,7 @@ public class Analyze {
     for (final var pin : outputPins) {
       final var label = pinNames.get(pin);
       final var width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
-      for (var b = 0; b < width; b++) {
+      for (int b = 0; b < width; b++) {
         final var loc = new LocationBit(pin.getLocation(), b);
         final var name = (width > 1 ? label + "[" + b + "]" : label);
         model.getOutputExpressions().setExpression(name, expressionMap.get(loc));
@@ -192,14 +192,14 @@ public class Analyze {
     final var rowCount = 1 << inputCount;
     final var columns = new Entry[outputNames.size()][rowCount];
 
-    for (var i = 0; i < rowCount; i++) {
+    for (int i = 0; i < rowCount; i++) {
       final var circuitState = new CircuitState(proj, circuit);
-      var incol = 0;
+      int incol = 0;
       for (final var pin : inputPins) {
         final var width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
         final var v = new Value[width];
-        for (var b = width - 1; b >= 0; b--) {
-          var value = TruthTable.isInputSet(i, incol++, inputCount);
+        for (int b = width - 1; b >= 0; b--) {
+          boolean value = TruthTable.isInputSet(i, incol++, inputCount);
           v[b] = value ? Value.TRUE : Value.FALSE;
         }
         final var pinState = circuitState.getInstanceState(pin);
@@ -215,11 +215,11 @@ public class Analyze {
       // TODO: Search for circuit state
 
       if (prop.isOscillating()) {
-        for (var j = 0; j < columns.length; j++) {
+        for (int j = 0; j < columns.length; j++) {
           columns[j][i] = Entry.OSCILLATE_ERROR;
         }
       } else {
-        var outcol = 0;
+        int outcol = 0;
         for (final var pin : outputPins) {
           int width = pin.getAttributeValue(StdAttr.WIDTH).getWidth();
           final var pinState = circuitState.getInstanceState(pin);
@@ -241,7 +241,7 @@ public class Analyze {
     }
 
     model.setVariables(inputVars, outputVars);
-    for (var i = 0; i < columns.length; i++) {
+    for (int i = 0; i < columns.length; i++) {
       model.getTruthTable().setOutputColumn(i, columns[i]);
     }
   }
@@ -274,7 +274,7 @@ public class Analyze {
     final var pinList = new ArrayList<>(ret.keySet());
     final var labelsTaken = new HashSet<String>();
     for (final var pin : pinList) {
-      var label = pin.getAttributeSet().getValue(StdAttr.LABEL);
+      java.lang.String label = pin.getAttributeSet().getValue(StdAttr.LABEL);
       label = toValidLabel(label);
       if (label != null) {
         if (labelsTaken.contains(label)) {
@@ -306,7 +306,7 @@ public class Analyze {
 
       final var options = defaultList.split(",");
       String label = null;
-      for (var i = 0; label == null && i < options.length; i++) {
+      for (int i = 0; label == null && i < options.length; i++) {
         if (!labelsTaken.contains(options[i])) {
           label = options[i];
         }
@@ -382,9 +382,9 @@ public class Analyze {
     if (label == null) return null;
     StringBuilder end = null;
     final var ret = new StringBuilder();
-    var afterWhitespace = false;
-    for (var i = 0; i < label.length(); i++) {
-      var c = label.charAt(i);
+    boolean afterWhitespace = false;
+    for (int i = 0; i < label.length(); i++) {
+      char c = label.charAt(i);
       if (Character.isJavaIdentifierStart(c)) {
         if (afterWhitespace) {
           // capitalize words after the first one

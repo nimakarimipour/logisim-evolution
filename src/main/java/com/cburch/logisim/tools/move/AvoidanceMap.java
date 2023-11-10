@@ -57,14 +57,14 @@ public final class AvoidanceMap {
     final var avoid = this.avoidanceMap;
     final var translated = dx != 0 || dy != 0;
     final var bds = comp.getBounds();
-    var x0 = bds.getX() + dx;
-    var y0 = bds.getY() + dy;
+    int x0 = bds.getX() + dx;
+    int y0 = bds.getY() + dy;
     final var x1 = x0 + bds.getWidth();
     final var y1 = y0 + bds.getHeight();
     x0 += 9 - (x0 + 9) % 10;
     y0 += 9 - (y0 + 9) % 10;
-    for (var x = x0; x <= x1; x += 10) {
-      for (var y = y0; y <= y1; y += 10) {
+    for (int x = x0; x <= x1; x += 10) {
+      for (int y = y0; y <= y1; y += 10) {
         final var loc = Location.create(x, y, false);
         // loc is most likely in the component, so go ahead and
         // put it into the map as if it is - and in the rare event
@@ -87,8 +87,8 @@ public final class AvoidanceMap {
   public void markWire(Wire w, int dx, int dy) {
     final var avoid = this.avoidanceMap;
     final var translated = dx != 0 || dy != 0;
-    var loc0 = w.getEnd0();
-    var loc1 = w.getEnd1();
+    com.cburch.logisim.data.Location loc0 = w.getEnd0();
+    com.cburch.logisim.data.Location loc1 = w.getEnd1();
     if (translated) {
       loc0 = loc0.translate(dx, dy);
       loc1 = loc1.translate(dx, dy);

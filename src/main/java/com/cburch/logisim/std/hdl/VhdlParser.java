@@ -185,7 +185,7 @@ public class VhdlParser {
     if (index == -1)
       throw new IllegalVhdlContentException(S.get("multiplePortsDeclarationException"));
 
-    var local = new Scanner(line.substring(0, index));
+    java.util.Scanner local = new Scanner(line.substring(0, index));
     local.useDelimiter(",");
 
     final var names = new ArrayList<String>();

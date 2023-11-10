@@ -44,8 +44,8 @@ public class Ttl7454 extends AbstractTtlGate {
     // TODO Auto-generated method stub
     final var offset =
         (AppPreferences.GATE_SHAPE.get().equals(AppPreferences.SHAPE_RECTANGULAR)) ? 4 : 0;
-    var xpos = new int[] {x + 105, x + 108, x + 108, x + 111 + offset};
-    var ypos = new int[] {y + 20, y + 20, y + 27, y + 27};
+    int[] xpos = new int[] {x + 105, x + 108, x + 108, x + 111 + offset};
+    int[] ypos = new int[] {y + 20, y + 20, y + 27, y + 27};
     g.drawPolyline(xpos, ypos, 4);
     xpos = new int[] {x + 65, x + 68, x + 68, x + 111 + offset};
     ypos = new int[] {y + 20, y + 20, y + 29, y + 29};

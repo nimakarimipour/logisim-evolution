@@ -67,7 +67,7 @@ public class HdlParameters {
 
         case MAP_MULTIPLY:
           if (args.length == 2) {
-            for (var arg = 0; arg < 2; arg++) {
+            for (int arg = 0; arg < 2; arg++) {
               if (!(args[arg] instanceof Attribute<?> attr))
                 throw new IllegalArgumentException("Mutliply map Type: argument needs to be an Attribute<?>");
               attributesList.add(attr);
@@ -144,8 +144,8 @@ public class HdlParameters {
     }
 
     public String getParameterValue(AttributeSet attrs) {
-      var totalValue = 0L;
-      var selectedValue = 0L;
+      long totalValue = 0L;
+      long selectedValue = 0L;
 
       final var noReqAttrExMsg = "Component has not the required attribute";
       final var notAnIntExMsg = "Requested attribute is not an Integer";
@@ -164,7 +164,7 @@ public class HdlParameters {
           break;
 
         case MAP_POW2:
-          for (var attr : attributesList) {
+          for (com.cburch.logisim.data.Attribute<?> attr : attributesList) {
             if (!attrs.containsAttribute(attr)) throw new UnsupportedOperationException(noReqAttrExMsg);
             final var intValue = attrs.getValue(attr);
             if (intValue instanceof Integer) {
@@ -177,7 +177,7 @@ public class HdlParameters {
           break;
 
         case MAP_LN2:
-          for (var attr : attributesList) {
+          for (com.cburch.logisim.data.Attribute<?> attr : attributesList) {
             if (!attrs.containsAttribute(attr)) throw new UnsupportedOperationException(noReqAttrExMsg);
             final var intValue = attrs.getValue(attr);
             if (intValue instanceof Integer) {
@@ -202,9 +202,9 @@ public class HdlParameters {
         case MAP_GATE_INPUT_BUBLE:
           if (!attrs.containsAttribute(GateAttributes.ATTR_INPUTS)) throw new UnsupportedOperationException(noReqAttrExMsg);
           final var nrOfInputs = attrs.getValue(GateAttributes.ATTR_INPUTS);
-          var bubbleMask = 0L;
-          var mask = 1L;
-          for (var i = 0; i < nrOfInputs; i++) {
+          long bubbleMask = 0L;
+          long mask = 1L;
+          for (int i = 0; i < nrOfInputs; i++) {
             // VHDL is particular with the general type std_logic_vector, as it does an upto, so we have to exchange the bits
             final var realIndex = Hdl.isVhdl() ? nrOfInputs - i - 1 : i;   
             final var inputIsInverted = attrs.getValue(new NegateAttribute(realIndex, null));
@@ -252,7 +252,7 @@ public class HdlParameters {
 
     public int getNumberOfVectorBits(AttributeSet attrs) {
       if (isIntParameter) throw new UnsupportedOperationException("Parameter is not a bit vector!");
-      var nrOfVectorBits = -1;
+      int nrOfVectorBits = -1;
       if (myMapType == MAP_GATE_INPUT_BUBLE) {
         if (!attrs.containsAttribute(GateAttributes.ATTR_INPUTS)) throw new UnsupportedOperationException("Component has not the required attribute");
         nrOfVectorBits = attrs.getValue(GateAttributes.ATTR_INPUTS);
@@ -270,7 +270,7 @@ public class HdlParameters {
 
     private long getCorrectIntValue(Object... args) {
       if (args.length != 1) throw new IllegalArgumentException("Map Type requires a single argument");
-      var value = 0L;
+      long value = 0L;
       if (args[0] instanceof Integer intVal) value = intVal;
       else if (args[0] instanceof Long longVal) value = longVal;
       else throw new IllegalArgumentException("Map Type requires an Integer or Long");
@@ -411,7 +411,7 @@ public class HdlParameters {
   }
 
   public boolean isEmpty(AttributeSet attrs) {
-    var count = 0;
+    int count = 0;
     for (final var parameter : myParameters) {
       if (parameter.isUsed(attrs)) count++;
     }
