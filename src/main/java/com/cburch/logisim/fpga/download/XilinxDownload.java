@@ -32,12 +32,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class XilinxDownload implements VendorDownload {
 
   private final VendorSoftware xilinxVendor = VendorSoftware.getSoftware(VendorSoftware.VENDOR_XILINX);
-  private final String scriptPath;
-  private final String projectPath;
+  private final @RUntainted String scriptPath;
+  private final @RUntainted String projectPath;
   private final String sandboxPath;
   private final String ucfPath;
   private final Netlist rootNetList;
@@ -59,7 +60,7 @@ public class XilinxDownload implements VendorDownload {
   private static final Integer BUFFER_SIZE = 16 * 1024;
 
   public XilinxDownload(
-      String projectPath,
+      @RUntainted String projectPath,
       Netlist rootNetList,
       BoardInformation boardInfo,
       List<String> entities,
@@ -119,7 +120,7 @@ public class XilinxDownload implements VendorDownload {
   @Override
   public ProcessBuilder downloadToBoard() {
     if (!boardInfo.fpga.isUsbTmcDownloadRequired()) {
-      java.util.ArrayList<java.lang.String> command = new ArrayList<String>();
+      java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
       command.add(xilinxVendor.getBinaryPath(5));
       command.add("-batch");
       command.add(scriptPath.replace(projectPath, "../") + File.separator + DOWNLOAD_FILE);

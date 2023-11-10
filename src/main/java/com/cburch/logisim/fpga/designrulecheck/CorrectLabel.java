@@ -18,6 +18,7 @@ import com.cburch.logisim.fpga.hdlgenerator.Vhdl;
 import com.cburch.logisim.gui.generic.OptionPane;
 import java.util.Arrays;
 import java.util.List;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RPolyTainted;
 
 public class CorrectLabel {
   public static String getCorrectLabel(String label) {

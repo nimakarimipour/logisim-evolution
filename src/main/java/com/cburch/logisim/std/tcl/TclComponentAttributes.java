@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JFileChooser;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class TclComponentAttributes extends AbstractAttributeSet {
 

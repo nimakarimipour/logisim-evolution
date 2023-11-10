@@ -78,6 +78,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.UnrecognizedOptionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Startup implements AWTEventListener {
 
