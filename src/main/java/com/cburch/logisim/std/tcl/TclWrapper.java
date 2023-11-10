@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 /**
  * The TclWrapper create a TCL subprocess runnning the script specified in the TCL component
@@ -98,7 +99,7 @@ public class TclWrapper {
 
     /* Create the TCL process */
     ProcessBuilder builder;
-    final java.util.ArrayList<java.lang.String> command = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
 
     command.add("tclsh");
     command.add(TCL_PATH + "tcl_wrapper.tcl");
