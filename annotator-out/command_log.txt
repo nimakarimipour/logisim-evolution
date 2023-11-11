@@ -166,3 +166,149 @@
 
 2023-11-10T10:29:05.681650:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
 
+2023-11-11T01:34:26.908618:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T01:36:11.126677:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T01:37:55.797842:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T01:39:36.199021:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T01:41:11.543983:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T01:42:45.811638:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T01:44:21.747567:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T01:45:56.475638:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T01:47:30.887896:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T01:48:59.725672:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T01:50:30.272185:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T01:51:57.917829:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T01:53:26.766493:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T01:54:55.361955:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T01:56:24.589423:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T01:57:52.040117:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T01:59:21.242389:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:00:49.981291:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:02:17.527495:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:03:45.752728:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:05:15.857011:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:06:44.254846:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:08:14.095272:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:09:44.204679:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:11:13.780543:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:12:43.899960:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:14:11.458364:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:15:39.501180:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:17:08.702154:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:18:37.046770:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:20:07.021240:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:21:36.018443:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:23:04.349507:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:24:34.142241:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:26:02.347890:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:27:30.366054:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:28:59.488825:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:30:28.328295:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:31:58.253750:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:33:27.715072:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:34:57.066212:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:36:23.963365:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:37:52.087208:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:39:19.765650:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:40:48.199822:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:42:17.148242:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:43:45.329342:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:45:13.325792:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:46:41.997350:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:48:11.250125:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:49:40.810980:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:51:09.471902:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:52:37.947141:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:54:06.407061:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:55:35.068735:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:57:03.160280:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:58:30.448044:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T02:59:57.356730:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T03:01:24.905130:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T03:02:51.655594:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T03:04:19.195066:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T03:05:46.745878:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T03:07:16.350937:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T03:08:43.399728:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T03:10:11.683151:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T03:11:39.538211:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T03:11:43.884489:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T03:11:48.375312:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T03:11:52.866969:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T03:11:57.862666:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T03:12:03.043105:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T03:12:08.140474:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+
+2023-11-11T03:12:13.321636:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava
+

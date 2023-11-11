@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Hdl {
 
@@ -234,7 +235,7 @@ public class Hdl {
     return isVhdl() ? "'1'" : "1'b1";
   }
 
-  public static String unconnected(boolean empty) {
+  public static @RUntainted String unconnected(boolean empty) {
     return isVhdl() ? Vhdl.getVhdlKeyword("OPEN") : empty ? "" : "'bz";
   }
 
@@ -249,7 +250,7 @@ public class Hdl {
                 : LineBuffer.formatHdl("[{{1}}:{{2}}]", start, end);
   }
 
-  public static String getZeroVector(int nrOfBits, boolean floatingPinTiedToGround) {
+  public static @RUntainted String getZeroVector(int nrOfBits, boolean floatingPinTiedToGround) {
     final java.lang.StringBuilder contents = new StringBuilder();
     if (isVhdl()) {
       java.lang.String fillValue = (floatingPinTiedToGround) ? "0" : "1";
@@ -322,7 +323,7 @@ public class Hdl {
   public static String getNetName(netlistComponent comp, int endIndex, boolean floatingNetTiedToGround, Netlist myNetlist) {
     java.lang.String netName = "";
     if ((endIndex >= 0) && (endIndex < comp.nrOfEnds())) {
-      final java.lang.String floatingValue = floatingNetTiedToGround ? zeroBit() : oneBit();
+      final java.lang.@RUntainted String floatingValue = floatingNetTiedToGround ? zeroBit() : oneBit();
       final com.cburch.logisim.fpga.designrulecheck.ConnectionEnd thisEnd = comp.getEnd(endIndex);
       final boolean isOutput = thisEnd.isOutputEnd();
 
@@ -412,7 +413,7 @@ public class Hdl {
     return contents.toString();
   }
 
-  public static boolean writeEntity(String targetDirectory, List<String> contents, String componentName) {
+  public static boolean writeEntity(String targetDirectory, List<@RUntainted String> contents, String componentName) {
     if (!Hdl.isVhdl()) return true;
     if (contents.isEmpty()) {
       // FIXME: hardcoded string
@@ -424,7 +425,7 @@ public class Hdl {
     return FileWriter.writeContents(outFile, contents);
   }
 
-  public static boolean writeArchitecture(String targetDirectory, List<String> contents, String componentName) {
+  public static boolean writeArchitecture(String targetDirectory, List<@RUntainted String> contents, String componentName) {
     if (CollectionUtil.isNullOrEmpty(contents)) {
       // FIXME: hardcoded string
       Reporter.report.addFatalErrorFmt("INTERNAL ERROR: Empty behavior description for Component '%s' received!", componentName);
@@ -553,7 +554,7 @@ public class Hdl {
     wires.clear();
   }
 
-  public static List<String> getExtendedLibrary() {
+  public static List<@RUntainted String> getExtendedLibrary() {
     final com.cburch.logisim.util.LineBuffer lines = LineBuffer.getBuffer();
     lines.addVhdlKeywords().add("""
 
@@ -565,7 +566,7 @@ public class Hdl {
     return lines.get();
   }
 
-  public static List<String> getStandardLibrary() {
+  public static List<@RUntainted String> getStandardLibrary() {
     final com.cburch.logisim.util.LineBuffer lines = LineBuffer.getBuffer();
     lines.addVhdlKeywords().add("""
 

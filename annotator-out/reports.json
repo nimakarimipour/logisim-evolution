@@ -1,0 +1,772 @@
+{
+    "REPORTS": [
+        {
+            "ROOT": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "KIND": "METHOD",
+                    "METHOD": "get()"
+                }
+            ],
+            "EFFECT": 3,
+            "TREE": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "INDEX": [
+                        0
+                    ],
+                    "KIND": "POLY_METHOD",
+                    "METHOD": "applyPairs(java.lang.String,com.cburch.logisim.util.LineBuffer.Pairs)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "INDEX": 1,
+                    "KIND": "PARAMETER",
+                    "METHOD": "repeat(int,java.lang.String)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "INDEX": 0,
+                    "KIND": "PARAMETER",
+                    "METHOD": "addLines(java.lang.String[])"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "INDEX": 0,
+                    "KIND": "PARAMETER",
+                    "METHOD": "addUnique(java.lang.String,java.lang.Object[])"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "INDEX": [
+                        0
+                    ],
+                    "KIND": "POLY_METHOD",
+                    "METHOD": "applyPairs(java.lang.String)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "INDEX": 0,
+                    "KIND": "PARAMETER",
+                    "METHOD": "add(java.lang.StringBuilder)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "INDEX": 0,
+                    "KIND": "PARAMETER",
+                    "METHOD": "addUnique(java.lang.String)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "INDEX": [
+                        0
+                    ],
+                    "KIND": "POLY_METHOD",
+                    "METHOD": "format(java.lang.String,java.lang.Object[])"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "VARIABLES": "replacement",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "applyPairs(java.lang.String,com.cburch.logisim.util.LineBuffer.Pairs)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "INDEX": 0,
+                    "KIND": "PARAMETER",
+                    "METHOD": "add(java.lang.String)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "INDEX": 0,
+                    "KIND": "PARAMETER",
+                    "METHOD": "LineBuffer(java.lang.String,com.cburch.logisim.util.LineBuffer.Pairs)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "VARIABLES": "line",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "addUnique(java.lang.String,java.lang.Object[])"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "VARIABLES": "searchRegExp",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "applyPairs(java.lang.String,com.cburch.logisim.util.LineBuffer.Pairs)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "INDEX": 0,
+                    "KIND": "PARAMETER",
+                    "METHOD": "add(java.lang.String,boolean)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "INDEX": 0,
+                    "KIND": "PARAMETER",
+                    "METHOD": "add(java.lang.String,com.cburch.logisim.util.LineBuffer.Pairs)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "KIND": "METHOD",
+                    "METHOD": "get()"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "VARIABLES": "contents",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "buildRemarkBlock(java.lang.String,int)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "KIND": "METHOD",
+                    "METHOD": "buildRemarkBlock(java.lang.String,int)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "VARIABLES": [
+                        "contents"
+                    ],
+                    "KIND": "FIELD"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "INDEX": 0,
+                    "KIND": "PARAMETER",
+                    "METHOD": "LineBuffer(java.lang.String)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/LineBuffer.java",
+                    "CLASS": "com.cburch.logisim.util.LineBuffer",
+                    "INDEX": 0,
+                    "KIND": "PARAMETER",
+                    "METHOD": "add(java.util.Collection)"
+                }
+            ],
+            "FINISHED": false
+        },
+        {
+            "ROOT": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.AlteraDownload",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "downloadToBoard()"
+                }
+            ],
+            "EFFECT": 1,
+            "TREE": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/file/BoardReaderClass.java",
+                    "CLASS": "com.cburch.logisim.fpga.file.BoardReaderClass",
+                    "VARIABLES": "jtagPos",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "getFpgaInfo()"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/data/FpgaClass.java",
+                    "CLASS": "com.cburch.logisim.fpga.data.FpgaClass",
+                    "VARIABLES": [
+                        "jtagPos"
+                    ],
+                    "KIND": "FIELD"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java",
+                    "CLASS": "com.cburch.logisim.fpga.settings.VendorSoftware",
+                    "KIND": "METHOD",
+                    "METHOD": "getBinaryPath(int)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java",
+                    "CLASS": "com.cburch.logisim.fpga.settings.VendorSoftware",
+                    "KIND": "METHOD",
+                    "METHOD": "getToolPath()"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.AlteraDownload",
+                    "VARIABLES": [
+                        "cablename"
+                    ],
+                    "KIND": "FIELD"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.AlteraDownload",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "downloadToBoard()"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/data/FpgaClass.java",
+                    "CLASS": "com.cburch.logisim.fpga.data.FpgaClass",
+                    "KIND": "METHOD",
+                    "METHOD": "getFpgaJTAGChainPosition()"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/data/FpgaClass.java",
+                    "CLASS": "com.cburch.logisim.fpga.data.FpgaClass",
+                    "INDEX": 11,
+                    "KIND": "PARAMETER",
+                    "METHOD": "set(long,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,boolean,java.lang.String,java.lang.String,java.lang.String)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java",
+                    "CLASS": "com.cburch.logisim.fpga.settings.VendorSoftware",
+                    "VARIABLES": [
+                        "bin"
+                    ],
+                    "KIND": "FIELD"
+                }
+            ],
+            "FINISHED": false
+        },
+        {
+            "ROOT": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/vhdl/sim/VhdlSimulatorTclBinder.java",
+                    "CLASS": "com.cburch.logisim.vhdl.sim.VhdlSimulatorTclBinder",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "init(int)"
+                }
+            ],
+            "EFFECT": 1,
+            "TREE": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/Softwares.java",
+                    "CLASS": "com.cburch.logisim.util.Softwares",
+                    "VARIABLES": [
+                        "QUESTA_BIN"
+                    ],
+                    "KIND": "FIELD"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/vhdl/sim/VhdlSimulatorTclBinder.java",
+                    "CLASS": "com.cburch.logisim.vhdl.sim.VhdlSimulatorTclBinder",
+                    "INDEX": 0,
+                    "KIND": "PARAMETER",
+                    "METHOD": "init(int)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/Softwares.java",
+                    "CLASS": "com.cburch.logisim.util.Softwares",
+                    "VARIABLES": "prefPath",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "getQuestaPath(java.awt.Component)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/Softwares.java",
+                    "CLASS": "com.cburch.logisim.util.Softwares",
+                    "KIND": "METHOD",
+                    "METHOD": "loadQuesta()"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/Softwares.java",
+                    "CLASS": "com.cburch.logisim.util.Softwares",
+                    "VARIABLES": "questaProgs",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "loadQuesta()"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/Softwares.java",
+                    "CLASS": "com.cburch.logisim.util.Softwares",
+                    "KIND": "METHOD",
+                    "METHOD": "getQuestaPath()"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/SocketClient.java",
+                    "CLASS": "com.cburch.logisim.util.SocketClient",
+                    "VARIABLES": [
+                        "server"
+                    ],
+                    "KIND": "FIELD"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/vhdl/sim/VhdlSimulatorTclBinder.java",
+                    "CLASS": "com.cburch.logisim.vhdl.sim.VhdlSimulatorTclBinder",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "init(int)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/SocketClient.java",
+                    "CLASS": "com.cburch.logisim.util.SocketClient",
+                    "KIND": "METHOD",
+                    "METHOD": "getServerPort()"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/Softwares.java",
+                    "CLASS": "com.cburch.logisim.util.Softwares",
+                    "KIND": "METHOD",
+                    "METHOD": "getQuestaPath(java.awt.Component)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/FileUtil.java",
+                    "CLASS": "com.cburch.logisim.util.FileUtil",
+                    "INDEX": [
+                        0
+                    ],
+                    "KIND": "POLY_METHOD",
+                    "METHOD": "correctPath(java.lang.String)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/prefs/AppPreferences.java",
+                    "CLASS": "com.cburch.logisim.prefs.AppPreferences",
+                    "VARIABLES": [
+                        "QUESTA_PATH"
+                    ],
+                    "KIND": "FIELD"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/Softwares.java",
+                    "CLASS": "com.cburch.logisim.util.Softwares",
+                    "KIND": "METHOD",
+                    "METHOD": "setQuestaPath()"
+                }
+            ],
+            "FINISHED": false
+        },
+        {
+            "ROOT": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/proj/ProjectActions.java",
+                    "CLASS": "com.cburch.logisim.proj.ProjectActions",
+                    "VARIABLES": "exportCircDir",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "doExportProject(com.cburch.logisim.proj.Project)"
+                }
+            ],
+            "EFFECT": 0,
+            "TREE": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/proj/ProjectActions.java",
+                    "CLASS": "com.cburch.logisim.proj.ProjectActions",
+                    "VARIABLES": "exportCircDir",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "doExportProject(com.cburch.logisim.proj.Project)"
+                }
+            ],
+            "FINISHED": true
+        },
+        {
+            "ROOT": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.AlteraDownload",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "stage0Project()"
+                }
+            ],
+            "EFFECT": 0,
+            "TREE": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java",
+                    "CLASS": "com.cburch.logisim.fpga.settings.VendorSoftware",
+                    "KIND": "METHOD",
+                    "METHOD": "getBinaryPath(int)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.AlteraDownload",
+                    "VARIABLES": [
+                        "scriptPath"
+                    ],
+                    "KIND": "FIELD"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.AlteraDownload",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "stage0Project()"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.AlteraDownload",
+                    "VARIABLES": [
+                        "projectPath"
+                    ],
+                    "KIND": "FIELD"
+                }
+            ],
+            "FINISHED": true
+        },
+        {
+            "ROOT": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/Softwares.java",
+                    "CLASS": "com.cburch.logisim.util.Softwares",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "createWorkLibrary(java.io.File,java.lang.String,java.lang.StringBuilder)"
+                }
+            ],
+            "EFFECT": 0,
+            "TREE": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/Softwares.java",
+                    "CLASS": "com.cburch.logisim.util.Softwares",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "createWorkLibrary(java.io.File,java.lang.String,java.lang.StringBuilder)"
+                }
+            ],
+            "FINISHED": true
+        },
+        {
+            "ROOT": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/std/tcl/TclWrapper.java",
+                    "CLASS": "com.cburch.logisim.std.tcl.TclWrapper",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "start()"
+                }
+            ],
+            "EFFECT": 0,
+            "TREE": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/std/tcl/TclComponentAttributes.java",
+                    "CLASS": "com.cburch.logisim.std.tcl.TclComponentAttributes",
+                    "VARIABLES": [
+                        "CONTENT_FILE_ATTR"
+                    ],
+                    "KIND": "FIELD"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/std/tcl/TclWrapper.java",
+                    "CLASS": "com.cburch.logisim.std.tcl.TclWrapper",
+                    "VARIABLES": [
+                        "tclContentFile"
+                    ],
+                    "KIND": "FIELD"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/SocketClient.java",
+                    "CLASS": "com.cburch.logisim.util.SocketClient",
+                    "VARIABLES": [
+                        "server"
+                    ],
+                    "KIND": "FIELD"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/std/tcl/TclWrapper.java",
+                    "CLASS": "com.cburch.logisim.std.tcl.TclWrapper",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "start()"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/SocketClient.java",
+                    "CLASS": "com.cburch.logisim.util.SocketClient",
+                    "KIND": "METHOD",
+                    "METHOD": "getServerPort()"
+                }
+            ],
+            "FINISHED": true
+        },
+        {
+            "ROOT": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/XilinxDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.XilinxDownload",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "downloadToBoard()"
+                }
+            ],
+            "EFFECT": 0,
+            "TREE": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java",
+                    "CLASS": "com.cburch.logisim.fpga.settings.VendorSoftware",
+                    "KIND": "METHOD",
+                    "METHOD": "getBinaryPath(int)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/XilinxDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.XilinxDownload",
+                    "VARIABLES": [
+                        "projectPath"
+                    ],
+                    "KIND": "FIELD"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/XilinxDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.XilinxDownload",
+                    "VARIABLES": [
+                        "scriptPath"
+                    ],
+                    "KIND": "FIELD"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/XilinxDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.XilinxDownload",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "downloadToBoard()"
+                }
+            ],
+            "FINISHED": true
+        },
+        {
+            "ROOT": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/Softwares.java",
+                    "CLASS": "com.cburch.logisim.util.Softwares",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "validateVhdl(java.lang.String,java.lang.StringBuilder,java.lang.StringBuilder)"
+                }
+            ],
+            "EFFECT": 0,
+            "TREE": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/Softwares.java",
+                    "CLASS": "com.cburch.logisim.util.Softwares",
+                    "VARIABLES": [
+                        "QUESTA_BIN"
+                    ],
+                    "KIND": "FIELD"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/vhdl/sim/VhdlSimulatorTclBinder.java",
+                    "CLASS": "com.cburch.logisim.vhdl.sim.VhdlSimulatorTclBinder",
+                    "INDEX": 0,
+                    "KIND": "PARAMETER",
+                    "METHOD": "init(int)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/Softwares.java",
+                    "CLASS": "com.cburch.logisim.util.Softwares",
+                    "KIND": "METHOD",
+                    "METHOD": "loadQuesta()"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/Softwares.java",
+                    "CLASS": "com.cburch.logisim.util.Softwares",
+                    "VARIABLES": "questaProgs",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "loadQuesta()"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/Softwares.java",
+                    "CLASS": "com.cburch.logisim.util.Softwares",
+                    "KIND": "METHOD",
+                    "METHOD": "getQuestaPath()"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/vhdl/sim/VhdlSimulatorTclBinder.java",
+                    "CLASS": "com.cburch.logisim.vhdl.sim.VhdlSimulatorTclBinder",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "init(int)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/Softwares.java",
+                    "CLASS": "com.cburch.logisim.util.Softwares",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "validateVhdl(java.lang.String,java.lang.StringBuilder,java.lang.StringBuilder)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/Softwares.java",
+                    "CLASS": "com.cburch.logisim.util.Softwares",
+                    "VARIABLES": "tmp",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "validateVhdl(java.lang.String,java.lang.StringBuilder,java.lang.StringBuilder)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/Softwares.java",
+                    "CLASS": "com.cburch.logisim.util.Softwares",
+                    "KIND": "METHOD",
+                    "METHOD": "getQuestaPath(java.awt.Component)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/FileUtil.java",
+                    "CLASS": "com.cburch.logisim.util.FileUtil",
+                    "INDEX": [
+                        0
+                    ],
+                    "KIND": "POLY_METHOD",
+                    "METHOD": "correctPath(java.lang.String)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/FileUtil.java",
+                    "CLASS": "com.cburch.logisim.util.FileUtil",
+                    "INDEX": [
+                        1,
+                        2
+                    ],
+                    "KIND": "POLY_METHOD",
+                    "METHOD": "createTmpFile(java.lang.String,java.lang.String,java.lang.String)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/util/Softwares.java",
+                    "CLASS": "com.cburch.logisim.util.Softwares",
+                    "VARIABLES": "questaPath",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "validateVhdl(java.lang.String,java.lang.StringBuilder,java.lang.StringBuilder)"
+                }
+            ],
+            "FINISHED": true
+        },
+        {
+            "ROOT": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.AlteraDownload",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "isBoardConnected()"
+                }
+            ],
+            "EFFECT": 0,
+            "TREE": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.AlteraDownload",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "isBoardConnected()"
+                }
+            ],
+            "FINISHED": true
+        },
+        {
+            "ROOT": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.AlteraDownload",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "createJicFile()"
+                }
+            ],
+            "EFFECT": 0,
+            "TREE": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java",
+                    "CLASS": "com.cburch.logisim.fpga.settings.VendorSoftware",
+                    "KIND": "METHOD",
+                    "METHOD": "getBinaryPath(int)"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.AlteraDownload",
+                    "VARIABLES": [
+                        "scriptPath"
+                    ],
+                    "KIND": "FIELD"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.AlteraDownload",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "createJicFile()"
+                },
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.AlteraDownload",
+                    "VARIABLES": [
+                        "projectPath"
+                    ],
+                    "KIND": "FIELD"
+                }
+            ],
+            "FINISHED": true
+        },
+        {
+            "ROOT": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.AlteraDownload",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "stage2SprBit()"
+                }
+            ],
+            "EFFECT": 0,
+            "TREE": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.AlteraDownload",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "stage2SprBit()"
+                }
+            ],
+            "FINISHED": true
+        },
+        {
+            "ROOT": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/proj/ProjectActions.java",
+                    "CLASS": "com.cburch.logisim.proj.ProjectActions",
+                    "VARIABLES": "exportLibDir",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "doExportProject(com.cburch.logisim.proj.Project)"
+                }
+            ],
+            "EFFECT": 0,
+            "TREE": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/proj/ProjectActions.java",
+                    "CLASS": "com.cburch.logisim.proj.ProjectActions",
+                    "VARIABLES": "exportLibDir",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "doExportProject(com.cburch.logisim.proj.Project)"
+                }
+            ],
+            "FINISHED": true
+        },
+        {
+            "ROOT": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.AlteraDownload",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "stage1Optimize()"
+                }
+            ],
+            "EFFECT": 0,
+            "TREE": [
+                {
+                    "PATH": "/home/nima/Developer/taint-benchmarks/logisim-evolution/src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java",
+                    "CLASS": "com.cburch.logisim.fpga.download.AlteraDownload",
+                    "VARIABLES": "command",
+                    "KIND": "LOCAL_VARIABLE",
+                    "METHOD": "stage1Optimize()"
+                }
+            ],
+            "FINISHED": true
+        }
+    ]
+}

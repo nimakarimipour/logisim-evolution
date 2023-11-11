@@ -21,6 +21,7 @@ import com.cburch.logisim.fpga.data.FpgaIoInformationContainer;
 import com.cburch.logisim.fpga.data.LedArrayDriving;
 import com.cburch.logisim.fpga.hdlgenerator.AbstractHdlGeneratorFactory;
 import com.cburch.logisim.fpga.hdlgenerator.Hdl;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class LedArrayGenericHdlGeneratorFactory {
   public static String LedArrayOutputs = "externalLeds";
@@ -55,7 +56,7 @@ public class LedArrayGenericHdlGeneratorFactory {
     };
   }
 
-  public static String getSpecificHDLName(char typeId) {
+  public static @RUntainted String getSpecificHDLName(char typeId) {
     return switch (typeId) {
       case LedArrayDriving.LED_DEFAULT -> LedArrayLedDefaultHdlGeneratorFactory.HDL_IDENTIFIER;
       case LedArrayDriving.LED_ROW_SCANNING -> LedArrayRowScanningHdlGeneratorFactory.HDL_IDENTIFIER;
@@ -197,7 +198,7 @@ public class LedArrayGenericHdlGeneratorFactory {
     return wires;
   }
 
-  public static List<String> getComponentMap(char typeId, int nrOfRows, int nrOfColumns, int identifier, long FpgaClockFrequency, boolean isActiveLow) {
+  public static List<@RUntainted String> getComponentMap(char typeId, int nrOfRows, int nrOfColumns, int identifier, long FpgaClockFrequency, boolean isActiveLow) {
     final com.cburch.logisim.util.LineBuffer componentMap = LineBuffer.getBuffer()
             .add(Hdl.isVhdl()
                 ? LineBuffer.format("array{{1}} : {{2}}", identifier, getSpecificHDLName(typeId))
@@ -270,7 +271,7 @@ public class LedArrayGenericHdlGeneratorFactory {
     return connections;
   }
 
-  public static List<String> getLedArrayConnections(FpgaIoInformationContainer info, int id) {
+  public static List<@RUntainted String> getLedArrayConnections(FpgaIoInformationContainer info, int id) {
     final com.cburch.logisim.util.LineBuffer connections = LineBuffer.getHdlBuffer();
     final java.util.HashMap<java.lang.String,java.lang.String> wires = new HashMap<String, String>();
     for (int pin = 0; pin < info.getNrOfPins(); pin++) {
@@ -285,7 +286,7 @@ public class LedArrayGenericHdlGeneratorFactory {
     return connections.get();
   }
 
-  public static List<String> getRGBArrayConnections(FpgaIoInformationContainer array, int id) {
+  public static List<@RUntainted String> getRGBArrayConnections(FpgaIoInformationContainer array, int id) {
     final java.util.HashMap<java.lang.String,java.lang.String> wires = new HashMap<String, String>();
     final com.cburch.logisim.util.LineBuffer connections =
         LineBuffer.getHdlBuffer()

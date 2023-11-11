@@ -39,6 +39,7 @@ import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class AppPreferences {
   //
@@ -451,7 +452,7 @@ public class AppPreferences {
   public static final PrefMonitor<String> LOCALE = create(new LocalePreference());
 
   // FPGA Commander Preferences
-  public static final PrefMonitor<String> FPGA_Workspace =
+  public static final PrefMonitor<@RUntainted String> FPGA_Workspace =
       create(
           new PrefMonitorString(
               "FPGAWorkspace", System.getProperty("user.home") + "/logisim_evolution_workspace"));
@@ -731,7 +732,7 @@ public class AppPreferences {
       create(new PrefMonitorBoolean("AntiAliassing", true));
 
   // Third party softwares preferences
-  public static final PrefMonitor<String> QUESTA_PATH =
+  public static final PrefMonitor<@RUntainted String> QUESTA_PATH =
       create(new PrefMonitorString("questaPath", ""));
 
   public static final PrefMonitor<Boolean> QUESTA_VALIDATION =

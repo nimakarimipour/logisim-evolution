@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
 
@@ -62,7 +63,7 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
   }
 
   @Override
-  public List<String> getArchitecture(Netlist theNetlist, AttributeSet attrs, String componentName) {
+  public List<@RUntainted String> getArchitecture(Netlist theNetlist, AttributeSet attrs, @RUntainted String componentName) {
     final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
     if (getWiresPortsDuringHDLWriting) {
       myWires.removeWires();
@@ -110,7 +111,7 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
           .add(getModuleFunctionality(theNetlist, attrs).getWithIndent())
           .add("{{end}} platformIndependent;");
     } else {
-      final java.lang.String preamble = String.format("module %s( ", componentName);
+      final java.lang.@RUntainted String preamble = String.format("module %s( ", componentName);
       final java.lang.String indenting = " ".repeat(preamble.length());
       final com.cburch.logisim.util.LineBuffer body = LineBuffer.getHdlBuffer();
       if (myPorts.isEmpty()) {
@@ -130,14 +131,14 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
       }
       if (!myParametersList.isEmpty(attrs)) {
         body.empty().addRemarkBlock("Here all module parameters are defined with a dummy value");
-        final java.util.TreeSet<java.lang.String> parameters = new TreeSet<String>();
+        final java.util.@RUntainted TreeSet<java.lang.String> parameters = new TreeSet<String>();
         for (final java.lang.Integer paramId : myParametersList.keySet(attrs)) {
           // For verilog we specify a maximum vector, this seems the best way to do it
           final java.lang.String paramName = myParametersList.isPresentedByInteger(paramId, attrs)
               ? myParametersList.get(paramId, attrs) : String.format("[64:0] %s", myParametersList.get(paramId, attrs));
           parameters.add(paramName);
         }
-        for (final java.lang.String param : parameters)
+        for (final java.lang.@RUntainted String param : parameters)
           body.add(String.format("parameter %s = 1;", param));
       }
       if (myTypedWires.getNrOfTypes() > 0) {
@@ -325,7 +326,7 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
   }
 
   @Override
-  public List<String> getEntity(Netlist theNetlist, AttributeSet attrs, String componentName) {
+  public List<@RUntainted String> getEntity(Netlist theNetlist, AttributeSet attrs, @RUntainted String componentName) {
     final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer();
     if (Hdl.isVhdl()) {
       contents.add(FileWriter.getGenerateRemark(componentName, theNetlist.projName()))
@@ -446,7 +447,7 @@ public class AbstractHdlGeneratorFactory implements HdlGeneratorFactory {
     return directoryName.toString();
   }
 
-  private List<String> getVHDLBlackBox(Netlist theNetlist, AttributeSet attrs,
+  private List<@RUntainted String> getVHDLBlackBox(Netlist theNetlist, AttributeSet attrs,
       String componentName, Boolean isEntity) {
     final com.cburch.logisim.util.LineBuffer contents = LineBuffer.getHdlBuffer().addVhdlKeywords();
     int maxNameLength = 0;

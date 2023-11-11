@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class VhdlParser {
 
@@ -65,8 +66,8 @@ public class VhdlParser {
   private final List<PortDescription> outputs;
   private final String source;
   private String name;
-  private String libraries;
-  private String architecture;
+  private @RUntainted String libraries;
+  private @RUntainted String architecture;
 
   public VhdlParser(String source) {
     this.source = source;
@@ -74,7 +75,7 @@ public class VhdlParser {
     this.outputs = new ArrayList<>();
   }
 
-  public String getArchitecture() {
+  public @RUntainted String getArchitecture() {
     return architecture;
   }
 
@@ -97,7 +98,7 @@ public class VhdlParser {
     return inputs;
   }
 
-  public String getLibraries() {
+  public @RUntainted String getLibraries() {
     return libraries;
   }
 

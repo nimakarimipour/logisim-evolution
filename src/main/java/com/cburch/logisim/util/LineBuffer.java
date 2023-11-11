@@ -22,6 +22,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.text.WordUtils;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RPolyTainted;
 
 /**
  * This class is intended to simplify building any HDL content, which usually contains of fixed text
@@ -37,7 +39,7 @@ public class LineBuffer implements RandomAccess {
   public static final int MAX_ALLOWED_INDENT = MAX_LINE_LENGTH - (2 * Hdl.REMARK_MARKER_LENGTH);
 
   // Internal buffer holding separate lines.
-  private final ArrayList<String> contents = new java.util.ArrayList<>();
+  private final ArrayList<@RUntainted String> contents = new java.util.ArrayList<>();
 
   // Paired placeholders.
   private final Pairs pairs = new Pairs();
@@ -56,7 +58,7 @@ public class LineBuffer implements RandomAccess {
    *
    * @param line text line to be added to buffer
    */
-  public LineBuffer(String line) {
+  public LineBuffer(@RUntainted String line) {
     this();
     add(line);
   }
@@ -69,7 +71,7 @@ public class LineBuffer implements RandomAccess {
    * @param line Text line to be added.
    * @param pairsToAdd Placeholder pairs to be used.
    */
-  public LineBuffer(String line, Pairs pairsToAdd) {
+  public LineBuffer(@RUntainted String line, Pairs pairsToAdd) {
     this();
     pairs.addPairs(pairsToAdd);
     add(line);
@@ -226,11 +228,11 @@ public class LineBuffer implements RandomAccess {
    * @param fmt Line to add if not present in buffer.
    * @return Instance of self for easy chaining.
    */
-  public LineBuffer addUnique(String fmt, Object... args) {
+  public LineBuffer addUnique(@RUntainted String fmt, Object... args) {
     // Resolve positional arguments then apply paired ones.     WE need to do this first (instead of
     // letting add() do that) otherwise `contains` would be looking for non-final version of the
     // string.
-    final java.lang.String line = applyPairs(format(fmt, args));
+    final java.lang.@RUntainted String line = applyPairs(format(fmt, args));
     if (!contents.contains(line)) add(line, true);
     return this;
   }
@@ -243,7 +245,7 @@ public class LineBuffer implements RandomAccess {
    * @param line Line to add if not present in buffer.
    * @return Instance of self for easy chaining.
    */
-  public LineBuffer addUnique(String line) {
+  public LineBuffer addUnique(@RUntainted String line) {
     // Resolve positional arguments then apply paired ones.     WE need to do this first (instead of
     // letting add() do that) otherwise `contains` would be looking for non-final version of the
     // string.
@@ -261,7 +263,7 @@ public class LineBuffer implements RandomAccess {
    * @param line String to be added to the content buffer.
    * @return Instance of self for easy chaining.
    */
-  public LineBuffer add(String line) {
+  public LineBuffer add(@RUntainted String line) {
     return add(line, true);
   }
 
@@ -274,7 +276,7 @@ public class LineBuffer implements RandomAccess {
    *     want it to be added "raw".
    * @return Instance of self for easy chaining.
    */
-  public LineBuffer add(String line, boolean applyMap) {
+  public LineBuffer add(@RUntainted String line, boolean applyMap) {
     if (applyMap) line = applyPairs(line, pairs);
 
     // Ensure no placeholders left unprocessed.
@@ -290,7 +292,7 @@ public class LineBuffer implements RandomAccess {
    * @param stringBuilder StringBuilder which contents is to be added.
    * @return Instance of self for easy chaining.
    */
-  public LineBuffer add(StringBuilder stringBuilder) {
+  public LineBuffer add(@RUntainted StringBuilder stringBuilder) {
     return add(stringBuilder.toString());
   }
 
@@ -302,7 +304,7 @@ public class LineBuffer implements RandomAccess {
    * @param args Optional values for positional placeholders.
    * @return Instance of self for easy chaining.
    */
-  public LineBuffer add(String fmt, Object... args) {
+  public LineBuffer add(@RUntainted String fmt, Object... args) {
     return add(fmt, Pairs.fromArgs(args));
   }
 
@@ -318,7 +320,7 @@ public class LineBuffer implements RandomAccess {
    * @param pairs Search-Replace map.
    * @return Instance of self for easy chaining.
    */
-  public LineBuffer add(String fmt, Pairs pairs) {
+  public LineBuffer add(@RUntainted String fmt, Pairs pairs) {
     fmt = applyPairs(fmt, pairs);
 
     // Ensure no placeholders left unprocessed.
@@ -334,7 +336,7 @@ public class LineBuffer implements RandomAccess {
    * @param lines
    * @return Instance of self for easy chaining.
    */
-  public LineBuffer add(Collection<String> lines) {
+  public LineBuffer add(Collection<@RUntainted String> lines) {
     for (final java.lang.String line : lines) add(line);
     return this;
   }
@@ -349,7 +351,7 @@ public class LineBuffer implements RandomAccess {
    * @param lines lines to be added to the buffer.
    * @return Instance of self for easy chaining.
    */
-  public LineBuffer addLines(String... lines) {
+  public LineBuffer addLines(@RUntainted String... lines) {
     return add(Arrays.asList(lines));
   }
 
@@ -371,7 +373,7 @@ public class LineBuffer implements RandomAccess {
    * @param fnt Formatting string.
    * @return Instance of self for easy chaining.
    */
-  public String applyPairs(String fnt) {
+  public @RPolyTainted String applyPairs(@RPolyTainted String fnt) {
     return applyPairs(fnt, pairs);
   }
 
@@ -382,14 +384,14 @@ public class LineBuffer implements RandomAccess {
    * @param pairs Instance of `Pairs` holdinhg replacements for placeholders.
    * @return Formatted string.
    */
-  public static String applyPairs(String format, Pairs pairs) {
+  public static @RPolyTainted String applyPairs(@RPolyTainted String format, Pairs pairs) {
     if (pairs != null) {
-      for (final java.util.Map.Entry<java.lang.String,java.lang.Object> set : pairs.getContainer().entrySet()) {
-        final java.lang.String searchRegExp = String.format("\\{\\{\\s*%s\\s*\\}\\}", set.getKey());
+      for (final java.util.Map.Entry<java.lang.@RUntainted String,java.lang.@RUntainted Object> set : pairs.getContainer().entrySet()) {
+        final java.lang.@RUntainted String searchRegExp = String.format("\\{\\{\\s*%s\\s*\\}\\}", set.getKey());
         // Both backslashes (\) and dollar signs ($) in the replacement string may cause the
         // results to be different than if it were being treated as a literal replacement string
         // so as we do not need to support i.e. group references etc, we just need to escape it.
-        final java.lang.String replacement = Matcher.quoteReplacement(set.getValue().toString());
+        final java.lang.@RUntainted String replacement = Matcher.quoteReplacement(set.getValue().toString());
         format = format.replaceAll(searchRegExp, replacement);
       }
     }
@@ -403,7 +405,7 @@ public class LineBuffer implements RandomAccess {
    * @param line String to be added to the buffer.
    * @return Instance of self for easy chaining.
    */
-  public LineBuffer repeat(int count, String line) {
+  public LineBuffer repeat(int count, @RUntainted String line) {
     for (int i = 0; i < count; i++) add(line);
     return this;
   }
@@ -447,7 +449,7 @@ public class LineBuffer implements RandomAccess {
    *
    * @return unindented content of the buffer.
    */
-  public List<String> get() {
+  public List<@RUntainted String> get() {
     return contents;
   }
 
@@ -457,7 +459,7 @@ public class LineBuffer implements RandomAccess {
    *
    * @return indented content of the buffer.
    */
-  public List<String> getWithIndent() {
+  public List<@RUntainted String> getWithIndent() {
     return getWithIndent(getDefaultIndent());
   }
 
@@ -468,7 +470,7 @@ public class LineBuffer implements RandomAccess {
    * @param howMany Number of spaces to prefix each line with.
    * @return indented content of the buffer.
    */
-  public List<String> getWithIndent(int howMany) {
+  public List<@RUntainted String> getWithIndent(@RUntainted int howMany) {
     return getWithIndent(getIndent(howMany));
   }
 
@@ -481,7 +483,7 @@ public class LineBuffer implements RandomAccess {
    * @param indent Indent string.
    * @return indented content of the buffer.
    */
-  public List<String> getWithIndent(int howMany, String indent) {
+  public List<@RUntainted String> getWithIndent(@RUntainted int howMany, @RUntainted String indent) {
     return getWithIndent(indent.repeat(howMany));
   }
 
@@ -491,11 +493,11 @@ public class LineBuffer implements RandomAccess {
    * @param indent Indent string.
    * @return indented content of the buffer.
    */
-  public List<String> getWithIndent(String indent) {
-    final java.util.ArrayList<java.lang.String> result = new ArrayList<String>();
-    for (final java.lang.String content : contents) {
-      final java.lang.String[] lines = content.split("\n");
-      for (final java.lang.String line : lines) {
+  public List<@RUntainted String> getWithIndent(@RUntainted String indent) {
+    final java.util.ArrayList<java.lang.@RUntainted String> result = new ArrayList<@RUntainted String>();
+    for (final java.lang.@RUntainted String content : contents) {
+      final java.lang.@RUntainted @RUntainted @RUntainted @RUntainted @RUntainted @RUntainted @RUntainted @RUntainted @RUntainted String[] lines = content.split("\n");
+      for (final java.lang.@RUntainted String line : lines) {
         // We do not indent empty lines, just ones with content.
         result.add((line.length() == 0) ? line : indent + line);
       }
@@ -512,7 +514,7 @@ public class LineBuffer implements RandomAccess {
   /* ********************************************************************************************* */
 
   /** Returns default unit of indentation string. */
-  public static String getDefaultIndent() {
+  public static @RUntainted String getDefaultIndent() {
     return getIndent(DEFAULT_INDENT, DEFAULT_INDENT_STR);
   }
 
@@ -521,7 +523,7 @@ public class LineBuffer implements RandomAccess {
    *
    * @param indentUnits Number of indentation units to return.
    */
-  public static String getIndent(int indentUnits) {
+  public static @RPolyTainted String getIndent(@RPolyTainted int indentUnits) {
     return getIndent(indentUnits, DEFAULT_INDENT_STR);
   }
 
@@ -531,7 +533,7 @@ public class LineBuffer implements RandomAccess {
    * @param indentUnits Number of indentation units to return.
    * @param indentString Indentation string.
    */
-  public static String getIndent(int indentUnits, String indentString) {
+  public static @RPolyTainted String getIndent(@RPolyTainted int indentUnits, @RPolyTainted String indentString) {
     return indentString.repeat(indentUnits);
   }
 
@@ -566,7 +568,7 @@ public class LineBuffer implements RandomAccess {
    * @param indentSpaces Number of extra indentation spaces.
    * @return Constructed lines of remark block.
    */
-  protected ArrayList<String> buildRemarkBlock(String remarkText, int indentSpaces) {
+  protected ArrayList<@RUntainted String> buildRemarkBlock(String remarkText, int indentSpaces) {
     if (indentSpaces < 0) {
       throw new IllegalArgumentException("Negative indentation is not allowed.");
     }
@@ -578,7 +580,7 @@ public class LineBuffer implements RandomAccess {
 
     final int maxRemarkLineLength = MAX_LINE_LENGTH - indentSpaces - (2 * Hdl.REMARK_MARKER_LENGTH);
     final java.lang.String indent = SPACE.repeat(indentSpaces);
-    final java.util.ArrayList<java.lang.String> contents = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.@RUntainted String> contents = new ArrayList<@RUntainted String>();
 
     final java.lang.StringBuilder oneLine = new StringBuilder();
     final java.util.List<java.lang.String> remarkLines =
@@ -634,7 +636,7 @@ public class LineBuffer implements RandomAccess {
    * @param args Positional placeholders.
    * @return Formatted string.
    */
-  public static String format(String fmt, Object... args) {
+  public static @RPolyTainted String format(@RPolyTainted String fmt, Object... args) {
     return applyPairs(fmt, Pairs.fromArgs(args));
   }
 
@@ -646,7 +648,7 @@ public class LineBuffer implements RandomAccess {
    * @param args Positional placeholders.
    * @return Formatted string.
    */
-  public static String formatHdl(String fmt, Object... args) {
+  public static String formatHdl(@RUntainted String fmt, Object... args) {
     return getHdlBuffer().add(fmt, args).get(0);
   }
 
@@ -658,7 +660,7 @@ public class LineBuffer implements RandomAccess {
    * @param args Positional placeholders.
    * @return Formatted string.
    */
-  public static String formatVhdl(String fmt, Object... args) {
+  public static String formatVhdl(@RUntainted String fmt, Object... args) {
     return getHdlBuffer().addVhdlKeywords().add(fmt, args).get(0);
   }
 
@@ -893,7 +895,7 @@ public class LineBuffer implements RandomAccess {
   /** Container holding all the key-value pairs used by LineBuffer. */
   public static class Pairs implements Cloneable {
     /** Internal pair container. */
-    private final HashMap<String, Object> pairContainer = new HashMap<>();
+    private final HashMap<@RUntainted String, @RUntainted Object> pairContainer = new HashMap<>();
 
     /** Default constructor. */
     public Pairs() {
@@ -994,7 +996,7 @@ public class LineBuffer implements RandomAccess {
     }
 
     /** Returns instance of internal HashMap holding all the pairs. */
-    protected HashMap<String, Object> getContainer() {
+    protected HashMap<@RUntainted String, @RUntainted Object> getContainer() {
       return pairContainer;
     }
 

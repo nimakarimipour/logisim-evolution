@@ -40,6 +40,7 @@ import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public final class ProjectActions {
   private static final String FILE_NAME_FORMAT_ERROR = "FileNameError";

@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RPolyTainted;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public abstract class DownloadBase {
 
@@ -120,8 +122,8 @@ public abstract class DownloadBase {
     return drcResult == Netlist.DRC_PASSED;
   }
 
-  protected String getProjDir(String selectedCircuit) {
-    java.lang.String projectDir =
+  protected @RUntainted String getProjDir(@RUntainted String selectedCircuit) {
+    java.lang.@RUntainted String projectDir =
         AppPreferences.FPGA_Workspace.get() + File.separator + myProject.getLogisimFile().getName();
     if (!projectDir.endsWith(File.separator)) {
       projectDir += File.separator;
@@ -130,7 +132,7 @@ public abstract class DownloadBase {
     return projectDir;
   }
 
-  protected boolean writeHDL(String selectedCircuit, Double frequency) {
+  protected boolean writeHDL(@RUntainted String selectedCircuit, Double frequency) {
     if (!genDirectory(
         AppPreferences.FPGA_Workspace.get()
             + File.separator
@@ -200,7 +202,7 @@ public abstract class DownloadBase {
               .getFactory()
               .getHDLGenerator(
                   rootSheet.getNetList().getAllClockSources().get(0).getAttributeSet());
-      final java.lang.String compName =
+      final java.lang.@RUntainted String compName =
           rootSheet.getNetList().getAllClockSources().get(0).getFactory().getHDLName(null);
       if (!Hdl.writeEntity(
           projectDir + clockGen.getRelativeDirectory(),
@@ -222,7 +224,7 @@ public abstract class DownloadBase {
       for (java.lang.String type : LedArrayDriving.DRIVING_STRINGS) {
         if (top.hasLedArrayType(type)) {
           worker = LedArrayGenericHdlGeneratorFactory.getSpecificHDLGenerator(type);
-          final java.lang.String name = LedArrayGenericHdlGeneratorFactory.getSpecificHDLName(type);
+          final java.lang.@RUntainted String name = LedArrayGenericHdlGeneratorFactory.getSpecificHDLName(type);
           if (worker != null && name != null) {
             if (!Hdl.writeEntity(
                 projectDir + worker.getRelativeDirectory(),
@@ -267,8 +269,8 @@ public abstract class DownloadBase {
   protected void getVhdlFiles(
       String sourcePath,
       String path,
-      ArrayList<String> entities,
-      ArrayList<String> behaviors,
+      ArrayList<@RUntainted String> entities,
+      ArrayList<@RUntainted String> behaviors,
       String type) {
     final java.io.File dir = new File(path);
     final java.io.File[] files = dir.listFiles();
@@ -296,7 +298,7 @@ public abstract class DownloadBase {
     }
   }
 
-  public static String getDirectoryLocation(String projectBase, int identifier) {
+  public static @RPolyTainted String getDirectoryLocation(@RPolyTainted String projectBase, int identifier) {
     final java.lang.String base =
         (projectBase.endsWith(File.separator)) ? projectBase : projectBase + File.separator;
     if (identifier >= HDLPaths.length) return null;
@@ -321,9 +323,9 @@ public abstract class DownloadBase {
     }
   }
 
-  public static Map<String, String> getLedArrayMaps(
+  public static Map<@RUntainted String, @RUntainted String> getLedArrayMaps(
       MappableResourcesContainer maps, Netlist nets, BoardInformation board) {
-    final java.util.HashMap<java.lang.String,java.lang.String> ledArrayMaps = new HashMap<String, String>();
+    final java.util.HashMap<java.lang.@RUntainted String,java.lang.@RUntainted String> ledArrayMaps = @RUntainted new HashMap<String, @RUntainted String>();
     boolean hasMappedClockedArray = false;
     for (final com.cburch.logisim.fpga.data.FpgaIoInformationContainer comp : maps.getIoComponentInformation().getComponents()) {
       if (comp.getType().equals(IoComponentTypes.LedArray)) {

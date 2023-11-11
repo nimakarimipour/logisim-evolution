@@ -16,6 +16,7 @@ import com.cburch.logisim.util.LineBuffer;
 
 import java.util.List;
 import java.util.Set;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class InlinedHdlGeneratorFactory implements HdlGeneratorFactory {
 
@@ -26,7 +27,7 @@ public class InlinedHdlGeneratorFactory implements HdlGeneratorFactory {
   }
 
   @Override
-  public List<String> getArchitecture(
+  public List<@RUntainted String> getArchitecture(
       Netlist theNetlist, AttributeSet attrs, String componentName) {
     throw new IllegalAccessError("BUG: getArchitecture not supported");
   }
@@ -44,7 +45,7 @@ public class InlinedHdlGeneratorFactory implements HdlGeneratorFactory {
   }
 
   @Override
-  public List<String> getEntity(Netlist theNetlist, AttributeSet attrs, String componentName) {
+  public List<@RUntainted String> getEntity(Netlist theNetlist, AttributeSet attrs, String componentName) {
     throw new IllegalAccessError("BUG: getEntity not supported");
   }
 

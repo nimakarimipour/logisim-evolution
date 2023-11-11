@@ -13,6 +13,8 @@ import com.cburch.logisim.prefs.AppPreferences;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JFileChooser;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RPolyTainted;
 
 public final class JFileChoosers {
 
@@ -54,7 +56,7 @@ public final class JFileChoosers {
     }
   }
 
-  public static JFileChooser create() {
+  public static @RUntainted JFileChooser create() {
     RuntimeException first = null;
     for (final java.lang.String prop : PROP_NAMES) {
       try {
@@ -70,7 +72,7 @@ public final class JFileChoosers {
         if ("".equals(dirname)) {
           return new LogisimFileChooser();
         } else {
-          final java.io.File dir = new File(dirname);
+          final java.io.@RUntainted File dir = new File(dirname);
           if (dir.canRead()) {
             return new LogisimFileChooser(dir);
           }
@@ -84,7 +86,7 @@ public final class JFileChoosers {
     throw first;
   }
 
-  public static JFileChooser createAt(File openDirectory) {
+  public static @RPolyTainted JFileChooser createAt(@RPolyTainted File openDirectory) {
     if (openDirectory == null) {
       return create();
     } else {

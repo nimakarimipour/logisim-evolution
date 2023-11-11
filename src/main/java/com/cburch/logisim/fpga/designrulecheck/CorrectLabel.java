@@ -18,9 +18,10 @@ import com.cburch.logisim.fpga.hdlgenerator.Vhdl;
 import com.cburch.logisim.gui.generic.OptionPane;
 import java.util.Arrays;
 import java.util.List;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RPolyTainted;
 
 public class CorrectLabel {
-  public static String getCorrectLabel(String label) {
+  public static @RPolyTainted String getCorrectLabel(@RPolyTainted String label) {
     if (label.isEmpty()) return label;
     final java.lang.StringBuilder result = new StringBuilder();
     if (NUMBERS.contains(label.substring(0, 1))) result.append("L_");

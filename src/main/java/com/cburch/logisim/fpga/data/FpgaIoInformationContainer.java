@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class FpgaIoInformationContainer implements Cloneable {
 
