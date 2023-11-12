@@ -26,13 +26,13 @@ def run_annotator():
     commands += ['-i', 'edu.ucr.Initializer']
     commands += ['-n', 'edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted']
     commands += ['-cn', 'UCRTaint']
-    commands += ["--depth", "5"]
+    commands += ["--depth", "2"]
     # Uncomment to see build output
     # commands += ['-rboserr']
     # Uncomment to disable outer loop
-    # commands += ['-dol']
+    commands += ['-dol']
     # Uncomment to disable parallel processing
-    # commands += ['--disable-parallel-processing']
+    commands += ['--disable-parallel-processing']
 
     subprocess.call(commands)
 
