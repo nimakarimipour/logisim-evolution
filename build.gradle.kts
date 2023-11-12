@@ -772,4 +772,6 @@ tasks.named("compileJava", JavaCompile::class) {
   options.errorprone.option("AnnotatorScanner:ConfigPath", scanner_config)
   // set minimum number of warnings to 10000
   options.compilerArgs.addAll(listOf("-Xmaxwarns", "10000"))
+  // set minimum number of errors to 10000
+  options.compilerArgs.addAll(listOf("-Xmaxerrs", "10000"))
 }
