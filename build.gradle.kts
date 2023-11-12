@@ -770,4 +770,6 @@ tasks.named("compileJava", JavaCompile::class) {
   // The check defaults to a warning, bump it up to an error for the main sources
   options.errorprone.error("AnnotatorScanner")
   options.errorprone.option("AnnotatorScanner:ConfigPath", scanner_config)
+  // set minimum number of warnings to 10000
+  options.compilerArgs.addAll(listOf("-Xmaxwarns", "10000"))
 }
