@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 /**
  * The TCL binder is a TCL program creating a socket server. The signals have to be written to the
