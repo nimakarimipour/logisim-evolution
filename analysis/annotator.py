@@ -11,7 +11,7 @@ ANNOTATOR_JAR = "{}/.m2/repository/edu/ucr/cs/riple/annotator/annotator-core/{}/
 
 def prepare():
     os.makedirs(OUT_DIR, exist_ok=True)
-    shutil.rmtree('{}/0'.format(OUT_DIR), ignore_errors=True)
+    # shutil.rmtree('{}/0'.format(OUT_DIR), ignore_errors=True)
     with open('{}/paths.tsv'.format(OUT_DIR), 'w') as o:
         o.write("{}\t{}\n".format('{}/checker.xml'.format(OUT_DIR), '{}/scanner.xml'.format(OUT_DIR)))
 
