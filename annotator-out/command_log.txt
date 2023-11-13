@@ -1,0 +1,34 @@
+2023-11-12T17:00:16.079962:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava --rerun-tasks
+
+2023-11-12T17:01:54.789704:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava --rerun-tasks
+
+2023-11-12T17:03:32.138246:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava --rerun-tasks
+
+2023-11-12T17:05:10.752838:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava --rerun-tasks
+
+2023-11-12T17:06:45.536738:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava --rerun-tasks
+
+2023-11-12T17:08:22.778097:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava --rerun-tasks
+
+2023-11-12T17:09:59.131134:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava --rerun-tasks
+
+2023-11-12T17:11:36.360603:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava --rerun-tasks
+
+2023-11-12T17:13:13.350121:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava --rerun-tasks
+
+2023-11-12T17:14:51.265679:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava --rerun-tasks
+
+2023-11-12T17:16:27.276926:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava --rerun-tasks
+
+2023-11-12T17:18:02.840276:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava --rerun-tasks
+
+2023-11-12T17:19:38.277110:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava --rerun-tasks
+
+2023-11-12T17:21:14.734078:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava --rerun-tasks
+
+2023-11-12T17:22:50.692803:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava --rerun-tasks
+
+2023-11-12T17:24:27.062372:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava --rerun-tasks
+
+2023-11-12T17:26:03.752923:cd /home/nima/Developer/taint-benchmarks/logisim-evolution && ./gradlew compileJava --rerun-tasks
+

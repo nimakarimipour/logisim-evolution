@@ -40,6 +40,7 @@ import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public final class ProjectActions {
   private static final String FILE_NAME_FORMAT_ERROR = "FileNameError";
@@ -424,8 +425,8 @@ public final class ProjectActions {
         final java.io.File exportHome = chooser.getSelectedFile();
         final java.lang.String exportRoot = loader.getMainFile().getName().replace(".circ", "");
         exportRootDir = String.format("%s%s%s", exportHome, File.separator, exportRoot);
-        final java.lang.String exportLibDir = String.format("%s%s%s", exportRootDir, File.separator, Loader.LOGISIM_LIBRARY_DIR);
-        final java.lang.String exportCircDir = String.format("%s%s%s", exportRootDir, File.separator, Loader.LOGISIM_CIRCUIT_DIR);
+        final java.lang.@RUntainted String exportLibDir = String.format("%s%s%s", exportRootDir, File.separator, Loader.LOGISIM_LIBRARY_DIR);
+        final java.lang.@RUntainted String exportCircDir = String.format("%s%s%s", exportRootDir, File.separator, Loader.LOGISIM_CIRCUIT_DIR);
         try {
           final java.nio.file.Path path = Paths.get(exportRootDir);
           if (Files.exists(path)) {

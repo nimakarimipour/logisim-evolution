@@ -36,6 +36,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class AlteraDownload implements VendorDownload {
 
@@ -146,7 +147,7 @@ public class AlteraDownload implements VendorDownload {
   }
 
   private ProcessBuilder stage1Optimize() {
-    final java.util.ArrayList<java.lang.String> command = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
     command.add(alteraVendor.getBinaryPath(2));
     command.add(ToplevelHdlGeneratorFactory.FPGA_TOP_LEVEL_NAME);
     command.add("--optimize=area");
@@ -156,7 +157,7 @@ public class AlteraDownload implements VendorDownload {
   }
 
   private ProcessBuilder stage2SprBit() {
-    java.util.ArrayList<java.lang.String> command = new ArrayList<String>();
+    java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
     command.add(alteraVendor.getBinaryPath(0));
     command.add("--flow");
     command.add("compile");
@@ -287,7 +288,7 @@ public class AlteraDownload implements VendorDownload {
 
   @Override
   public boolean isBoardConnected() {
-    java.util.ArrayList<java.lang.String> command = new ArrayList<String>();
+    java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
     command.add(alteraVendor.getBinaryPath(1));
     command.add("--list");
     final java.lang.ProcessBuilder detect = new ProcessBuilder(command);

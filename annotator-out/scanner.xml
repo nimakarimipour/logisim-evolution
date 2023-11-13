@@ -1,10 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<scanner>
-    <serialization active="true"/>
-    <uuid>be59b6fe-1673-4b4d-8c7e-c03016472e9b</uuid>
-    <path>/home/nima/Developer/taint-benchmarks/logisim-evolution/annotator-out/0</path>
-    <processor>
-        <LOMBOK active="true"/>
-    </processor>
-    <annotations/>
-</scanner>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><scanner><serialization active="false"/><uuid>0f0047c3-5b35-4445-b203-b6072d967397</uuid><path>/home/nima/Developer/taint-benchmarks/logisim-evolution/annotator-out/0</path><processor><LOMBOK active="true"/></processor><annotations/></scanner>
