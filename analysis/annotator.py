@@ -32,7 +32,7 @@ def run_annotator():
     # Uncomment to disable outer loop
     commands += ['-dol']
     # Uncomment to disable parallel processing
-    commands += ['--disable-parallel-processing']
+    # commands += ['--disable-parallel-processing']
 
     subprocess.call(commands)
 

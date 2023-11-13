@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public final class Softwares {
 
@@ -49,7 +50,7 @@ public final class Softwares {
     }
 
     try {
-      final java.util.ArrayList<java.lang.String> command = new ArrayList<String>();
+      final java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
       command.add(FileUtil.correctPath(questaPath) + QUESTA_BIN[VLIB]);
       command.add("work");
 
