@@ -34,6 +34,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
+import org.checkerframework.checker.units.qual.A;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
@@ -50,7 +52,7 @@ public class AlteraDownload implements VendorDownload {
   private final List<String> entities;
   private final List<String> architectures;
   private final String hdlType;
-  private String cablename;
+  private @RUntainted String cablename;
   private final boolean writeToFlash;
 
   private static final String alteraTclFile = "AlteraDownload.tcl";
@@ -116,7 +118,7 @@ public class AlteraDownload implements VendorDownload {
   @Override
   public ProcessBuilder downloadToBoard() {
     if (writeToFlash && !doFlashing()) return null;
-    final java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
+    final java.util.ArrayList<@RUntainted String> command = new ArrayList<@RUntainted String>();
     command.add(alteraVendor.getBinaryPath(1));
     command.add("-c");
     command.add(cablename);
@@ -303,21 +305,21 @@ public class AlteraDownload implements VendorDownload {
     } catch (IOException | InterruptedException e) {
       return false;
     }
-    java.util.List<java.lang.String> devices = getDevices(response);
+    java.util.List<java.lang.@RUntainted String> devices = getDevices(response);
     if (devices == null) return false;
     if (devices.size() == 1) {
       cablename = devices.get(0);
       return true;
     }
-    java.lang.String selection = Download.chooseBoard(devices);
+    java.lang.@RUntainted String selection = Download.chooseBoard(devices);
     if (selection == null) return false;
     cablename = selection;
     return true;
   }
 
-  private List<String> getDevices(ArrayList<String> lines) {
-    final java.util.ArrayList<java.lang.String> dev = new ArrayList<String>();
-    for (java.lang.String line : lines) {
+  private List<@RUntainted String> getDevices(@RUntainted ArrayList<String> lines) {
+    final java.util.ArrayList<java.lang.@RUntainted String> dev = new ArrayList<@RUntainted String>();
+    for (java.lang.@RUntainted String line : lines) {
       int n = dev.size() + 1;
       if (!line.matches("^" + n + "\\) .*")) continue;
       line = line.replaceAll("^" + n + "\\) ", "");
@@ -355,16 +357,16 @@ public class AlteraDownload implements VendorDownload {
       Reporter.report.addError(S.get("AlteraFlashError", jicFile));
       return false;
     }
-    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
-    command
-        .add(alteraVendor.getBinaryPath(1))
-        .add("-c")
-        .add(cablename)
-        .add("-m")
-        .add("jtag")
-        .add("-o")
-        .add("P;{{1}}", jicFile);
-    final java.lang.ProcessBuilder prog = new ProcessBuilder(command.get());
+    final List<@RUntainted String> command = new ArrayList<>();
+    command.add(alteraVendor.getBinaryPath(1));
+    command.add("-c");
+    command.add(cablename);
+    command.add("-m");
+    command.add("jtag");
+    command.add("-o");
+    command.add("P;{{1}}");
+    command.add(jicFile);
+    final java.lang.ProcessBuilder prog = new ProcessBuilder(command);
     prog.directory(new File(sandboxPath));
     try {
       final java.lang.String result = Download.execute(prog, null);
@@ -380,8 +382,8 @@ public class AlteraDownload implements VendorDownload {
   }
 
   private boolean loadProgrammerSoftware() {
-    final java.lang.String FpgaDevice = stripPackageSpeedSuffix();
-    final java.lang.String ProgrammerSofFile = new File(VendorSoftware.getToolPath(VendorSoftware.VENDOR_ALTERA)).getParent()
+    final java.lang.@RUntainted String FpgaDevice = stripPackageSpeedSuffix();
+    final java.lang.@RUntainted String ProgrammerSofFile = new File(VendorSoftware.getToolPath(VendorSoftware.VENDOR_ALTERA)).getParent()
         + File.separator
         + "common"
         + File.separator
@@ -399,15 +401,15 @@ public class AlteraDownload implements VendorDownload {
       Reporter.report.addError(S.get("AlteraProgSofError", ProgrammerSofFile));
       return false;
     }
-    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
-    command.add(alteraVendor.getBinaryPath(1))
-            .add("-c")
-            .add(cablename)
-            .add("-m")
-            .add("jtag")
-            .add("-o")
-            .add("P;{{1}}", ProgrammerSofFile);
-    final java.lang.ProcessBuilder prog = new ProcessBuilder(command.get());
+    final List<@RUntainted String> command = new ArrayList<@RUntainted String>();
+    command.add(alteraVendor.getBinaryPath(1));
+    command.add("-c");
+    command.add(cablename);
+    command.add("-m");
+    command.add("jtag");
+    command.add("-o");
+command.add(String.format("P;{{1}}", ProgrammerSofFile));
+    final java.lang.ProcessBuilder prog = new ProcessBuilder(command);
     prog.directory(new File(sandboxPath));
     try {
       final java.lang.String result = Download.execute(prog, null);
@@ -422,13 +424,13 @@ public class AlteraDownload implements VendorDownload {
     return true;
   }
 
-  private String stripPackageSpeedSuffix() {
+  private @RUntainted String stripPackageSpeedSuffix() {
     /* For the Cyclone IV devices the name used for Syntesis is in form
      * EP4CE15F23C8. For the programmer sof-file (for flash writing) we need to strip
      * the part F23C8. For future supported devices this should be checked.
      */
-    final java.lang.String FpgaDevice = boardInfo.fpga.getPart();
-    final int index = FpgaDevice.indexOf("F");
+    final java.lang.@RUntainted String FpgaDevice = boardInfo.fpga.getPart();
+    final @RUntainted int index = FpgaDevice.indexOf("F");
     return FpgaDevice.substring(0, index);
   }
 

@@ -25,11 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
+import org.checkerframework.checker.units.qual.A;
 
 public class VivadoDownload implements VendorDownload {
 
   private final VendorSoftware vivadoVendor = VendorSoftware.getSoftware(VendorSoftware.VENDOR_VIVADO);
-  private final String scriptPath;
+  private final @RUntainted String scriptPath;
   private final String sandboxPath;
   private final String xdcPath;
   private final String vivadoProjectPath;
@@ -47,7 +48,7 @@ public class VivadoDownload implements VendorDownload {
   private static final String VIVADO_PROJECT_NAME = "vp";
 
   public VivadoDownload(
-      String projectPath,
+      @RUntainted String projectPath,
       Netlist rootNetList,
       BoardInformation boardInfo,
       List<String> entities,
@@ -103,13 +104,13 @@ public class VivadoDownload implements VendorDownload {
 
   @Override
   public ProcessBuilder downloadToBoard() {
-    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
-    command.add(vivadoVendor.getBinaryPath(0))
-        .add("-mode")
-        .add("batch")
-        .add("-source")
-        .add(scriptPath + File.separator + LOAD_BITSTEAM_FILE);
-    final java.lang.ProcessBuilder stage0 = new ProcessBuilder(command.get());
+    final List<@RUntainted String> command = new ArrayList<>();
+    command.add(vivadoVendor.getBinaryPath(0));
+        command.add("-mode");
+    command.add("batch");
+    command.add("-source");
+    command.add(scriptPath + File.separator + LOAD_BITSTEAM_FILE);
+    final java.lang.ProcessBuilder stage0 = new ProcessBuilder(command);
     stage0.directory(new File(sandboxPath));
     return stage0;
   }
@@ -251,28 +252,27 @@ public class VivadoDownload implements VendorDownload {
   }
 
   private ProcessBuilder stage0Project() {
-    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
-    command
-        .add(vivadoVendor.getBinaryPath(0))
-        .add("-mode")
-        .add("batch")
-        .add("-source")
-        .add(scriptPath + File.separator + CREATE_PROJECT_TCL);
+    final List<@RUntainted String> command = new ArrayList<>();
+    command.add(vivadoVendor.getBinaryPath(0));
+    command.add("-mode");
+    command.add("batch");
+    command.add("-source");
+    command.add(scriptPath + File.separator + CREATE_PROJECT_TCL);
 
-    final java.lang.ProcessBuilder stage0 = new ProcessBuilder(command.get());
+    final java.lang.ProcessBuilder stage0 = new ProcessBuilder(command);
     stage0.directory(new File(sandboxPath));
     return stage0;
   }
 
   private ProcessBuilder stage1Bit() {
-    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
+    final List<@RUntainted String> command = new ArrayList<>();
     command
-        .add(vivadoVendor.getBinaryPath(0))
-        .add("-mode")
-        .add("batch")
-        .add("-source")
-        .add(scriptPath + File.separator + GENERATE_BITSTREAM_FILE);
-    final java.lang.ProcessBuilder stage1 = new ProcessBuilder(command.get());
+        .add(vivadoVendor.getBinaryPath(0));
+        command.add("-mode");
+    command.add("batch");
+    command.add("-source");
+    command.add(scriptPath + File.separator + GENERATE_BITSTREAM_FILE);
+    final java.lang.ProcessBuilder stage1 = new ProcessBuilder(command);
     stage1.directory(new File(sandboxPath));
     return stage1;
   }

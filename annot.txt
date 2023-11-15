@@ -1,21 +1,60 @@
+src/main/java/com/cburch/logisim/fpga/data/FpgaClass.java:  private @RUntainted String part;
 src/main/java/com/cburch/logisim/fpga/data/FpgaClass.java:  private @RUntainted int jtagPos;
+src/main/java/com/cburch/logisim/fpga/data/FpgaClass.java:  public @RUntainted String getPart() {
 src/main/java/com/cburch/logisim/fpga/data/FpgaClass.java:  public @RUntainted int getFpgaJTAGChainPosition() {
+src/main/java/com/cburch/logisim/fpga/data/FpgaClass.java:      @RUntainted String device,
+src/main/java/com/cburch/logisim/fpga/data/FpgaClass.java:      @RUntainted String jtagPPos,
 src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:  private final @RUntainted String scriptPath;
 src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:  private final @RUntainted String projectPath;
-src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    final java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:  private @RUntainted String cablename;
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:      @RUntainted String projectPath,
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    final java.util.ArrayList<@RUntainted String> command = new ArrayList<@RUntainted String>();
 src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    final java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
 src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    final java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
 src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
 src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    java.util.List<java.lang.@RUntainted String> devices = getDevices(response);
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    java.lang.@RUntainted String selection = Download.chooseBoard(devices);
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:  private List<@RUntainted String> getDevices(@RUntainted ArrayList<String> lines) {
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    final java.util.ArrayList<java.lang.@RUntainted String> dev = new ArrayList<@RUntainted String>();
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    for (java.lang.@RUntainted String line : lines) {
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    final List<@RUntainted String> command = new ArrayList<>();
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    final java.lang.@RUntainted String FpgaDevice = stripPackageSpeedSuffix();
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    final java.lang.@RUntainted String ProgrammerSofFile = new File(VendorSoftware.getToolPath(VendorSoftware.VENDOR_ALTERA)).getParent()
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    final List<@RUntainted String> command = new ArrayList<@RUntainted String>();
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:  private @RUntainted String stripPackageSpeedSuffix() {
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    final java.lang.@RUntainted String FpgaDevice = boardInfo.fpga.getPart();
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    final @RUntainted int index = FpgaDevice.indexOf("F");
 src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
+src/main/java/com/cburch/logisim/fpga/download/Download.java:  public static String chooseBoard(List<@RUntainted String> devices) {
+src/main/java/com/cburch/logisim/fpga/download/DownloadBase.java:  protected @RUntainted String getProjDir(String selectedCircuit) {
+src/main/java/com/cburch/logisim/fpga/download/VivadoDownload.java:  private final @RUntainted String scriptPath;
+src/main/java/com/cburch/logisim/fpga/download/VivadoDownload.java:      @RUntainted String projectPath,
+src/main/java/com/cburch/logisim/fpga/download/VivadoDownload.java:    final List<@RUntainted String> command = new ArrayList<>();
+src/main/java/com/cburch/logisim/fpga/download/VivadoDownload.java:    final List<@RUntainted String> command = new ArrayList<>();
+src/main/java/com/cburch/logisim/fpga/download/VivadoDownload.java:    final List<@RUntainted String> command = new ArrayList<>();
 src/main/java/com/cburch/logisim/fpga/download/XilinxDownload.java:  private final @RUntainted String scriptPath;
 src/main/java/com/cburch/logisim/fpga/download/XilinxDownload.java:  private final @RUntainted String projectPath;
 src/main/java/com/cburch/logisim/fpga/download/XilinxDownload.java:      @RUntainted String projectPath,
 src/main/java/com/cburch/logisim/fpga/download/XilinxDownload.java:      java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
+src/main/java/com/cburch/logisim/fpga/file/BoardReaderClass.java:    org.w3c.dom.@RUntainted NodeList fpgaList = BoardDoc.getElementsByTagName(BoardWriterClass.BOARD_INFORMATION_SECTION_STRING);
+src/main/java/com/cburch/logisim/fpga/file/BoardReaderClass.java:    @RUntainted String jtagPos = null;
+src/main/java/com/cburch/logisim/fpga/file/BoardReaderClass.java:    final org.w3c.dom.@RUntainted Node thisFpga = fpgaList.item(0);
+src/main/java/com/cburch/logisim/fpga/file/BoardReaderClass.java:    final org.w3c.dom.@RUntainted NodeList fpgaParams = thisFpga.getChildNodes();
+src/main/java/com/cburch/logisim/fpga/file/BoardReaderClass.java:        final org.w3c.dom.@RUntainted NamedNodeMap fpgaAttrs = fpgaParams.item(i).getAttributes();
+src/main/java/com/cburch/logisim/fpga/gui/FpgaCommander.java:    @RUntainted String ToolPath = VendorSoftware.getToolPath(vendor);
 src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java:  private final @RUntainted String[] bin;
 src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java:  public VendorSoftware(char vendor, String name, @RUntainted String[] bin) {
 src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java:  public @RUntainted String getToolPath() {
 src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java:  public @RUntainted String getBinaryPath(int binPos) {
+src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java:  public static @RUntainted String getToolPath(char vendor) {
+src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java:  public static boolean setToolPath(char vendor, @RUntainted String path) {
+src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java:  private static @RUntainted String[] load(char vendor) {
+src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java:    ArrayList<@RUntainted String> progs = new ArrayList<>();
+src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java:    @RUntainted String[] progsArray = progs.toArray(new String[0]);
+src/main/java/com/cburch/logisim/prefs/AppPreferences.java:  public static final PrefMonitor<@RUntainted String> QuartusToolPath =
+src/main/java/com/cburch/logisim/prefs/AppPreferences.java:  public static final PrefMonitor<@RUntainted String> ISEToolPath =
+src/main/java/com/cburch/logisim/prefs/AppPreferences.java:  public static final PrefMonitor<@RUntainted String> VivadoToolPath =
 src/main/java/com/cburch/logisim/proj/ProjectActions.java:      java.lang.@RUntainted String exportRootDir = "";
 src/main/java/com/cburch/logisim/proj/ProjectActions.java:        final java.lang.@RUntainted String exportLibDir = String.format("%s%s%s", exportRootDir, File.separator, Loader.LOGISIM_LIBRARY_DIR);
 src/main/java/com/cburch/logisim/proj/ProjectActions.java:        final java.lang.@RUntainted String exportCircDir = String.format("%s%s%s", exportRootDir, File.separator, Loader.LOGISIM_CIRCUIT_DIR);

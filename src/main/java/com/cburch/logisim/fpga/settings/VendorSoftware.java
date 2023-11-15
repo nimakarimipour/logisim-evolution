@@ -91,7 +91,7 @@ public class VendorSoftware {
     };
   }
 
-  public static String getToolPath(char vendor) {
+  public static @RUntainted String getToolPath(char vendor) {
     return switch (vendor) {
       case VENDOR_ALTERA -> AppPreferences.QuartusToolPath.get();
       case VENDOR_XILINX -> AppPreferences.ISEToolPath.get();
@@ -100,7 +100,7 @@ public class VendorSoftware {
     };
   }
 
-  public static boolean setToolPath(char vendor, String path) {
+  public static boolean setToolPath(char vendor, @RUntainted String path) {
     if (!toolsPresent(vendor, path)) return false;
     switch (vendor) {
       case VENDOR_ALTERA:

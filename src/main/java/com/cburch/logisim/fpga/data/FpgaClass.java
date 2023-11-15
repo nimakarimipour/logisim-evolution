@@ -33,7 +33,7 @@ public class FpgaClass {
   private char clockPullBehavior;
   private char clockIOStandard;
   private String technology;
-  private String part;
+  private @RUntainted String part;
   private String Package;
   private String speedGrade;
   private char vendor;
@@ -110,7 +110,7 @@ public class FpgaClass {
     return Package;
   }
 
-  public String getPart() {
+  public @RUntainted String getPart() {
     return part;
   }
 
@@ -140,7 +140,7 @@ public class FpgaClass {
       String pull,
       String standard,
       String tech,
-      String device,
+      @RUntainted String device,
       String box,
       String speed,
       String vend,

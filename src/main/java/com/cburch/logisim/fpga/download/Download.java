@@ -411,7 +411,7 @@ public class Download extends DownloadBase implements Runnable, BaseWindowListen
     return Long.toString(clkfreq);
   }
 
-  public static String chooseBoard(List<String> devices) {
+  public static String chooseBoard(List<@RUntainted String> devices) {
     /* This code is based on the version of Kevin Walsh */
     if (Main.hasGui()) {
       java.lang.String[] choices = new String[devices.size()];

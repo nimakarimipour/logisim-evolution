@@ -431,7 +431,7 @@ public class FpgaCommander
   }
 
   public static void selectToolPath(char vendor) {
-    String ToolPath = VendorSoftware.getToolPath(vendor);
+    @RUntainted String ToolPath = VendorSoftware.getToolPath(vendor);
     if (ToolPath == null) return;
     JFileChooser fc = new JFileChooser(ToolPath);
     fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);

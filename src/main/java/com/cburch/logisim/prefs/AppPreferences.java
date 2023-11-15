@@ -737,11 +737,11 @@ public class AppPreferences {
 
   public static final PrefMonitor<Boolean> QUESTA_VALIDATION =
       create(new PrefMonitorBoolean("questaValidation", false));
-  public static final PrefMonitor<String> QuartusToolPath =
+  public static final PrefMonitor<@RUntainted String> QuartusToolPath =
       create(new PrefMonitorString("QuartusToolPath", ""));
-  public static final PrefMonitor<String> ISEToolPath =
+  public static final PrefMonitor<@RUntainted String> ISEToolPath =
       create(new PrefMonitorString("ISEToolPath", ""));
-  public static final PrefMonitor<String> VivadoToolPath =
+  public static final PrefMonitor<@RUntainted String> VivadoToolPath =
       create(new PrefMonitorString("VivadoToolPath", ""));
 
   // hidden window preferences - not part of the preferences dialog, changes
