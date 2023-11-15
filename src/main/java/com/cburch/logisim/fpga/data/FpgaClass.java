@@ -13,6 +13,7 @@ import com.cburch.logisim.fpga.settings.VendorSoftware;
 import com.cburch.logisim.util.StringUtil;
 import java.util.Iterator;
 import java.util.List;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class FpgaClass {
   public static char getId(String identifier) {
@@ -41,7 +42,7 @@ public class FpgaClass {
 
   private boolean usbTmcDownload;
 
-  private int jtagPos;
+  private @RUntainted int jtagPos;
 
   private String flashName;
   private int flashPos;
@@ -129,7 +130,7 @@ public class FpgaClass {
     return vendor;
   }
 
-  public int getFpgaJTAGChainPosition() {
+  public @RUntainted int getFpgaJTAGChainPosition() {
     return jtagPos;
   }
 
@@ -145,7 +146,7 @@ public class FpgaClass {
       String vend,
       String unused,
       boolean usbTmc,
-      String jtagPPos,
+      @RUntainted String jtagPPos,
       String flashName,
       String flashPos) {
     clockFrequency = frequency;

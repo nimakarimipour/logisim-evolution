@@ -25,6 +25,7 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import javax.swing.filechooser.FileFilter;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class TruthtableTextFile {
 

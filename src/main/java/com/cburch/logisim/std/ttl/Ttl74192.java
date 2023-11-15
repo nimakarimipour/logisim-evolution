@@ -19,6 +19,7 @@ import com.cburch.logisim.util.GraphicsUtil;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Ttl74192 extends AbstractTtlGate {
   /**

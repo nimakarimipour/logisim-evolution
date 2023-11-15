@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 class OpenRecent extends JMenu implements PropertyChangeListener {
   private static final long serialVersionUID = 1L;

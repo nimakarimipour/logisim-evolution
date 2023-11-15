@@ -31,6 +31,7 @@ import com.cburch.logisim.tools.TextEditable;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class InstanceTextField implements AttributeListener, TextFieldListener, TextEditable {
   private Canvas canvas;

@@ -30,6 +30,7 @@ import com.cburch.logisim.tools.key.BitWidthConfigurator;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Arrays;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Shifter extends InstanceFactory {
   /**

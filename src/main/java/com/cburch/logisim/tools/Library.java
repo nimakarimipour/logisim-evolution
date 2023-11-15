@@ -13,6 +13,7 @@ import com.cburch.logisim.comp.ComponentFactory;
 import com.cburch.logisim.util.LibraryUtil;
 import java.util.Collections;
 import java.util.List;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public abstract class Library {
   private boolean hidden = false;

@@ -25,6 +25,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class BoardReaderClass {
 
@@ -152,7 +153,7 @@ public class BoardReaderClass {
   }
 
   private FpgaClass getFpgaInfo() {
-    org.w3c.dom.NodeList fpgaList = BoardDoc.getElementsByTagName(BoardWriterClass.BOARD_INFORMATION_SECTION_STRING);
+    org.w3c.dom.@RUntainted NodeList fpgaList = BoardDoc.getElementsByTagName(BoardWriterClass.BOARD_INFORMATION_SECTION_STRING);
     long frequency = -1L;
     String clockPin = null;
     String clockPull = null;
@@ -164,12 +165,12 @@ public class BoardReaderClass {
     String Package = null;
     String speed = null;
     String usbTmc = null;
-    String jtagPos = null;
+    @RUntainted String jtagPos = null;
     String flashName = null;
     String flashPos = null;
     if (fpgaList.getLength() != 1) return null;
-    final org.w3c.dom.Node thisFpga = fpgaList.item(0);
-    final org.w3c.dom.NodeList fpgaParams = thisFpga.getChildNodes();
+    final org.w3c.dom.@RUntainted Node thisFpga = fpgaList.item(0);
+    final org.w3c.dom.@RUntainted NodeList fpgaParams = thisFpga.getChildNodes();
     for (int i = 0; i < fpgaParams.getLength(); i++) {
       if (fpgaParams
           .item(i)
@@ -197,7 +198,7 @@ public class BoardReaderClass {
           .item(i)
           .getNodeName()
           .equals(BoardWriterClass.FPGA_INFORMATION_SECTION_STRING)) {
-        final org.w3c.dom.NamedNodeMap fpgaAttrs = fpgaParams.item(i).getAttributes();
+        final org.w3c.dom.@RUntainted NamedNodeMap fpgaAttrs = fpgaParams.item(i).getAttributes();
         for (int j = 0; j < fpgaAttrs.getLength(); j++) {
           if (fpgaAttrs.item(j).getNodeName().equals(BoardWriterClass.FPGA_SECTION_STRINGS[0]))
             vendor = fpgaAttrs.item(j).getNodeValue();

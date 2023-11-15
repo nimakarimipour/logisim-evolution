@@ -1,0 +1,39 @@
+src/main/java/com/cburch/logisim/fpga/data/FpgaClass.java:  private @RUntainted int jtagPos;
+src/main/java/com/cburch/logisim/fpga/data/FpgaClass.java:  public @RUntainted int getFpgaJTAGChainPosition() {
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:  private final @RUntainted String scriptPath;
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:  private final @RUntainted String projectPath;
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    final java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    final java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    final java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
+src/main/java/com/cburch/logisim/fpga/download/AlteraDownload.java:    java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
+src/main/java/com/cburch/logisim/fpga/download/XilinxDownload.java:  private final @RUntainted String scriptPath;
+src/main/java/com/cburch/logisim/fpga/download/XilinxDownload.java:  private final @RUntainted String projectPath;
+src/main/java/com/cburch/logisim/fpga/download/XilinxDownload.java:      @RUntainted String projectPath,
+src/main/java/com/cburch/logisim/fpga/download/XilinxDownload.java:      java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
+src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java:  private final @RUntainted String[] bin;
+src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java:  public VendorSoftware(char vendor, String name, @RUntainted String[] bin) {
+src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java:  public @RUntainted String getToolPath() {
+src/main/java/com/cburch/logisim/fpga/settings/VendorSoftware.java:  public @RUntainted String getBinaryPath(int binPos) {
+src/main/java/com/cburch/logisim/proj/ProjectActions.java:      java.lang.@RUntainted String exportRootDir = "";
+src/main/java/com/cburch/logisim/proj/ProjectActions.java:        final java.lang.@RUntainted String exportLibDir = String.format("%s%s%s", exportRootDir, File.separator, Loader.LOGISIM_LIBRARY_DIR);
+src/main/java/com/cburch/logisim/proj/ProjectActions.java:        final java.lang.@RUntainted String exportCircDir = String.format("%s%s%s", exportRootDir, File.separator, Loader.LOGISIM_CIRCUIT_DIR);
+src/main/java/com/cburch/logisim/std/tcl/TclComponentAttributes.java:  public static final Attribute<@RUntainted File> CONTENT_FILE_ATTR = new ContentFileAttribute();
+src/main/java/com/cburch/logisim/std/tcl/TclWrapper.java:  private @RUntainted File tclContentFile;
+src/main/java/com/cburch/logisim/std/tcl/TclWrapper.java:  public void setFile(@RUntainted File file) {
+src/main/java/com/cburch/logisim/std/tcl/TclWrapper.java:    final java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
+src/main/java/com/cburch/logisim/util/SocketClient.java:  private static @RUntainted ServerSocket server = null;
+src/main/java/com/cburch/logisim/util/SocketClient.java:  public @RUntainted int getServerPort() {
+src/main/java/com/cburch/logisim/util/Softwares.java:  public static final @RUntainted String[] QUESTA_BIN = loadQuesta();
+src/main/java/com/cburch/logisim/util/Softwares.java:  private static boolean createWorkLibrary(File tmpDir, @RUntainted String questaPath, StringBuilder result)
+src/main/java/com/cburch/logisim/util/Softwares.java:      final java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
+src/main/java/com/cburch/logisim/util/Softwares.java:  public static @RUntainted String getQuestaPath() {
+src/main/java/com/cburch/logisim/util/Softwares.java:  public static @RUntainted String getQuestaPath(Component parent) {
+src/main/java/com/cburch/logisim/util/Softwares.java:  private static @RUntainted String[] loadQuesta() {
+src/main/java/com/cburch/logisim/util/Softwares.java:    @RUntainted String[] questaProgs = {"vcom", "vsim", "vmap", "vlib"};
+src/main/java/com/cburch/logisim/util/Softwares.java:    final java.lang.@RUntainted String questaPath = getQuestaPath();
+src/main/java/com/cburch/logisim/util/Softwares.java:    @RUntainted File tmp = null;
+src/main/java/com/cburch/logisim/util/Softwares.java:      List<@RUntainted String> command = new ArrayList<>();
+src/main/java/com/cburch/logisim/vhdl/sim/VhdlSimulatorTclBinder.java:  private void init(@RUntainted int serverPort) {
+src/main/java/com/cburch/logisim/vhdl/sim/VhdlSimulatorTclBinder.java:    final java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();

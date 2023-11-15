@@ -11,6 +11,7 @@ package com.cburch.logisim.gui.prefs;
 
 import com.cburch.logisim.util.StringGetter;
 import javax.swing.JComboBox;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class PrefOption {
   private final Object value;

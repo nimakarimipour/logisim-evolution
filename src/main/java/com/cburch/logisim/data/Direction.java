@@ -12,6 +12,7 @@ package com.cburch.logisim.data;
 import static com.cburch.logisim.data.Strings.S;
 
 import com.cburch.logisim.util.StringGetter;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Direction implements AttributeOptionInterface {
   public static Direction parse(String str) {

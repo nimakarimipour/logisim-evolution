@@ -33,6 +33,7 @@ import com.cburch.logisim.util.SyntaxChecker;
 import java.awt.Font;
 import java.util.Arrays;
 import java.util.List;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class CircuitAttributes extends AbstractAttributeSet {
 

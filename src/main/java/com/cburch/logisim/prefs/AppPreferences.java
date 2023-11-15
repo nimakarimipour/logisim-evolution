@@ -39,6 +39,7 @@ import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class AppPreferences {
   //

@@ -44,6 +44,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class VhdlEntity extends InstanceFactory implements HdlModelListener {
 

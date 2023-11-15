@@ -16,6 +16,7 @@ import com.cburch.logisim.gui.icons.FlipFlopIcon;
 import com.cburch.logisim.instance.Port;
 import com.cburch.logisim.instance.StdAttr;
 import com.cburch.logisim.util.LineBuffer;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class JKFlipFlop extends AbstractFlipFlop {
   /**

@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RPolyTainted;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public abstract class DownloadBase {
 
@@ -120,7 +122,7 @@ public abstract class DownloadBase {
     return drcResult == Netlist.DRC_PASSED;
   }
 
-  protected String getProjDir(String selectedCircuit) {
+  protected @RUntainted String getProjDir(String selectedCircuit) {
     java.lang.String projectDir =
         AppPreferences.FPGA_Workspace.get() + File.separator + myProject.getLogisimFile().getName();
     if (!projectDir.endsWith(File.separator)) {
@@ -296,7 +298,7 @@ public abstract class DownloadBase {
     }
   }
 
-  public static String getDirectoryLocation(String projectBase, int identifier) {
+  public static @RPolyTainted String getDirectoryLocation(@RPolyTainted String projectBase, int identifier) {
     final java.lang.String base =
         (projectBase.endsWith(File.separator)) ? projectBase : projectBase + File.separator;
     if (identifier >= HDLPaths.length) return null;

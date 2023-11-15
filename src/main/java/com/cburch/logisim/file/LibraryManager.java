@@ -24,6 +24,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.regex.Pattern;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RPolyTainted;
 
 public final class LibraryManager {
 

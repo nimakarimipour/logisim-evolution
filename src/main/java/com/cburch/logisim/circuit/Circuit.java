@@ -64,6 +64,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Circuit {
   private class EndChangedTransaction extends CircuitTransaction {

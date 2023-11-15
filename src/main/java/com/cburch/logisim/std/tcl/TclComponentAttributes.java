@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JFileChooser;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class TclComponentAttributes extends AbstractAttributeSet {
 
@@ -76,7 +77,7 @@ public class TclComponentAttributes extends AbstractAttributeSet {
     }
   }
 
-  public static final Attribute<File> CONTENT_FILE_ATTR = new ContentFileAttribute();
+  public static final Attribute<@RUntainted File> CONTENT_FILE_ATTR = new ContentFileAttribute();
 
   private static final List<Attribute<?>> attributes =
       Arrays.asList(new Attribute<?>[] {CONTENT_FILE_ATTR, StdAttr.LABEL, StdAttr.LABEL_FONT});

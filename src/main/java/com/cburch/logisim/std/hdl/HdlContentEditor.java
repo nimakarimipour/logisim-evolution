@@ -42,6 +42,7 @@ import javax.swing.event.DocumentListener;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class HdlContentEditor extends JDialog implements JInputDialog {
 

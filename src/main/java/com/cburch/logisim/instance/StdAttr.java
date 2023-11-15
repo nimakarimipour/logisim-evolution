@@ -19,6 +19,7 @@ import com.cburch.logisim.data.Direction;
 import com.cburch.logisim.fpga.data.ComponentMapInformationContainer;
 import java.awt.Color;
 import java.awt.Font;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public interface StdAttr {
   Attribute<Direction> FACING = Attributes.forDirection("facing", S.getter("stdFacingAttr"));

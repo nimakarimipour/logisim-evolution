@@ -12,6 +12,7 @@ package com.cburch.logisim.data;
 import com.cburch.logisim.util.StringGetter;
 import java.awt.Window;
 import javax.swing.JTextField;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public abstract class Attribute<V> {
   private final String name;

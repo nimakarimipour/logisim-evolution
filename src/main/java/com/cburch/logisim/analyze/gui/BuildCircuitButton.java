@@ -33,6 +33,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 class BuildCircuitButton extends JButton {
   private class DialogPanel extends JPanel {

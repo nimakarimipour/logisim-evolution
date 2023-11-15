@@ -25,6 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class VhdlContentComponent extends HdlContent {
 

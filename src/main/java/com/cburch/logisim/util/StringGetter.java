@@ -8,6 +8,7 @@
  */
 
 package com.cburch.logisim.util;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public interface StringGetter {
   String toString();

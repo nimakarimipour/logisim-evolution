@@ -18,6 +18,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class PrefOptionList implements ActionListener, PropertyChangeListener {
   private final PrefMonitor<String> pref;

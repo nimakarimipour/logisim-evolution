@@ -15,6 +15,7 @@ import com.cburch.logisim.fpga.hdlgenerator.Hdl;
 import com.cburch.logisim.fpga.hdlgenerator.InlinedHdlGeneratorFactory;
 import com.cburch.logisim.instance.StdAttr;
 import com.cburch.logisim.util.LineBuffer;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class ControlledBufferHdlGenerator extends InlinedHdlGeneratorFactory {
 

@@ -22,6 +22,7 @@ package com.cburch.logisim.std.ttl;
 import com.cburch.logisim.instance.InstancePainter;
 import com.cburch.logisim.instance.InstanceState;
 import com.cburch.logisim.util.LineBuffer;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 /** TTL 74x34: hex buffer gate */
 public class Ttl7434 extends AbstractTtlGate {

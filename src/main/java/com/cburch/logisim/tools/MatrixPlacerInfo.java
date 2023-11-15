@@ -10,6 +10,7 @@
 package com.cburch.logisim.tools;
 
 import com.cburch.logisim.data.Bounds;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class MatrixPlacerInfo {
 

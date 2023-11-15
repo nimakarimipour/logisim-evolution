@@ -13,6 +13,8 @@ import com.cburch.logisim.prefs.AppPreferences;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JFileChooser;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RPolyTainted;
 
 public final class JFileChoosers {
 

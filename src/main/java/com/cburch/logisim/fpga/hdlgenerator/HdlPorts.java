@@ -16,6 +16,7 @@ import com.cburch.logisim.data.Attribute;
 import com.cburch.logisim.data.AttributeSet;
 import com.cburch.logisim.data.BitWidth;
 import com.cburch.logisim.instance.Port;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class HdlPorts {
 

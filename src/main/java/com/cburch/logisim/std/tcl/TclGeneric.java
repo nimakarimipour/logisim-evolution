@@ -25,6 +25,7 @@ import com.cburch.logisim.util.StringUtil;
 import java.awt.Color;
 import java.awt.Window;
 import java.util.WeakHashMap;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 /**
  * The TclGeneric component is a standard TclComponent but who has its interface defined by a VHDL

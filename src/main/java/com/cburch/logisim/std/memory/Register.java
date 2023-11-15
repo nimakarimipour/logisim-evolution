@@ -39,6 +39,7 @@ import com.cburch.logisim.util.StringUtil;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Register extends InstanceFactory implements DynamicElementProvider {
   /**

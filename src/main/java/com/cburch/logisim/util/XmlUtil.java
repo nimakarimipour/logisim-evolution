@@ -11,6 +11,7 @@ package com.cburch.logisim.util;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public final class XmlUtil {
 

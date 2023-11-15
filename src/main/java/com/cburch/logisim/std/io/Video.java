@@ -46,6 +46,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.DirectColorModel;
 import java.awt.image.IndexColorModel;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 // 128 x 128 pixel LCD display with 8bpp color (byte addressed)
 class Video extends ManagedComponent implements ToolTipMaker, AttributeListener {

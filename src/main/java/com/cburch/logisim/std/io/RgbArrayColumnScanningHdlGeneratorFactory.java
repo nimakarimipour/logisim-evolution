@@ -17,6 +17,7 @@ import com.cburch.logisim.instance.Port;
 import com.cburch.logisim.util.LineBuffer;
 
 import java.util.HashMap;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class RgbArrayColumnScanningHdlGeneratorFactory extends LedArrayColumnScanningHdlGeneratorFactory {
 

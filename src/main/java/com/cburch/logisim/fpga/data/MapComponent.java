@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class MapComponent {
 

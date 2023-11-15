@@ -21,6 +21,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class AbstractOctalFlops extends AbstractTtlGate {
 

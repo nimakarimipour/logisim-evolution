@@ -20,6 +20,7 @@ import com.cburch.logisim.data.Location;
 import com.cburch.logisim.util.GraphicsUtil;
 import com.cburch.logisim.util.StringGetter;
 import java.awt.Color;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 class WireFactory extends AbstractComponentFactory {
   public static final WireFactory instance = new WireFactory();

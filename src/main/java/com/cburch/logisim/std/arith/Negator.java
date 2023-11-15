@@ -25,6 +25,7 @@ import com.cburch.logisim.instance.InstanceState;
 import com.cburch.logisim.instance.Port;
 import com.cburch.logisim.instance.StdAttr;
 import com.cburch.logisim.tools.key.BitWidthConfigurator;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Negator extends InstanceFactory {
   /**

@@ -25,6 +25,7 @@ import com.cburch.logisim.instance.Port;
 import com.cburch.logisim.instance.StdAttr;
 import java.awt.Color;
 import java.util.ArrayList;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class ReptarLocalBus extends InstanceFactory {
   /**

@@ -41,6 +41,7 @@ import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Analyzer extends LFrame.SubWindow {
   private final AnalyzerMenuListener menuListener;

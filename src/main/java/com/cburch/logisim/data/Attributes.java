@@ -24,6 +24,7 @@ import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Attributes {
   private static class BooleanAttribute extends OptionAttribute<Boolean> {

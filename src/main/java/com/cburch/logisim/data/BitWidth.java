@@ -12,6 +12,7 @@ package com.cburch.logisim.data;
 import com.cburch.logisim.gui.generic.ComboBox;
 import com.cburch.logisim.util.StringGetter;
 import java.awt.Component;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class BitWidth implements Comparable<BitWidth> {
   static class Attribute extends com.cburch.logisim.data.Attribute<BitWidth> {

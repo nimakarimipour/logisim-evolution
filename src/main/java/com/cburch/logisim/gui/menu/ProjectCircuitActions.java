@@ -42,6 +42,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class ProjectCircuitActions {
   private ProjectCircuitActions() {

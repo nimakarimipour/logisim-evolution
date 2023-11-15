@@ -15,6 +15,7 @@ import com.cburch.logisim.data.AttributeSet;
 import com.cburch.logisim.data.BitWidth;
 import com.cburch.logisim.data.Location;
 import com.cburch.logisim.util.StringGetter;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Port {
   private static String defaultExclusive(String s) {

@@ -12,6 +12,7 @@ package com.cburch.logisim.std.ttl;
 import com.cburch.logisim.instance.InstancePainter;
 import com.cburch.logisim.instance.InstanceState;
 import com.cburch.logisim.prefs.AppPreferences;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 /** TTL 74x10: triple 3-input NAND gate */
 public class Ttl7410 extends AbstractTtlGate {

@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class VendorSoftware {
   public static final char VENDOR_ALTERA = 0;
@@ -29,15 +30,15 @@ public class VendorSoftware {
 
   private final char vendor;
   private final String name;
-  private final String[] bin;
+  private final @RUntainted String[] bin;
 
-  public VendorSoftware(char vendor, String name, String[] bin) {
+  public VendorSoftware(char vendor, String name, @RUntainted String[] bin) {
     this.vendor = vendor;
     this.name = name;
     this.bin = bin;
   }
 
-  public String getToolPath() {
+  public @RUntainted String getToolPath() {
     return switch (vendor) {
       case VENDOR_ALTERA -> AppPreferences.QuartusToolPath.get();
       case VENDOR_XILINX -> AppPreferences.ISEToolPath.get();
@@ -58,7 +59,7 @@ public class VendorSoftware {
     return bin;
   }
 
-  public String getBinaryPath(int binPos) {
+  public @RUntainted String getBinaryPath(int binPos) {
     return getToolPath() + File.separator + bin[binPos];
   }
 
@@ -121,8 +122,8 @@ public class VendorSoftware {
     else return path + File.separator;
   }
 
-  private static String[] load(char vendor) {
-    ArrayList<String> progs = new ArrayList<>();
+  private static @RUntainted String[] load(char vendor) {
+    ArrayList<@RUntainted String> progs = new ArrayList<>();
     String windowsExtension = ".exe";
     if (vendor == VENDOR_ALTERA) {
       progs.add("quartus_sh");
@@ -143,7 +144,7 @@ public class VendorSoftware {
       windowsExtension = ".bat";
     }
 
-    String[] progsArray = progs.toArray(new String[0]);
+    @RUntainted String[] progsArray = progs.toArray(new String[0]);
     String osname = System.getProperty("os.name");
     if (osname == null) throw new IllegalArgumentException("no os.name");
     else {

@@ -30,6 +30,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Text extends InstanceFactory {
   /**

@@ -27,6 +27,7 @@ import com.cburch.logisim.instance.StdAttr;
 import com.cburch.logisim.tools.key.BitWidthConfigurator;
 import com.cburch.logisim.util.GraphicsUtil;
 import java.awt.Color;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Subtractor extends InstanceFactory {
   /**

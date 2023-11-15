@@ -26,6 +26,7 @@ import com.cburch.logisim.instance.InstanceState;
 import com.cburch.logisim.instance.Port;
 import com.cburch.logisim.tools.key.BitWidthConfigurator;
 import java.awt.Color;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class BinToBcd extends InstanceFactory {
   /**

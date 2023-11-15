@@ -11,6 +11,7 @@ package com.cburch.logisim.std.ttl;
 
 import com.cburch.logisim.instance.InstancePainter;
 import com.cburch.logisim.instance.InstanceState;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Ttl7413 extends AbstractTtlGate {
   /**

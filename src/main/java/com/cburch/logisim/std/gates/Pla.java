@@ -46,6 +46,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 class Pla extends InstanceFactory {
   /**

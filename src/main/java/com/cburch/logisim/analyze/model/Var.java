@@ -12,6 +12,7 @@ package com.cburch.logisim.analyze.model;
 import static com.cburch.logisim.analyze.Strings.S;
 
 import java.util.Iterator;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Var implements Iterable<String> {
 

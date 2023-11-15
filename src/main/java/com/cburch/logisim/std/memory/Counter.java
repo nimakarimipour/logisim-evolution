@@ -38,6 +38,7 @@ import java.awt.event.KeyEvent;
 import java.math.BigInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Counter extends InstanceFactory implements DynamicElementProvider {
   /**

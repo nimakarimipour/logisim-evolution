@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.cburch.logisim.prefs.AppPreferences;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RPolyTainted;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Vhdl {
 

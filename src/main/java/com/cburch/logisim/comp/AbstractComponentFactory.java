@@ -25,6 +25,7 @@ import com.cburch.logisim.util.StringGetter;
 import com.cburch.logisim.util.StringUtil;
 import java.awt.Color;
 import javax.swing.Icon;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public abstract class AbstractComponentFactory implements ComponentFactory {
   private static final Icon toolIcon = IconsUtil.getIcon("subcirc.gif");

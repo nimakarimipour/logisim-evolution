@@ -37,6 +37,7 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import javax.swing.Icon;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Clock extends InstanceFactory {
   /**

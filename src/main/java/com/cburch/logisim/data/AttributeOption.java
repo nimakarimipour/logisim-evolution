@@ -10,6 +10,7 @@
 package com.cburch.logisim.data;
 
 import com.cburch.logisim.util.StringGetter;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class AttributeOption implements AttributeOptionInterface {
   private final Object value;

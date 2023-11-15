@@ -29,6 +29,7 @@ import com.cburch.logisim.tools.key.BitWidthConfigurator;
 import com.cburch.logisim.util.GraphicsUtil;
 import java.awt.Color;
 import java.awt.Graphics;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Adder extends InstanceFactory {
   /**

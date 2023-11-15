@@ -19,6 +19,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 /**
  * Socket client to talk to the binder.
@@ -29,7 +30,7 @@ public class SocketClient {
 
   static final Logger logger = LoggerFactory.getLogger(SocketClient.class);
 
-  private static ServerSocket server = null;
+  private static @RUntainted ServerSocket server = null;
 
   private boolean connected = false;
 
@@ -51,7 +52,7 @@ public class SocketClient {
     }
   }
 
-  public int getServerPort() {
+  public @RUntainted int getServerPort() {
     if (server != null) {
       return server.getLocalPort();
     }

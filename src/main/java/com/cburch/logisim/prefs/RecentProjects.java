@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 class RecentProjects implements PreferenceChangeListener {
   private static class FileTime {
