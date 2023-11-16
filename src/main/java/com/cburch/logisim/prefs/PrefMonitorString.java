@@ -9,10 +9,12 @@
 
 package com.cburch.logisim.prefs;
 
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
+
 import java.util.Objects;
 import java.util.prefs.PreferenceChangeEvent;
 
-class PrefMonitorString extends AbstractPrefMonitor<String> {
+class PrefMonitorString extends AbstractPrefMonitor<@RUntainted String> {
   private static boolean isSame(String a, String b) {
     return Objects.equals(a, b);
   }

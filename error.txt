@@ -1,0 +1,9 @@
+> Task :createCheckerFrameworkManifest UP-TO-DATE
+> Task :genBuildInfo UP-TO-DATE
+> Task :genVhdlSyntax UP-TO-DATE
+> Task :genFiles UP-TO-DATE
+
+> Task :compileJava
+
+> Task :compileJava FAILED
+4 actionable tasks: 1 executed, 3 up-to-date
