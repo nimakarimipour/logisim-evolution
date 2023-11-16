@@ -309,61 +309,58 @@ public class XilinxDownload implements VendorDownload {
   }
 
   private ProcessBuilder stage0Synth() {
-    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
-    command
-        .add(xilinxVendor.getBinaryPath(0))
-        .add("-ifn")
-        .add(scriptPath.replace(projectPath, "../") + File.separator + SCRIPT_FILE)
-        .add("-ofn")
-        .add("logisim.log");
-    final java.lang.ProcessBuilder stage0 = new ProcessBuilder(command.get());
+    final List<String> command = new ArrayList<>();
+    command.add(xilinxVendor.getBinaryPath(0));
+    command.add("-ifn");
+    command.add(scriptPath.replace(projectPath, "../") + File.separator + SCRIPT_FILE);
+    command.add("-ofn");
+    command.add("logisim.log");
+    final java.lang.ProcessBuilder stage0 = new ProcessBuilder(command);
     stage0.directory(new File(sandboxPath));
     return stage0;
   }
 
   private ProcessBuilder stage1Constraints() {
-    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
-    command
-        .add(xilinxVendor.getBinaryPath(1))
-        .add("-intstyle")
-        .add("ise")
-        .add("-uc")
-        .add(ucfPath.replace(projectPath, "../") + File.separator + UCF_FILE)
-        .add("logisim.ngc")
-        .add("logisim.ngd");
-    final java.lang.ProcessBuilder stage1 = new ProcessBuilder(command.get());
+    final List<String> command = new ArrayList<>();
+    command.add(xilinxVendor.getBinaryPath(1));
+    command.add("-intstyle");
+    command.add("ise");
+    command.add("-uc");
+    command.add(ucfPath.replace(projectPath, "../") + File.separator + UCF_FILE);
+    command.add("logisim.ngc");
+    command.add("logisim.ngd");
+    final java.lang.ProcessBuilder stage1 = new ProcessBuilder(command);
     stage1.directory(new File(sandboxPath));
     return stage1;
   }
 
   private ProcessBuilder stage2Map() {
     if (isCpld) return null; /* mapping is skipped for the CPLD target*/
-    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
+    final List<String> command = new ArrayList<>();
     command
-        .add(xilinxVendor.getBinaryPath(2))
-        .add("-intstyle")
-        .add("ise")
-        .add("-o")
-        .add("logisim_map")
-        .add("logisim.ngd");
-    final java.lang.ProcessBuilder stage2 = new ProcessBuilder(command.get());
+        .add(xilinxVendor.getBinaryPath(2));
+       command .add("-intstyle");
+    command  .add("ise");
+    command.add("-o");
+    command.add("logisim_map");
+    command.add("logisim.ngd");
+    final java.lang.ProcessBuilder stage2 = new ProcessBuilder(command);
     stage2.directory(new File(sandboxPath));
     return stage2;
   }
 
   private ProcessBuilder stage3Par() {
-    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
+    final List<String> command = new ArrayList<>();
     if (!isCpld) {
-      command
-          .add(xilinxVendor.getBinaryPath(3))
-          .add("-w")
-          .add("-intstyle")
-          .add("ise")
-          .add("-ol")
-          .add("high")
-          .add("logisim_map")
-          .add("logisim_par")
-          .add("logisim_map.pcf");
+      command.add(xilinxVendor.getBinaryPath(3));
+      command .add("-w");
+      command .add("-intstyle");
+      command .add("ise");
+      command .add("-ol");
+      command .add("high");
+      command .add("logisim_map");
+      command .add("logisim_par");
+      command .add("logisim_map.pcf");
     } else {
       final java.lang.String pinPullBehavior = switch (boardInfo.fpga.getUnusedPinsBehavior()) {
         case PullBehaviors.PULL_UP -> "pullup";
@@ -372,36 +369,44 @@ public class XilinxDownload implements VendorDownload {
       };
       final com.cburch.logisim.fpga.data.FpgaClass fpga = boardInfo.fpga;
       command
-          .add(xilinxVendor.getBinaryPath(6))
-          .add("-p")
-          .add("{{1}}-{{2}}-{{3}}", fpga.getPart().toUpperCase(), fpga.getSpeedGrade(), fpga.getPackage().toUpperCase())
-          .add("-intstyle")
-          .add("ise")
+          .add(xilinxVendor.getBinaryPath(6));
+      command.add("-p");
+      command .add(String.format("{{1}}-{{2}}-{{3}}", fpga.getPart().toUpperCase(), fpga.getSpeedGrade(), fpga.getPackage().toUpperCase()));
+      command .add("-intstyle");
+      command .add("ise");
           /* TODO: do correct termination type */
-          .add("-terminate")
-          .add(pinPullBehavior)
-          .add("-loc")
-          .add("on")
-          .add("-log")
-          .add("logisim_cpldfit.log")
-          .add("logisim.ngd");
+      command .add("-terminate");
+      command .add(pinPullBehavior);
+      command .add("-loc");
+      command .add("on");
+      command .add("-log");
+      command .add("logisim_cpldfit.log");
+      command .add("logisim.ngd");
     }
-    final java.lang.ProcessBuilder stage3 = new ProcessBuilder(command.get());
+    final java.lang.ProcessBuilder stage3 = new ProcessBuilder(command);
     stage3.directory(new File(sandboxPath));
     return stage3;
   }
 
   private ProcessBuilder stage4Bit() {
-    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
+    final List<String> command = new ArrayList<>();
     if (!isCpld) {
-      command.add(xilinxVendor.getBinaryPath(4)).add("-w");
-      if (boardInfo.fpga.getUnusedPinsBehavior() == PullBehaviors.PULL_UP) command.add("-g").add("UnusedPin:PULLUP");
-      if (boardInfo.fpga.getUnusedPinsBehavior() == PullBehaviors.PULL_DOWN) command.add("-g").add("UnusedPin:PULLDOWN");
-      command.add("-g").add("StartupClk:CCLK").add("logisim_par").add("{{1}}.bit", ToplevelHdlGeneratorFactory.FPGA_TOP_LEVEL_NAME);
+      command.add(xilinxVendor.getBinaryPath(4));
+      command.add("-w");
+      if (boardInfo.fpga.getUnusedPinsBehavior() == PullBehaviors.PULL_UP) command.add("-g");
+      command.add("UnusedPin:PULLUP");
+      if (boardInfo.fpga.getUnusedPinsBehavior() == PullBehaviors.PULL_DOWN) command.add("-g");
+      command.add("UnusedPin:PULLDOWN");
+      command.add("-g");
+      command.add("StartupClk:CCLK");
+      command.add("logisim_par");
+      command.add(String.format("{{1}}.bit", ToplevelHdlGeneratorFactory.FPGA_TOP_LEVEL_NAME));
     } else {
-      command.add(xilinxVendor.getBinaryPath(7)).add("-i").add("logisim.vm6");
+      command.add(xilinxVendor.getBinaryPath(7));
+      command.add("-i");
+      command.add("logisim.vm6");
     }
-    final java.lang.ProcessBuilder stage4 = new ProcessBuilder(command.get());
+    final java.lang.ProcessBuilder stage4 = new ProcessBuilder(command);
     stage4.directory(new File(sandboxPath));
     return stage4;
   }

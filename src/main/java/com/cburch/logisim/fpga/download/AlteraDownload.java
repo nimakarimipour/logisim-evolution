@@ -34,6 +34,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
+import org.checkerframework.checker.units.qual.A;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -354,16 +356,16 @@ public class AlteraDownload implements VendorDownload {
       Reporter.report.addError(S.get("AlteraFlashError", jicFile));
       return false;
     }
-    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
+    List<String> command = new ArrayList<>();
     command
-        .add(alteraVendor.getBinaryPath(1))
-        .add("-c")
-        .add(cablename)
-        .add("-m")
-        .add("jtag")
-        .add("-o")
-        .add("P;{{1}}", jicFile);
-    final java.lang.ProcessBuilder prog = new ProcessBuilder(command.get());
+        .add(alteraVendor.getBinaryPath(1));
+        command.add("-c");
+        command.add(cablename);
+    command.add("-m");
+    command.add("jtag");
+    command.add("-o");
+    command.add(String.format("P;{{1}}", jicFile));
+    final java.lang.ProcessBuilder prog = new ProcessBuilder(command);
     prog.directory(new File(sandboxPath));
     try {
       final java.lang.String result = Download.execute(prog, null);
@@ -398,15 +400,15 @@ public class AlteraDownload implements VendorDownload {
       Reporter.report.addError(S.get("AlteraProgSofError", ProgrammerSofFile));
       return false;
     }
-    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
-    command.add(alteraVendor.getBinaryPath(1))
-            .add("-c")
-            .add(cablename)
-            .add("-m")
-            .add("jtag")
-            .add("-o")
-            .add("P;{{1}}", ProgrammerSofFile);
-    final java.lang.ProcessBuilder prog = new ProcessBuilder(command.get());
+    final List<String> command = new ArrayList<>();
+    command.add(alteraVendor.getBinaryPath(1));
+    command.add("-c");
+    command.add(cablename);
+    command.add("-m");
+    command.add("jtag");
+    command.add("-o");
+    command.add(String.format("P;{{1}}", ProgrammerSofFile));
+    final java.lang.ProcessBuilder prog = new ProcessBuilder(command);
     prog.directory(new File(sandboxPath));
     try {
       final java.lang.String result = Download.execute(prog, null);

@@ -102,13 +102,13 @@ public class VivadoDownload implements VendorDownload {
 
   @Override
   public ProcessBuilder downloadToBoard() {
-    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
-    command.add(vivadoVendor.getBinaryPath(0))
-        .add("-mode")
-        .add("batch")
-        .add("-source")
-        .add(scriptPath + File.separator + LOAD_BITSTEAM_FILE);
-    final java.lang.ProcessBuilder stage0 = new ProcessBuilder(command.get());
+    final List<String> command = new ArrayList<>();
+    command.add(vivadoVendor.getBinaryPath(0));
+    command.add("-mode");
+    command.add("batch");
+    command.add("-source");
+    command.add(scriptPath + File.separator + LOAD_BITSTEAM_FILE);
+    final java.lang.ProcessBuilder stage0 = new ProcessBuilder(command);
     stage0.directory(new File(sandboxPath));
     return stage0;
   }
@@ -250,28 +250,25 @@ public class VivadoDownload implements VendorDownload {
   }
 
   private ProcessBuilder stage0Project() {
-    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
-    command
-        .add(vivadoVendor.getBinaryPath(0))
-        .add("-mode")
-        .add("batch")
-        .add("-source")
-        .add(scriptPath + File.separator + CREATE_PROJECT_TCL);
-
-    final java.lang.ProcessBuilder stage0 = new ProcessBuilder(command.get());
+    final List<String> command = new ArrayList<>();
+    command.add(vivadoVendor.getBinaryPath(0));
+    command  .add("-mode");
+    command  .add("batch");
+    command  .add("-source");
+    command  .add(scriptPath + File.separator + CREATE_PROJECT_TCL);
+    final java.lang.ProcessBuilder stage0 = new ProcessBuilder(command);
     stage0.directory(new File(sandboxPath));
     return stage0;
   }
 
   private ProcessBuilder stage1Bit() {
-    final com.cburch.logisim.util.LineBuffer command = LineBuffer.getBuffer();
-    command
-        .add(vivadoVendor.getBinaryPath(0))
-        .add("-mode")
-        .add("batch")
-        .add("-source")
-        .add(scriptPath + File.separator + GENERATE_BITSTREAM_FILE);
-    final java.lang.ProcessBuilder stage1 = new ProcessBuilder(command.get());
+    final List<String> command = new ArrayList<>();
+    command.add(vivadoVendor.getBinaryPath(0));
+    command.add("-mode");
+    command.add("batch");
+    command.add("-source");
+    command.add(scriptPath + File.separator + GENERATE_BITSTREAM_FILE);
+    final java.lang.ProcessBuilder stage1 = new ProcessBuilder(command);
     stage1.directory(new File(sandboxPath));
     return stage1;
   }
