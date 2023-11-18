@@ -27,6 +27,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class SimOptions extends OptionsPanel {
 

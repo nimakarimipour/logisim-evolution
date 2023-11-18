@@ -37,6 +37,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class TestFrame extends LFrame.SubWindowWithSimulation {
 

@@ -15,6 +15,7 @@ import java.util.NoSuchElementException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class XmlIterator<E extends Node> implements Iterable<E>, Iterator<E>, Cloneable {
 

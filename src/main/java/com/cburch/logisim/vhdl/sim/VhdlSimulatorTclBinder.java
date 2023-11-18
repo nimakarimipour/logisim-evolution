@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 /**
  * The TCL binder is a TCL program creating a socket server. The signals have to be written to the
@@ -56,7 +57,7 @@ public class VhdlSimulatorTclBinder {
   }
 
   private void init(int serverPort) {
-    final java.util.ArrayList<java.lang.String> command = new ArrayList<String>();
+    final java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
 
     command.add(
         FileUtil.correctPath(Softwares.getQuestaPath()) + Softwares.QUESTA_BIN[Softwares.VSIM]);

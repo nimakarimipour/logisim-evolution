@@ -10,6 +10,7 @@
 package com.cburch.logisim.file;
 
 import com.cburch.logisim.tools.Library;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 interface LibraryLoader {
   String getDescriptor(Library lib);

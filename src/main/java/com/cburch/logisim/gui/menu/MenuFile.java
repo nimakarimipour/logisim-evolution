@@ -22,6 +22,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 class MenuFile extends Menu implements ActionListener {
   private static final long serialVersionUID = 1L;

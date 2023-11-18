@@ -24,6 +24,7 @@ import java.io.StringWriter;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.plaf.FontUIResource;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Main {
   /**

@@ -21,6 +21,7 @@ import com.cburch.logisim.proj.ProjectActions;
 import com.cburch.logisim.std.wiring.Pin;
 import java.io.File;
 import java.util.Map;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class TestBench {
 

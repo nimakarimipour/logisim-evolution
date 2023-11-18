@@ -40,6 +40,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class LogFrame extends LFrame.SubWindowWithSimulation {
   private final LogMenuListener menuListener;

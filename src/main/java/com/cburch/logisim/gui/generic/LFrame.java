@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class LFrame extends JFrame implements WindowClosable {
   private static final long serialVersionUID = 1L;

@@ -31,6 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class OptionsFrame extends LFrame.Dialog {
   private static final long serialVersionUID = 1L;

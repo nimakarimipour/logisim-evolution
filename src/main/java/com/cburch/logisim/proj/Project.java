@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JFileChooser;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Project {
   private static class ActionData {

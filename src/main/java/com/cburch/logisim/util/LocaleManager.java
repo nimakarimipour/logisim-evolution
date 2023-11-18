@@ -22,6 +22,8 @@ import java.util.StringTokenizer;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RPolyTainted;
 
 public class LocaleManager {
   private static class LocaleGetter implements StringGetter {

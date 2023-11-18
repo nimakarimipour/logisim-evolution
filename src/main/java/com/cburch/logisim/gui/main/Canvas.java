@@ -80,6 +80,7 @@ import javax.swing.JScrollBar;
 import javax.swing.JViewport;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Canvas extends JPanel implements LocaleListener, CanvasPaneContents, AdjustmentListener {
 

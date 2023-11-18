@@ -14,6 +14,7 @@ import com.cburch.logisim.proj.ProjectActions;
 import com.cburch.logisim.util.MacCompatibility;
 import java.awt.Desktop;
 import java.io.File;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 class MacOsAdapter {
 

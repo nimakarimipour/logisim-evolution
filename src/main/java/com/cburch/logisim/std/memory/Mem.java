@@ -34,6 +34,7 @@ import com.cburch.logisim.util.GraphicsUtil;
 import com.cburch.logisim.util.StringGetter;
 import java.io.File;
 import java.util.WeakHashMap;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public abstract class Mem extends InstanceFactory {
   // Note: The code is meant to be able to handle up to 32-bit addresses, but

@@ -20,6 +20,7 @@ import com.cburch.logisim.util.TableLayout;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import javax.swing.JPanel;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 class LayoutOptions extends OptionsPanel {
   private static final long serialVersionUID = 1L;

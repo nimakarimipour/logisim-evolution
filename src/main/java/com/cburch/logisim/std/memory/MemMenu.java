@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 class MemMenu implements ActionListener, MenuExtender {
   private final Mem factory;

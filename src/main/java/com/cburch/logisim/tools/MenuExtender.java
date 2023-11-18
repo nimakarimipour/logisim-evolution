@@ -11,6 +11,7 @@ package com.cburch.logisim.tools;
 
 import com.cburch.logisim.proj.Project;
 import javax.swing.JPopupMenu;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public interface MenuExtender {
   void configureMenu(JPopupMenu menu, Project proj);

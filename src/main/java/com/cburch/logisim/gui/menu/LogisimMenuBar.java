@@ -25,6 +25,7 @@ import javax.swing.JMenuBar;
 import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 @SuppressWarnings("serial")
 public class LogisimMenuBar extends JMenuBar {

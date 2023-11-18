@@ -18,6 +18,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 class ExperimentalOptions extends OptionsPanel {
   private static final long serialVersionUID = 1L;

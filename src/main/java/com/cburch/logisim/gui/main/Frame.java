@@ -72,6 +72,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Frame extends LFrame.MainWindow implements LocaleListener {
   private static final long serialVersionUID = 1L;

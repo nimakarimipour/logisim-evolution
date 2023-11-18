@@ -11,6 +11,7 @@ package com.cburch.logisim.gui.prefs;
 
 import java.awt.LayoutManager;
 import javax.swing.JPanel;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public abstract class OptionsPanel extends JPanel {
   private static final long serialVersionUID = 1L;

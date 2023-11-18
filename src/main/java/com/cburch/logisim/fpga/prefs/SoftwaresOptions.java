@@ -29,6 +29,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class SoftwaresOptions extends OptionsPanel {
 

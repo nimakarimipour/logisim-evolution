@@ -32,6 +32,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class XilinxDownload implements VendorDownload {
 
@@ -119,7 +120,7 @@ public class XilinxDownload implements VendorDownload {
   @Override
   public ProcessBuilder downloadToBoard() {
     if (!boardInfo.fpga.isUsbTmcDownloadRequired()) {
-      java.util.ArrayList<java.lang.String> command = new ArrayList<String>();
+      java.util.ArrayList<java.lang.@RUntainted String> command = new ArrayList<@RUntainted String>();
       command.add(xilinxVendor.getBinaryPath(5));
       command.add("-batch");
       command.add(scriptPath.replace(projectPath, "../") + File.separator + DOWNLOAD_FILE);
@@ -309,7 +310,7 @@ public class XilinxDownload implements VendorDownload {
   }
 
   private ProcessBuilder stage0Synth() {
-    final List<String> command = new ArrayList<>();
+    final List<@RUntainted String> command = new ArrayList<>();
     command.add(xilinxVendor.getBinaryPath(0));
     command.add("-ifn");
     command.add(scriptPath.replace(projectPath, "../") + File.separator + SCRIPT_FILE);
@@ -321,7 +322,7 @@ public class XilinxDownload implements VendorDownload {
   }
 
   private ProcessBuilder stage1Constraints() {
-    final List<String> command = new ArrayList<>();
+    final List<@RUntainted String> command = new ArrayList<>();
     command.add(xilinxVendor.getBinaryPath(1));
     command.add("-intstyle");
     command.add("ise");
@@ -336,7 +337,7 @@ public class XilinxDownload implements VendorDownload {
 
   private ProcessBuilder stage2Map() {
     if (isCpld) return null; /* mapping is skipped for the CPLD target*/
-    final List<String> command = new ArrayList<>();
+    final List<@RUntainted String> command = new ArrayList<>();
     command
         .add(xilinxVendor.getBinaryPath(2));
        command .add("-intstyle");
@@ -350,7 +351,7 @@ public class XilinxDownload implements VendorDownload {
   }
 
   private ProcessBuilder stage3Par() {
-    final List<String> command = new ArrayList<>();
+    final List<@RUntainted String> command = new ArrayList<>();
     if (!isCpld) {
       command.add(xilinxVendor.getBinaryPath(3));
       command .add("-w");
@@ -389,7 +390,7 @@ public class XilinxDownload implements VendorDownload {
   }
 
   private ProcessBuilder stage4Bit() {
-    final List<String> command = new ArrayList<>();
+    final List<@RUntainted String> command = new ArrayList<>();
     if (!isCpld) {
       command.add(xilinxVendor.getBinaryPath(4));
       command.add("-w");

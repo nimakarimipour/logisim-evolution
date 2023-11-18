@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class VivadoDownload implements VendorDownload {
 
@@ -102,7 +103,7 @@ public class VivadoDownload implements VendorDownload {
 
   @Override
   public ProcessBuilder downloadToBoard() {
-    final List<String> command = new ArrayList<>();
+    final List<@RUntainted String> command = new ArrayList<>();
     command.add(vivadoVendor.getBinaryPath(0));
     command.add("-mode");
     command.add("batch");
@@ -250,7 +251,7 @@ public class VivadoDownload implements VendorDownload {
   }
 
   private ProcessBuilder stage0Project() {
-    final List<String> command = new ArrayList<>();
+    final List<@RUntainted String> command = new ArrayList<>();
     command.add(vivadoVendor.getBinaryPath(0));
     command  .add("-mode");
     command  .add("batch");
@@ -262,7 +263,7 @@ public class VivadoDownload implements VendorDownload {
   }
 
   private ProcessBuilder stage1Bit() {
-    final List<String> command = new ArrayList<>();
+    final List<@RUntainted String> command = new ArrayList<>();
     command.add(vivadoVendor.getBinaryPath(0));
     command.add("-mode");
     command.add("batch");

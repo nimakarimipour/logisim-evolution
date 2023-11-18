@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class VendorSoftware {
   public static final char VENDOR_ALTERA = 0;
@@ -58,7 +59,7 @@ public class VendorSoftware {
     return bin;
   }
 
-  public String getBinaryPath(int binPos) {
+  public @RUntainted String getBinaryPath(int binPos) {
     return getToolPath() + File.separator + bin[binPos];
   }
 

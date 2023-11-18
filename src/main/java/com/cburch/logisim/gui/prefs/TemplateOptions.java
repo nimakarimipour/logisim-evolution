@@ -37,6 +37,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 class TemplateOptions extends OptionsPanel {
   private static final long serialVersionUID = 1L;

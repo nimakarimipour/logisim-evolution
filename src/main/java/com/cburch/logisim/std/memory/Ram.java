@@ -30,6 +30,7 @@ import com.cburch.logisim.instance.InstanceState;
 import com.cburch.logisim.instance.StdAttr;
 import com.cburch.logisim.proj.Project;
 import java.util.WeakHashMap;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Ram extends Mem {
   /**

@@ -27,6 +27,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class MenuTool extends Tool {
   /**

@@ -23,6 +23,7 @@ import java.util.jar.JarFile;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class ProjectLibraryActions {
   private ProjectLibraryActions() {}

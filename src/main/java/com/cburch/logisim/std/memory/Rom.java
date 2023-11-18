@@ -36,6 +36,7 @@ import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.WeakHashMap;
 import javax.swing.JLabel;
+import edu.ucr.cs.riple.taint.ucrtainting.qual.RUntainted;
 
 public class Rom extends Mem {
   /**
